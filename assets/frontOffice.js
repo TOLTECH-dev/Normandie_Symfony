@@ -1,0 +1,12 @@
+import './styles/frontOffice/common/header.css'
+import './styles/frontOffice/common/menu.css'
+import './styles/frontOffice/common/tooltip.css'
+import './styles/frontOffice/core/layout_core.css'
+import './styles/frontOffice/core/form.css'
+
+import './js/frontOffice/display'
+import './js/frontOffice/fixFormError'
+import './js/frontOffice/formatter'
+import './js/frontOffice/formatterPattern'
+import './js/frontOffice/notification'
+import './js/frontOffice/tooltip'

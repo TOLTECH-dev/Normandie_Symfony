@@ -1,0 +1,14 @@
+{{ form_start(form_delete, {
+    'action': path('admin_delete', {'userId': user.id}),
+    'method': 'post',
+    'attr': {'id': 'form_user_delete'}
+}) }}
+    <p class="text-center">
+        &Ecirc;tes-vous certain de vouloir supprimer l'Utilisateur ?
+    </p>
+    <div class="bloc-submit">
+        <button type="submit" class="btn btn-danger text-center">Supprimer</button>
+        <button type="button" class="btn btn-secondary marginLeft10" data-dismiss="modal">Annuler</button>
+    </div>
+{{ form_end(form_delete) }}
+

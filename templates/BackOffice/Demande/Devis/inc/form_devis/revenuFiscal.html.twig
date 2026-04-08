@@ -1,0 +1,9 @@
+{% if constant('App\\Entity\\Demande_travaux_devis::REVENU_REFERENCE_COMPRIS_ENTRE_2_ET_4_FOIS_ANAH_KEY') == informationANAH %}
+    {% set ANAH = 'compris entre 2 et 4 fois' %}
+{% endif %}
+
+{% if ANAH is defined and ANAH and (disabled_button_popupValidation is defined and '1' != disabled_button_popupValidation) %}
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc marginTop20" id="bloc-revenuFiscal">
+        <p class="bold">Le revenu fiscal de r&eacute;f&eacute;rence est {{ ANAH }} le niveau &laquo;revenus modestes&raquo; de l'Anah.</p>
+    </div>
+{% endif %}

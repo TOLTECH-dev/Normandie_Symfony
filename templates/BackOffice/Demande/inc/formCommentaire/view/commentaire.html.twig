@@ -1,0 +1,26 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc bloc-commentaireList">
+    <fieldset>
+        <legend><span class="legend-icon"></span>&nbsp;Liste des commentaires ({{ listCommentaire|length }})</legend>
+
+        <div class="bloc-commentaire">
+            {% for item in listCommentaire %}
+                <p class="bold noMargin">
+                    Cr&eacute;&eacute; le {{ item.commentaireDate }} de {{ item.commentaireAuteur }} &agrave; :
+                    <ul>
+                        {% for row in arrayRecipient[item.historiqueId] %}
+                            <li class="bold">{{ row }}</li>
+                        {% else %}
+                            <li class="bold">Aucun destinataire</li>
+                        {% endfor %}
+                    </ul>
+                </p>
+                <p class="marginTop7">{{ item.commentaireContent|nl2br }}</p>
+
+                <hr>
+            {% else %}
+                <p class="text-center bold">Aucun commentaire.</p>
+            {% endfor %}
+        </div>
+
+    </fieldset>
+</div>

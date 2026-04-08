@@ -1,0 +1,113 @@
+/*******************************************
+                BLOC MODAL
+*******************************************/
+.modal {
+    margin-top: 60px;
+}
+.modal legend {
+    border: 0;
+}
+div.modal_view .modal-dialog {
+    overflow-y: initial !important;
+    width: 85%;
+}
+div.modal_view .modal-header legend {
+    border: 0 !important;
+    color: #77b636 !important;
+}
+div.modal_view .modal-body {
+    padding-top: 0 !important;
+}
+
+/*******************************************
+                BLOC CONTENT
+*******************************************/
+#bloc-content {
+    align-items: stretch;
+    display: flex;
+    justify-content: space-around;
+}
+#bloc-content legend {
+    font-size: 1.4em;
+}
+
+
+
+.bloc-score {
+    border-right: 1px solid #e5e5e5;
+    height: 380px;
+    overflow-y: hidden;
+    width: 100%;
+}
+.bloc-score .form-group, .bloc-score textarea {
+    width: 100% !important;
+}
+#score_flex {
+    align-items: stretch;
+    display: flex;
+    justify-content: space-around;
+}
+#score_flex1 {
+    width: 25%;
+}
+#score_flex2 {
+    width: 75%;
+}
+.scoreParfait:before {
+    content: '\25CF ';
+    color: #51a351;
+    font-size: 20px;
+}
+.scoreMoyen:before {
+    content: '\25CF ';
+    color: #F89406;
+    font-size: 20px;
+}
+.scoreMauvais:before {
+    content: '\25CF ';
+    color: #BD362F;
+    font-size: 20px;
+}
+.scoreParfait, .scoreMoyen, .scoreMauvais {
+    color: #767676;
+}
+.countScoreParfait:before {
+    content: '\25CF ';
+    font-size: 20px;
+}
+.countScoreMoyen:before {
+    content: '\25CF ';
+    font-size: 20px;
+}
+.countScoreMauvais:before {
+    content: '\25CF ';
+    font-size: 20px;
+}
+.countScoreParfait, .countScoreMoyen, .countScoreMauvais {
+    color: #FFF;
+}
+.countScoreParfait > span, .countScoreMoyen > span, .countScoreMauvais > span {
+    color: #767676;
+}
+
+
+
+.bloc-commentaire {
+}
+.bloc-commentaireList {
+    display: block;
+    font-size: 0.95em;
+    max-height: 300px !important;
+    overflow-y: auto;
+    width: 100%;
+}
+.bloc-commentaireList hr {
+    border-top: 1px solid #e9661f;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.export {
+    float: right;
+    margin-right: 15px;
+}

@@ -1,0 +1,49 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-structure">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Votre Accompagnateur R&eacute;nov&rsquo; conventionn&eacute; avec la R&eacute;gion</legend>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.demande_auditEnergie.structure_id) }}</div>
+        <div class="form-group">
+            {{ form_label(form.demande_auditEnergie.structure_id, "Structure", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.demande_auditEnergie.structure_id, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="hidden" id="bloc-conseillerDisplay">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.demande_auditEnergie.conseiller_id) }}</div>
+            <div class="form-group">
+                {{ form_label(form.demande_auditEnergie.conseiller_id, "Conseiller", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                    {{ form_widget(form.demande_auditEnergie.conseiller_id, {'attr': {'class': 'form-control select-conseiller'}}) }}
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>
+
+<div id="data-js-demande"
+     class="hidden"
+     data-demande-conseiller-id="{{ demandeConseillerId is defined ? demandeConseillerId : '' }}">
+</div>
+
+{# vars necessary for the ajax structure list #}
+{% if auditE is not null and auditE.beneficiaireId is not empty %}
+    {#  Edition mode #}
+    {% set beneficiaireId = auditE.beneficiaireId %}
+    {% set logementId = auditE.logementId %}
+    {% set isCreation = '0' %}
+{% else %}
+    {#  Creation mode #}
+    {% set beneficiaireId = app.request.attributes.get('beneficiaireId') %}
+    {% set logementId = app.request.attributes.get('logementId') %}
+    {% set isCreation = '1' %}
+{% endif %}
+<input type="hidden" value="{{ beneficiaireId }}" id="beneficiaireId" />
+<input type="hidden" value="{{ logementId }}" id="logementId" />
+<input type="hidden" value="{{ isCreation }}" id="isCreation" />

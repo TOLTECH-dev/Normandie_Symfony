@@ -1,0 +1,103 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-rib">
+    <hr class="bloc-limit">
+
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;RIB</legend>
+
+        {% if not isDepot %}
+            <div class="form-group">
+                {{ form_label(formInstruction.destinataire, "Remboursement à ", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                {{ form_errors(formInstruction.destinataire) }}
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                    {{ form_widget(formInstruction.destinataire, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <ul id="custom-control_rib" class="list_error"></ul>
+        {{ form_errors(formInstruction.rib) }}
+        <div class="form-group">
+            {{ form_label(formInstruction.rib, "Téléchargement du RIB", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+
+                {# Cas audit energetique ou numerique avec "Remboursement à" égal à "Auditeur" #}
+                {% if auditeur is defined
+                    and auditeur
+                    and auditeur.partenaireOptionAuditeur
+                    and auditeur.partenaireOptionAuditeur.ribUrl
+                %}
+                    <p class="lineHeight30 noMargin" id="box-ribAuditeur">
+                        <a href="{{ path(path_location, {'demandeId': auditeur.partenaireOptionAuditeur.id, 'typeFile': 6, 'extension': auditeur.partenaireOptionAuditeur.ribUrl, 'typeDemande': 6}) }}" target="_blank">
+                            Voir le document
+                        </a>
+                    </p>
+                {% endif %}
+
+                {# Cas audit energetique ou numerique avec "Remboursement à" égal à "Beneficiaire" ou Cas Travaux #}
+                {% set destinataire = (remboursementItem and remboursementItem.instruction is defined and remboursementItem.instruction and remboursementItem.instruction.destinataire) ? remboursementItem.instruction.destinataire|split(' | ')[0] : null %}
+                {% if destinataire
+                    and destinataire != '0'
+                    and remboursementItem.instruction.ribUrl
+                %}
+                    <p class="lineHeight30 noMargin" id="box-ribRemboursement">
+                        <a href="{{ path(path_location, {'demandeId': remboursementItem.instruction.id, 'typeFile': 6, 'extension': remboursementItem.instruction.ribUrl, 'typeDemande': typeDemandeDocument}) }}" target="_blank">
+                            Voir le document
+                        </a>
+                    </p>
+                {% endif %}
+
+                {{ form_widget(formInstruction.rib) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(formInstruction.iban, "IBAN", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(formInstruction.iban) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(formInstruction.iban, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(formInstruction.bic, "BIC", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(formInstruction.bic) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(formInstruction.bic, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(formInstruction.domiciliationBancaire, "Domiciliation bancaire", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(formInstruction.domiciliationBancaire) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(formInstruction.domiciliationBancaire, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+        {% if not isDepot %}
+            <div class="form-group">
+                {{ form_label(formInstruction.isRibConforme, "RIB conforme ?", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                {{ form_errors(formInstruction.isRibConforme) }}
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                    {{ form_widget(formInstruction.isRibConforme, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+        {% endif %}
+
+    </fieldset>
+</div>
+
+{#  Si audit energetique ou numerique #}
+{% if remboursementItemType == 0 or remboursementItemType == 1 %}
+    <input type="hidden" value="{% if auditeur and auditeur.partenaireOptionAuditeur %}{{ auditeur.partenaireOptionAuditeur.iban }}{% endif %}" id="auditeur_iban" />
+    <input type="hidden" value="{% if auditeur and auditeur.partenaireOptionAuditeur %}{{ auditeur.partenaireOptionAuditeur.bic }}{% endif %}" id="auditeur_bic" />
+    <input type="hidden" value="{% if auditeur and auditeur.partenaireOptionAuditeur %}{{ auditeur.partenaireOptionAuditeur.domicileBancaire }}{% endif %}" id="auditeur_domiciliationBancaire" />
+{% endif %}
+
+{# check if is auditeur role #}
+<input type="hidden" value="{% if is_granted('ROLE_AUDITEUR') and not is_granted('ROLE_ADMIN') %}1{% else %}0{% endif %}" id="is_auditeur" />

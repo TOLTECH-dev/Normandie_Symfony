@@ -1,0 +1,55 @@
+/*******************************************
+            BLOC AUDIT
+*******************************************/
+#bloc-audit {
+
+}
+
+/*******************************************
+            BLOC CHEQUE
+*******************************************/
+#bloc-cheque {
+}
+
+/*******************************************
+    BLOC FACTURE
+*******************************************/
+#bloc-facture {
+
+}
+
+/*******************************************
+            BLOC RIB
+*******************************************/
+#bloc-rib {
+}
+
+.custom-file {
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    height: 30px;
+    margin: auto;
+    outline: 0;
+    position: relative;
+    width: 250px;
+}
+.custom-file:after {
+    border-radius: 5px;
+    color: #fff;
+    display: block;
+    font-size: 20px;
+    height: 100%;
+    left: 0;
+    line-height: 60px;
+    position: absolute;
+    top: 0;
+    transition: 200ms all ease;
+    text-align: center;
+    width: 100%;
+}
+
+#content-wrapper input[type=file] {
+    margin-left: 0;
+}

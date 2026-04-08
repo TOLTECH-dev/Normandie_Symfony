@@ -1,0 +1,56 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-caracteristique">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Caract&eacute;ristique</legend>
+
+        {% set typeLogementArray = {
+        '0 | maison_individuelle': 'Maison individuelle',
+        '1 | copropriete': 'Copropriété',
+        '': '-'
+        } %}
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Type de logement :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ typeLogementArray[logement.typeLogement] }}
+            </div>
+        </div>
+
+        {% set typeHabitationArray = {
+        '0 | principale': 'Principale',
+        '1 | secondaire': 'Secondaire',
+        '': '-'
+        } %}
+
+        {% if '1 | proprietaire_bailleur' != logement.situation %}
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Type d'habitation :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ typeHabitationArray[logement.typeHabitation] }}
+            </div>  
+        </div>
+        {% endif %}
+
+        {% set anneeConstructionArray = {
+        '2 | <15': 'Maison de -15 ans',
+        '3 | [15,39]': 'Entre 15 ans et 39 ans',
+        '4 | [40,79]': 'Entre 40 ans et 79 ans',
+        '5 | +80': '+ de 80 ans',
+        '': '-'
+        } %}
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Ann&eacute;e de construction :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ anneeConstructionArray[logement.anneeConstruction] }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Description succincte du projet de r&eacute;novation :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ logement.descriptionProjet }}
+            </div>
+        </div>
+
+    </fieldset>
+</div>

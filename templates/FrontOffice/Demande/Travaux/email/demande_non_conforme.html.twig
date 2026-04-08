@@ -1,0 +1,11 @@
+{% extends 'FrontOffice/Demande/email/base.html.twig' %}
+
+{% block content %}
+    <p>
+        Afin de r&eacute;gulariser la demande d'aide de {{ civilite|capitalize }} {{ beneficiairePrenom|capitalize }} {{ beneficiaireNom|upper }} correspondant au dossier n&deg;{{ demandeId }}, nous avons constat&eacute; la non-conformit&eacute; suivante :
+    </p>
+    {{ dataDocumentNonConforme|raw }}
+    <p>
+        Merci de bien vouloir y rem&eacute;dier.
+    </p>
+{% endblock content %}

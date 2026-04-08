@@ -1,0 +1,5 @@
+{% extends 'BackOffice/Remboursement/email/base.html.twig' %}
+
+{% block content %}
+    <p>Suite &agrave; {{ demandeTypeLabelAvecPrefix }} de <i>{{ civilite }} {{ beneficiairePrenom|capitalize }} {{ beneficiaireNom|upper }} (Dossier n° {{ demandeId }})</i>, nous avons le plaisir de vous informer que vous percevrez le versement sous 3 semaines.</p>
+{% endblock content %}

@@ -1,0 +1,5 @@
+{% extends 'BackOffice/Remboursement/email/base.html.twig' %}
+
+{% block content %}
+    <p>Suite &agrave; l'audit r&eacute;alis&eacute; chez <i>{{ civilite }} {{ beneficiairePrenom|capitalize }} {{ beneficiaireNom|upper }}</i> correspondant au dossier de demande d'aide &quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie&quot; n° <i>{{ demandeId }}</i>, nous avons le plaisir de vous informer que vous percevrez le versement sous 3 semaines.</p>
+{% endblock content %}

@@ -1,0 +1,84 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-plancherBas">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Plancher bas</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Surface (m<sup>2</sup>)</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.plancherBasSurface ? ficheTechnique.ficheTechnique_initial.plancherBasSurface : '-' }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.plancherBasSurface ? ficheTechnique.ficheTechnique_BBC.plancherBasSurface : '-' }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.plancherBasSurface ? ficheTechnique.ficheTechnique_prescription.plancherBasSurface : '-' }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.plancherBasSurface ? ficheTechnique.ficheTechnique_finChantier.plancherBasSurface : '-' }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">R (m<sup>2</sup>.K/W)</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.plancherBasR ? ficheTechnique.ficheTechnique_initial.plancherBasR : '-' }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.plancherBasR ? ficheTechnique.ficheTechnique_BBC.plancherBasR : '-' }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.plancherBasR ? ficheTechnique.ficheTechnique_prescription.plancherBasR : '-' }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.plancherBasR ? ficheTechnique.ficheTechnique_finChantier.plancherBasR : '-' }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Gestion des points singuliers</label>
+            </div>
+            <div class="flex1 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_initial.plancherBasEtancheite %}
+                    {{ ficheTechnique.ficheTechnique_initial.plancherBasEtancheite }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex2 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_BBC.plancherBasEtancheite %}
+                    {{ ficheTechnique.ficheTechnique_BBC.plancherBasEtancheite }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex3 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_prescription.plancherBasEtancheite %}
+                    {{ ficheTechnique.ficheTechnique_prescription.plancherBasEtancheite }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 marginTop7 fontSize9">
+                    {% if ficheTechnique.ficheTechnique_finChantier.plancherBasEtancheite %}
+                        {{ ficheTechnique.ficheTechnique_finChantier.plancherBasEtancheite }}
+                    {% else %}
+                        <p class="text-center">-</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

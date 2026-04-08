@@ -1,0 +1,8 @@
+{% if constant('App\\Entity\\Demande_travaux_devis::REVENU_REFERENCE_COMPRIS_ENTRE_2_ET_4_FOIS_ANAH_KEY') == informationANAH and '1' != disabled_button_popupValidation %}
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc marginTop20" id="bloc-revenuFiscal">
+        <p class="bold">
+            <i class="glyphicon glyphicon-warning-sign"></i>&nbsp;
+            Attention. Vous &ecirc;tes &eacute;ligible aux ch&egrave;ques BBC avec des travaux sup&eacute;rieurs &agrave; {{ constant('App\\Entity\\Demande_travaux_devis::RENOVATION_GLOBALE_BBC_MIN_DEVIS_TOTAL_ENTRE_2_ET_4_FOIS_ANAH')|number_format(0, '', ' ') }}&euro;.
+        </p>
+    </div>
+{% endif %}

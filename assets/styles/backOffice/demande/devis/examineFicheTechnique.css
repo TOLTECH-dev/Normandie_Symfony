@@ -1,0 +1,144 @@
+/*******************************************
+                COLUMN
+*******************************************/
+.flex-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-bottom: 5px;
+}
+
+.flex-wrapper > div {
+    /*flex: 1 1 auto;*/
+    margin-left: 3px;
+}
+
+.flex0 {
+    flex: 0 0 300px;
+}
+
+.flex1, .flex2, .flex3, .flex4 {
+    flex: 1;
+}
+
+.header-popover {
+    margin-left: 5px;
+}
+
+.header-popover i {
+    font-size: 13px;
+}
+
+body .popover {
+    width: auto;
+    max-width: 500px;
+}
+
+/*******************************************
+            BLOC TYPE
+*******************************************/
+#bloc-type {
+    margin-top: 0;
+}
+
+#bloc-type section {
+    height: 55px;
+}
+
+#bloc-type section.fixed {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    z-index: 999;
+    background: #e9661f;
+    padding-top: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+    border: 1px solid #e9661f;
+    border-top: 0;
+    border-radius: 0 0 10px 10px;
+    -webkit-border-radius: 0 0 10px 10px;
+    -moz-border-radius: 0 0 10px 10px;
+    font-size: 0.9em;
+    color: #fff;
+}
+
+/*******************************************
+            BLOC DOCUMENT
+*******************************************/
+.custom-file {
+    display: block;
+    position: relative;
+    margin: auto;
+    cursor: pointer;
+    border: 0;
+    height: 30px;
+    border-radius: 5px;
+    outline: 0;
+    padding-left: 0px;
+    font-size: 12px;
+}
+
+.custom-file:after {
+    transition: 200ms all ease;
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    line-height: 60px;
+    border-radius: 5px;
+}
+
+/*******************************************
+            SELECT MULTIPLE
+*******************************************/
+.bloc-selectMultiple {
+    margin-top: 7px;
+}
+
+.bloc-selectMultiple label {
+    display: block;
+    padding-left: 35px;
+    margin-top: -19px;
+    text-align: left;
+    font-weight: normal;
+    font-size: 0.9em;
+}
+
+.bloc-selectMultiple input {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+    *overflow: hidden;
+}
+
+/*******************************************
+            BLOC VALIDATION
+*******************************************/
+#bloc-validation {
+    margin-bottom: 20px;
+}
+
+/*******************************************
+            BLOC VALIDATION CONSEILLER
+*******************************************/
+#bloc-validation-conseiller {
+    margin-bottom: 20px;
+}
+
+
+.custom-titre-btn-oui-non {
+    color: #34c247;
+    text-align: center;
+    font-weight: bold;
+}

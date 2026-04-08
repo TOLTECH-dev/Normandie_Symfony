@@ -1,0 +1,46 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-caracteristique">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Caract&eacute;ristique</legend>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.typeLogement) }}</div>
+        <div class="form-group">
+            {{ form_label(form.typeLogement, "Type de logement", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.typeLogement, {'attr': {'class': 'checkboxstyle'}}) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.typeHabitation) }}</div>
+        <div class="form-group hidden" id="bloc-typeHabitation">
+            {{ form_label(form.typeHabitation, "Type d'habitation", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label', 'id': 'label-typeHabitation'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.typeHabitation, {'attr': {'class': 'checkboxstyle'}}) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.anneeConstruction) }}</div>
+        <div class="form-group">
+            {{ form_label(form.anneeConstruction, "Année construction", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.anneeConstruction, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.descriptionProjet) }}</div>
+        <div class="form-group">
+            {{ form_label(form.descriptionProjet, "Description succincte du projet de rénovation", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.descriptionProjet, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+</div>

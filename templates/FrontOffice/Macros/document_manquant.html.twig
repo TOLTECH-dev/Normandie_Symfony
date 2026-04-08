@@ -1,0 +1,25 @@
+{% macro format_document_manquant(documentManquantList) %}
+    {% set labelArray = {
+        'justificatif_propriete':   'Un justificatif de propri&eacute;t&eacute;:
+                                        <ul>
+                                            <li>taxe fonci&egrave;re</li>
+                                            <li>ou, &agrave; d&eacute;faut, l\'attestation notariale</li>
+                                            <li>ou le compromis de vente en cas d\'acquisition en cours</li>
+                                        </ul>',
+        'statut_sci': 'Statut de la SCI',
+        'avis_imposition': 'L\'avis d\'imposition du foyer (revenus de N1 ou N2)',
+        'rib': 'RIB',
+        'facture': 'Facture',
+        'cheque': 'Ch&egrave;que &eacute;co&eacute;nergie',
+        'fiche_travaux': 'Fiche de liaison'
+    }
+    %}
+
+    {% if (documentManquantList) %}
+        <ul>
+            {% for documentTag in documentManquantList %}
+                <li> {{ labelArray[documentTag]|raw }} </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}

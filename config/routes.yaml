@@ -1,0 +1,12 @@
+app_routes:
+  resource: routes/main.yaml
+
+france_connect:
+  resource: '../vendor/kleegroup/franceconnect-bundle/Controller/'
+  type: annotation
+  prefix: /
+
+controllers:
+    resource: '../src/Controller/'
+    type: annotation
+    prefix: /

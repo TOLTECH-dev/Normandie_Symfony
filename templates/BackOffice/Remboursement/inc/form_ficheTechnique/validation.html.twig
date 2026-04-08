@@ -1,0 +1,35 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-validation">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Validation Fiche Technique</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_errors(formFicheTechnique.ficheTechnique_initial.informationValidation) }}
+            </div>
+
+            <div class="flex1">
+                {{ form_widget(formFicheTechnique.ficheTechnique_initial.informationValidation, {'attr': attrValidation}) }}
+            </div>
+
+            <div class="flex2">
+                {{ form_widget(formFicheTechnique.ficheTechnique_BBC.informationValidation, {'attr': attrValidation}) }}
+            </div>
+
+            <div class="flex3">
+                {{ form_widget(formFicheTechnique.ficheTechnique_prescription.informationValidation, {'attr': attrValidation}) }}
+            </div>
+
+            <div class="flex4">
+                <p class="custom-titre-btn-oui-non">Valider la fin de chantier</p>
+                <div class="onoffswitch">
+                    {{ form_widget(formFicheTechnique.ficheTechnique_finChantier.informationValidation, {'attr': {'class': 'onoffswitch-checkbox finChantier-informationValidation'}}) }}
+                    <label class="onoffswitch-label" for="{{ formFicheTechnique.ficheTechnique_finChantier.informationValidation.vars.id }}">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+</div>

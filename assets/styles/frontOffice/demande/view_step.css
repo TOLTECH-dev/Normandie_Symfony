@@ -1,0 +1,98 @@
+.crumbs {
+  margin-left: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-left: 10px;
+  width: 95%;
+}
+
+.crumbs ul {
+  padding-left: 0;
+  display:flex;
+  list-style:none;
+}
+
+.crumbs ul li {
+  float: left;
+  margin-left: 0;
+  height: 30px; /* total height */
+  line-height: 30px;
+  list-style-type: none;
+  padding: 5px 5px 94px 25px; /* padding around text, last should include arrow width */
+  border-right: 10px solid white; /* width: gap between arrows, color: background of document */
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.0em;
+  width: 33%;
+}
+
+/* remove extra padding on the first object since it doesn't have an arrow to the left */
+.crumbs ul li:first-child {
+  padding-left: 25px;
+}
+
+/* white arrow to the left to "erase" background (starting from the 2nd object) */
+.crumbs ul li:nth-child(n+2)::before {
+  position: absolute;
+  top:0;
+  left:0;
+  display: block;
+  border-left: 40px solid white; /* width: arrow width, color: background of document */
+  border-top: 50px solid transparent; /* width: half height */
+  border-bottom: 50px solid transparent; /* width: half height */
+  width: 0;
+  height: 0;
+  content: " ";
+}
+
+/* colored arrow to the right */
+.crumbs ul li::after {
+  z-index: 1; /* need to bring this above the next item */
+  position: absolute;
+  top: 0;
+  right: -40px; /* arrow width (negated) */
+  display: block;
+  border-left: 40px solid #77b636; /* width: arrow width */
+  border-top: 50px solid transparent; /* width: half height */
+  border-bottom: 50px solid transparent; /* width: half height */
+  width:0;
+  height:0;
+  content: " ";
+}
+
+/* Setup colors (both the background and the arrow) */
+/* color_green */
+.crumbs ul li.color_green { background-color: #77b636; }
+.crumbs ul li.color_green::after { border-left-color: #77b636 !important;border-right-color: #77b636 !important; }
+
+/* color_orange */
+.crumbs ul li.color_orange { background-color: #f89406; }
+.crumbs ul li.color_orange::after { border-left-color: #f89406 !important;border-right-color: #f89406 !important;  }
+
+/* color_gray */
+.crumbs ul li.color_gray { background-color: #ebebeb; }
+.crumbs ul li.color_gray::after { border-left-color: #ebebeb !important;border-right-color: #ebebeb !important;}
+
+/* color_red */
+.crumbs ul li.color_red { background-color: #D1072A; }
+.crumbs ul li.color_red::after { border-left-color: #D1072A !important;border-right-color: #D1072A !important; }
+
+.crumbs ul li > p {
+  height: 94px;
+  line-height: 25px;
+  padding-top: 26px;
+}
+.crumbs ul li:not(:first-child) > p {
+  margin-left: 15px;
+}
+.crumbs ul li span {
+  color: #fff;
+}
+
+.without_cheque2 {
+  width: 33%;
+}
+.with_cheque2 {
+  width: 25%;
+}

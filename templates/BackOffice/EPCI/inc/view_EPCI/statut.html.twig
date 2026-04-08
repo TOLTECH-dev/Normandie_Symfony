@@ -1,0 +1,23 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-statut">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Statut</legend>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Actif :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {% if 1 == EPCI.enabled %}
+                    {% set statut = 'Actif' %}
+                {% else %}
+                    {% set statut = 'Inactif' %}
+                    {% if EPCI.dateInactif is defined and EPCI.dateInactif %}
+                        {% set statut = statut ~ ' depuis le ' ~ EPCI.dateInactif|date('d/m/Y') %}
+                    {% endif %}
+                {% endif %}
+                {{ statut }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

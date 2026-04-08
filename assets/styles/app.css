@@ -1,0 +1,4 @@
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "backOffice/core/datatable/bootstrap.css";
+@import "backOffice/core/datatable/bootstrap_datatable.css";
+@import "~jquery-ui-dist/jquery-ui.min.css";

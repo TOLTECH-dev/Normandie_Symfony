@@ -1,0 +1,119 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-document">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Votre Plan de financement</legend>
+
+        <div class="row hidden">
+            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">Aide de l'Anah :</label>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ devis.devisAideAnah ? devis.devisAideAnah|number_format(2, '.', ' ')~'€' : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">Aide R&eacute;gion :</label>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ devis.devisAideRegion ? devis.devisAideRegion|number_format(2, '.', ' ')~'€' : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">Aide D&eacute;partement :</label>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ devis.devisAideDepartement ? devis.devisAideDepartement|number_format(2, '.', ' ')~'€' : '-' }}
+            </div>
+            <label class="col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label">Origine :</label>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                {{ devis.devisAideDepartementOrigine ? devis.devisAideDepartementOrigine : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">Aide Intercommunalit&eacute; :</label>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ devis.devisAideIntercommunalite ? devis.devisAideIntercommunalite|number_format(2, '.', ' ')~'€' : '-' }}
+            </div>
+            <label class="col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label">Origine :</label>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                {{ devis.devisAideIntercommunaliteOrigine ? devis.devisAideIntercommunaliteOrigine : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">MaPrimeR&eacute;nov&rsquo; :</label>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ devis.devisCreditImpot ? devis.devisCreditImpot|number_format(2, '.', ' ')~'€' : '-' }}
+            </div>
+            <label class="col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label">Type :</label>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                {{ devis.devisTypeMaPrimeRenovNom ? devis.devisTypeMaPrimeRenovNom : '-' }}
+            </div>
+        </div>
+
+{#        <div class="row">#}
+{#            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">MaPrimeR&eacute;nov&rsquo; S&eacute;r&eacute;nit&eacute; :</label>#}
+{#            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">#}
+{#                {{ devis.devisAideHabiterMieux ? devis.devisAideHabiterMieux|number_format(2, '.', ' ')~'€' : '-' }}#}
+{#            </div>#}
+{#            <label class="col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label">Type :</label>#}
+{#            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">#}
+{#                {{ devis.devisTypeMaPrimeRenovSereniteNom ? devis.devisTypeMaPrimeRenovSereniteNom : '-' }}#}
+{#            </div>#}
+{#        </div>#}
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">CEE :</label>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ devis.devisCEE ? devis.devisCEE|number_format(2, '.', ' ')~'€' : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">EcoPTZ :</label>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ devis.devisEcoPTZ ? devis.devisEcoPTZ|number_format(2, '.', ' ')~'€' : '-' }}
+            </div>
+            <label class="col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label">Banque :</label>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                {{ devis.devisEcoPTZBanque ? devis.devisEcoPTZBanqueNom : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">Fonds propres :</label>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ devis.devisFondPropre ? devis.devisFondPropre|number_format(2, '.', ' ')~'€' : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">Autre pr&ecirc;t :</label>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ devis.devisAutrePret ? devis.devisAutrePret|number_format(2, '.', ' ')~'€' : '-' }}
+            </div>
+            <label class="col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label">Banque :</label>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                {{ devis.devisAutrePretBanque ? devis.devisAutrePretBanqueNom : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">Autres aides :</label>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ devis.devisAutreAide ? devis.devisAutreAide|number_format(2, '.', ' ')~'€' : '-' }}
+            </div>
+            <label class="col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label">Origine :</label>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                {{ devis.devisAutreAideOrigine ? devis.devisAutreAideOrigine : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label">Total :</label>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ devis.devisTotalPlan|number_format(2, '.', ' ') }}&euro;
+            </div>
+        </div>
+
+    </fieldset>
+
+</div>

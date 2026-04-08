@@ -1,0 +1,186 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-module">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;R&eacute;capitulatif</legend>
+
+        {% set civiliteLabel = {
+            '0 | madame': 'Madame',
+            '1 | monsieur': 'Monsieur'
+        } %}
+
+        {% set complementRueLabel = {
+            '0 | bis': 'BIS',
+            '1 | ter': 'TER',
+            '': ''
+        } %}
+
+        {% set situationLabel = {
+            '0 | proprietaire_occupant': 'Propriétaire occupant ou en cours d\'acquisition',
+            '1 | proprietaire_bailleur': 'Propriétaire bailleur',
+            '2 | locataire': 'Locataire'
+        } %}
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="bloc-wrapper">
+            <div id="bloc-wrapper1">
+                <div id="bloc-data_beneficiaire">
+                    <p class="bold"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;Fiche B&eacute;n&eacute;ficiaire</p>
+                    <ul>
+                        <li>{% if '1 | sci' == beneficiaire.type %}Nom SCI:&nbsp;{{ beneficiaire.nomSCI }}{% endif %}</li>
+                        <li>{{ civiliteLabel[beneficiaire.civilite] }}&nbsp;{{ beneficiaire.prenom }}&nbsp;{{ beneficiaire.nom|upper }}</li>
+                        <li>{{ beneficiaire.numeroRue }}{% if complementRueLabel[beneficiaire.complementNumeroRue] is defined %}{{ ' ' ~ complementRueLabel[beneficiaire.complementNumeroRue] }}{% endif %},&nbsp;{{ beneficiaire.nomRue }}</li>
+                        <li>{% if beneficiaire.complement1 %}{{ beneficiaire.complement1 }}{% endif %}{% if beneficiaire.complement2 %}{{ ', ' ~ beneficiaire.complement2 }}{% endif %}</li>
+                        <li>{{ beneficiaire.codePostal }}&nbsp;{{ beneficiaire.ville|upper }}</li>
+                        <br>
+                        {% block beneficiaire_complement %}
+                            <li>Situation familiale: {{ beneficiaire.situationFamilleLabel }}</li>
+                            {% if beneficiaire.situationFamille in [constant('SITUATION_FAMILIALE_MARIE_KEY', beneficiaire), constant('SITUATION_FAMILIALE_UNION_LIBRE_KEY', beneficiaire), constant('SITUATION_FAMILIALE_PACSE_KEY', beneficiaire)] %}
+                                <li>Nom du conjoint: {{ beneficiaire.nomConjoint }}</li>
+                                <li>Pr&eacute;nom du conjoint: {{ beneficiaire.prenomConjoint }}</li>
+                            {% endif %}
+                            <li>Nombre de personnes constituant le foyer:&nbsp;{{ beneficiaire.nbPersFoyer }}</li>
+                            <li>Revenu fiscal de r&eacute;f&eacute;rence du foyer:&nbsp;{{ beneficiaire.revenuFiscalRef|number_format(2, '.', ' ') }}&euro;</li>
+                        {% endblock beneficiaire_complement %}
+                    </ul>
+                </div>
+
+                <div id="bloc-data_logement">
+                    <p class="bold"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;Fiche Logement</p>
+                    <ul>
+                        <li>{{ logement.numeroRue }}{% if complementRueLabel[logement.complementRue] is defined %}{{ ' ' ~ complementRueLabel[logement.complementRue] }}{% endif %},&nbsp;{{ logement.adresse }}</li>
+                        <li>{% if logement.complement1 %}{{ logement.complement1 }}{% endif %}{% if logement.complement2 %}{{ ', ' ~ logement.complement2 }}{% endif %}</li>
+                        <li>{{ logement.codePostal }}&nbsp;{{ logement.ville|upper }}</li>
+                        <br>
+                        <li>Situation:&nbsp;{{ situationLabel[logement.situation] }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="bloc-wrapper2">
+                {% block custom_bottom_block %}
+                    <div id="bloc-data_demande">
+                        <p class="bold"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Fiche Demande</p>
+                        <ul>
+                            {% if demande.type in [
+                                    constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE'),
+                                    constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE'),
+                                ]
+                            %}
+                                <li>
+                                    Justificatif propri&eacute;t&eacute;:
+                                    {% if demande.demande_auditEnergie and demande.demande_auditEnergie.justificatifProprieteAlt %}
+                                        <a href="{{ path('demande_document_bo', {'demandeId': demande.demande_auditEnergie.id, 'typeFile': 0, 'extension': demande.demande_auditEnergie.justificatifProprieteUrl, 'typeDemande': 0}) }}" target="_blank">
+                                            Voir le document
+                                        </a>
+                                    {% else %}
+                                        Aucun document t&eacute;l&eacute;charg&eacute;
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    {% if '1 | sci' == beneficiaire.type %}Justificatif statut SCI{% else %}Justificatif compl&eacute;mentaire{% endif %}:
+                                    {% if demande.demande_auditEnergie and demande.demande_auditEnergie.pieceComplementAlt %}
+                                        <a href="{{ path('demande_document_bo', {'demandeId': demande.demande_auditEnergie.id, 'typeFile': 1, 'extension': demande.demande_auditEnergie.pieceComplementUrl, 'typeDemande': 0}) }}" target="_blank">
+                                            Voir le document
+                                        </a>
+                                    {% else %}
+                                        Aucun document t&eacute;l&eacute;charg&eacute;
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    Avis d'imposition du demandeur:
+                                    {% if demande.demande_auditEnergie and demande.demande_auditEnergie.avisImpositionAlt %}
+                                        <a href="{{ path('demande_document_bo', {'demandeId': demande.demande_auditEnergie.id, 'typeFile': 2, 'extension': demande.demande_auditEnergie.avisImpositionUrl, 'typeDemande': 0}) }}" target="_blank">
+                                            Voir le document
+                                        </a>
+                                    {% else %}
+                                        Aucun document t&eacute;l&eacute;charg&eacute;
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    Avis d'imposition du conjoint:
+                                    {% if demande.demande_auditEnergie and demande.demande_auditEnergie.avisImpositionConjointAlt %}
+                                        <a href="{{ path('demande_document_bo', {'demandeId': demande.demande_auditEnergie.id, 'typeFile': 11, 'extension': demande.demande_auditEnergie.avisImpositionConjointUrl, 'typeDemande': 0}) }}" target="_blank">
+                                            Voir le document
+                                        </a>
+                                    {% else %}
+                                        Aucun document t&eacute;l&eacute;charg&eacute;
+                                    {% endif %}
+                                </li>
+
+                                <br>
+
+                                <li>Nombre de personnes constituant le foyer:&nbsp;{{ demande.demande_auditEnergie.nbPersFoyer }}</li>
+                                <li>Revenu fiscal de r&eacute;f&eacute;rence du demandeur:&nbsp;{{ demande.demande_auditEnergie.revenu1|number_format(2, '.', ' ') }}&euro;</li>
+                                <li>Revenu fiscal de r&eacute;f&eacute;rence du conjoint:&nbsp;
+                                    {% if demande.demande_auditEnergie.revenu2 %}
+                                        {{ demande.demande_auditEnergie.revenu2|number_format(2, '.', ' ') }}&euro;
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </li>
+                            {% elseif constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.type %}
+                                <li>
+                                    Justificatif propri&eacute;t&eacute;:
+                                    {% if demande.demande_travaux and demande.demande_travaux.justificatifProprieteAlt %}
+                                        <a href="{{ path('demande_document_bo', {'demandeId': demande.demande_travaux.id, 'typeFile': 0, 'extension': demande.demande_travaux.justificatifProprieteUrl, 'typeDemande': 1}) }}" target="_blank">
+                                            Voir le document
+                                        </a>
+                                    {% else %}
+                                        Aucun document t&eacute;l&eacute;charg&eacute;
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    {% if '1 | sci' == beneficiaire.type %}Justificatif statut SCI{% else %}Justificatif compl&eacute;mentaire{% endif %}:
+                                    {% if demande.demande_travaux and demande.demande_travaux.pieceComplementAlt %}
+                                        <a href="{{ path('demande_document_bo', {'demandeId': demande.demande_travaux.id, 'typeFile': 1, 'extension': demande.demande_travaux.pieceComplementUrl, 'typeDemande': 1}) }}" target="_blank">
+                                            Voir le document
+                                        </a>
+                                    {% else %}
+                                        Aucun document t&eacute;l&eacute;charg&eacute;
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    Avis d'imposition du demandeur:
+                                    {% if demande.demande_travaux and demande.demande_travaux.avisImpositionAlt %}
+                                        <a href="{{ path('demande_document_bo', {'demandeId': demande.demande_travaux.id, 'typeFile': 2, 'extension': demande.demande_travaux.avisImpositionUrl, 'typeDemande': 1}) }}" target="_blank">
+                                            Voir le document
+                                        </a>
+                                    {% else %}
+                                        Aucun document t&eacute;l&eacute;charg&eacute;
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    Avis d'imposition du conjoint:
+                                    {% if demande.demande_travaux and demande.demande_travaux.avisImpositionConjointAlt %}
+                                        <a href="{{ path('demande_document_bo', {'demandeId': demande.demande_travaux.id, 'typeFile': 11, 'extension': demande.demande_travaux.avisImpositionConjointUrl, 'typeDemande': 1}) }}" target="_blank">
+                                            Voir le document
+                                        </a>
+                                    {% else %}
+                                        Aucun document t&eacute;l&eacute;charg&eacute;
+                                    {% endif %}
+                                </li>
+
+                                <br>
+
+                                <li>Nombre de personnes constituant le foyer:&nbsp;{{ demande.demande_travaux.nbPersFoyer }}</li>
+                                <li>Revenu fiscal de r&eacute;f&eacute;rence du demandeur:&nbsp;{{ demande.demande_travaux.revenu1|number_format(2, '.', ' ') }}&euro;</li>
+                                <li>Revenu fiscal de r&eacute;f&eacute;rence du conjoint:&nbsp;
+                                    {% if demande.demande_travaux.revenu2 %}
+                                        {{ demande.demande_travaux.revenu2|number_format(2, '.', ' ') }}&euro;
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </li>
+                            {% else %}
+                                <li>
+                                    <p class="text-center">Aucune information pour cette fiche.</p>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endblock custom_bottom_block %}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

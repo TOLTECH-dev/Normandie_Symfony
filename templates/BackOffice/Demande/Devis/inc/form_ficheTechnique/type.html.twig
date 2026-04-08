@@ -1,0 +1,41 @@
+{% import 'Macros/popover.html.twig' as macro_popover %}
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-type">
+    <section>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-center bold underline">
+
+            </div>
+            <div class="flex1 text-center bold underline">
+                SITUATION INITIALE
+                {{ macro_popover.fiche_technique_popover(travaux.demandeTravaux.audit) }}
+            </div>
+            <div class="flex2 text-center bold underline">
+                SCENARIO BBC
+                {{ macro_popover.fiche_technique_popover(travaux.demandeTravaux.audit) }}
+            </div>
+            <div class="flex3 text-center bold underline">
+                TRAVAUX CORRESPONDANT AUX DEVIS
+                {{ macro_popover.fiche_technique_popover(travaux.demandeTravaux.audit) }}
+            </div>
+        </div>
+
+        <div class="flex-wrapper hidden">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.type, "Type", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.type) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.type, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.type, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.type, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </section>
+</div>

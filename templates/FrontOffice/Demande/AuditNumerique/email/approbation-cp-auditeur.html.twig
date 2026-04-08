@@ -1,0 +1,18 @@
+{% extends 'FrontOffice/Demande/email/base.html.twig' %}
+{% import 'Macros/adresse_postale_emails.html.twig' as macro_adresse_postale %}
+
+{% block content %}
+    <p>Nous vous informons que <u>le dossier de demande d'aide n° {{ demandeId }}</u> &quot;{{ demandeTypeLabel }}&quot; pour lequel vous avez &eacute;t&eacute; identifi&eacute; par <u>{{ civilite }} {{ beneficiairePrenom|capitalize }} {{ beneficiaireNom|upper }}</u> comme son auditeur, a &eacute;t&eacute; approuv&eacute; par la Commission Permanente de la R&eacute;gion Normandie.</p>
+
+    <p>Apr&egrave;s la remise du rapport en version num&eacute;rique au particulier, vous &ecirc;tes dans l'obligation de :</p>
+
+    <ul>
+        <li>accepter le <i>&quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie&quot;</i> remis par le particulier pour paiement partiel de votre facture apr&egrave;s avoir  v&eacute;rifi&eacute; que la partie &quot;mandat&quot;, situ&eacute;e au verso, a bien &eacute;t&eacute; sign&eacute;e par le particulier</li>
+        <li>t&eacute;l&eacute;charger le mode d'emploi de l'audit num&eacute;rique et le fichier IFC sur l'extranet</li>
+        <li>signer et tamponner vous-m&ecirc;me la partie &quot;mandat&quot;, situ&eacute;e au verso, avant de l'adresser avec votre RIB, la facture acquitt&eacute;e pour la partie restant &agrave; charge du b&eacute;n&eacute;ficiaire et le bordereau de remise de ch&egrave;que &agrave; l'adresse suivante pour r&eacute;glement :
+            <p>
+                {{ macro_adresse_postale.show_address_docaposte_html() }}
+            </p>
+        </li>
+    </ul>
+{% endblock content %}

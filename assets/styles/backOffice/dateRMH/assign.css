@@ -1,0 +1,75 @@
+/*******************************************
+                BLOC FORM
+*******************************************/
+#bloc-form {
+
+}
+
+/*******************************************
+            BLOC RATING
+*******************************************/
+.rating {
+    width: 295px;
+    margin: 0 auto 20px;
+    position: relative;
+    left: -23px;
+    font-size: 45px;
+    overflow: hidden;
+}
+.rating input {
+    visibility: hidden;
+}
+.rating:not(:checked) > span > input {
+    position: absolute;
+    top: -9999px;
+    clip: rect(0,0,0,0);
+}
+.rating:not(:checked) > span > label {
+    float:right;
+    width:1em;
+    padding:0 .1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:200%;
+    line-height:1.2;
+    color:#ddd;
+    text-shadow:1px 1px #bbb, 2px 2px #666, 5px 5px 10px rgba(0,0,0,.5);
+}
+.rating:not(:checked) > span > label:before {
+    content: '\25CF ';
+}
+
+.rating > span#star3 > input:not(:checked) + label {
+    color: #51a351;
+    text-shadow:1px 1px #006416, 2px 2px #004600, 5px 5px 10px rgba(0,0,0,.5);
+}
+.rating > span#star2 > input:not(:checked) + label {
+    color: #F89406;
+    text-shadow:1px 1px #b96100, 2px 2px #a04d00, 5px 5px 10px rgba(0,0,0,.5);
+}
+.rating > span#star1 > input:not(:checked) + label {
+    color: #BD362F;
+    text-shadow:1px 1px #aa2422, 2px 2px #710000, 5px 5px 10px rgba(0,0,0,.5);
+}
+
+
+
+.rating > span#star3 > input:checked + label {
+    color: #51a351;
+    text-shadow:1px 1px #006416, 2px 2px #004600, 5px 5px 10px rgba(0,0,0,.5);
+    font-size:250%;
+    margin-top: -13px;
+}
+.rating > span#star2 > input:checked + label {
+    color: #F89406;
+    text-shadow:1px 1px #b96100, 2px 2px #a04d00, 5px 5px 10px rgba(0,0,0,.5);
+    font-size:250%;
+    margin-top: -13px;
+}
+.rating > span#star1 > input:checked + label {
+    color: #BD362F;
+    text-shadow:1px 1px #aa2422, 2px 2px #710000, 5px 5px 10px rgba(0,0,0,.5);
+    font-size:250%;
+    margin-top: -13px;
+}

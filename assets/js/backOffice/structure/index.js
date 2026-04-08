@@ -1,0 +1,8 @@
+import './formStructure/autocomplete'
+import './formStructure/dateInactif'
+import './formStructure/disableSubmit'
+import './formStructure/displayConseiller'
+import './formStructure/displayContact'
+import './formStructure/displayPermanence'
+import './formStructure/formatField'
+import './listStructure/appel_datatables'

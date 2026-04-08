@@ -1,0 +1,120 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-menuiseries">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Menuiseries ext&eacute;rieures</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Surface Menuiseries (m<sup>2</sup>)</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.menuiseriesExterieuresSurface ? ficheTechnique.ficheTechnique_initial.menuiseriesExterieuresSurface : '-' }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.menuiseriesExterieuresSurface ? ficheTechnique.ficheTechnique_BBC.menuiseriesExterieuresSurface : '-' }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.menuiseriesExterieuresSurface ? ficheTechnique.ficheTechnique_prescription.menuiseriesExterieuresSurface : '-' }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.menuiseriesExterieuresSurface ? ficheTechnique.ficheTechnique_finChantier.menuiseriesExterieuresSurface : '-' }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Uw (W/m<sup>2</sup>.K)</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.menuiseriesExterieuresUW ? ficheTechnique.ficheTechnique_initial.menuiseriesExterieuresUW : '-' }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.menuiseriesExterieuresUW ? ficheTechnique.ficheTechnique_BBC.menuiseriesExterieuresUW : '-' }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.menuiseriesExterieuresUW ? ficheTechnique.ficheTechnique_prescription.menuiseriesExterieuresUW : '-' }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.menuiseriesExterieuresUW ? ficheTechnique.ficheTechnique_finChantier.menuiseriesExterieuresUW : '-' }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Information sur mode de pose et traitement jonction isolant / retour de tableau</label>
+            </div>
+            <div class="flex1 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_initial.menuiseriesModePose %}
+                    {{ ficheTechnique.ficheTechnique_initial.menuiseriesModePose }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex2 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_BBC.menuiseriesModePose %}
+                    {{ ficheTechnique.ficheTechnique_BBC.menuiseriesModePose }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex3 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_prescription.menuiseriesModePose %}
+                    {{ ficheTechnique.ficheTechnique_prescription.menuiseriesModePose }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 marginTop7 fontSize9">
+                    {% if ficheTechnique.ficheTechnique_finChantier.menuiseriesModePose %}
+                        {{ ficheTechnique.ficheTechnique_finChantier.menuiseriesModePose }}
+                    {% else %}
+                        <p class="text-center">-</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Type de protections solaires</label>
+            </div>
+            <div class="flex1 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_initial.menuiseriesTypeProtectionsSolaires %}
+                    {{ ficheTechnique.ficheTechnique_initial.menuiseriesTypeProtectionsSolaires }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex2 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_BBC.menuiseriesTypeProtectionsSolaires %}
+                    {{ ficheTechnique.ficheTechnique_BBC.menuiseriesTypeProtectionsSolaires }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex3 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_prescription.menuiseriesTypeProtectionsSolaires %}
+                    {{ ficheTechnique.ficheTechnique_prescription.menuiseriesTypeProtectionsSolaires }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 marginTop7 fontSize9">
+                    {% if ficheTechnique.ficheTechnique_finChantier.menuiseriesTypeProtectionsSolaires %}
+                        {{ ficheTechnique.ficheTechnique_finChantier.menuiseriesTypeProtectionsSolaires }}
+                    {% else %}
+                        <p class="text-center">-</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

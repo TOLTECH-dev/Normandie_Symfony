@@ -1,0 +1,73 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-identification">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Identification</legend>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.type) }}</div>
+        <div class="form-group">
+            {{ form_label(form.type, "Type", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.type, {'attr': {'class': 'checkboxstyle'}}) }}
+            </div>
+
+            <input type="hidden" id="isFranceConnect" value="{% if app.user.isFranceConnect %}1{% else %}0{% endif %}" />
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 hidden" id="box_information">
+            <p class="text-center">
+                <i class="glyphicon glyphicon-warning-sign"></i>&nbsp;
+                Attention. Les devis, les factures et le RIB doivent &ecirc;tre au nom de la SCI.
+            </p>
+        </div>
+
+        <div class="hidden" id="bloc-nomSCI">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.nomSCI) }}</div>
+            <div class="form-group">
+                {{ form_label(form.nomSCI, "Nom SCI", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    {{ form_widget(form.nomSCI, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.civilite) }}</div>
+        <div class="form-group">
+            {{ form_label(form.civilite, "Civilité", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label', 'id': 'labelCiviliteBeneficiaire'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.civilite) }}
+            </div>
+        </div>
+
+        <input type="hidden" value="{% if user_nom is defined %}{{ user_nom }}{% endif %}" id="userNom" />
+        <input type="hidden" value="{% if beneficiaire.nom %}{{ beneficiaire.nom }}{% endif %}" id="beneficiaireNom" />
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.nom) }}</div>
+        <div class="form-group">
+            {{ form_label(form.nom, "Nom", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label', 'id': 'labelNomBeneficiaire'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <input type="hidden" value="{% if user_prenom is defined %}{{ user_prenom }}{% endif %}" id="userPrenom" />
+        <input type="hidden" value="{% if beneficiaire.prenom %}{{ beneficiaire.prenom }}{% endif %}" id="beneficiairePrenom" />
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.prenom) }}</div>
+        <div class="form-group">
+            {{ form_label(form.prenom, "Prénom", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label', 'id': 'labelPrenomBeneficiaire'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

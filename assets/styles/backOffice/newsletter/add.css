@@ -1,0 +1,80 @@
+/*******************************************
+                BLOC EMAIL
+*******************************************/
+#bloc-email {
+
+}
+
+/*******************************************
+                BLOC SUBJECT
+*******************************************/
+#bloc-subject {
+
+}
+
+.custom-file {
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    height: 30px;
+    margin: auto;
+    outline: 0;
+    position: relative;
+    width: 100%;
+}
+.custom-file:after {
+    border-radius: 5px;
+    color: #fff;
+    display: block;
+    font-size: 20px;
+    height: 100%;
+    left: 0;
+    line-height: 60px;
+    position: absolute;
+    text-align: center;
+    transition: 200ms all ease;
+    top: 0;
+    width: 100%;
+}
+
+/*******************************************
+            BLOC DESTINATAIRE
+*******************************************/
+#bloc-destinataire {
+
+}
+
+#box-flex {
+    display: flex;
+    justify-content: space-around;
+}
+#flex1, #flex2 {
+    flex: 1;
+}
+
+#flex1 label {
+    line-height: 13px;
+    text-align: left;
+}
+#flex1 input[type=checkbox] {
+    vertical-align: bottom;
+}
+
+#flex2 label {
+    display: block;
+    padding-left: 30px;
+    margin-top: -13px;
+    text-align: left;
+    font-weight: bold;
+}
+#flex2 input {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    margin: 0;
+    vertical-align: bottom;
+    position: relative;
+    top: 3px;
+    *overflow: hidden;
+}

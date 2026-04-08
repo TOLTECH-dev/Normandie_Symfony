@@ -1,0 +1,107 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-RIB">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;RIB</legend>
+
+        {% set destinataireArray = {
+            '0': 'Auditeur',
+            '1': 'Bénéficiaire',
+            '2': 'Rénovateur',
+            '': '-'
+        } %}
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Remboursement &agrave; :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ (remboursementInstruction and remboursementInstruction.destinataire) ? destinataireArray[remboursementInstruction.destinataire|split(' | ')[0]] : '-' }}
+            </div>
+        </div>
+
+        {% if remboursementInstruction and '0' == remboursementInstruction.destinataire|split(' | ')[0] %} {% set typeDocumentRIB = 6 %}
+        {% else %} {% set typeDocumentRIB = typeDemandeDocument %}
+        {% endif %}
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">RIB :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {% if (remboursementInstruction and '0' == remboursementInstruction.destinataire|split(' | ')[0])
+                    and constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') != demande.demandeType
+                    and demande is defined
+                    and demande
+                    and demande.optionAuditeurId
+                    and demande.optionAuditeurRibAlt
+                %}
+                    <a href="{{ path(path_location, {'demandeId': demande.optionAuditeurId, 'typeFile': 6, 'extension': demande.optionAuditeurRibUrl, 'typeDemande': 6}) }}" target="_blank">
+                        Voir le document
+                    </a>
+                {% else %}
+                    {% if remboursement is defined
+                        and remboursementInstruction
+                        and remboursementInstruction.ribAlt
+                    %}
+                        <a href="{{ path(path_location, {'demandeId': remboursementInstruction.id, 'typeFile': 6, 'extension': remboursementInstruction.ribUrl, 'typeDemande': typeDemandeDocument}) }}" target="_blank">
+                            Voir le document
+                        </a>
+                    {% else %}
+                        Aucun document t&eacute;l&eacute;charg&eacute;
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">IBAN :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ (remboursementInstruction and remboursementInstruction.iban) ? remboursementInstruction.iban : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">BIC :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ (remboursementInstruction and remboursementInstruction.bic) ? remboursementInstruction.bic : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Domiciliation bancaire :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ (remboursementInstruction and remboursementInstruction.domiciliationBancaire) ? remboursementInstruction.domiciliationBancaire : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">RIB conforme ?</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {% if remboursementInstruction %}
+                    {{ isConformeArray[remboursementInstruction.isRibConforme|split(' | ')[0]] }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+        </div>
+
+        {% if remboursementInstruction and remboursementInstruction.ribReason is not empty %}
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Raison :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                <ul class="noMmargin noPadding">
+                    {% for item in remboursementInstruction.ribReason %}
+                        <li>{{ item.slug }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if remboursementInstruction and remboursementInstruction.ribReasonAutre %}
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Autre raison :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                <ul class="noMmargin noPadding noPuce">
+                    <li>{{ remboursementInstruction.ribReasonAutre }}</li>
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+    </fieldset>
+
+</div>

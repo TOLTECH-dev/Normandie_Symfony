@@ -1,0 +1,45 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-type">
+    <section>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                &nbsp;
+            </div>
+            <div class="flex1 text-center bold underline">
+                SITUATION INITIALE
+            </div>
+            <div class="flex2 text-center bold underline">
+                SCENARIO BBC
+            </div>
+            <div class="flex3 text-center bold underline">
+                TRAVAUX CORRESPONDANT AUX DEVIS
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 text-center bold underline">
+                    FIN DE CHANTIER
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper hidden">
+            <div class="flex0 text-right">
+                &nbsp;
+            </div>
+            <div class="flex1 text-center">
+                {{ ficheTechnique.ficheTechnique_initial.type }}
+            </div>
+            <div class="flex2 text-center">
+                {{ ficheTechnique.ficheTechnique_BBC.type }}
+            </div>
+            <div class="flex3 text-center">
+                {{ ficheTechnique.ficheTechnique_prescription.type }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 text-center">
+                    {{ ficheTechnique.ficheTechnique_finChantier.type }}
+                </div>
+            {% endif %}
+        </div>
+
+    </section>
+</div>

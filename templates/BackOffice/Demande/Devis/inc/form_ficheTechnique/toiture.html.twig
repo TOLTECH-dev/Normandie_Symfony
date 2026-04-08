@@ -1,0 +1,79 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-toiture">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Toiture
+            <span class="header-popover">
+                <a role="button"
+                   tabindex="0"
+                   data-container="body"
+                   data-toggle="popover"
+                   data-trigger="focus"
+                   data-placement="right"
+                   data-content="Dans le cas o&ugrave; il existe des parois diff&eacute;rentes, prendre la plus repr&eacute;sentative et laisser un commentaire."
+                >
+                    <i class="glyphicon glyphicon-question-sign"></i>
+                </a>
+            </span>
+        </legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.toitureSurface, "Surface (m²)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.toitureSurface, {'attr': {'class': 'form-control initial-toitureSurface'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.toitureSurface) }}
+                <ul id="error-initial-toitureSurface" class="list_error"></ul>
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.toitureSurface, {'attr': {'class': 'form-control BBC-toitureSurface'}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.toitureSurface) }}
+                <ul id="error-BBC-toitureSurface" class="list_error"></ul>
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.toitureSurface, {'attr': {'class': 'form-control prescription-toitureSurface'}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.toitureSurface) }}
+                <ul id="error-prescription-toitureSurface" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.toitureR, "R (m².K/W)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.toitureR, {'attr': {'class': 'form-control initial-toitureR'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.toitureR) }}
+                <ul id="error-initial-toitureR" class="list_error"></ul>
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.toitureR, {'attr': {'class': 'form-control BBC-toitureR'}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.toitureR) }}
+                <ul id="error-BBC-toitureR" class="list_error"></ul>
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.toitureR, {'attr': {'class': 'form-control prescription-toitureR'}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.toitureR) }}
+                <ul id="error-prescription-toitureR" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.toitureEtancheite, "Information étanchéité à l'air et migration vapeur d'eau", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.toitureEtancheite) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.toitureEtancheite, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.toitureEtancheite, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.toitureEtancheite, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

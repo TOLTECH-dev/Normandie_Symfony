@@ -1,0 +1,114 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_remboursement_list') }}
+    {{ encore_entry_link_tags('backOffice_historique_modal_commentaire') }}
+{% endblock %}
+
+{% block contents %}
+    {% if is_granted('ROLE_CONSEILLER')
+        or is_granted('ROLE_INSTRUCTEUR')
+        or is_granted('ROLE_INSTRUCTEUR_UP')
+        or is_granted('ROLE_AUDITEUR')
+        or is_granted('ROLE_RENOVATEUR')
+        or is_granted('ROLE_CLIENT')
+        or is_granted('ROLE_ADMIN')
+    %}
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 hidden" id="content-wrapper">
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-2 marginBottom40">
+                <div id="container-title">
+                    <h2>Remboursement des Aides</h2>
+                </div>
+            </div>
+
+            <table cellspacing="0" id="table_list_remboursement" class="table table-striped table-bordered big_table">
+                <thead>
+                    <tr>
+                        <th class="with_search breakWord col0">N&deg; dossier</th>
+                        <th class="with_search breakWord col1">N&deg; ch&egrave;que</th>
+                        <th class="with_search breakWord col2">B&eacute;n&eacute;ficiaire</th>
+                        <th class="with_search breakWord col3">Logement</th>
+                        <th class="with_search breakWord col4">Statut du Remboursement</th>
+                        <th class="with_search breakWord col5">Structure &amp; Conseiller</th>
+                        <th class="with_search breakWord col6">Nom professionnel</th>
+                        <th class="with_select breakWord col7">Th&eacute;matique</th>
+                        <th class="with_search breakWord col8">Date RMH</th>
+                        <th class="breakWord col9 col_action">Action</th>
+                    </tr>
+                </thead>
+
+                {% if not isDataEmpty %}
+                    <tfoot>
+                        <tr id="filterrow">
+                            <th class="with_search" id="demandeId">N&deg; dossier</th>
+                            <th class="with_search" id="numeroCheque">N&deg; ch&egrave;que</th>
+                            <th class="with_search" id="beneficiaire">B&eacute;n&eacute;ficiaire</th>
+                            <th class="with_search" id="logement">Logement</th>
+                            <th class="with_search" id="statut">Statut</th>
+                            <th class="with_search" id="structureConseiller">Structure &amp; Conseiller</th>
+                            <th class="with_search" id="partenaire">Nom professionnel</th>
+                            <th class="with_select" id="demandeType">Th&eacute;matique</th>
+                            <th class="with_search" id="RMHDate">Date RMH</th>
+                            <th class="text-center" id="action">
+                                <button type="button"
+                                        role="button"
+                                        class="btn btn-danger btn-xs"
+                                        data-toggle="tooltip"
+                                        data-placement="bottom"
+                                        data-container="body"
+                                        title="Vider les champs de recherche"
+                                        id="clear_search_input"
+                                >
+                                    <i class="glyphicon glyphicon-erase"></i>
+                                </button>
+
+                                {% if is_granted('ROLE_CLIENT')
+                                    or is_granted('ROLE_ADMIN')
+                                %}
+                                    <a  href="{{ path('remboursement_export') }}"
+                                        class="btn btn-success btn-xs"
+                                        role="button"
+                                        data-toggle="tooltip"
+                                        data-placement="bottom"
+                                        data-container="body"
+                                        title="Exporter les Remboursements"
+                                    >
+                                        <i class="glyphicon glyphicon-download-alt"></i>
+                                    </a>
+                                {% endif %}
+
+                            </th>
+                        </tr>
+                    </tfoot>
+                {% endif %}
+
+                <tbody></tbody>
+
+                <div id="js-role" class="hidden"
+                     data-is-conseiller="{% if is_granted('ROLE_CONSEILLER') %}1{% else %}0{% endif %}"
+                     data-is-instructeur="{% if is_granted('ROLE_INSTRUCTEUR') %}1{% else %}0{% endif %}"
+                     data-is-instructeur-up="{% if is_granted('ROLE_INSTRUCTEUR_UP') %}1{% else %}0{% endif %}"
+                     data-is-auditeur="{% if is_granted('ROLE_AUDITEUR') %}1{% else %}0{% endif %}"
+                     data-is-renovateur="{% if is_granted('ROLE_RENOVATEUR') %}1{% else %}0{% endif %}"
+                     data-is-epci="{% if is_granted('ROLE_EPCI') %}1{% else %}0{% endif %}"
+                     data-is-client="{% if is_granted('ROLE_CLIENT') %}1{% else %}0{% endif %}"
+                     data-is-admin="{% if is_granted('ROLE_ADMIN') %}1{% else %}0{% endif %}"
+                     data-is-technique="{% if is_granted('ROLE_TECHNIQUE') %}1{% else %}0{% endif %}"
+                >
+                </div>
+            </table>
+        </div>
+
+        {{ include('BackOffice/Demande/inc/modalCommentaire.html.twig') }}
+
+    {% endif %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    {{ encore_entry_script_tags('backOffice_remboursement_list_appel_datatables_ajax') }}
+    {{ encore_entry_script_tags('coreList') }}
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+{% endblock %}

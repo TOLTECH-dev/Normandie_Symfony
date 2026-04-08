@@ -1,0 +1,17 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-identification">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Identification</legend>
+
+        <div class="form-group">
+            {{ form_label(form_banque.nom, "Nom", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_banque.nom) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_banque.nom, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

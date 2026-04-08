@@ -1,0 +1,239 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-CEP">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;R&eacute;sultats</legend>
+
+        <div class="flex-wrapper" id="bloc-CEP-calcul">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">CEP (KW/m².an)</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.CEP }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.CEP }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.CEP }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.CEP }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">GES (Kg eq CO<sub>2</sub> /m<sup>2</sup>.an)</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.CEPGES ? ficheTechnique.ficheTechnique_initial.CEPGES : '-' }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.CEPGES ? ficheTechnique.ficheTechnique_BBC.CEPGES : '-' }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.CEPGES ? ficheTechnique.ficheTechnique_prescription.CEPGES : '-' }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.CEPGES ? ficheTechnique.ficheTechnique_finChantier.CEPGES : '-' }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Etiquette &eacute;nerg&eacute;tique</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.CEPEtiquetteEnergetique }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.CEPEtiquetteEnergetique }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.CEPEtiquetteEnergetique }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.CEPEtiquetteEnergetique }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Ub&acirc;t (W/m<sup>2</sup>.K)</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.CEPUbat ? ficheTechnique.ficheTechnique_initial.CEPUbat : '-' }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.CEPUbat ? ficheTechnique.ficheTechnique_BBC.CEPUbat : '-' }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.CEPUbat ? ficheTechnique.ficheTechnique_prescription.CEPUbat : '-' }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.CEPUbat ? ficheTechnique.ficheTechnique_finChantier.CEPUbat : '-' }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Ub&acirc;t base</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.CEPUbatBase ? ficheTechnique.ficheTechnique_initial.CEPUbatBase : '-' }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.CEPUbatBase ? ficheTechnique.ficheTechnique_BBC.CEPUbatBase : '-' }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.CEPUbatBase ? ficheTechnique.ficheTechnique_prescription.CEPUbatBase : '-' }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.CEPUbatBase ? ficheTechnique.ficheTechnique_finChantier.CEPUbatBase : '-' }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Q4 (m<sup>3</sup>/h.m<sup>2</sup>)</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.CEPQ4PaSurf ? ficheTechnique.ficheTechnique_initial.CEPQ4PaSurf : '-' }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.CEPQ4PaSurf ? ficheTechnique.ficheTechnique_BBC.CEPQ4PaSurf : '-' }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.CEPQ4PaSurf ? ficheTechnique.ficheTechnique_prescription.CEPQ4PaSurf : '-' }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.CEPQ4PaSurf ? ficheTechnique.ficheTechnique_finChantier.CEPQ4PaSurf : '-' }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Contr&ocirc;leur de fin de chantier : infiltrom&eacute;trie et ventilation</label>
+            </div>
+            <div class="flex1 marginTop7">
+                &nbsp;
+            </div>
+            <div class="flex2 marginTop7">
+                &nbsp;
+            </div>
+            <div class="flex3 marginTop7">
+                &nbsp;
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 marginTop7 fontSize9">
+                    {% if ficheTechnique.ficheTechnique_finChantier.informationControleurChantier %}
+                        {{ ficheTechnique.ficheTechnique_finChantier.informationControleurChantier }}
+                    {% else %}
+                        <p class="text-center">-</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Fichier PDF infiltrom&eacute;trie</label>
+            </div>
+            <div class="flex1 marginTop7">
+                &nbsp;
+            </div>
+            <div class="flex2 marginTop7">
+                &nbsp;
+            </div>
+            <div class="flex3 marginTop7">
+                &nbsp;
+            </div>
+
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 marginTop7">
+                    <p class="fontSize9 text-center">
+                        {% if ficheTechnique and ficheTechnique.ficheTechnique_finChantier and ficheTechnique.ficheTechnique_finChantier.infiltrometrieDocumentUrl %}
+                            <a href="{{ path('demande_document_bo', {'demandeId': ficheTechnique.ficheTechnique_finChantier.id, 'typeFile': 13, 'extension': ficheTechnique.ficheTechnique_finChantier.infiltrometrieDocumentUrl, 'typeDemande': 3}) }}" target="_blank">
+                                Voir le document
+                            </a>
+                        {% else %}
+                            Aucun document t&eacute;l&eacute;charg&eacute;
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Fichier PDF ventilation</label>
+            </div>
+            <div class="flex1 marginTop7">
+                &nbsp;
+            </div>
+            <div class="flex2 marginTop7">
+                &nbsp;
+            </div>
+            <div class="flex3 marginTop7">
+                &nbsp;
+            </div>
+
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 marginTop7">
+                    <p class="fontSize9 text-center">
+                        {% if ficheTechnique and ficheTechnique.ficheTechnique_finChantier and ficheTechnique.ficheTechnique_finChantier.ventilationDocumentUrl %}
+                            <a href="{{ path('demande_document_bo', {'demandeId': ficheTechnique.ficheTechnique_finChantier.id, 'typeFile': 14, 'extension': ficheTechnique.ficheTechnique_finChantier.ventilationDocumentUrl, 'typeDemande': 3}) }}" target="_blank">
+                                Voir le document
+                            </a>
+                        {% else %}
+                            Aucun document t&eacute;l&eacute;charg&eacute;
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Fichier PDF Audit mis &agrave; jour apr&egrave;s travaux</label>
+            </div>
+            <div class="flex1 marginTop7">
+                &nbsp;
+            </div>
+            <div class="flex2 marginTop7">
+                &nbsp;
+            </div>
+            <div class="flex3 marginTop7">
+                &nbsp;
+            </div>
+
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 marginTop7">
+                    <p class="fontSize9 text-center">
+                        {% if ficheTechnique and ficheTechnique.ficheTechnique_finChantier and ficheTechnique.ficheTechnique_finChantier.auditApresTravauxDocumentUrl %}
+                            <a href="{{ path('demande_document_bo', {'demandeId': ficheTechnique.ficheTechnique_finChantier.id, 'typeFile': 17, 'extension': ficheTechnique.ficheTechnique_finChantier.auditApresTravauxDocumentUrl, 'typeDemande': 3}) }}" target="_blank">
+                                Voir le document
+                            </a>
+                        {% else %}
+                            Aucun document t&eacute;l&eacute;charg&eacute;
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

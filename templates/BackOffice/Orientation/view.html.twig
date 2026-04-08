@@ -1,0 +1,36 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_orientation_view') }}
+{% endblock %}
+
+{% block contents %}
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 marginBottom40 hidden" id="content-wrapper">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="container-title">
+                <h2>Consulter une Orientation</h2>
+                <a href="{{ path('orientation_edit', {'orientationId': orientationResult.orientationId}) }}"
+                   class="btn btn-warning btn-xs"
+                   role="button"
+                   id="button_position1"
+                   data-toggle="tooltip"
+                   data-placement="bottom"
+                   data-container="body"
+                   title="Modifier l'Orientation"
+                >
+                    <i class="glyphicon glyphicon-edit"></i>
+                </a>
+                {{ include('BackOffice/Orientation/inc/back.html.twig') }}
+            </div>
+        </div>
+
+        {% set groupconcatSeparatorItems = constant('App\\Utils\\DefaultServiceUtils::GROUPCONCAT_SEPARATOR_ITEMS') %}
+
+        {{ include('BackOffice/Orientation/inc/view_orientation/identification.html.twig') }}
+        {{ include('BackOffice/Orientation/inc/view_orientation/structureInferieur.html.twig') }}
+        {{ include('BackOffice/Orientation/inc/view_orientation/structureSuperieur.html.twig') }}
+        {{ include('BackOffice/Orientation/inc/view_orientation/EPCI.html.twig') }}
+
+    </div>
+{% endblock %}

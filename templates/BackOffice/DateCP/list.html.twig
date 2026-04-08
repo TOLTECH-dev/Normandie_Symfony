@@ -1,0 +1,140 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_core_datepicker') }}
+    {{ encore_entry_link_tags('backOffice_dateCP_list') }}
+    {{ encore_entry_link_tags('backOffice_dateCP_add_edit') }}
+{% endblock %}
+
+{% block contents %}
+<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom40">
+        <div id="container-title">
+            <h2>Dates de CP</h2>
+        </div>
+    </div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom10">
+    <p class="text-center">
+        <span data-toggle="modal" data-target="#modal-addDateCP">
+            <button type="button"
+                    class="btn btn-primary btn-xs"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    data-container="body"
+                    title="Cr&eacute;er une Date de commission"
+            >
+                <i class="glyphicon glyphicon-plus"></i> <span class="bold">Cr&eacute;er une Date de commission</span>
+            </button>
+        </span>
+    </p>
+
+    <!-- Modal Add Date CP -->
+    <div class="modal fade modalBackdrop" id="modal-addDateCP" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-center" id="myModalLabel">Ajouter une Date CP</h4>
+                </div>
+                <div class="modal-body">
+                    {{ include('BackOffice/DateCP/inc/form_list/add.html.twig') }}
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table cellspacing="0" id="table_list_dateCP" class="table table-striped table-bordered big_table">
+    <thead>
+        <tr>
+            <th class="breakWord col0">Date CP</th>
+            <th class="breakWord col1">Num&eacute;ro D&eacute;lib&eacute;ration</th>
+            <th class="breakWord col2">Nombre de demande</th>
+            <th class="breakWord col3">Montant</th>
+            <th class="breakWord col4">Statut</th>
+            <th class="breakWord col5">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in list_dateCP %}
+            <tr>
+                <td class="text-center"><span class="hidden">{{ item.dateCP|date('Ymd') }}</span>{{ item.dateCP|date('d/m/Y') }}</td>
+                <td>{{ item.numeroDeliberation }}</td>
+
+                {% set countDemande = 0 %}
+                {% set montantDemande = 0 %}
+                {% for demande in list_demande %}
+                    {% if (demande.dateId == item.id) %}
+                        {% set countDemande = demande.countDemande %}
+                        {% set montantDemande = demande.montant %}
+                    {% endif %}
+                {% endfor %}
+                <td class="text-center">{{ countDemande }}</td>
+
+                <td class="text-center">{{ montantDemande|number_format(2, '.', ' ')~'€' }}</td>
+
+                {% if 0 == item.enabled %}
+                    {% set statut = 'Inactif' ~ ' depuis le ' ~ item.dateInactif|date('d/m/Y') %}
+                {% elseif 1 == item.enabled %}
+                    {% set statut = 'Actif' %}
+                {% endif %}
+                <td>{{ statut }}</td>
+
+                <td class="text-center">
+                    <span data-toggle="modal" data-target="#modal-editDateCP_{{ item.id }}">
+                        <button type="button"
+                                class="btn btn-warning btn-xs"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-container="body"
+                                title="Modifier la Date de commission"
+                        >
+                            <i class="glyphicon glyphicon-edit"></i>
+                        </button>
+                    </span>
+
+                    <!-- Modal Edit Date CP -->
+                    <div class="modal fade modalBackdrop" id="modal-editDateCP_{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title text-center" id="myModalLabel">Modifier une Date CP</h4>
+                                </div>
+                                <div class="modal-body">
+                                    {{ include('BackOffice/DateCP/inc/form_list/edit.html.twig') }}
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a  href="{{ path('dateCP_export', { 'dateCPId': item.id }) }}"
+                        class="btn btn-success btn-xs"
+                        role="button"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        data-container="body"
+                        title="Export des dossiers"
+                    >
+                        <i class="glyphicon glyphicon-download-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_dateCP_listDateCP_appel_datatables') }}
+    {{ encore_entry_script_tags('coreList') }}
+    {{ encore_entry_script_tags('backOffice_dateCP_formDateCP_index') }}
+{% endblock %}

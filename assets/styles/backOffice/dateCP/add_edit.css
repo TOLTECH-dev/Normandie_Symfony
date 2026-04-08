@@ -1,0 +1,33 @@
+/*******************************************
+            BLOC FORM ADD
+*******************************************/
+#bloc-formAdd {
+
+}
+
+#bloc-formAdd input[type=checkbox] {
+    vertical-align: bottom;
+}
+#bloc-formAdd .bloc-dateInactif label {
+    line-height: 30px;
+    padding-top: 0 !important;
+}
+
+/*******************************************
+            BLOC FORM EDIT
+*******************************************/
+.bloc-formEdit {
+
+}
+
+#bloc-formEdit input[type=checkbox] {
+    vertical-align: bottom;
+}
+#bloc-formEdit .bloc-dateInactif label {
+    line-height: 30px;
+    padding-top: 0 !important;
+}
+
+.bloc-formEdit input {
+    width: 100% !important;
+}

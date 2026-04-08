@@ -1,0 +1,15 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-EPCI">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Rattachement EPCI</legend>
+
+        <div class="form-group">
+            {{ form_label(form_orientation.EPCI_id, "EPCI", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_orientation.EPCI_id) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form_orientation.EPCI_id, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+</div>

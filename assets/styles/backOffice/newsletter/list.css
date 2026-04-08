@@ -1,0 +1,9 @@
+.col00 { width: 110px; }
+.col11 { width: 110px; }
+.col22 { width: 110px; }
+
+tr[class="filterrow"] th input, tr[class="filterrow"] th select {
+    width: 100%;
+    font-size: 11px;
+    height: 30px;
+}

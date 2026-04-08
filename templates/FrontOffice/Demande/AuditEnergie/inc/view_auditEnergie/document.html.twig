@@ -1,0 +1,41 @@
+{% set typeBeneficiaire = demande.beneficiaireType|split(' | ') %}
+{% if '0' == typeBeneficiaire[0] %}
+    {% set textePieceComplementaire = 'Justificatif complémentaire' %}
+{% elseif '1' == typeBeneficiaire[0] %}
+    {% set textePieceComplementaire = 'Statut de la SCI' %}
+{% endif %}
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-document">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Votre Maison</legend>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Justificatif de propri&eacute;t&eacute; :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {% if demande and demande.demandeJustificatifProprieteAlt %}
+                    <a href="{{ path(path_location, {'demandeId': demande.auditEId, 'typeFile': 0, 'extension': demande.demandeJustificatifProprieteUrl, 'typeDemande': 0}) }}" target="_blank">
+                        Voir le document
+                    </a>
+                {% else %}
+                    Aucun document t&eacute;l&eacute;charg&eacute;
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">{{ textePieceComplementaire }} :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {% if demande and demande.demandePieceComplementAlt %}
+                    <a href="{{ path(path_location, {'demandeId': demande.auditEId, 'typeFile': 1, 'extension': demande.demandePieceComplementUrl, 'typeDemande': 0}) }}" target="_blank">
+                        Voir le document
+                    </a>
+                {% else %}
+                    Aucun document t&eacute;l&eacute;charg&eacute;
+                {% endif %}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

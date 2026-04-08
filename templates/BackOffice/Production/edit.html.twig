@@ -1,0 +1,29 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc bloc-formProduction">
+    <fieldset>
+        {% for key, form_item in arrayForm %}
+            {% if key == item.productionId %}
+                {{ form_start(form_item, {'attr': {'class': 'form-horizontal'}}) }}
+
+                {{ form_errors(form_item) }}
+
+                <div>
+                    {{ form_label(form_item.dateExpedition, "Date d'expédition", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                    {{ form_errors(form_item.dateExpedition) }}
+
+                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                        {{ form_widget(form_item.dateExpedition, {'attr': {'class': 'form-control datepickerClass'}}) }}
+                    </div>
+                </div>
+                <br>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc bloc-submit">
+                    <div>
+                        {{ form_widget(form_item.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+                    </div>
+                </div>
+
+                {{ form_end(form_item) }}
+            {% endif %}
+        {% endfor %}
+    </fieldset>
+</div>

@@ -1,0 +1,16 @@
+{% block body_html %}
+    <p>Bonjour,</p>
+
+    <p>Pour lancer le processus d'activation de votre compte <b>{{ type }} "{{ username }}"</b>, cliquez sur le lien ci-dessous :</p>
+    <br>
+
+    {% set confirmationUrlDisplay = app_is_https ? confirmationUrl|replace({'http:': 'https:'}) : confirmationUrl %}
+    <a href="{{ confirmationUrlDisplay }}">{{ confirmationUrlDisplay }}</a>
+
+    <br><br>
+    <p>Si ce lien ne fonctionne pas, copiez l'URL, puis collez-la dans une nouvelle fen&ecirc;tre de navigateur.</p>
+
+    <p>Attention ! Ce lien n'est valable que 48 heures apr&egrave;s l'envoi de ce message.</p>
+
+    <p>L'&eacute;quipe Ch&egrave;que Eco-Energie de la R&eacute;gion Normandie.</p>
+{% endblock %}

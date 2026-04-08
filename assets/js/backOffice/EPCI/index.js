@@ -1,0 +1,8 @@
+import './formEPCI/autocomplete'
+import './formEPCI/dateInactif'
+import './formEPCI/disableSubmit'
+import './formEPCI/displayContact'
+import './formEPCI/displayPermanence'
+import './formEPCI/formatField'
+import './formEPCI/managePointEntreeStructure'
+import './listEPCI/appel_datatables'

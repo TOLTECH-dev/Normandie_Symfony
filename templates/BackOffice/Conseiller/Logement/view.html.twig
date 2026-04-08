@@ -1,0 +1,59 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_core_form') }}
+    {{ encore_entry_link_tags('frontOffice_logement_view') }}
+    {{ encore_entry_link_tags('frontOffice_common_menu') }}
+{% endblock %}
+
+{% block contents %}
+
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3" id="title-wrapper">
+        <div id="container-title">
+            <h2>Consulter un logement</h2>
+            {% if isEditLogement is not empty %}
+
+                <a href="{{ path('conseiller_logement_edit', {'beneficiaireId': beneficiaireId, 'logementId': logement.id}) }}"
+                   class="btn btn-warning btn-xs"
+                   id="button_position1"
+                   role="button"
+                   data-toggle="tooltip"
+                   data-placement="bottom"
+                   data-container="body"
+                   title="Modifier le Logement"
+                >
+                    <i class="glyphicon glyphicon-edit"></i>
+                </a>
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') and isDeleteLogement is not empty %}
+                <span data-toggle="modal" data-target="#modalDeleteLogement">
+                    <a  href="#"
+                        class="btn btn-danger btn-xs"
+                        id="button_position2"
+                        role="button"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        data-container="body"
+                        title="Supprimer le Logement"
+                    >
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </span>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 hidden" id="content-wrapper">
+        {{ include('FrontOffice/Logement/inc/view_logement/identification.html.twig') }}
+        {{ include('FrontOffice/Logement/inc/view_logement/adresse.html.twig') }}
+        {{ include('FrontOffice/Logement/inc/view_logement/situation.html.twig') }}
+        {{ include('FrontOffice/Logement/inc/view_logement/caracteristique.html.twig') }}
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') and isDeleteLogement is not empty %}
+        {{ include('BackOffice/Conseiller/Logement/inc/view/_modal_delete_logement.html.twig') }}
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{# Popup lors des erreurs du reset password ou del a création de compte #}
+{% if form is defined %}
+    {% if form_errors is defined %}
+        {% set error_email = form_errors(form.email) %}
+        {% set error_email_length = form_errors(form.email)|length %}
+        {% if error_email_length > 0 %}
+            <div id="notification" class="alert alert-danger alert-dismissible col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 notification" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p class="text-center">{{ form_errors(form.email)|striptags|raw }}</p>
+            </div>
+        {% endif %}
+
+        {% set error_username = form_errors(form.username) %}
+        {% set error_username_length = form_errors(form.username)|length %}
+        {% if error_username is defined and error_username_length > 0 %}
+            <div id="notification" class="alert alert-danger alert-dismissible col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xs-offset-0 col-sm-offset-0 col-md-offset-0 col-lg-offset-0 notification" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p class="text-center">{{ form_errors(form.username)|striptags|raw }}</p>
+            </div>
+        {% endif %}
+
+        {% if app.request.attributes.get('_route') != 'admin_add' %}
+            {% set error_password = form_errors(form.password.first) %}
+            {% set error_password_length = form_errors(form.password.first)|length %}
+            {% if error_password is defined and error_password_length > 0 %}
+            <div id="notification" class="alert alert-danger alert-dismissible col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 notification" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p class="text-center">{{ form_errors(form.password.first)|striptags }}</p>
+            </div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endif %}

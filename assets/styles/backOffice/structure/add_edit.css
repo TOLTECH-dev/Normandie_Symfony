@@ -1,0 +1,211 @@
+/*******************************************
+            BLOC IDENTIFICATION
+*******************************************/
+#bloc-identification {
+
+}
+
+/*******************************************
+            BLOC ADRESSE
+*******************************************/
+#bloc-adresse {
+
+}
+
+/*******************************************
+            BLOC STATUT
+*******************************************/
+#bloc-statut {
+
+}
+
+#bloc-statut input[type=checkbox] {
+    vertical-align: bottom;
+}
+#bloc-statut .bloc-dateInactif label {
+    line-height: 30px;
+    padding-top: 0 !important;
+}
+
+/*******************************************
+            BLOC CONTACT
+*******************************************/
+#bloc-contact, .structure_contact label {
+    text-align: left;
+}
+
+.structure_contact {
+    display: flex;
+    justify-content: space-around;
+}
+
+.structure_contact label {
+    margin-bottom: 0;
+    padding-top: 5px;
+}
+
+.structure_contact > input {
+    margin: 0 5px;
+}
+
+.structure_contact input[type=text], .structure_contact input[type=email], .structure_contact select {
+    width: 88%;
+    margin-right: 12%;
+    height: 34px;
+}
+
+#bloc-contact .form-group, #bloc-contact .form-horizontal {
+    margin-left: 0;
+}
+
+#bloc-contact select {
+    height: 34px;
+}
+
+#bloc-contact .box_addContact {
+    text-align: right;
+    margin-top: 10px;
+    margin-right: -15px;
+}
+
+#bloc-contact .box_deleteContact {
+    text-align: right;
+    margin-top: -28px;
+    margin-right: -16px;
+    width: 30px;
+    position: absolute;
+    right: 0;
+}
+
+/*******************************************
+            BLOC CONSEILLER
+*******************************************/
+#bloc-conseiller {
+    text-align: left;
+}
+
+.box-structure_conseiller:not(:first-child) {
+    margin-top: 50px;
+    margin-bottom: 25px;
+    vertical-align: middle;
+}
+
+.structure_conseiller label, .new_structure_conseiller label {
+    text-align: right;
+    padding-right: 20px;
+    line-height: 30px;
+}
+
+.structure_conseiller input[type=text],
+.structure_conseiller input[type=email],
+.new_structure_conseiller input[type=text],
+.new_structure_conseiller input[type=email] {
+    width: 73%;
+    margin-bottom: 10px;
+}
+
+.structure_conseiller div:nth-child(5), .new_structure_conseiller div:nth-child(5) {
+    margin-left: 25%;
+    margin-bottom: 5px;
+}
+.structure_conseiller div:nth-child(5) > div, .new_structure_conseiller div:nth-child(5) > div {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+.structure_conseiller div:nth-child(5) input[type=checkbox], .new_structure_conseiller div:nth-child(5) input[type=checkbox] {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+    *overflow: hidden;
+}
+.structure_conseiller div:nth-child(5) label, .new_structure_conseiller div:nth-child(5) label {
+    width: 100%;
+    display: block;
+    padding-left: 35px;
+    margin-top: -19px;
+    text-align: left;
+    line-height: 20px;
+}
+
+
+
+.structure_conseiller div:nth-child(6) input[type=checkbox], .new_structure_conseiller div:nth-child(6) input[type=checkbox] {
+    vertical-align: bottom;
+}
+.structure_conseiller div:nth-child(6) label, .new_structure_conseiller div:nth-child(6) label {
+    line-height: 0;
+    width: 25%;
+    padding-right: 20px;
+}
+
+#bloc-conseiller .form-group, #bloc-conseiller .form-horizontal {
+    margin-left: 0;
+}
+
+#bloc-conseiller .box_addConseiller {
+    text-align: right;
+    margin-top: 25px;
+    margin-right: -15px;
+}
+
+#bloc-conseiller .box_deleteConseiller {
+    text-align: right;
+    margin-top: -10px;
+    margin-right: -15px;
+    width: 160px;
+    position: absolute;
+    right: 0;
+}
+
+/*******************************************
+            BLOC PERMANENCE
+*******************************************/
+#bloc-permanence {
+    text-align: left;
+}
+
+.box-structure_permanence:not(:first-child) {
+    margin-top: 50px;
+    margin-bottom: 25px;
+    vertical-align: middle;
+}
+
+.structure_permanence label {
+    text-align: right;
+    padding-right: 20px;
+    line-height: 30px;
+}
+
+.structure_permanence div:nth-child(7) label, .structure_permanence div:nth-child(8) label {
+    vertical-align: top;
+    line-height: inherit;
+}
+
+.structure_permanence input, .structure_permanence textarea {
+    width: 65%;
+    margin-bottom: 10px;
+}
+
+#bloc-permanence .form-group, #bloc-permanence .form-horizontal {
+    margin-left: 0;
+}
+
+#bloc-permanence .box_addPermanence {
+    text-align: right;
+    margin-top: 35px;
+    margin-right: -15px;
+}
+
+#bloc-permanence .box_deletePermanence {
+    text-align: right;
+    margin-top: -2px;
+    margin-right: -15px;
+    width: 185px;
+    position: absolute;
+    right: 0;
+}

@@ -1,0 +1,59 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-ficheTravaux">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Fiche Travaux</legend>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Fiche de liaison :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {% if remboursement is defined
+                    and remboursementInstruction
+                    and remboursementInstruction.ficheTravauxAlt
+                %}
+                    <a href="{{ path(path_location, {'demandeId': remboursementInstruction.id, 'typeFile': 12, 'extension': remboursementInstruction.ficheTravauxUrl, 'typeDemande': typeDemandeDocument}) }}" target="_blank">
+                        Voir le document
+                    </a>
+                {% else %}
+                    Aucun document t&eacute;l&eacute;charg&eacute;
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Fiche de liaison conforme ?</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {% if remboursementInstruction %}
+                    {{ isConformeArray[remboursementInstruction.isFicheTravauxConforme|split(' | ')[0]] }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+        </div>
+
+        {% if remboursementInstruction and remboursementInstruction.ficheTravauxReason is not empty %}
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Raison :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                <ul class="noMmargin noPadding">
+                    {% for item in remboursementInstruction.ficheTravauxReason %}
+                        <li>{{ item.slug }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if remboursementInstruction and remboursementInstruction.ficheTravauxReasonAutre %}
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Autre raison :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                <ul class="noMmargin noPadding noPuce">
+                    <li>{{ remboursementInstruction.ficheTravauxReasonAutre }}</li>
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

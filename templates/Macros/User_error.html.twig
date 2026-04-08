@@ -1,0 +1,42 @@
+{# Macro pour afficher les erreurs de formulaire #}
+{# Utilisée pour les erreurs de reset password et création de compte #}
+
+{% if form is defined %}
+    {# Erreur email #}
+    {% if form.email is defined and form.email.vars.errors|length > 0 %}
+        <div id="notification" class="alert alert-danger alert-dismissible col-12 col-md-8 offset-md-2 notification" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <p class="text-center">
+                {% for error in form.email.vars.errors %}
+                    {{ error.message }}
+                {% endfor %}
+            </p>
+        </div>
+    {% endif %}
+
+    {# Erreur username #}
+    {% if form.username is defined and form.username.vars.errors|length > 0 %}
+        <div id="notification" class="alert alert-danger alert-dismissible w-100 notification" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <p class="text-center">
+                {% for error in form.username.vars.errors %}
+                    {{ error.message }}
+                {% endfor %}
+            </p>
+        </div>
+    {% endif %}
+
+    {# Erreur mot de passe (sauf pour admin_add) #}
+    {% if app.request.attributes.get('_route') != 'admin_add' and form.plainPassword is defined %}
+        {% if form.plainPassword.first is defined and form.plainPassword.first.vars.errors|length > 0 %}
+            <div id="notification" class="alert alert-danger alert-dismissible col-12 col-md-8 offset-md-2 notification" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <p class="text-center">
+                    {% for error in form.plainPassword.first.vars.errors %}
+                        {{ error.message }}
+                    {% endfor %}
+                </p>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endif %}

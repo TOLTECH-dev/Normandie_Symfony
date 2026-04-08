@@ -1,0 +1,35 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-information">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Informations Compl&eacute;mentaires</legend>
+
+        <div class="form-group">
+            {{ form_label(form_EPCI.telephone, "Téléphone", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_EPCI.telephone) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_EPCI.telephone, {'attr': {'class': 'form-control', 'title': '0x-xx-xx-xx-xx'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_EPCI.siteInternet, "Site internet", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_EPCI.siteInternet) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_EPCI.siteInternet, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_EPCI.email, "Courriel", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_EPCI.email) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_EPCI.email, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

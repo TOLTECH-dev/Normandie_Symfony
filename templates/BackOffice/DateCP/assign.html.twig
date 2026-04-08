@@ -1,0 +1,30 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_demande_inc_module') }}
+    {{ encore_entry_link_tags('backOffice_dateCP_assign') }}
+{% endblock %}
+
+{% block contents %}
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 marginBottom40 hidden" id="content-wrapper">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div id="container-title">
+            <h2>Affecter une Date de commission</h2>
+            {{ include('BackOffice/DateCP/inc/back.html.twig') }}
+        </div>
+    </div>
+
+{% set currentFlag = app.request.attributes.get('_route_params')['flag'] %}
+<input type="hidden" value="{{ currentFlag }}" id="currentFlag" />
+
+{{ include('BackOffice/Demande/inc/module.html.twig') }}
+{{ include('BackOffice/DateCP/inc/form_assign/form.html.twig') }}
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_dateCP_formAssign_displayOption') }}
+{% endblock %}

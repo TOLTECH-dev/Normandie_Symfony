@@ -1,0 +1,88 @@
+{% set messageDemande = '' %}
+{% set messageCheque = '' %}
+{% set messageRemboursementCheque1 = '' %}
+{% set messageRemboursementCheque2 = '' %}
+
+{% if demande.remboursementStatut is  null  %}
+    {% set color_step_second = 'color_gray' %}
+    {% set color_step_third = 'color_gray' %}
+    {% set color_step_fourth = 'color_gray' %}
+    {% if 1 == demande.demandeStatutColorStep %}
+        {% set messageDemande = 'En cours' %}
+        {% set color_step_first = 'color_orange' %}
+    {% elseif 0 == demande.demandeStatutColorStep %}
+        {% set color_step_first = 'color_red' %}
+        {% set messageDemande = 'Invalide' %}
+    {% else %}
+        {% set color_step_first = 'color_green' %}
+        {% if 14 == demande.demandeStatut %}
+            {% set color_step_second = 'color_green'%}
+        {% else %}
+            {% set color_step_second = 'color_orange'%}
+            {% set messageCheque = 'En cours' %}
+        {% endif %}
+    {% endif %}
+{% else %}
+    {% set color_step_first = 'color_green' %}
+    {% set color_step_second = 'color_green' %}
+    {% if 22 !=  demande.remboursementStatut %}
+        {% set color_step_fourth = 'color_gray' %}
+        {% if 1 == demande.remboursementColorStep %}
+            {% set messageRemboursementCheque1 = 'En cours' %}
+            {% set color_step_third = 'color_orange' %}
+        {% elseif 0 == demande.remboursementColorStep %}
+            {% set color_step_third = 'color_red' %}
+            {% set messageRemboursementCheque1 = 'Invalide' %}
+        {% endif %}
+    {% else %}
+        {% set color_step_third = 'color_green' %}
+        {% set color_step_fourth = 'color_green' %}
+        {% if demande.remboursementColorStep2 is null %}
+            {% set color_step_fourth = 'color_gray' %}
+        {% elseif 1 == demande.remboursementColorStep2 %}
+            {% set color_step_fourth = 'color_orange' %}
+            {% set messageRemboursementCheque2 = 'En cours' %}
+        {% elseif 0 == demande.remboursementColorStep2 %}
+            {% set color_step_fourth = 'color_red' %}
+            {% set messageRemboursementCheque2 = 'Invalide' %}
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+
+
+<div class="crumbs">
+    <ul>
+        <li class="{{ color_step_first }} without_cheque2">
+            <p class="bold">
+                Demande d&apos;aide
+                <br>
+                <span>{{ messageDemande }}</span>
+            </p>
+        </li>
+        <li class="{{ color_step_second }} without_cheque2">
+            <p class="bold">
+                &Eacute;mission du ch&egrave;que
+                <br>
+                <span>{{ messageCheque }}</span>
+            </p>
+        </li>
+        <li class="{{ color_step_third }} without_cheque2">
+            <p class="bold">
+                Remboursement de l&apos;aide
+                {{ (3 == demande.demandeTravauxDevisNiveau) ? " (1/2)" : "" }}
+                <br>
+                <span>{{ messageRemboursementCheque1 }}</span>
+            </p>
+        </li>
+        {% if 3 == demande.demandeTravauxDevisNiveau %}
+            <li class="{{ color_step_fourth }} with_cheque2">
+                <p class="bold">
+                    Remboursement de l&apos;aide (2/2)
+                    <br>
+                    <span>{{ messageRemboursementCheque2 }}</span>
+                </p>
+            </li>
+        {% endif %}
+    </ul>
+</div>

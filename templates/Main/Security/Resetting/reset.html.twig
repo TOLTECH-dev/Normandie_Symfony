@@ -1,0 +1,48 @@
+{% extends "Main/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('resettingReset') }}
+{% endblock %}
+
+{% block content %}
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+        {{ include('Macros/error.html.twig') }}
+
+        <form action="{{ path('user_resetting_reset', {'token': token}) }}" method="post" id="form_reset" class="fos_user_resetting_reset">
+            <div class="container-form">
+                <h1>R&eacute;initialisation du mot de passe</h1>
+
+                {{ form_start(form) }}
+                    <div id="pswd_info">
+                        <p>Le mot de passe doit respecter les r&egrave;gles suivantes:</p>
+                        <ul>
+                            <li id="pswd_letter" class="invalid">Au moins <strong>une lettre minuscule</strong></li>
+                            <li id="pswd_capital" class="invalid">Au moins <strong>une lettre majuscule</strong></li>
+                            <li id="pswd_number" class="invalid">Au moins <strong>un chiffre</strong></li>
+                            <li id="pswd_special_character" class="invalid">Au moins <strong>un caract&egrave;re sp&eacute;cial</strong></li>
+                            <li id="pswd_length" class="invalid">Au moins <strong>12 caract&egrave;res</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.password.first) }}
+                        <p id="result"></p>
+                        {{ form_widget(form.password.first, {'id':'password'}) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_row(form.password.second, {'id':'password_repeat'}) }}
+                        <small id="password_match_message" style="display:none;"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-warning" name="_submit" value="Modifier le mot de passe" />
+                    </div>
+                {{ form_end(form) }}
+
+            </div>
+        </form>
+
+    </div>
+{% endblock %}

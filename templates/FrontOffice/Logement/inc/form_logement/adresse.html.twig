@@ -1,0 +1,129 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-adresse">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Adresse</legend>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.codePostal) }}</div>
+        <div class="form-group">
+            {{ form_label(form.codePostal, "Code Postal", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.codePostal, {'attr': {'class': 'form-control'}}) }}
+
+                <span id="match"></span>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.ville) }}</div>
+        <div class="form-group">
+            {{ form_label(form.ville, "Ville", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.ville, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.numeroRue) }}</div>
+        <div class="form-group">
+            {{ form_label(form.numeroRue, "Numéro de rue", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.numeroRue, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group" id="bloc-complementRueInputDisplay">
+            <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label" for="complementRueInput">Compl&eacute;ment num&eacute;ro de rue</label>
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                <input type="text" value="" id="complementRueInput" class="form-control" />
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.complementRue) }}</div>
+        <div class="form-group" id="bloc-complementRueForm">
+            {{ form_label(form.complementRue, "Complément numéro de rue", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.complementRue, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group hidden" id="bloc-complementRueDisplay">
+            <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label" for="complementRue">Compl&eacute;ment num&eacute;ro de rue</label>
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                <select id="complementRue" class="form-control">
+                    <option value="">-- Choisir un compl&eacute;ment de rue --</option>
+                    <option value="0 | bis">BIS</option>
+                    <option value="1 | ter">TER</option>
+                </select>
+            </div>
+        </div>
+
+        {{ form_row(form.INSEE, {'attr': {'class': 'hidden'}}) }}
+        <div class="form-group hidden" id="bloc-addressDisplay">
+            <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label" for="nomRue">Nom de rue</label>
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                <select id="nomRue" class="form-control">
+
+                </select>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.nomRueNotFound) }}</div>
+        <div class="form-group hidden" id="checkbox-addressDisplay">
+            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 text-right">
+                {{ form_widget(form.nomRueNotFound, {'attr': {'class': 'control-label'}}) }}
+            </div>
+
+            {{ form_label(form.nomRueNotFound, "Votre adresse ne figure pas dans la liste?", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-7 col-lg-7 control-label text-left'}}) }}
+        </div>
+
+        <div class="form-group hidden" id="bloc-noAddressDisplay">
+            <p id="information-noAddressDisplay"></p>
+
+            <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label" for="nomRueNotFound">Nom de rue</label>
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                <input type="text" placeholder="Adresse" id="nomRueNotFound" class="form-control" />
+            </div>
+        </div>
+        {{ form_row(form.adresse, {'attr': {'class': 'hidden'}}) }}
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.complement1) }}</div>
+        <div class="form-group">
+            {{ form_label(form.complement1, "Complément 1", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.complement1, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.complement2) }}</div>
+        <div class="form-group">
+            {{ form_label(form.complement2, "Complément 2", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.complement2, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>
+
+<input type="hidden" value="{{ beneficiaire.codePostal }}" id="beneficiaire_codePostal" />
+<input type="hidden" value="{{ beneficiaire.ville }}" id="beneficiaire_ville" />
+<input type="hidden" value="{{ beneficiaire.villeId }}" id="beneficiaire_villeId" />
+<input type="hidden" value="{{ beneficiaire.numeroRue }}" id="beneficiaire_numeroRue" />
+<input type="hidden" value="{{ beneficiaire.complementNumeroRue }}" id="beneficiaire_complementNumeroRue" />
+<input type="hidden" value="{{ beneficiaire.INSEE }}" id="beneficiaire_INSEE" />
+<input type="hidden" value="{{ beneficiaire.nomRue }}" id="beneficiaire_nomRue" />
+<input type="hidden" value="{{ beneficiaire.complement1 }}" id="beneficiaire_complement1" />
+<input type="hidden" value="{{ beneficiaire.complement2 }}" id="beneficiaire_complement2" />

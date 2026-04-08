@@ -1,0 +1,141 @@
+{% extends "Main/layout_core.html.twig" %}
+{% import "Macros/captcha.html.twig" as captcha %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('mainLogin') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if cachedUserIsCaptchaItemValue is defined and cachedUserIsCaptchaItemValue %}
+        <script src="https://www.google.com/recaptcha/api.js?hl=fr" type="text/javascript"></script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+
+    {{ include('Macros/error.html.twig') }}
+
+{#    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="bloc-franceConnect">#}
+{#        <p>#}
+{#            Se connecter avec FranceConnect: acc&egrave;der &agrave; tous les services en vous <br>#}
+{#            connectant sur ameli.fr, impots.gouv.fr, idn.laposte.fr, mobileconnectetmoi.fr etc...#}
+{#        </p>#}
+
+{#        <a href="{{ path('kleegroup_franceconnect_franceconnect_login') }}">#}
+{#            <img#}
+{#                    src="{{ asset('build/images/main/logo/logo_FranceConnect.png') }}"#}
+{#                    alt="logo"#}
+{#                    class="franceConnect-logo"#}
+{#            >#}
+{#        </a>#}
+
+{#        <p class="franceConnect-tip">#}
+{#            <a href="https://app.franceconnect.gouv.fr/en-savoir-plus" target="_blank" title="Qu'est-ce que FranceConnect ?">#}
+{#                Qu'est-ce que FranceConnect ?#}
+{#            </a>#}
+{#        </p>#}
+{#    </div>#}
+
+
+
+{#    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="bloc-separation">#}
+{#        <fieldset>#}
+{#            <legend align="center">ou</legend>#}
+{#        </fieldset>#}
+{#    </div>#}
+
+
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop50" id="bloc-login">
+
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" id="container-create">
+        <fieldset>
+            <legend>Pas de compte?</legend>
+            {% if isShowDemandeCreateAction is not empty %}
+                <p>
+                    Si vous n'avez pas d'espace personnel, veuillez cliquer sur le lien ci-dessous pour en cr&eacute;er un et acc&eacute;der &agrave; votre espace personnel.
+                </p>
+
+                <div class="container-submit">
+                    <a href="{{ path('user_registration') }}" class="btn btn-warning">Créer un compte</a>
+                </div>
+            {% else %}
+                <div class="bold text-justify" id="text-revision-dispositif-aide">
+                    <p class="text-color-legend">Je n'ai pas de compte</p>
+                    <p>Pour b&eacute;n&eacute;ficier du Ch&egrave;que &eacute;co-&eacute;nergie Normandie, vous devez &ecirc;tre accompagn&eacute; par un conseiller d'une structure agr&eacute;&eacute;e Mon Accompagnateur R&eacute;nov' (MAR) par l'Anah et conventionn&eacute;e avec la R&eacute;gion (la liste des structures est &agrave; retrouver sur <a href="https://cheque-eco-energie.normandie.fr/trouver-un-conseiller" target="_blank">https://cheque-eco-energie.normandie.fr/trouver-un-conseiller</a>).</p>
+                    <p>Depuis mars 2025, les particuliers ne peuvent plus proc&eacute;der directement &agrave; leur inscription sur le site. Par cons&eacute;quent, nous vous invitons &agrave; demander &agrave; votre conseiller de cr&eacute;er votre compte et d'effectuer votre demande d'aide Audit / Travaux.  Vous serez ensuite inform&eacute; par mail de l'avancement de votre dossier.</p>
+                    <p>
+                        Merci de votre compr&eacute;hension.
+                    </p>
+                    <p>
+                        L'&eacute;quipe &laquo; Ch&egrave;que &eacute;co-&eacute;nergie Normandie &raquo;
+                    </p>
+                </div>
+            {% endif %}
+            <br>
+        </fieldset>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" id="container-connect">
+        <fieldset>
+            <legend>J'acc&egrave;de &agrave; mon compte</legend>
+
+                <form action="{{ path("user_login") }}" method="post">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+                    <div class="container-login">
+
+                        <form>
+                            <div class="form-group">
+                                <label for="username" class="col-xs-12 col-sm-12 col-md-5 col-lg-5">Login</label>
+                                <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" placeholder="Login" class="col-xs-12 col-sm-12 col-md-7 col-lg-7" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password" class="col-xs-12 col-sm-12 col-md-5 col-lg-5">Mot de passe</label>
+                                <input type="password" id="password" name="_password" required="required" placeholder="Mot de passe" class="col-xs-12 col-sm-12 col-md-7 col-lg-7" />
+                            </div>
+
+                            <div class="form-group container-checkbox">
+                                <input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
+                                <label for="remember_me">Se souvenir de moi</label>
+                            </div>
+
+                            {% if cachedUserIsCaptchaItemValue is defined and cachedUserIsCaptchaItemValue %}
+                                <div class="form-group">
+                                    {{ captcha.recaptcha(recaptcha_client_key) }}
+                                </div>
+                            {% endif %}
+
+                            <div class="container-submit">
+                                <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 submit-padding">
+                                    <input type="submit" class="btn btn-warning" id="_submit" name="_submit" value="Connexion" />
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="container-help">
+                            <a href="{{ path('user_resetting_request') }}">Mot de passe oubli&eacute;?</a>
+                        </div>
+                    </div>
+                </form>
+
+        </fieldset>
+    </div>
+    </div>
+
+
+{#    <!-- POUR MAINTENANCE -->#}
+{#    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop50" id="bloc-login">#}
+{#        <fieldset>#}
+{#            <legend style="padding: 0 500px"><h2>Site en maintenance</h2></legend>#}
+{#            <div class='text-center'>#}
+{#                <h4>Ch&egrave;que &eacute;co-&eacute;nergie Normandie est en cours de maintenance. Nous serons de retour tr&egrave;s bient&ocirc;t. Merci de votre patience.</h4>#}
+{#            </div>#}
+{#        </fieldset>#}
+{#    </div>#}
+
+</div>
+{% endblock %}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="apple-touch-icon" href="{{ asset('build/images/backOffice/favicon/apple-touch-icon.png') }}"
+          sizes="180x180">
+    <link rel="icon" href="{{ asset('build/images/backOffice/favicon/favicon-32x32.png') }}" type="image/png"
+          sizes="32x32">
+    <link rel="icon" href="{{ asset('build/images/backOffice/favicon/favicon-16x16.png') }}" type="image/png"
+          sizes="16x16">
+    <link rel="mask-icon" href="{{ asset('build/images/backOffice/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="manifest" href="{{ asset('build/images/backOffice/favicon/manifest.json') }}">
+
+    <title>
+        {% block title %}
+            Espace Partenaire
+        {% endblock %}
+    </title>
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_link_tags('backOffice') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        {{ encore_entry_script_tags('backOffice') }}
+        <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    {% endblock %}
+</head>
+<body>
+{% set currentPath = app.request.attributes.get('_route') %}
+
+{{ render(controller('App\\Controller\\BackOfficeCommonController::layoutHeader', {
+    'route': currentPath,
+    'routeParams': app.request.attributes.get('_route_params')
+})) }}
+
+{% if 'admin_user_login' != currentPath %}
+    <div class="nav-right visible-xs">
+        <div class="buttonSidebar" id="btn">
+            <div class="bar top"></div>
+            <div class="bar middle"></div>
+            <div class="bar bottom"></div>
+        </div>
+    </div>
+
+    <nav class="navbar-fixed-top navPadding">
+        <div class="nav-right hidden-xs">
+            <div class="buttonSidebar" id="btn">
+                <div class="bar top"></div>
+                <div class="bar middle"></div>
+                <div class="bar bottom"></div>
+            </div>
+        </div>
+    </nav>
+
+<main class="mainSidebar">
+    {% endif %}
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row padding13">
+                {{ include('Macros/error.html.twig') }}
+
+                {% block contents %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    {% if 'admin_user_login' != currentPath %}
+</main>
+
+    <div class="sidebar">
+        <ul class="sidebar-list">
+            {% if is_granted('ROLE_CONSEILLER')
+                or is_granted('ROLE_INSTRUCTEUR')
+                or is_granted('ROLE_AUDITEUR')
+                or is_granted('ROLE_RENOVATEUR')
+                or is_granted('ROLE_EPCI')
+                or is_granted('ROLE_CLIENT')
+                or is_granted('ROLE_ADMIN')
+                or is_granted('ROLE_TECHNIQUE') %}
+                <li class="sidebar-item"><a href="{{ path("demande_list_all") }}" class="sidebar-anchor">Consultation
+                        des dossiers</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="{{ path("beneficiaire_list_all") }}" class="sidebar-anchor">Liste des
+                        b&eacute;n&eacute;ficiaires</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="{{ path("demande_list_bo") }}" class="sidebar-anchor">Instruction
+                        administrative</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_CONSEILLER') %}
+                <li class="sidebar-item"><a
+                            href="{{ path(constant('App\\Utils\\DefaultServiceUtils::PATHNAME_CONSEILLER_BENEFICIAIRE_LIST')) }}"
+                            class="sidebar-anchor">Assistance B&eacute;n&eacute;ficiaires</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_CONSEILLER') or is_granted('ROLE_AUDITEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="{{ path("demande_devis_list") }}" class="sidebar-anchor">Instruction
+                        Technique</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="{{ path("dateCP_list") }}" class="sidebar-anchor">Dates de CP</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="{{ path("production_list") }}" class="sidebar-anchor">Productions des
+                        Ch&egrave;ques</a></li>
+            {% endif %}
+            {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="{{ path('titre_list') }}" class="sidebar-anchor">Liste des Ch&egrave;ques
+                        &eacute;mis</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_CONSEILLER')
+                or is_granted('ROLE_INSTRUCTEUR')
+                or is_granted('ROLE_INSTRUCTEUR_UP')
+                or is_granted('ROLE_AUDITEUR')
+                or is_granted('ROLE_RENOVATEUR')
+                or is_granted('ROLE_CLIENT')
+                or is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="{{ path("remboursement_list") }}" class="sidebar-anchor">Remboursement
+                        des Aides</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="{{ path("dateRMH_list") }}" class="sidebar-anchor">Dates de RMH</a>
+                </li>
+            {% endif %}
+
+            {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="#" class="sidebar-anchor">&nbsp;</a></li>
+                <li class="sidebar-item"><a href="{{ path("partenaire_list", {'type': 0}) }}" class="sidebar-anchor">Liste
+                        des auditeurs</a></li>
+                <li class="sidebar-item"><a href="{{ path("partenaire_list", {'type': 1}) }}" class="sidebar-anchor">Liste
+                        des r&eacute;novateurs</a></li>
+                <li class="sidebar-item"><a href="{{ path("structure_list") }}" class="sidebar-anchor">Liste des
+                        structures</a></li>
+                <li class="sidebar-item"><a href="{{ path("EPCI_list") }}" class="sidebar-anchor">Liste des EPCI</a>
+                </li>
+                <li class="sidebar-item"><a href="{{ path("orientation_list") }}" class="sidebar-anchor">Liste des
+                        Orientations H&amp;E</a></li>
+                <li class="sidebar-item"><a href="{{ path("ANAHCritere_list") }}" class="sidebar-anchor">Liste des Crit&egrave;res
+                        ANAH</a></li>
+                <li class="sidebar-item"><a href="{{ path("banque_list") }}" class="sidebar-anchor">Liste des
+                        Banques</a></li>
+                <li class="sidebar-item"><a href="{{ path("contact_list") }}" class="sidebar-anchor">Newsletter</a></li>
+            {% endif %}
+
+{#            {% if is_granted('ROLE_AUDITEUR') %}#}
+{#                <li class="sidebar-item"><a href="{{ path('partenaire_export_rating', {'partenaireId': app.user.username|slice(1)|number_format(0,'',''), 'partenaireType': 0}) }}" class="sidebar-anchor" target="_blank">Avis</a></li>#}
+{#            {% endif %}#}
+
+            {% if is_granted('ROLE_RENOVATEUR') %}
+                <li class="sidebar-item"><a
+                            href="{{ path('partenaire_export_rating', {'partenaireId': app.user.username|slice(1)|number_format(0,'',''), 'partenaireType': 1}) }}"
+                            class="sidebar-anchor" target="_blank">Avis</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_CONSEILLER') or is_granted('ROLE_AUDITEUR') or is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_TECHNIQUE') %}
+                <li class="sidebar-item"><a href="{{ path("document_help_view") }}" class="sidebar-anchor"
+                                            target="_blank">Besoin d'aide ?</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="#" class="sidebar-anchor">&nbsp;</a></li>
+                <li class="sidebar-item"><a
+                            href="{{ path(constant('App\\Utils\\DefaultServiceUtils::PATHNAME_CONSEILLER_BENEFICIAIRE_LIST')) }}"
+                            class="sidebar-anchor">Assistance B&eacute;n&eacute;ficiaires</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="{{ path('admin_list') }}" class="sidebar-anchor">Liste des
+                        Utilisateurs</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="sidebar-item"><a href="{{ path('admin_import') }}" class="sidebar-anchor">Import de donn&eacute;es</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+{% endif %}
+
+{#
+{{ render(controller('App\\Controller\\BackOfficeCommonController::layoutFooter')) }}
+#}
+
+</body>
+</html>

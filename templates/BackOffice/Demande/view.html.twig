@@ -1,0 +1,1008 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_demande_view') }}
+{% endblock %}
+
+{% block contents %}
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-2 marginBottom40 hidden" id="content-wrapper">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="container-title">
+                <h2>Consulter une Demande: Dossier n&deg;{{ demande.demandeId }}</h2>
+                {% if is_granted('ROLE_CONSEILLER')
+                    or is_granted('ROLE_AUDITEUR')
+                    or is_granted('ROLE_RENOVATEUR')
+                    or is_granted('ROLE_EPCI')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                    or is_granted('ROLE_TECHNIQUE')
+                %}
+
+                    {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType)
+                        and (constant('App\\Entity\\Demande_statut::STATUS_14') == demande.statutId)
+                    %}
+                        <a href="{{ path('demande_fiche_liaison_bo', {'demandeId': demande.demandeId}) }}"
+                           class="btn btn-success btn-xs"
+                           role="button"
+                           id="button_position1"
+                           data-toggle="tooltip"
+                           data-placement="bottom"
+                           data-container="body"
+                           title="T&eacute;l&eacute;charger la Fiche Liaison"
+                           target="_blank">
+                            <i class="glyphicon glyphicon-file"></i>
+                        </a>
+                    {% else %}
+                        <a href="#"
+                           class="btn btn-link btn-xs"
+                           role="button"
+                           id="button_position1"
+                           data-toggle="tooltip"
+                           data-placement="bottom"
+                           data-container="body"
+                           title="Indisponible"
+                        >
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                        </a>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                        {% if demande.statutId not in ['13', '15'] %}
+                        {# Cas Demande au statut autre que "chèque en cours de production" ou "refusée" #}
+                            {% if demande.dateCPId is null %}
+                            {# Cas Demande au statut "Chèque en cours de production" #}
+                                <a href="{{ path('demande_edit', {'demandeId': demande.demandeId}) }}"
+                                   class="btn btn-warning btn-xs"
+                                   id="button_position2"
+                                   role="button"
+                                   data-toggle="tooltip"
+                                   data-placement="bottom"
+                                   data-container="body"
+                                   title="Modifier la Demande"
+                                >
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                </a>
+                            {% elseif demande.statutId not in ['14'] %}
+                            {# Cas Demande au statut autre que "Chèque envoyé au bénéficiaire" #}
+                                <a href="{{ path('demande_edit', {'demandeId': demande.demandeId}) }}"
+                                   class="btn btn-danger btn-xs"
+                                   id="button_position2"
+                                   role="button"
+                                   data-toggle="tooltip"
+                                   data-placement="bottom"
+                                   data-container="body"
+                                   title="Attention: Une date de commission a d&eacute;j&eacute; &eacute;t&eacute; affect&eacute;e."
+                                >
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                </a>
+                            {% else %}
+                                <a href="#"
+                                   class="btn btn-link btn-xs"
+                                   id="button_position2"
+                                   role="button"
+                                   data-toggle="tooltip"
+                                   data-placement="bottom"
+                                   data-container="body"
+                                   title="Indisponible"
+                                >
+                                    <i class="glyphicon glyphicon-ban-circle"></i>
+                                </a>
+                            {% endif %}
+
+                            {% if demande.statutId not in ['11','13'] %}
+                                {# SET VARIABLES REMBOURSEMENT #}
+                                {% if remboursement and demande.remboursementId %}
+                                    {% if remboursement2 and demande.remboursementId2 %}
+                                        {% set remboursementId = demande.remboursementId2 %}
+                                        {% set remboursementStatutId = remboursement2.statutId %}
+                                    {% else %}
+                                        {% set remboursementId = demande.remboursementId %}
+                                        {% set remboursementStatutId = remboursement.statutId %}
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if remboursementId is defined and remboursementId is not null %}
+                                {# Cas Remboursement existe #}
+
+                                    {% if remboursementStatutId not in ['20'] %}
+                                    {# Cas Remboursement au statut autre que refusé #}
+                                        {% if remboursementStatutId not in ['21', '22'] %}
+                                            <span data-toggle="modal" data-target="#popupRefusRemboursement">
+                                                <a  href="#"
+                                                    class="btn btn-danger btn-xs"
+                                                    id="button_position3"
+                                                    role="button"
+                                                    data-toggle="tooltip"
+                                                    data-placement="bottom"
+                                                    data-container="body"
+                                                    title="Refuser le Remboursement"
+                                                >
+                                                    <i class="glyphicon glyphicon-remove-sign"></i>
+                                                </a>
+                                            </span>
+                                        {% else %}
+                                        {# Cas Remboursement au statut "en cours de remboursement par la Région" ou "Remboursé" #}
+                                            <a href="#"
+                                               class="btn btn-link btn-xs"
+                                               id="button_position3"
+                                               role="button"
+                                               data-toggle="tooltip"
+                                               data-placement="bottom"
+                                               data-container="body"
+                                               title="Indisponible"
+                                            >
+                                                <i class="glyphicon glyphicon-ban-circle"></i>
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                    {# Cas Remboursement au statut "refusé" #}
+                                        <a href="#"
+                                           class="btn btn-link btn-xs"
+                                           id="button_position3"
+                                           role="button"
+                                           data-toggle="tooltip"
+                                           data-placement="bottom"
+                                           data-container="body"
+                                           title="Remboursement au statut refus&eacute;"
+                                        >
+                                            <i class="glyphicon glyphicon-ban-circle"></i>
+                                        </a>
+                                    {% endif %}
+
+                                {% else %}
+                                {# Cas Remboursement n'existe pas #}
+
+                                    {% if demande.statutId not in ['14'] %}
+                                        <span data-toggle="modal" data-target="#popupRefusDemande">
+                                            <a  href="#"
+                                                class="btn btn-danger btn-xs"
+                                                id="button_position3"
+                                                role="button"
+                                                data-toggle="tooltip"
+                                                data-placement="bottom"
+                                                data-container="body"
+                                                title="Refuser la Demande"
+                                            >
+                                                <i class="glyphicon glyphicon-remove-sign"></i>
+                                            </a>
+                                        </span>
+                                    {% else %}
+                                    {# Cas Demande au statut "Chèque envoyé au Beneficiaire" #}
+                                        <a href="#"
+                                           class="btn btn-link btn-xs"
+                                           id="button_position3"
+                                           role="button"
+                                           data-toggle="tooltip"
+                                           data-placement="bottom"
+                                           data-container="body"
+                                           title="Indisponible"
+                                        >
+                                            <i class="glyphicon glyphicon-ban-circle"></i>
+                                        </a>
+                                    {% endif %}
+
+                                {% endif %}
+                            {% else %}
+                                <a href="#"
+                                   class="btn btn-link btn-xs"
+                                   id="button_position3"
+                                   role="button"
+                                   data-toggle="tooltip"
+                                   data-placement="bottom"
+                                   data-container="body"
+                                   title="Indisponible"
+                                >
+                                    <i class="glyphicon glyphicon-ban-circle"></i>
+                                </a>
+                            {% endif %}
+                        {% else %}
+                        {# Cas Demande au statut "chèque en cours de production" ou "refusée" #}
+                            {% if demande.statutId in ['13'] %}
+                                {% set titleTooltip = 'Chèque en cours de production' %}
+                            {% else %}
+                                {% set titleTooltip = 'Demande au statut refusé' %}
+                            {% endif %}
+                            <a href="#"
+                               class="btn btn-link btn-xs"
+                               id="button_position2"
+                               role="button"
+                               data-toggle="tooltip"
+                               data-placement="bottom"
+                               data-container="body"
+                               title="{{ titleTooltip }}"
+                            >
+                                <i class="glyphicon glyphicon-ban-circle"></i>
+                            </a>
+
+                            <a href="#"
+                               class="btn btn-link btn-xs"
+                               id="button_position3"
+                               role="button"
+                               data-toggle="tooltip"
+                               data-placement="bottom"
+                               data-container="body"
+                               title="Demande au statut refus&eacute;"
+                            >
+                                <i class="glyphicon glyphicon-ban-circle"></i>
+                            </a>
+                        {% endif %}
+
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <span data-toggle="modal" data-target="#popupValidation">
+                                <a  href="#"
+                                    class="btn btn-danger btn-xs"
+                                    id="button_position4"
+                                    role="button"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    data-container="body"
+                                    title="Supprimer la Demande"
+                                >
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                </a>
+                            </span>
+                        {% else %}
+                            <a href="#"
+                               class="btn btn-link btn-xs"
+                               id="button_position4"
+                               role="button"
+                               data-toggle="tooltip"
+                               data-placement="bottom"
+                               data-container="body"
+                               title="Indisponible"
+                            >
+                                <i class="glyphicon glyphicon-ban-circle"></i>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="#"
+                           class="btn btn-link btn-xs"
+                           id="button_position4"
+                           role="button"
+                           data-toggle="tooltip"
+                           data-placement="bottom"
+                           data-container="body"
+                           title="Indisponible"
+                        >
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                        </a>
+                        <a href="#"
+                           class="btn btn-link btn-xs"
+                           id="button_position3"
+                           role="button"
+                           data-toggle="tooltip"
+                           data-placement="bottom"
+                           data-container="body"
+                           title="Indisponible"
+                        >
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                        </a>
+                        <a href="#"
+                           class="btn btn-link btn-xs"
+                           id="button_position2"
+                           role="button"
+                           data-toggle="tooltip"
+                           data-placement="bottom"
+                           data-container="body"
+                           title="Indisponible"
+                        >
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                        </a>
+                    {% endif %}
+
+                {% endif %}
+
+                {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                    {%
+                        if (
+                            demande.statutId == '14'
+                            and (
+                                (not remboursement or remboursement.statutId != '22')
+                                or (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType and 1 == isBBC2 and (not remboursement2 or remboursement2.statutId != '22'))
+                            )
+                        )
+                    %}
+                        <span data-toggle="modal" data-target="#popupAssignContacts">
+                            <a  href="#"
+                                class="btn btn-warning btn-xs"
+                                id="button_position5"
+                                role="button"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-container="body"
+                                title="Modifier les contacts"
+                            >
+                                <i class="glyphicon glyphicon-retweet"></i>
+                            </a>
+                        </span>
+                    {% else %}
+                        <a href="#"
+                           class="btn btn-link btn-xs"
+                           id="button_position5"
+                           role="button"
+                           data-toggle="tooltip"
+                           data-placement="bottom"
+                           data-container="body"
+                           title="Indisponible"
+                        >
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <a href="#"
+                       class="btn btn-link btn-xs"
+                       id="button_position5"
+                       role="button"
+                       data-toggle="tooltip"
+                       data-placement="bottom"
+                       data-container="body"
+                       title="Indisponible"
+                    >
+                        <i class="glyphicon glyphicon-ban-circle"></i>
+                    </a>
+                {% endif %}
+
+                {% if (is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN'))
+                    and ((constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and demande.devisId)
+                %}
+                    <span data-toggle="modal" data-target="#popupTravauxDevisUpdateNiveauAide">
+                        <a  href="#"
+                            class="btn btn-warning btn-xs"
+                            id="button_position6"
+                            role="button"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-container="body"
+                            title="Changer niveau d'aides"
+                        >
+                            <i class="glyphicon glyphicon-random"></i>
+                        </a>
+                    </span>
+                {% else %}
+                    <a href="#"
+                       class="btn btn-link btn-xs"
+                       id="button_position6"
+                       role="button"
+                       data-toggle="tooltip"
+                       data-placement="bottom"
+                       data-container="body"
+                       title="Indisponible"
+                    >
+                        <i class="glyphicon glyphicon-ban-circle"></i>
+                    </a>
+                {% endif %}
+
+                {% if (is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN'))
+                    and (constant('App\\Entity\\Demande_statut::STATUS_15') == demande.statutId)
+                %}
+                    <span data-toggle="modal" data-target="#modalReactivationDemande">
+                        <a  href="#"
+                            class="btn btn-warning btn-xs"
+                            id="button_position7"
+                            role="button"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-container="body"
+                            title="Réactiver demande"
+                        >
+                            <i class="glyphicon glyphicon-folder-open"></i>
+                        </a>
+                    </span>
+                {% else %}
+                    <a href="#"
+                       class="btn btn-link btn-xs"
+                       id="button_position7"
+                       role="button"
+                       data-toggle="tooltip"
+                       data-placement="bottom"
+                       data-container="body"
+                       title="Indisponible"
+                    >
+                        <i class="glyphicon glyphicon-ban-circle"></i>
+                    </a>
+                {% endif %}
+
+                {{ include('BackOffice/Demande/inc/back.html.twig') }}
+            </div>
+        </div>
+
+        {% set path_location = 'demande_document_bo' %}
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <ul class="nav nav-tabs marginTop20" role="tablist">
+                {% if is_granted('ROLE_AUDITEUR')
+                    or is_granted('ROLE_RENOVATEUR')
+                    or is_granted('ROLE_CONSEILLER')
+                    or is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                %}
+                    <li class="active"><a href="#tab_beneficiaire" aria-controls="beneficiaire" role="tab" data-toggle="tab">B&eacute;n&eacute;ficiaire</a></li>
+                    <li><a href="#tab_logement" aria-controls="logement" role="tab" data-toggle="tab">Logement</a></li>
+                {% endif %}
+
+                {% if is_granted('ROLE_CONSEILLER')
+                    or is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                %}
+                    <li><a href="#tab_demande" aria-controls="demande" role="tab" data-toggle="tab">Demande</a></li>
+                {% endif %}
+
+                {% set classDevis = '' %}
+                {% set classDevisPanel = '' %}
+                {% set classFicheTechnique = '' %}
+                {% set classFicheTechniquePanel = '' %}
+                {% if is_granted('ROLE_EPCI') or is_granted('ROLE_TECHNIQUE') %}
+                    {% if demande.devisId is defined and demande.devisId %}
+                        {% set classDevis = 'active' %}
+                        {% set classDevisPanel = 'in active' %}
+                    {% else %}
+                        {% if demande.ficheTechniqueId is defined and demande.ficheTechniqueId %}
+                            {% set classFicheTechnique = 'active' %}
+                            {% set classFicheTechniquePanel = 'in active' %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and demande.devisId %}
+                    <li class="{{ classDevis }}"><a href="#tab_devis" aria-controls="devis" role="tab" data-toggle="tab">Devis</a></li>
+                {% endif %}
+
+                {% if is_granted('ROLE_AUDITEUR')
+                    or is_granted('ROLE_RENOVATEUR')
+                    or is_granted('ROLE_CONSEILLER')
+                    or is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_EPCI')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                    or is_granted('ROLE_TECHNIQUE')
+                %}
+                    {% if constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType and demande.ficheTechniqueId %}
+                        <li class="{{ classFicheTechnique }}"><a href="#tab_ficheTechnique" aria-controls="devis" role="tab" data-toggle="tab">Fiche Technique</a></li>
+                    {% endif %}
+                {% endif %}
+
+                {% if is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                    or is_granted('ROLE_CONSEILLER')
+                %}
+                    {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and (1 == isBBC2) %}
+                        <li><a href="#tab_remboursement" aria-controls="remboursement" role="tab" data-toggle="tab">Remboursement (1/2)</a></li>
+                        <li><a href="#tab_remboursement2" aria-controls="remboursement2" role="tab" data-toggle="tab">Remboursement (2/2)</a></li>
+                    {% else %}
+                        <li><a href="#tab_remboursement" aria-controls="remboursement" role="tab" data-toggle="tab">Remboursement</a></li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+
+
+
+            <div class="tab-content">
+                {% if is_granted('ROLE_AUDITEUR')
+                    or is_granted('ROLE_RENOVATEUR')
+                    or is_granted('ROLE_CONSEILLER')
+                    or is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                %}
+                    <div role="tabpanel" class="tab-pane fade in active" id="tab_beneficiaire">
+                        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/identification.html.twig') }}
+                        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/adresse.html.twig') }}
+                        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/situation.html.twig') }}
+                        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/dispositif.html.twig') }}
+                        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/structure.html.twig') }}
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="tab_logement">
+                        {{ include('FrontOffice/Logement/inc/view_logement/identification.html.twig') }}
+                        {{ include('FrontOffice/Logement/inc/view_logement/adresse.html.twig') }}
+                        {{ include('FrontOffice/Logement/inc/view_logement/situation.html.twig') }}
+                        {{ include('FrontOffice/Logement/inc/view_logement/caracteristique.html.twig') }}
+                    </div>
+                {% endif %}
+
+                {% if is_granted('ROLE_CONSEILLER')
+                    or is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                %}
+                    <div role="tabpanel" class="tab-pane fade" id="tab_demande">
+                        {% if (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE') == demande.demandeType)
+                            or (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE') == demande.demandeType)
+                        %}
+                            {{ include('FrontOffice/Demande/AuditEnergie/inc/view_auditEnergie/document.html.twig') }}
+                            {{ include('FrontOffice/Demande/AuditEnergie/inc/view_auditEnergie/revenu.html.twig') }}
+                            {{ include('FrontOffice/Demande/AuditEnergie/inc/view_auditEnergie/structure.html.twig') }}
+                            {{ include('FrontOffice/Demande/AuditEnergie/inc/view_auditEnergie/auditeur.html.twig') }}
+                            {{ include('FrontOffice/Demande/AuditEnergie/inc/view_auditEnergie/signature.html.twig') }}
+                        {% elseif (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE') == demande.demandeType
+                                or constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE') == demande.demandeType)
+                        %}
+                            {{ include('FrontOffice/Demande/AuditNumerique/inc/view_auditNumerique/condition.html.twig') }}
+                            {{ include('FrontOffice/Demande/AuditNumerique/inc/view_auditNumerique/structure.html.twig') }}
+                            {{ include('FrontOffice/Demande/AuditNumerique/inc/view_auditNumerique/auditeur.html.twig') }}
+                            {{ include('FrontOffice/Demande/AuditNumerique/inc/view_auditNumerique/signature.html.twig') }}
+                        {% elseif (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) %}
+                            {{ include('FrontOffice/Demande/Travaux/inc/view_travaux/audit.html.twig') }}
+                            {{ include('FrontOffice/Demande/Travaux/inc/view_travaux/revenu.html.twig') }}
+                            {{ include('FrontOffice/Demande/Travaux/inc/view_travaux/structure.html.twig') }}
+                            {{ include('FrontOffice/Demande/Travaux/inc/view_travaux/signature.html.twig') }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and demande.devisId %}
+                    <div role="tabpanel" class="tab-pane fade {{ classDevisPanel }}" id="tab_devis">
+                        {% if devis %}
+
+                            {% set disabled_button_popupValidation = '1' %}
+                            {% if
+                                (demande.demandeAudit is defined and demande.demandeAudit)
+                                or '2' != informationANAH
+                            %}
+                                {% set disabled_button_popupValidation = '0' %}
+                            {% endif %}
+
+                            {{ include('FrontOffice/Demande/Devis/inc/view_devis/audit.html.twig') }}
+                            {{ include('FrontOffice/Demande/Devis/inc/view_devis/document.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/form_devis/revenuFiscal.html.twig') }}
+                            {{ include('FrontOffice/Demande/Devis/inc/view_devis/type.html.twig') }}
+                            {{ include('FrontOffice/Demande/Devis/inc/view_devis/plan.html.twig') }}
+                            {{ include('FrontOffice/Demande/Devis/inc/view_devis/acte_engagement.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_devis/instruction.html.twig') }}
+                        {% else %}
+                            <p class="text-center bold marginTop20">Aucun Devis r&eacute;alis&eacute;.</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {% if is_granted('ROLE_AUDITEUR')
+                    or is_granted('ROLE_RENOVATEUR')
+                    or is_granted('ROLE_CONSEILLER')
+                    or is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_EPCI')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                    or is_granted('ROLE_TECHNIQUE')
+                %}
+                    {% if constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType and demande.ficheTechniqueId %}
+                    <div role="tabpanel" class="tab-pane fade marginBottom20 {{ classFicheTechniquePanel }}" id="tab_ficheTechnique">
+                        {% if ficheTechnique %}
+                            {% set pathologieVentilationArray = {
+                            '1 | humidite remontee capillaire': 'Humidité Remontée Capillaire',
+                            '2 | humidite pluie': 'Humidité Pluie',
+                            '3 | humidite non diagnostiquee': 'Humidité non diagnostiquée',
+                            '4 | humidite ventilation': 'Humidité Ventilation',
+                            '5 | champignon': 'Champignon',
+                            '6 | merule': 'Merule',
+                            '7 | termites': 'Termites',
+                            '8 | fissuration structure': 'Fissuration Structure',
+                            '9 | fuite couverture': 'Fuite Couverture',
+                            '10 | absence gouttiere': 'Absence Gouttière',
+                            '11 | fioul': 'Fioul',
+                            '12 | gaz naturel': 'Gaz Naturel',
+                            '13 | gaz propane': 'Gaz Propane',
+                            '14 | electricite': 'Electricité',
+                            '15 | pompe chaleur': 'Pompe à Chaleur',
+                            '16 | solaire thermique': 'Solaire Thermique',
+                            '17 | solaire photvoltaique': 'Solaire Photovoltaïque',
+                            '18 | charbon': 'Charbon',
+                            '19 | bois': 'Bois',
+                            '20 | naturelle': 'Naturelle',
+                            '21 | double flux': 'Double flux',
+                            '22 | simple flux': 'Simple flux',
+                            '23 | simple flux autoreglable': 'Simple flux autoréglable',
+                            '24 | simple flux B': 'Simple flux Hygro-réglable B',
+                            '25 | simple flux A': 'Simple flux Hygro A',
+                            '26 | vmr': 'VMR',
+                            '27 | vmi': 'VMI',
+                            '28 | no ventilation': 'Pas de Ventilation',
+                            '29 | autre': 'Autre',
+                            '': '-'
+                            } %}
+
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/document.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/type.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/surface.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/toiture.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/murs.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/menuiseries.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/plancherBas.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/chauffage.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/ECS.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/climatisation.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/CEP.html.twig') }}
+                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/validation.html.twig') }}
+                        {% else %}
+                            <p class="text-center bold marginTop20">Aucune Fiche Technique r&eacute;alis&eacute;e.</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endif %}
+
+                {% if is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                    or is_granted('ROLE_CONSEILLER')
+                %}
+                    {% set isConformeArray = {
+                        '0': 'OUI',
+                        '1': 'NON',
+                        '': '-'
+                    } %}
+                    <div role="tabpanel" class="tab-pane fade" id="tab_remboursement">
+                        {% if demande.remboursementId and remboursement %}
+                            {% if (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE') == demande.demandeType
+                                or constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE') == demande.demandeType)
+                            %}
+                                {% set remboursementInstruction = (remboursement and remboursement.remboursementAuditEnergie and remboursement.remboursementAuditEnergie.instruction) ? remboursement.remboursementAuditEnergie.instruction : null %}
+                                {% set remboursementDepot = (remboursement and remboursement.remboursementAuditEnergie and remboursement.remboursementAuditEnergie.depot) ? remboursement.remboursementAuditEnergie.depot : null %}
+                                {% set typeDemandeDocument = 5 %}
+                                {% set typeDepotDocument = 4 %}
+                            {% elseif (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE') == demande.demandeType
+                                or constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE') == demande.demandeType)
+                            %}
+                                {% set remboursementInstruction = (remboursement and remboursement.remboursementAuditNumerique and remboursement.remboursementAuditNumerique.instruction) ? remboursement.remboursementAuditNumerique.instruction : null %}
+                                {% set remboursementDepot = (remboursement and remboursement.remboursementAuditNumerique and remboursement.remboursementAuditNumerique.depot) ? remboursement.remboursementAuditNumerique.depot : null %}
+                                {% set typeDemandeDocument = 8 %}
+                                {% set typeDepotDocument = 7 %}
+                            {% elseif (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) %}
+                                {% set remboursementInstruction = (remboursement and remboursement.remboursementTravaux and remboursement.remboursementTravaux.instruction) ? remboursement.remboursementTravaux.instruction : null %}
+                                {% set remboursementDepot = '' %}
+                                {% set typeDemandeDocument = 9 %}
+                                {% set typeDepotDocument = '' %}
+                            {% endif %}
+
+                            {% if is_granted('ROLE_INSTRUCTEUR')
+                                or is_granted('ROLE_CLIENT')
+                                or is_granted('ROLE_ADMIN')
+                            %}
+                                {{ include('BackOffice/Demande/inc/view_remboursement/statut.html.twig') }}
+                                {{ include('BackOffice/Demande/inc/view_remboursement/remise.html.twig') }}
+                                {{ include('BackOffice/Demande/inc/view_remboursement/cheque.html.twig') }}
+                            {% endif %}
+
+                            {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and (1 == isBBC1) %}
+                                {{ include('BackOffice/Demande/inc/view_remboursement/ficheTravaux.html.twig') }}
+                            {% else %}
+                                {{ include('BackOffice/Demande/inc/view_remboursement/facture.html.twig') }}
+                            {% endif %}
+
+                            {% if is_granted('ROLE_INSTRUCTEUR')
+                                or is_granted('ROLE_CLIENT')
+                                or is_granted('ROLE_ADMIN')
+                            %}
+                                {{ include('BackOffice/Demande/inc/view_remboursement/RIB.html.twig') }}
+                                {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') != demande.demandeType) %}
+                                    {{ include('BackOffice/Demande/inc/view_remboursement/depot.html.twig') }}
+                                {% endif %}
+                            {% endif %}
+
+                        {% else %}
+                            <p class="text-center bold marginTop20">Aucun Remboursement r&eacute;alis&eacute;.</p>
+                        {% endif %}
+                    </div>
+
+                    {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and (1 == isBBC2) %}
+                        <div role="tabpanel" class="tab-pane fade" id="tab_remboursement2">
+                            {% if demande.remboursementId2 and remboursement2 %}
+                                {% set remboursementInstruction = remboursement2.remboursementTravaux.instruction %}
+                                {% set typeDemandeDocument = 9 %}
+
+                                {% if is_granted('ROLE_INSTRUCTEUR')
+                                    or is_granted('ROLE_CLIENT')
+                                    or is_granted('ROLE_ADMIN')
+                                %}
+                                    {% include 'BackOffice/Demande/inc/view_remboursement/statut.html.twig' with {'remboursement': remboursement2, 'remboursementStatutSlug': remboursement2StatutSlug, 'remboursementDateRMH': remboursement2DateRMH} %}
+                                    {% include 'BackOffice/Demande/inc/view_remboursement/remise.html.twig' with {'remboursement': remboursement2} %}
+                                    {% include 'BackOffice/Demande/inc/view_remboursement/cheque.html.twig' with {'remboursement': remboursement2} %}
+                                {% endif %}
+
+                                {% include 'BackOffice/Demande/inc/view_remboursement/facture.html.twig' with {'remboursement': remboursement2} %}
+
+                                {% if is_granted('ROLE_INSTRUCTEUR')
+                                    or is_granted('ROLE_CLIENT')
+                                    or is_granted('ROLE_ADMIN')
+                                %}
+                                    {% include 'BackOffice/Demande/inc/view_remboursement/RIB.html.twig' with {'remboursement': remboursement2} %}
+                                {% endif %}
+
+                            {% else %}
+                                <p class="text-center bold marginTop20">Aucun Remboursement r&eacute;alis&eacute;.</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+        <!-- Modal PopupRefus Demande -->
+        <div class="modal fade modalBackdrop" id="popupRefusDemande" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center" id="myModalLabel1">Veuillez justifier le refus de la Demande</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <form class="form-horizontal" action="{{ path('demande_deny', {'demandeId': demande.demandeId}) }}" method="post">
+                            <div class="form-group">
+                                {{ form_label(form_deny_demande.motifRefus, "Motif de refus", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                                {{ form_errors(form_deny_demande.motifRefus) }}
+
+                                <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                                    {{ form_widget(form_deny_demande.motifRefus, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-submit">
+                                <div class="form-group">
+                                    {{ form_widget(form_deny_demande.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+                                </div>
+                            </div>
+                            &nbsp;
+                            {{ form_rest(form_deny_demande) }}
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if remboursementId is defined and remboursementId is not null %}
+            <!-- Modal PopupRefus Remboursement -->
+            <div class="modal fade modalBackdrop" id="popupRefusRemboursement" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="false">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title text-center" id="myModalLabel2">Veuillez justifier le refus du Remboursement</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <form class="form-horizontal" action="{{ path('remboursement_deny', {'remboursementId': remboursementId}) }}" method="post">
+                                <div class="form-group">
+                                    {{ form_label(form_deny_remboursement.motifRefus, "Motif de refus", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                                    {{ form_errors(form_deny_remboursement.motifRefus) }}
+
+                                    <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                                        {{ form_widget(form_deny_remboursement.motifRefus, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-submit">
+                                    <div class="form-group">
+                                        {{ form_widget(form_deny_remboursement.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+                                    </div>
+                                </div>
+                                &nbsp;
+                                {{ form_rest(form_deny_remboursement) }}
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {%
+            if (
+                demande.statutId == '14'
+                and (
+                    (not remboursement or remboursement.statutId != '22')
+                    or (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType and 1 == isBBC2 and (not remboursement2 or remboursement2.statutId != '22'))
+                )
+            )
+        %}
+            <!-- Modal Choix Contacts (saisie Email Bénéficiaire, Auditeur/Renovateur) -->
+            <div class="modal fade modalBackdrop" id="popupAssignContacts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="false">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title text-center" id="myModalLabel2">Veuillez choisir les contacts</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <form class="form-horizontal" action="{{ path('demande_assign_contacts', {'demandeId': demande.demandeId}) }}" method="post">
+
+                                <div class="form-group">
+                                    {{ form_label(form_assign_demande_contacts.beneficiaireEmail, "Email du Bénéficiaire", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                                    {{ form_errors(form_assign_demande_contacts.beneficiaireEmail) }}
+
+                                    <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                                        {{ form_widget(form_assign_demande_contacts.beneficiaireEmail, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+
+                                <div id="bloc-structure">
+                                    <div class="form-group">
+                                        {{ form_label(form_assign_demande_contacts.structure_id, "Structure", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+                                        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 custom-select">
+                                            {{ form_widget(form_assign_demande_contacts.structure_id, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="hidden" id="bloc-conseillerDisplay">
+                                        <div class="form-group">
+                                            {{ form_label(form_assign_demande_contacts.conseiller_id, "Conseiller", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                                            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 custom-select">
+                                                {{ form_widget(form_assign_demande_contacts.conseiller_id, {'attr': {'class': 'form-control select-conseiller'}}) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="bloc-auditeur" class="{% if not showAuditeur %}hidden{% endif %}">
+                                    <div class="form-group">
+                                        {{ form_label(form_assign_demande_contacts.auditeur_id, "Auditeur", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                                        {{ form_errors(form_assign_demande_contacts.auditeur_id) }}
+
+                                        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 custom-select">
+                                            {{ form_widget(form_assign_demande_contacts.auditeur_id, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="bloc-renovateur" class="{% if not showRenovateur %}hidden{% endif %}">
+                                    <div class="form-group">
+                                        {{ form_label(form_assign_demande_contacts.renovateur_id, "Rénovateur", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                                        {{ form_errors(form_assign_demande_contacts.renovateur_id) }}
+
+                                        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 custom-select">
+                                            {{ form_widget(form_assign_demande_contacts.renovateur_id, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-submit">
+                                    <div class="form-group">
+                                        {{ form_widget(form_assign_demande_contacts.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+                                    </div>
+                                </div>
+                                &nbsp;
+                                {{ form_rest(form_assign_demande_contacts) }}
+                            </form>
+
+                            <div id="data-js-bundle"
+                                 class="hidden"
+                                 data-prefix-pathname-bundle="{{ prefix_pathname_bundle_bo }}">
+                            </div>
+
+                            <div id="data-js-demande"
+                                 class="hidden"
+                                 data-demande-conseiller-id="{{ demandeConseillerId is defined ? demandeConseillerId : '' }}">
+                            </div>
+
+                            <input type="hidden" value="0" id="isCreation" />
+                            <input type="hidden" id="demandeNbPersFoyer" value="{{ demande.demandeNbPersFoyer is defined and demande.demandeNbPersFoyer ? demande.demandeNbPersFoyer : '' }}">
+                            <input type="hidden" id="demandeRevenuFoyer" name="revenuFiscalRef" value="{{ demande.demandeRevenuFoyer is defined and demande.demandeRevenuFoyer ? demande.demandeRevenuFoyer : '' }}">
+                            <input type="hidden" id="demandeType" value="{{ demande.demandeType is defined and demande.demandeType ? demande.demandeType : '' }}">
+                            <input type="hidden" id="beneficiaireId" value="{{ demande.beneficiaireId is defined and demande.beneficiaireId ? demande.beneficiaireId : '' }}">
+                            <input type="hidden" id="logementId" value="{{ logement.id is defined and logement.id ? logement.id : '' }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if ((constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and demande.devisId) %}
+            <!-- Modal TravauxDevis Update NiveauAide -->
+            <div class="modal fade modalBackdrop" id="popupTravauxDevisUpdateNiveauAide" tabindex="-1" role="dialog" data-backdrop="false">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title text-center">Changer niveau d'aides</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" action="{{ path('demande_update_niveau_aide_travaux_devis', {'demandeId': demande.demandeId, 'devisId': demande.devisId}) }}" method="post">
+                                <div class="form-group">
+                                    {{ form_label(form_travaux_devis_update_niveau_aide.niveau, "Niveau d'aide", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                                    {{ form_errors(form_travaux_devis_update_niveau_aide.niveau) }}
+
+                                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                                        {{ form_widget(form_travaux_devis_update_niveau_aide.niveau, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+
+                                <input type="hidden" value="{{ devis.renovateurId }}" id="box-valueRenovateur" />
+                                <div class="form-group hidden" id="box-renovateur">
+                                    {{ form_label(form_travaux_devis_update_niveau_aide.renovateur_id, "Rénovateur", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                                    {{ form_errors(form_travaux_devis_update_niveau_aide.renovateur_id) }}
+
+                                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                                        {{ form_widget(form_travaux_devis_update_niveau_aide.renovateur_id, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-submit">
+                                    <div class="form-group">
+                                        {{ form_widget(form_travaux_devis_update_niveau_aide.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+                                    </div>
+                                </div>
+                                &nbsp;
+                                {{ form_rest(form_travaux_devis_update_niveau_aide) }}
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="data-js-demande-niveau" class="hidden"
+                 data-niveau-etape1-bbc-renovateur-value="{{ constant('App\\Entity\\Demande_travaux_devis::DEMANDE_TYPE_NIVEAU_ETAPE1_BBC_RENOVATEUR_VALUE') }}"
+                 data-niveau-renovation-globale-bbc-value="{{ constant('App\\Entity\\Demande_travaux_devis::DEMANDE_TYPE_NIVEAU_RENOVATION_GLOBALE_BBC_VALUE') }}"
+            ></div>
+            &nbsp;
+        {% endif %}
+
+    {% endif %}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <!-- Modal -->
+        <div class="modal fade modalBackdrop" id="popupValidation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center" id="myModalLabel">Veuillez confirmer la suppression</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <form action="{{ path('demande_delete', {'demandeId': demande.demandeId}) }}" method="post">
+                            <p class="text-center">Etes-vous certain de vouloir supprimer la Demande n&deg;{{ demande.demandeId }}?</p>
+                            <div class="bloc-submit">
+                                <input type="submit" value="Supprimer" class="btn btn-danger text-center" />
+                                <button type="button" class="btn btn-secondary marginLeft10" data-dismiss="modal">Annuler</button>
+                            </div>
+                            {{ form_rest(form_delete) }}
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if (is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN'))
+        and (constant('App\\Entity\\Demande_statut::STATUS_15') == demande.statutId)
+    %}
+        <!-- Modal -->
+        <div class="modal fade modalBackdrop" id="modalReactivationDemande" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center" id="myModalLabel">Veuillez confirmer la r&eacute;activation</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <form action="{{ path('demande_reactive', {'demandeId': demande.demandeId}) }}" method="post">
+                            <p class="text-center">Etes-vous certain de vouloir r&eacute;activer la Demande n&deg;{{ demande.demandeId }}?</p>
+                            <div class="bloc-submit">
+                                <input type="submit" value="Réactiver" class="btn btn-info text-center" />
+                                <button type="button" class="btn btn-secondary marginLeft10" data-dismiss="modal">Annuler</button>
+                            </div>
+                            {{ form_rest(form_reactive_demande) }}
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_demande_viewFicheTechnique_fixedNavType') }}
+    {{ encore_entry_script_tags('backOffice_demande_view_index') }}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+{% endblock %}

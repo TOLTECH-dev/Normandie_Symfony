@@ -1,0 +1,43 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc bloc-historiqueContent">
+    {% for email in item.historiqueEmail %}
+        {% if item.historiqueEmail|length>0 %}
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label">Exp&eacute;di&eacute; &agrave; :</label>
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    {% if email.recipient is not empty %}{{ email.recipient|join(' / ') }}{% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if isCommentaire %}
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label">Auteur :</label>
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    {{ item.auteurCreation }}
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label">Contenu :</label>
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    {{ email.content|nl2br }}
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label">Email :</label>
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    {{ email.content|raw }}
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        {% if isCommentaire %}
+            {% set resultNotFound = 'Aucun commentaire' %}
+        {% else %}
+            {% set resultNotFound = 'Aucun email envoyé' %}
+        {% endif %}
+        <p class="text-center">{{ resultNotFound }}</p>
+    {% endfor %}
+</div>
+&nbsp;

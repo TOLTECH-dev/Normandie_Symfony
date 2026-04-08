@@ -1,0 +1,42 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-document">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Votre Type de Demande</legend>
+
+        <div class="row">
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Je souhaite obtenir la bonification de l'aide :</label>
+                {% if devis.demandeTravauxDevisIsBonificationAide %}
+                    Oui
+                {% elseif devis.demandeTravauxDevisIsBonificationAide is null %}
+                    -
+                {% else %}
+                    Non
+                {% endif %}
+            </div>
+
+            {% if isNotEligible %}
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc marginTop20" id="bloc-revenuFiscal">
+                    <p id="bloc-type-niveau">
+                        <i class="glyphicon glyphicon-warning-sign"></i>&nbsp;
+                        Vous n'&ecirc;tes pas &eacute;ligible au dispositif.
+                    </p><p>&nbsp;</p>
+                </div>
+            {% else %}
+                <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Niveau d'aide :</label>
+                <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                    {{ arrayDemandeTypeNiveau[devis.devisNiveau] is defined ? arrayDemandeTypeNiveau[devis.devisNiveau] : '-'}}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">R&eacute;novateur :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ devis.renovateurId ? devis.renovateurNom : '-' }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

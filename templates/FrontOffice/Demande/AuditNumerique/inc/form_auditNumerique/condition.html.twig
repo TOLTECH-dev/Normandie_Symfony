@@ -1,0 +1,23 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-condition">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Conditions G&eacute;n&eacute;rales</legend>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.demande_auditNumerique.commitment) }}</div>
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                <p>
+                    Je m'engage &agrave; b&eacute;n&eacute;ficier d'une aide r&eacute;gionale Ch&egrave;que Eco-Energie Normandie "{{ demandeTypeLabel }}"
+                </p>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 noMargin noPadding checkboxstyle text-right">
+                {{ form_label(form.demande_auditNumerique.commitment) }}
+                {{ form_widget(form.demande_auditNumerique.commitment) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

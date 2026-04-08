@@ -1,0 +1,26 @@
+{% extends "Main/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('registerCheckEmail') }}
+{% endblock %}
+
+{% block content %}
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="container-title">
+            <h2>Création de compte</h2>
+        </div>
+
+        {#
+        {{ include('whiteLabelMainBundle:Macros:error.html.twig') }}
+        #}
+
+        <p>Un e-mail a été envoyé à l'adresse {{ user.email }}. Il contient un lien d'activation sur lequel il vous faudra cliquer afin d'activer votre compte.</p>
+
+        <br><br>
+
+        <div class="col-xs-12 col-sm-12 container-submit">
+            <a href="{{ path('web_homepage') }}" class="btn btn-warning">Retour à l'accueil</a>
+        </div>
+    </div>
+{% endblock %}

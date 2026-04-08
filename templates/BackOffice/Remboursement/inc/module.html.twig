@@ -1,0 +1,48 @@
+{% extends "BackOffice/Demande/inc/module.html.twig" %}
+
+{% block beneficiaire_complement %}
+    {% if beneficiaire.nomConjoint is defined and beneficiaire.nomConjoint %}
+        <li>Conjoint: {{ beneficiaire.prenomConjoint|capitalize ~ ' ' ~ beneficiaire.nomConjoint|upper }}</li>
+    {% endif %}
+{% endblock beneficiaire_complement %}
+
+{% block custom_bottom_block %}
+    <div id="bloc-further_information">
+        <p class="bold"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;&nbsp;Informations compl&eacute;mentaires</p>
+        <ul>
+            {% set demandeType = demande.type|split(' | ') %}
+            <li>Date cr&eacute;ation de la Demande: {{ demande.dateCreation|date('d/m/Y') }}</li>
+            <li>Num&eacute;ro ch&egrave;que: {{ numeroCheque }}</li>
+            {% if valeurTitre is defined %}
+                {% if (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE') == demande.type) %}
+                    {% set montantFacture = remboursement.remboursementAuditEnergie.instruction.montantFacture %}
+                {% elseif (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE') == demande.type) %}
+                    {% set montantFacture = remboursement.remboursementAuditEnergie.instruction.montantFacture %}
+                {% elseif (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE') == demande.type) %}
+                    {% set montantFacture = remboursement.remboursementAuditNumerique.instruction.montantFacture %}
+                {% elseif (constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE') == demande.type) %}
+                    {% set montantFacture = remboursement.remboursementAuditNumerique.instruction.montantFacture %}
+                {% elseif (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.type) %}
+                    {% set montantFacture = remboursement.remboursementTravaux.instruction.montantFacture %}
+                {% endif %}
+
+                <li>Montant de l'aide: {{ valeurTitre|number_format(2, '.', ' ') }}&euro;</li>
+                {% if true != isBBC1 %}
+                    <li>Montant total des factures: {{ montantFacture|number_format(2, '.', ' ') }}&euro;</li>
+                {% endif %}
+            {% else %}
+                {% if (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE') == demande.type
+                        or constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE') == demande.type
+                        or constant('App\\Entity\\Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE') == demande.type
+                        or constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE') == demande.type
+                    )
+                    and auditeur is defined
+                %}
+                    <li>Nom Auditeur de la Demande: {{ auditeur.partenaireIdentification.raisonSociale }}</li>
+                {% elseif constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.type and totalDevis is defined %}
+                    <li>Montant des devis: {{ totalDevis|number_format(2, '.', ' ') }}&euro;</li>
+                {% endif %}
+            {% endif %}
+        </ul>
+    </div>
+{% endblock custom_bottom_block %}

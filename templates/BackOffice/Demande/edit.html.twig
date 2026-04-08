@@ -1,0 +1,121 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% if (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE') == demandeData['type']
+        or constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE') == demandeData['type'])
+    %}
+        {{ encore_entry_link_tags('frontOffice_demande_auditEnergie_add_edit') }}
+    {% elseif (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE') == demandeData['type']
+        or constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE') == demandeData['type'])
+    %}
+        {{ encore_entry_link_tags('frontOffice_demande_auditNumerique_add_edit') }}
+    {% elseif constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demandeData['type'] %}
+        {{ encore_entry_link_tags('frontOffice_demande_travaux_add_edit') }}
+    {% endif %}
+{% endblock %}
+
+{% block contents %}
+    {% set arrayDemandeType = static_function('App\\Entity\\Demande_', 'demandeType') %}
+    {% set demandeTypeLibelle = (demandeData['type'] is not empty) ? arrayDemandeType[demandeData['type']] : '' %}
+
+    {% if (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE') == demandeData['type']
+        or constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE') == demandeData['type'])
+    %}
+        {% set formName = 'form_editAuditEnergieByConseiller' %}
+    {% elseif (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE') == demandeData['type']
+        or constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE') == demandeData['type'])
+    %}
+        {% set formName = 'form_editAuditNumeriqueByConseiller' %}
+    {% elseif constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demandeData['type']  %}
+        {% set formName = 'form_editTravauxByConseiller' %}
+    {% endif %}
+
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 marginBottom40 hidden" id="content-wrapper">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="container-title">
+                <h2>Modifier une Demande de {{ demandeTypeLibelle }}</h2>
+                {{ include('BackOffice/Demande/inc/back.html.twig') }}
+            </div>
+        </div>
+
+        {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id': formName}}) }}
+
+            {{ form_errors(form) }}
+
+            {% set path_location = 'demande_document_bo' %}
+
+            {% if constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE') == demandeData['type']
+                or constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE') == demandeData['type']
+            %}
+                {% set proprio = logement.situation|split(' | ') %}
+                <input type="hidden" value="{{ proprio[0] }}" id="situationLogement_value" />
+                {{ include('FrontOffice/Demande/AuditEnergie/inc/form_auditEnergie/document.html.twig', {'auditE': demandeData['auditE']}) }}
+                {{ include('FrontOffice/Demande/AuditEnergie/inc/form_auditEnergie/revenu.html.twig', {'auditE': demandeData['auditE']}) }}
+                {{ include('FrontOffice/Demande/AuditEnergie/inc/form_auditEnergie/structure.html.twig', {'auditE': demandeData['auditE']}) }}
+                {{ include('FrontOffice/Demande/AuditEnergie/inc/form_auditEnergie/auditeur.html.twig') }}
+                {{ include('FrontOffice/Demande/AuditEnergie/inc/form_auditEnergie/signature.html.twig') }}
+
+            {% elseif (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE') == demandeData['type']
+                or constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE') == demandeData['type'])
+            %}
+                {{ include('FrontOffice/Demande/AuditNumerique/inc/form_auditNumerique/information.html.twig') }}
+                {{ include('FrontOffice/Demande/AuditNumerique/inc/form_auditNumerique/condition.html.twig') }}
+                {{ include('FrontOffice/Demande/AuditNumerique/inc/form_auditNumerique/structure.html.twig', {
+                    'formDisplay': demandeData['formDisplay'],
+                    'auditN': demandeData['auditN']
+                }) }}
+                {{ include('FrontOffice/Demande/AuditNumerique/inc/form_auditNumerique/auditeur.html.twig', {
+                    'formDisplay': demandeData['formDisplay'],
+                    'isDoublon': demandeData['isDoublon']
+                }) }}
+                {{ include('FrontOffice/Demande/AuditNumerique/inc/form_auditNumerique/signature.html.twig') }}
+            {% elseif constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demandeData['type']  %}
+                {% set proprio = logement.situation|split(' | ') %}
+                <input type="hidden" value="{{ proprio[0] }}" id="situationLogement_value" />
+
+                <input type="hidden" value="{{ demandeData['auditE']|length }}" id="auditE_value" />
+                <input type="hidden" value="false" id="demandeTravauxIsCreate" />
+                <input type="hidden" value="{{ demandeData['auditE'].statutId is defined ? demandeData['auditE'].statutId : '' }}" id="auditE_statut" />
+                <input type="hidden" value="{{ remboursementAuditStatutId }}" id="remboursementAuditStatutId" />
+
+                {{ include('FrontOffice/Demande/Travaux/inc/form_travaux/audit.html.twig', {'travaux': demandeData['travaux'], 'auditE': demandeData['auditE']}) }}
+                {{ include('FrontOffice/Demande/Travaux/inc/form_travaux/revenu.html.twig', {'travaux': demandeData['travaux']}) }}
+                {{ include('FrontOffice/Demande/Travaux/inc/form_travaux/structure.html.twig', {'travaux': demandeData['travaux']}) }}
+                {{ include('FrontOffice/Demande/Travaux/inc/form_travaux/signature.html.twig') }}
+            {% endif %}
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-submit">
+                <div class="form-group">
+                    {{ form_widget(form.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+                </div>
+            </div>
+
+            {{ form_rest(form) }}
+
+        {{ form_end(form) }}
+
+        <div id="data-js-bundle" class="hidden" data-prefix-pathname-bundle="{{ prefix_pathname_bundle_bo }}">
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    {% if (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE') == demandeData['type']
+        or constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE') == demandeData['type'])
+    %}
+        {{ encore_entry_script_tags('frontOffice_demande_formAuditEnergie_index') }}
+        {{ encore_entry_script_tags('frontOffice_demande_checkFile') }}
+    {% elseif (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE') == demandeData['type']
+        or constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE') == demandeData['type'])
+    %}
+        {{ encore_entry_script_tags('frontOffice_demande_formAuditNumerique_index') }}
+    {% elseif constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demandeData['type'] %}
+        {{ encore_entry_script_tags('frontOffice_demande_formTravaux_index') }}
+        {{ encore_entry_script_tags('frontOffice_demande_checkFile') }}
+    {% endif %}
+{% endblock %}

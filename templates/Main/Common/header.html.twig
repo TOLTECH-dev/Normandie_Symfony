@@ -1,0 +1,68 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+
+        <header>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 header-container">
+                <div class="hidden-xs hidden-sm col-md-3 col-lg-3">
+                    <div id="bloc_logo">
+                        {% if 'fo' == title %}
+                        <a href="{{ path('user_login') }}">
+                            <img
+                                    src="{{ asset('build/images/main/logo/logo_Normandie.jpg') }}"
+                                    alt="logo"
+                                    class="header-logo"
+                            >
+                        </a>
+                        {% elseif 'bo' == title %}
+                            <a href="{{ path('admin_user_login') }}">
+                                <img
+                                        src="{{ asset('build/images/main/logo/logo_Normandie.jpg') }}"
+                                        alt="logo"
+                                        class="header-logo"
+                                >
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6 bloc_admin_menu text-center">
+                    <div class="main_title">
+                        {% if 'fo' == title %}
+                            <img
+                                    src="{{ asset('build/images/frontOffice/logo/logo_espace.png') }}"
+                                    alt="logo"
+                                    class="header-logo-espace"
+                            >
+                        {% elseif 'bo' == title %}
+                            <img
+                                    src="{{ asset('build/images/backOffice/logo/logo_espace_partenaire.png') }}"
+                                    alt="logo"
+                                    class="header-logo-espace"
+                            >
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if app.user.roles is defined %}
+                    {% if 'ROLE_MEMBER' in app.user.roles and is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        {# if app.user.username is defined #}
+                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 header-login">
+                            Bonjour <span class="bold"> {{ app.user.username }} &nbsp;</span>
+                            &nbsp;
+                            <a href="{{ path('user_logout') }}"
+                               class="btn btn-warning btn-sm"
+                               role="button"
+                               data-toggle="tooltip" data-placement="bottom"
+                               data-container="body"
+                               title="Se d&eacute;connecter"
+                            >
+                                <i class="glyphicon glyphicon-log-out"></i>
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </header>
+
+    </div>
+</nav>

@@ -1,0 +1,73 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-facture">
+    <hr class="bloc-limit">
+
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Factures</legend>
+
+        {% if 2 == remboursementItemType %}
+            <ul id="custom-control_document" class="list_error"></ul>
+            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 smallPadding">
+                {{ form_row(formInstruction.remboursement_travaux_instruction_conformite) }}
+
+                <p class="box_addConformite">
+                    <a href="#" id="add_conformite" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-plus"></i> Ajouter une facture</a>
+                </p>
+            </div>
+
+            {% if remboursement is defined
+                and remboursementItem is defined
+                and remboursementItem.instruction is defined
+            %}
+                {% for item in remboursementItem.instruction.remboursementTravauxInstructionConformite %}
+                    {% if item.documentUrl %}
+                    <input type="hidden" value="{{ path(path_location, {'demandeId': item.id, 'typeFile': 10, 'extension': item.documentUrl, 'typeDemande': 10}) }}" class="instruction_conformite_document" />
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% else %}
+            <ul id="custom-control_facture" class="list_error"></ul>
+            {{ form_errors(formInstruction.facture) }}
+            <div class="form-group">
+                {{ form_label(formInstruction.facture, "Téléchargement de la facture", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    {% if remboursement is defined
+                        and remboursementItem
+                        and remboursementItem.instruction
+                        and remboursementItem.instruction.factureUrl
+                    %}
+                        <p class="lineHeight30 noMargin">
+                            <a href="{{ path(path_location, {'demandeId': remboursementItem.instruction.id, 'typeFile': 7, 'extension': remboursementItem.instruction.factureUrl, 'typeDemande': typeDemandeDocument}) }}" target="_blank">
+                                Voir le document
+                            </a>
+                        </p>
+                    {% endif %}
+
+                    {{ form_widget(formInstruction.facture, {'attr': {'class': 'custom-file'}}) }}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if not isDepot %}
+            <div class="form-group">
+                {{ form_label(formInstruction.montantFacture, "Montant de la facture", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                {{ form_errors(formInstruction.montantFacture) }}
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    {{ form_widget(formInstruction.montantFacture, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(formInstruction.isFactureConforme, "Factures conformes ?", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+                {{ form_errors(formInstruction.isFactureConforme) }}
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                    {{ form_widget(formInstruction.isFactureConforme, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+        {% endif %}
+
+    </fieldset>
+
+</div>

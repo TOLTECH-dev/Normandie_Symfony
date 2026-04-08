@@ -1,0 +1,38 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-fiche-travaux">
+    <hr class="bloc-limit">
+
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Fiche de liaison</legend>
+
+        <div class="form-group">
+            {{ form_label(form.remboursement_travaux.instruction.ficheTravaux, "Téléchargement de la fiche de liaison", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form.remboursement_travaux.instruction.ficheTravaux) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {% if remboursement is defined and
+                remboursement.remboursementTravaux and
+                remboursement.remboursementTravaux.instruction and
+                remboursement.remboursementTravaux.instruction.ficheTravauxUrl %}
+                    <p class="lineHeight30 noMargin">
+                        <a href="{{ path(path_location, {'demandeId': remboursement.remboursementTravaux.instruction.id, 'typeFile': 12, 'extension': remboursement.remboursementTravaux.instruction.ficheTravauxUrl, 'typeDemande': 9}) }}" target="_blank">
+                            Voir le document
+                        </a>
+                    </p>
+                {% endif %}
+
+                {{ form_widget(form.remboursement_travaux.instruction.ficheTravaux, {'attr': {'class': 'custom-file'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.remboursement_travaux.instruction.isFicheTravauxConforme, "Fiche de liaison conforme ?", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form.remboursement_travaux.instruction.isFicheTravauxConforme) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.remboursement_travaux.instruction.isFicheTravauxConforme, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+    
+</div>

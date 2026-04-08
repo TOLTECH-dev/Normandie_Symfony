@@ -1,0 +1,57 @@
+.navbar {
+    background: #EFEFEF !important;
+    min-height: 30px !important;
+}
+
+.navbar-default {
+    border: 0 !important;
+}
+
+header, .header-container {
+    height: 50px;
+    width: 100%;
+}
+
+.navbar::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-bottom: 3px solid #e9661f;
+}
+
+#bloc_logo {
+    position: absolute;
+    background: #FFF;
+    width: 230px;
+    z-index: 2;
+}
+.header-logo {
+    margin: 10px 15px;
+    width: 200px;
+}
+
+.header-login {
+    padding: 12px 10px 10px 10px;
+    text-align: right;
+    z-index: 2;
+}
+
+header a.no-underline {
+    color: #000;
+}
+
+div.main_title{
+    width: 100%;
+    margin: 5px auto 0;
+    height: 0;
+    max-height: 0;
+    text-align: center;
+    cursor: default;
+}
+.header-logo-espace {
+    width: 300px;
+}

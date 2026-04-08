@@ -1,0 +1,126 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-dispositif">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;J'ai eu connaissance du dispositif par :</legend>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.knownByMedia) }}</div>
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noPadding">
+                    {{ form_widget(form.knownByMedia, {'attr': {'class': 'noMargin checkboxstyle pull-right'}}) }}
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    {{ form_label(form.knownByMedia, "Média / Evènement / Presse", {'label_attr': {'class': 'control-label smallPadding'}}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.knownByOther) }}</div>
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noPadding">
+                    {{ form_widget(form.knownByOther, {'attr': {'class': 'noMargin checkboxstyle pull-right'}}) }}
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    {{ form_label(form.knownByOther, "Autre", {'label_attr': {'class': 'control-label smallPadding'}}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noPadding">
+                    <input type="checkbox" id="checkboxForStructure" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noMargin checkboxstyle pull-right" />
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    <label class="control-label smallPadding" for="checkboxForStructure">Mon Accompagnateur R&eacute;nov&rsquo; conventionn&eacute; avec la R&eacute;gion</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 hidden paddingBottom15 noMargin" id="bloc-structureConseiller">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.structure_id) }}</div>
+            <div class="form-group hidden" id="bloc-structure">
+                {{ form_label(form.structure_id, "Nom structure", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                    {{ form_widget(form.structure_id, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noPadding">
+                    <input type="checkbox" id="checkboxForAuditeur" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noMargin checkboxstyle pull-right" />
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    <label class="control-label smallPadding" for="checkboxForAuditeur">Auditeur</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.auditeur_id) }}</div>
+        <div class="form-group hidden paddingBottom15" id="bloc-auditeur">
+            {{ form_label(form.auditeur_id, "Nom auditeur", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.auditeur_id, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noPadding">
+                    <input type="checkbox" id="checkboxForRenovateur" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noMargin checkboxstyle pull-right" />
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    <label class="control-label smallPadding" for="checkboxForRenovateur">R&eacute;novateur</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.renovateur_id) }}</div>
+        <div class="form-group hidden paddingBottom15" id="bloc-renovateur">
+            {{ form_label(form.renovateur_id, "Nom rénovateur", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.renovateur_id, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noPadding">
+                    <input type="checkbox" id="checkboxForFinanceur" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noMargin checkboxstyle pull-right" />
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    <label class="control-label smallPadding" for="checkboxForFinanceur">Financeur</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.financeur_id) }}</div>
+        <div class="form-group hidden paddingBottom15" id="bloc-financeur">
+            {{ form_label(form.financeur_id, "Nom financeur", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.financeur_id, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

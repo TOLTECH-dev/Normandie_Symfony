@@ -1,0 +1,38 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_banque_add_edit') }}
+{% endblock %}
+
+{% block contents %}
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 marginBottom40 hidden" id="content-wrapper">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="container-title">
+                <h2>Ajouter une Banque</h2>
+                {{ include('BackOffice/Banque/inc/back.html.twig') }}
+            </div>
+        </div>
+
+        {{ form_start(form_banque, {'attr': {'class': 'form-horizontal', 'id': 'form_addBanque'}}) }}
+            {{ form_errors(form_banque) }}
+
+            {{ include('BackOffice/Banque/inc/form_banque/identification.html.twig') }}
+            {{ include('BackOffice/Banque/inc/form_banque/statut.html.twig') }}
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-submit">
+                <div class="form-group">
+                    {{ form_widget(form_banque.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+                </div>
+            </div>
+
+            {{ form_rest(form_banque) }}
+        {{ form_end(form_banque) }}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_banque_index') }}
+{% endblock %}

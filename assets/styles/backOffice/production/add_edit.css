@@ -1,0 +1,33 @@
+/*******************************************
+            MODAL ADD
+*******************************************/
+#modal-production .modal-dialog {
+    width: 500px;
+    max-width: 500px;
+}
+
+#bloc-selectAll label, #bloc-selectMultiple label {
+    display: block;
+    padding-left: 35px;
+    margin-top: -19px;
+    text-align: left;
+    font-weight: normal;
+    font-size: 0.9em;
+}
+#bloc-selectAll input, #bloc-selectMultiple input {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    margin: 0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+    *overflow: hidden;
+}
+
+/*******************************************
+            MODAL EDIT
+*******************************************/
+.bloc-formProduction input {
+    width: 100% !important;
+}

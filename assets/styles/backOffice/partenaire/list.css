@@ -1,0 +1,12 @@
+.col0 { width:160px; }
+.col1 { width:80px; }
+.col2 { width:160px; }
+.col3 {}
+.col4 { width:60px;}
+.col5 { width:45px; }
+
+tr[id="filterrow"] th input, tr[id="filterrow"] th select {
+    width: 100%;
+    font-size: 11px;
+    height: 30px;
+}

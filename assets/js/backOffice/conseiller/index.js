@@ -1,0 +1,5 @@
+import './beneficiaire/listBeneficiaire/appel_datatables'
+import './demandeAuditEnergie/viewAuditEnergie/modalCommentaire'
+import './demandeAuditNumerique/viewAuditNumerique/modalCommentaire'
+import './demandeTravaux/viewTravaux/modalCommentaire'
+import './checkFile'

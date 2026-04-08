@@ -1,0 +1,15 @@
+{% extends 'FrontOffice/Demande/email/base.html.twig' %}
+
+{% block content %}
+    <p>Dans le cadre du dispositif <i>&quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie&quot;</i>, vous venez d'&ecirc;tre s&eacute;lectionn&eacute; par {{ civilite|capitalize }} {{ beneficiairePrenom|capitalize }} {{ beneficiaireNom|upper }}, {{ adresseTravaux }}, pour devenir son R&eacute;novateur BBC (Ch&egrave;que Travaux 1<sup>&egrave;re</sup> &eacute;tape BBC avec R&eacute;novateur ou R&eacute;novation globale BBC).
+    <br>Merci de bien vouloir en prendre acte.</p>
+    <p></p>
+    Nous vous rappelons &eacute;galement la n&eacute;cessit&eacute; :
+    <ul>
+        <li>d'indiquer sur vos devis la mention &quot;R&eacute;novateur BBC Normandie assurant la coordination d'une r&eacute;novation r&eacute;alis&eacute;e dans le cadre du dispositif Ch&egrave;que &eacute;co-&eacute;nergie Normandie&quot; ;</li>
+        <li>et de vous mettre en relation avec le Bureau d'Etude ayant r&eacute;alis&eacute; l'audit &eacute;nerg&eacute;tique de ce chantier pour &eacute;changer sur le projet de r&eacute;novation &agrave; venir.</li>
+    </ul>
+    <p>
+        De plus, il vous est demand&eacute; de vous assurer aupr&egrave;s du particulier qu'un contr&ocirc;leur a bien &eacute;t&eacute; retenu pour assurer des tests d'infiltrom&eacute;trie (&agrave; l'&eacute;tat initial ou interm&eacute;diaire + en fin de chantier) et un contr&ocirc;le du syst&egrave;me de renouvellement d'air. Ces devis seront &agrave; positionner dans la demande d'aide. Pour toute question, vous pouvez contacter le Conseiller Habitat &amp; Energie en charge de ce dossier.
+    </p>
+{% endblock content %}

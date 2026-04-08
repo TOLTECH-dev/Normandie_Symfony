@@ -1,0 +1,26 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-JP">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Conformit&eacute; Justificatif Propri&eacute;t&eacute;</legend>
+
+        <div class="form-group">
+            {{ form_label(form_instruction.instruction_travaux.JPconformite, "Justificatif propriété conforme", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_instruction.instruction_travaux.JPconformite) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form_instruction.instruction_travaux.JPconformite, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group hidden" id="bloc-JPtype">
+            {{ form_label(form_instruction.instruction_travaux.JPtype, "Type de document", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_instruction.instruction_travaux.JPtype) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form_instruction.instruction_travaux.JPtype, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

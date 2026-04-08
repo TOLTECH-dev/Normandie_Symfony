@@ -1,0 +1,49 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block contents %}
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 marginBottom40 hidden" id="content-wrapper">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="container-title">
+                <h2>Consulter un Utilisateur</h2>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('admin_edit', {'userId': user.id}) }}"
+                       class="btn btn-warning btn-xs modifier-user"
+                       role="button"
+                       id="button_position1"
+                       data-toggle="tooltip"
+                       data-placement="bottom"
+                       data-container="body"
+                       title="Modifier l'Utilisateur"
+                    >
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    {% if not is_fiche_beneficiaire_exists %}
+                        <span data-toggle="modal" data-target="#modal_delete_user">
+                            <a  class="btn btn-danger btn-xs"
+                                role="button"
+                                id="button_position2"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-container="body"
+                                data-original-title="Supprimer l'Utilisateur"
+                                title="Supprimer l'Utilisateur"
+                            >
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </a>
+                        </span>
+                    {% endif %}
+                {% endif %}
+
+                {{ include('BackOffice/Admin/inc/back.html.twig') }}
+            </div>
+        </div>
+
+        {{ include('BackOffice/Admin/inc/view_admin/identification.html.twig') }}
+        {{ include('BackOffice/Admin/inc/view_admin/profil.html.twig') }}
+
+        {% if is_granted('ROLE_ADMIN') and not is_fiche_beneficiaire_exists %}
+            {{ include('BackOffice/Admin/inc/view_admin/_modal_delete_user.html.twig') }}
+        {% endif %}
+
+    </div>
+{% endblock %}

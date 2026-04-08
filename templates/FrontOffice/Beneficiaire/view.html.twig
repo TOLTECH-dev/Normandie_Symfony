@@ -1,0 +1,30 @@
+{% extends "FrontOffice/layout_core.html.twig" %}
+
+{% block contents %}
+
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3" id="title-wrapper">
+        <div id="container-title">
+            <h2>Consultation de mes informations personnelles</h2>
+            {% if isEditBeneficiaire is not empty %}
+                <a href="{{ path('beneficiaire_edit', {'beneficiaireId': beneficiaire.beneficiaireId}) }}"
+                   class="btn btn-warning btn-xs"
+                   role="button"
+                   data-toggle="tooltip"
+                   data-placement="bottom"
+                   data-container="body"
+                   title="Modifier la fiche B&eacute;n&eacute;ficiaire"
+                >
+                    <i class="glyphicon glyphicon-edit"></i>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 hidden" id="content-wrapper">
+        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/identification.html.twig') }}
+        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/adresse.html.twig') }}
+        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/situation.html.twig') }}
+        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/dispositif.html.twig') }}
+        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/structure.html.twig') }}
+    </div>
+{% endblock %}

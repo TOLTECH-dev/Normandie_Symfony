@@ -1,0 +1,63 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc hidden" id="bloc-optionAuditeur">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Coordonn&eacute;es bancaire</legend>
+
+        <ul id="custom-control_document" class="list_error"></ul>
+        {{ form_errors(form_partenaire.partenaire_optionAuditeur.rib) }}
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_optionAuditeur.rib, "Téléchargement du RIB", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_optionAuditeur.rib, {'attr': {'class': 'custom-file'}}) }}
+            </div>
+        </div>
+
+        {% if partenaire and partenaire.partenaireOptionAuditeur and partenaire.partenaireOptionAuditeur.ribUrl %}
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-4 col-lg-offset-4">
+            <p>
+                <a href="{{ path(path_location, {'demandeId': partenaire.partenaireOptionAuditeur.id, 'typeFile': 6, 'extension': partenaire.partenaireOptionAuditeur.ribUrl, 'typeDemande': 6}) }}" target="_blank">
+                    Voir le document
+                </a>
+            </p>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_optionAuditeur.domicileBancaire, "Domicialisation bancaire", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_optionAuditeur.domicileBancaire) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_optionAuditeur.domicileBancaire, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_optionAuditeur.titulaire, "Titulaire", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_optionAuditeur.titulaire) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_optionAuditeur.titulaire, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_optionAuditeur.iban, "IBAN", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_optionAuditeur.iban) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_optionAuditeur.iban, {'attr': {'class': 'form-control', 'onkeyup': 'toUpperCase()'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_optionAuditeur.bic, "BIC", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_optionAuditeur.bic) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_optionAuditeur.bic, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

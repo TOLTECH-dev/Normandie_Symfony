@@ -1,0 +1,24 @@
+<p>Bonjour {{ user.firstname }} {{ user.lastname }},</p>
+
+<p>Vous venez de cr&eacute;er votre compte sur le site du Ch&egrave;que Eco-Energie de la R&eacute;gion Normandie et nous vous remercions de l'int&eacute;r&ecirc;t que vous portez &agrave; ce dispositif d'aide &agrave; la r&eacute;novation &eacute;nerg&eacute;tique de votre maison.</p>
+<p>Pour l'activer et valider votre inscription, cliquez sur ce lien:</p>
+
+{% set confirmationUrlDisplay = app_is_https ? confirmationUrl|replace({'http:': 'https:'}) : confirmationUrl %}
+<a href="{{ confirmationUrlDisplay }}">{{ confirmationUrlDisplay }}</a>
+
+<br><br>
+<p>Vous pourrez ensuite acc&eacute;der &agrave; votre espace personnel et faire votre demande de Ch&egrave;que Eco-Energie Normandie.</p>
+
+<p>Si le lien d'activation ne fonctionne pas, copiez l'URL ci-dessous en entier, collez-la dans la zone d'adresse de votre navigateur internet et validez.</p>
+
+<p>Attention, apr&egrave;s r&eacute;ception de ce mail, vous ne disposez que de 48 heures pour activer votre compte.</p>
+
+<p>Ce message vous a &eacute;t&eacute; envoy&eacute; automatiquement, merci de ne pas y r&eacute;pondre.</p>
+
+<p>Vous en souhaitant bonne r&eacute;ception.</p>
+
+<p>
+    Bien cordialement,<br>
+    L'&eacute;quipe Ch&egrave;que &eacute;co-&eacute;nergie<br>
+    R&eacute;gion Normandie
+</p>

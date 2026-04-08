@@ -1,0 +1,133 @@
+.nav > li > a {
+    color: #555;
+    padding: 10px 8px;
+}
+
+.nav-tabs > li.active {
+    font-weight: bold;
+}
+
+.nav > li > a:focus, .nav > li > a:hover {
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    border-top: 1px solid #e9661f;
+    border-left: 1px solid #e9661f;
+    border-right: 1px solid #e9661f;
+    border-bottom-color: transparent;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #e9661f;
+}
+
+
+
+/*******************************************
+            BLOC REVENU FISCAL
+*******************************************/
+#bloc-revenuFiscal {
+    color: red;
+    text-align: center;
+}
+
+#bloc-revenuFiscal p {
+    margin: 0;
+    padding: 0;
+}
+
+/*******************************************
+            BLOC TYPE AIDE
+*******************************************/
+#bloc-type-niveau {
+    font-weight: bold;
+    color: red;
+    text-align: center;
+}
+
+#bloc-type-niveau p {
+    margin: 0;
+    padding: 0;
+}
+
+
+/*******************************************
+                COLUMN
+*******************************************/
+.flex-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-bottom: 10px;
+}
+
+.flex-wrapper > div {
+    /*flex: 1 1 auto;*/
+    margin-left: 3px;
+}
+
+.flex0 {
+    flex: 0 0 200px;
+}
+
+.flex1, .flex2, .flex3, .flex4 {
+    flex: 1;
+}
+
+/*******************************************
+            BLOC TYPE
+*******************************************/
+#bloc-type {
+    margin-top: 0;
+}
+
+#bloc-type section {
+    height: 65px;
+}
+
+#bloc-type section.fixed {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    z-index: 999;
+    background: #e9661f;
+    padding-top: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+    border: 1px solid #e9661f;
+    border-top: 0;
+    border-radius: 0 0 10px 10px;
+    -webkit-border-radius: 0 0 10px 10px;
+    -moz-border-radius: 0 0 10px 10px;
+    font-size: 0.9em;
+    color: #fff;
+}
+
+/*******************************************
+            SELECT MULTIPLE
+*******************************************/
+.bloc-selectMultiple {
+    margin-top: 7px;
+}
+
+.bloc-selectMultiple label {
+    display: block;
+    padding-left: 35px;
+    margin-top: -19px;
+    text-align: left;
+    font-weight: normal;
+    font-size: 0.9em;
+}
+
+.bloc-selectMultiple ul {
+    padding-left: 20px;
+}
+
+
+
+.padding612 {
+    padding: 6px 12px;
+}

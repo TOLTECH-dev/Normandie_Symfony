@@ -1,0 +1,66 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-identification">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Identification</legend>
+
+        {% set typeArray = {
+            '0 | particulier': 'Particulier',
+            '1 | sci': 'SCI',
+            '': '-'
+        } %}
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Type :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ typeArray[beneficiaire.beneficiaireType] }}
+            </div>
+        </div>
+
+        {% if "1 | sci" == beneficiaire.beneficiaireType %}
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Nom SCI :</label>
+                <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                    {{ beneficiaire.beneficiaireNomSCI }}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if "0 | particulier" == beneficiaire.beneficiaireType %}
+            {% set labelCivilite = "Civilité :" %}
+            {% set labelNom = "Nom :" %}
+            {% set labelPrenom = "Prénom :" %}
+        {% elseif "1 | sci" == beneficiaire.beneficiaireType %}
+            {% set labelCivilite = "Civilité gérant :" %}
+            {% set labelNom = "Nom gérant :" %}
+            {% set labelPrenom = "Prénom gérant :" %}
+        {% endif %}
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">{{ labelCivilite }}</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {% if "1 | monsieur" == beneficiaire.beneficiaireCivilite %}
+                    {% set civilite = "Monsieur" %}
+                {% elseif "0 | madame" == beneficiaire.beneficiaireCivilite %}
+                    {% set civilite = "Madame" %}
+                {% endif %}
+                {{ civilite }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">{{ labelNom }}</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ beneficiaire.beneficiaireNom }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">{{ labelPrenom }}</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ beneficiaire.beneficiairePrenom }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

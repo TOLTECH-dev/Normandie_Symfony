@@ -1,0 +1,22 @@
+.col0 { width: 120px; }
+.col1 { width: 60px; }
+.col2 { width: 150px; }
+.col3 { }
+.col4 { width: 120px; }
+.col5 { width: 60px; }
+
+
+tr[id="filterrow"] th input, tr[id="filterrow"] th select {
+    width: 100%;
+    font-size: 11px;
+    height: 30px;
+}
+
+tfoot {
+    display: table-header-group;
+}
+
+body .popover {
+    width: auto;
+    max-width: 500px;
+}

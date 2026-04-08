@@ -1,0 +1,29 @@
+{% set renovationGlobaleBBCMinDevisTotal = (constant('App\\Entity\\Demande_travaux_devis::REVENU_REFERENCE_COMPRIS_ENTRE_2_ET_4_FOIS_ANAH_KEY') == informationANAH) ? constant('App\\Entity\\Demande_travaux_devis::RENOVATION_GLOBALE_BBC_MIN_DEVIS_TOTAL_ENTRE_2_ET_4_FOIS_ANAH') : constant('App\\Entity\\Demande_travaux_devis::RENOVATION_GLOBALE_BBC_MIN_DEVIS_TOTAL') %}
+<div class="{{ class_modal_renovation_globale_BBC_controle_devis }}" id="modalRenovationGlobaleBBCControleDevis" tabindex="-1" role="dialog" aria-labelledby="Information sur Devis" data-backdrop="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center" id="myModalLabel">Information sur Devis</h4>
+            </div>
+            <div class="modal-body">
+                <div class="bloc-confirmation">
+                    <p>Pour toute demande de Ch&egrave;que &eacute;co-&eacute;nergie Travaux &laquo; R&eacute;novation globale BBC &raquo;, <br>le montant total des devis des travaux de r&eacute;novation &eacute;nerg&eacute;tique et travaux induits doit &ecirc;tre sup&eacute;rieur &agrave; {{ renovationGlobaleBBCMinDevisTotal|number_format(0, '', ' ') }} &euro;.</p>
+                    <br><br><br><br>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-submit">
+                        <div class="form-group">
+                           <button type="button" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success btn btn-success" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="js-type-travaux-keys" class="hidden"
+     data-key-renovation-globale-bbc="{{ constant('App\\Entity\\Demande_travaux_devis::DEMANDE_TYPE_NIVEAU_RENOVATION_GLOBALE_BBC_VALUE') }}"
+     data-information-anah="{{ informationANAH }}"
+     data-revenu-reference-entre-2-et-4-fois-anah-key="{{ constant('App\\Entity\\Demande_travaux_devis::REVENU_REFERENCE_COMPRIS_ENTRE_2_ET_4_FOIS_ANAH_KEY') }}"
+     data-renovation-globale-bbc-min-devis-total="{{ renovationGlobaleBBCMinDevisTotal }}"
+>
+</div>

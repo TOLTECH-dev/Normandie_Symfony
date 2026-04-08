@@ -1,0 +1,19 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-content">
+
+    {% if score is defined
+        and score
+        and (score['countMauvais'] or score['countMoyen'] or score['countParfait'])
+    %}
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            {{ include('BackOffice/Rating/inc/view/score.html.twig') }}
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            {{ include('BackOffice/Rating/inc/view/commentaire.html.twig') }}
+        </div>
+    {% else %}
+        <p class="text-center bold marginTop20">Aucune notation effectu&eacute;e.</p>
+    {% endif %}
+
+</div>
+&nbsp;

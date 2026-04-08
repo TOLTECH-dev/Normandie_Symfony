@@ -1,0 +1,85 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-adresse">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Adresse</legend>
+
+        <div class="form-group">
+            {{ form_label(form_structure.structure_adresse.adresse1, "Adresse 1", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_structure.structure_adresse.adresse1) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_structure.structure_adresse.adresse1, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_structure.structure_adresse.adresse2, "Adresse 2", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_structure.structure_adresse.adresse2) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_structure.structure_adresse.adresse2, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_structure.structure_adresse.adresse3, "Adresse 3", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_structure.structure_adresse.adresse3) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_structure.structure_adresse.adresse3, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_structure.structure_adresse.codePostal, "Code Postal", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_structure.structure_adresse.codePostal) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_structure.structure_adresse.codePostal, {'attr': {'class': 'form-control'}}) }}
+
+                {#
+                <p class="structure_spinner hidden">
+                    <br>
+                    <span class="bold">Recherche en cours</span>
+                    {% image
+                    'bundles/whitelabelbackoffice/images/spinner.gif'
+                    %}
+                    <img src="{{ asset_url }}" alt="spinner" class="spinner" />
+                    {% endimage %}
+                </p>
+                #}
+
+                <span id="structure_match"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_structure.structure_adresse.ville, "Commune", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_structure.structure_adresse.ville) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_structure.structure_adresse.ville, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_structure.structure_adresse.telephone, "Téléphone", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_structure.structure_adresse.telephone) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_structure.structure_adresse.telephone, {'attr': {'class': 'form-control', 'title': '0x-xx-xx-xx-xx'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_structure.structure_adresse.siteInternet, "Site internet", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_structure.structure_adresse.siteInternet) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_structure.structure_adresse.siteInternet, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

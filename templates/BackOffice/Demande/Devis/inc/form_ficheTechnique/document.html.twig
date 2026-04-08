@@ -1,0 +1,42 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc marginBottom20" id="bloc-document">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Document</legend>
+
+        {{ form_errors(form.ficheTechnique_initial.ficheTechniqueDocument) }}
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.ficheTechniqueDocument, "Fichier XML", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.ficheTechniqueDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+            <div class="flex2">
+                <ul id="custom-control_documentXMLBBC" class="list_error"></ul>
+
+                {{ form_widget(form.ficheTechnique_BBC.ficheTechniqueDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file'}}) }}
+                {% if ficheTechnique and ficheTechnique.ficheTechnique_BBC and ficheTechnique.ficheTechnique_BBC.ficheTechniqueDocumentUrl %}
+                    <p class="lineHeight30">
+                        <a href="{{ path(path_location, {'demandeId': ficheTechnique.ficheTechnique_BBC.id, 'typeFile': 4, 'extension': ficheTechnique.ficheTechnique_BBC.ficheTechniqueDocumentUrl, 'typeDemande': 3}) }}" target="_blank">
+                            Voir le document
+                        </a>
+                    </p>
+                {% endif %}
+            </div>
+            <div class="flex3">
+                <ul id="custom-control_documentXML" class="list_error"></ul>
+
+                {{ form_widget(form.ficheTechnique_prescription.ficheTechniqueDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file'}}) }}
+
+                {% if ficheTechnique and ficheTechnique.ficheTechnique_prescription and ficheTechnique.ficheTechnique_prescription.ficheTechniqueDocumentUrl %}
+                    <p class="lineHeight30">
+                        <a href="{{ path(path_location, {'demandeId': ficheTechnique.ficheTechnique_prescription.id, 'typeFile': 4, 'extension': ficheTechnique.ficheTechnique_prescription.ficheTechniqueDocumentUrl, 'typeDemande': 3}) }}" target="_blank">
+                            Voir le document
+                        </a>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+    </fieldset>
+
+</div>

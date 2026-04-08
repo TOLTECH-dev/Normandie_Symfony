@@ -1,0 +1,15 @@
+{% block admin_menu %}
+    {% if dataMenuConseiller is defined and dataMenuConseiller is not empty %}
+        <ul id="fo_menu">
+            <li class="{{ (dataMenuConseiller['isMenuMonCompte'] == 1) ? 'active' : '' }}">
+                <a href="{{ path('conseiller_beneficiaire_view', {'beneficiaireId': dataMenuConseiller['beneficiaireId']}) }}">Mon compte</a>
+            </li>
+            <li class="{{ (dataMenuConseiller['isMenuLogement'] == 1) ? 'active' : '' }}">
+                <a href="{{ path('conseiller_logement_list', {'beneficiaireId': dataMenuConseiller['beneficiaireId']}) }}">Mon logement</a>
+            </li>
+            <li class="{{ (dataMenuConseiller['isMenuDemandes'] == 1) ? 'active' : '' }}">
+                <a href="{{ path('conseiller_demande_list', {'beneficiaireId': dataMenuConseiller['beneficiaireId']}) }}">Mes demandes</a>
+            </li>
+        </ul>
+    {% endif %}
+{% endblock %}

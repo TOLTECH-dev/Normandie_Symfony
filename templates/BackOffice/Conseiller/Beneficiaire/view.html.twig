@@ -1,0 +1,63 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('frontOffice_beneficiaire_view') }}
+    {{ encore_entry_link_tags('frontOffice_common_menu') }}
+
+{% endblock %}
+
+{% block contents %}
+
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3" id="title-wrapper">
+        <div id="container-title">
+            <h2>Consultation des informations personnelles</h2>
+            {% if isEditBeneficiaire is not empty %}
+                <a href="{{ path('conseiller_beneficiaire_edit', {'beneficiaireId': beneficiaire.beneficiaireId}) }}"
+                   class="btn btn-warning btn-xs"
+                   id="button_position1"
+                   role="button"
+                   data-toggle="tooltip"
+                   data-placement="bottom"
+                   data-container="body"
+                   title="Modifier la fiche B&eacute;n&eacute;ficiaire"
+                >
+                    <i class="glyphicon glyphicon-edit"></i>
+                </a>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') and isDeleteBeneficiaire is not empty %}
+                <span data-toggle="modal" data-target="#modalDeleteBeneficiaire">
+                    <a  href="#"
+                        class="btn btn-danger btn-xs"
+                        id="button_position2"
+                        role="button"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        data-container="body"
+                        title="Supprimer la fiche B&eacute;n&eacute;ficiaire"
+                    >
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 hidden" id="content-wrapper">
+        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/identification.html.twig') }}
+        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/adresse.html.twig') }}
+        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/situation.html.twig') }}
+        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/dispositif.html.twig') }}
+        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/structure.html.twig') }}
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') and isDeleteBeneficiaire is not empty %}
+        {{ include('BackOffice/Conseiller/Beneficiaire/inc/view/_modal_delete_beneficiaire.html.twig') }}
+    {% endif %}
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_conseiller_index') }}
+{% endblock %}

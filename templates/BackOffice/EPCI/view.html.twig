@@ -1,0 +1,43 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_EPCI_view') }}
+{% endblock %}
+
+{% block contents %}
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 marginBottom40 hidden" id="content-wrapper">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="container-title">
+                <h2>Consulter une EPCI</h2>
+                <a href="{{ path('EPCI_edit', {'EPCIId': EPCI.id}) }}"
+                   class="btn btn-warning btn-xs"
+                   role="button"
+                   id="button_position1"
+                   data-toggle="tooltip"
+                   data-placement="bottom"
+                   data-container="body"
+                   title="Modifier l'EPCI"
+                >
+                    <i class="glyphicon glyphicon-edit"></i>
+                </a>
+                {{ include('BackOffice/EPCI/inc/back.html.twig') }}
+            </div>
+        </div>
+
+        {{ include('BackOffice/EPCI/inc/view_EPCI/identification.html.twig') }}
+        {{ include('BackOffice/EPCI/inc/view_EPCI/adresse.html.twig') }}
+        {{ include('BackOffice/EPCI/inc/view_EPCI/information.html.twig') }}
+        {{ include('BackOffice/EPCI/inc/view_EPCI/participation_sare.html.twig') }}
+        {{ include('BackOffice/EPCI/inc/view_EPCI/point_entree_structure.html.twig') }}
+        {{ include('BackOffice/EPCI/inc/view_EPCI/statut.html.twig') }}
+        {{ include('BackOffice/EPCI/inc/view_EPCI/contact.html.twig') }}
+        {{ include('BackOffice/EPCI/inc/view_EPCI/permanence.html.twig') }}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_EPCI_index') }}
+{% endblock %}

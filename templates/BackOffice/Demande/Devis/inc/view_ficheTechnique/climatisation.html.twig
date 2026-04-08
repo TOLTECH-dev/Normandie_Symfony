@@ -1,0 +1,64 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-climatisation">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Autres &eacute;quipements</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Climatisation</label>
+            </div>
+            <div class="flex1 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_initial.climatisation %}
+                    {{ ficheTechnique.ficheTechnique_initial.climatisation }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex2 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_BBC.climatisation %}
+                    {{ ficheTechnique.ficheTechnique_BBC.climatisation }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex3 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_prescription.climatisation %}
+                    {{ ficheTechnique.ficheTechnique_prescription.climatisation }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 marginTop7 fontSize9">
+                    {% if ficheTechnique.ficheTechnique_finChantier.climatisation %}
+                        {{ ficheTechnique.ficheTechnique_finChantier.climatisation }}
+                    {% else %}
+                        <p class="text-center">-</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Ventilation</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.climatisationTypeVentilation ? pathologieVentilationArray[ficheTechnique.ficheTechnique_initial.climatisationTypeVentilation] : '-' }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.climatisationTypeVentilation ? pathologieVentilationArray[ficheTechnique.ficheTechnique_BBC.climatisationTypeVentilation] : '-' }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.climatisationTypeVentilation ? pathologieVentilationArray[ficheTechnique.ficheTechnique_prescription.climatisationTypeVentilation] : '-' }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.climatisationTypeVentilation ? pathologieVentilationArray[ficheTechnique.ficheTechnique_finChantier.climatisationTypeVentilation] : '-' }}
+                </div>
+            {% endif %}
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

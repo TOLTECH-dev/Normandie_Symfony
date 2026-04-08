@@ -1,0 +1,26 @@
+<!-- Modal -->
+<div class="modal fade modalBackdrop" id="modalDeleteBeneficiaire" tabindex="-1" role="dialog" aria-labelledby="modalDeleteBeneficiaireLabel" data-backdrop="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center" id="myModalLabel">Veuillez confirmer la suppression</h4>
+            </div>
+            <div class="modal-body">
+
+                <form action="{{ path('beneficiaire_delete', {'beneficiaireId': beneficiaire.beneficiaireId}) }}" method="post">
+                    <p class="text-center">
+                        Etes-vous certain de vouloir supprimer le B&eacute;n&eacute;ficiaire
+                        <span class="bold">{{ beneficiaire.beneficiairePrenom }} {{ beneficiaire.beneficiaireNom }}</span>?
+                    </p>
+                    <div class="bloc-submit">
+                        <input type="submit" value="Supprimer" class="btn btn-danger text-center" />
+                        <button type="button" class="btn btn-secondary marginLeft10" data-dismiss="modal">Annuler</button>
+                    </div>
+                    {{ form_rest(form_delete) }}
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

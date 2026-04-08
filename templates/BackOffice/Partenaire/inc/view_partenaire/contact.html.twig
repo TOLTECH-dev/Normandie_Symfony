@@ -1,0 +1,37 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-contact">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Contact</legend>
+
+        {% if partenaire.partenaireContact is empty %}
+            <p class="text-center bold">Aucun contact cr&eacute;&eacute;.</p>
+        {% else %}
+            {% set i = 1 %}
+            {% for item in partenaire.partenaireContact %}
+                <div class="row">
+                    <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Contact {{ i }}:</label>
+                    <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                        <ul class="noMmargin noPadding noPuce">
+                            <li>
+                                {% if "1 | monsieur" == item.civilite %}
+                                    {% set civilite = "Monsieur" %}
+                                {% elseif "0 | madame" == item.civilite %}
+                                    {% set civilite = "Madame" %}
+                                {% endif %}
+                                {{ civilite }}
+                            </li>
+                            <li>{{ item.nom|upper }}</li>
+                            <li>{{ item.prenom|capitalize }}</li>
+                            <li>{{ item.titre|capitalize }}</li>
+                            <li>{{ item.telephone }}</li>
+                            <li>{{ item.email }}</li>
+                        </ul>
+                    </div>
+                </div>
+            {% set i = i + 1 %}
+            {% endfor %}
+        {% endif %}
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

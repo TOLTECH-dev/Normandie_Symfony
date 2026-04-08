@@ -1,0 +1,74 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+
+        <header>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 header-container">
+                <div class="hidden-xs hidden-sm col-md-3 col-lg-3">
+                    <div id="bloc_logo">
+                        <a href="{{ path('fo_dashboard') }}">
+                            <img src="{{ asset('build/images/frontOffice/logo/logo_Normandie.jpg') }}" alt="logo" class="header-logo" />
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6 bloc_admin_menu text-center">
+                    <div class="main_title">
+                        <img src="{{ asset('build/images/frontOffice/logo/logo_espace.png') }}" alt="logo" class="header-logo-espace" />
+                    </div>
+
+                    {% if app.user.roles is defined %}
+                        {% if 'ROLE_MEMBER' in app.user.roles and is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            {# if app.user.username is defined #}
+                            {% block admin_menu %}
+                                {{ include('FrontOffice/Common/menu.html.twig', {'path': path}) }}
+                            {% endblock %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                {% if app.user.roles is defined %}
+                    {% if 'ROLE_MEMBER' in app.user.roles and is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        {# if app.user.username is defined #}
+                        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-3 header-login">
+                            {% if app.user.isFranceConnect %}
+                                <div id="fconnect-profile" data-fc-logout-url="{{ url('kleegroup_franceconnect_franceconnect_logout') }}">
+                                    <a href="#" >
+                                        {{- app.user.firstname ~ ' ' ~ app.user.lastname|upper -}}
+                                    </a>
+                                </div>
+                            {% else %}
+                                Bonjour
+                                <span class="bold">
+                                    {#
+                                    <a href="{{ path('fos_user_profile_show') }}"
+                                       class="no-underline"
+                                       data-toggle="tooltip"
+                                       data-placement="bottom"
+                                       data-container="body"
+                                       title="Voir son profil"
+                                    >{{ app.user.username }}
+                                    </a>
+                                    #}
+                                    {{ app.user.username }}
+                                </span>
+                                &nbsp;
+                                <a href="{{ path('user_logout') }}"
+                                   class="btn btn-warning btn-xs"
+                                   role="button"
+                                   data-toggle="tooltip"
+                                   data-placement="bottom"
+                                   data-container="body"
+                                   title="Se déconnecter"
+                                >
+                                    <i class="glyphicon glyphicon-log-out"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </header>
+
+    </div>
+</nav>
+

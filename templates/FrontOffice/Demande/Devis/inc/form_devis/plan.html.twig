@@ -1,0 +1,175 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-plan">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Votre Plan de Financement</legend>
+
+        <div class="form-group hidden">
+            {{ form_label(form.aideAnah, "Aide de l'Anah", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}
+            {{ form_errors(form.aideAnah) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.aideAnah, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.aideRegion, "Aide Région", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}
+            {{ form_errors(form.aideRegion) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.aideRegion, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.aideDepartement, "Aide Département", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}
+            {{ form_errors(form.aideDepartement) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.aideDepartement, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            {{ form_label(form.aideDepartementOrigine, "Origine", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label'}}) }}
+            {{ form_errors(form.aideDepartementOrigine) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                {{ form_widget(form.aideDepartementOrigine, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.aideIntercommunalite, "Aide Intercommunalité", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}
+            {{ form_errors(form.aideIntercommunalite) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.aideIntercommunalite, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            {{ form_label(form.aideIntercommunaliteOrigine, "Origine", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label'}}) }}
+            {{ form_errors(form.aideIntercommunaliteOrigine) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                {{ form_widget(form.aideIntercommunaliteOrigine, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.creditImpot, "MaPrimeRénov’", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}
+            {{ form_errors(form.creditImpot) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.creditImpot, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            {{ form_label(form.typeMaPrimeRenovNom, "Type", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label'}}) }}
+            {{ form_errors(form.typeMaPrimeRenovNom) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 custom-select">
+                {{ form_widget(form.typeMaPrimeRenovNom, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+{#        <div class="form-group">#}
+{#            {{ form_label(form.aideHabiterMieux, "MaPrimeRénov’ Sérénité", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}#}
+{#            {{ form_errors(form.aideHabiterMieux) }}#}
+
+{#            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">#}
+{#                {{ form_widget(form.aideHabiterMieux, {'attr': {'class': 'form-control'}}) }}#}
+{#            </div>#}
+{#            {{ form_label(form.typeMaPrimeRenovSereniteNom, "Type", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label'}}) }}#}
+{#            {{ form_errors(form.typeMaPrimeRenovSereniteNom) }}#}
+
+{#            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 custom-select">#}
+{#                {{ form_widget(form.typeMaPrimeRenovSereniteNom, {'attr': {'class': 'form-control'}}) }}#}
+{#            </div>#}
+{#        </div>#}
+
+        <div class="form-group">
+            {{ form_label(form.CEE, "CEE", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}
+            {{ form_errors(form.CEE) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.CEE, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.EcoPTZ, "EcoPTZ", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}
+            {{ form_errors(form.EcoPTZ) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.EcoPTZ, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            {{ form_label(form.EcoPTZBanque, "Banque", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label'}}) }}
+            {{ form_errors(form.EcoPTZBanque) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 custom-select">
+                {{ form_widget(form.EcoPTZBanque, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.fondsPropres, "Fonds propres", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}
+            {{ form_errors(form.fondsPropres) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.fondsPropres, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.autrePret, "Autre prêt", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}
+            {{ form_errors(form.autrePret) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.autrePret, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            {{ form_label(form.autrePretBanque, "Banque", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label'}}) }}
+            {{ form_errors(form.autrePretBanque) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 custom-select">
+                {{ form_widget(form.autrePretBanque, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.autreAide, "Autres aides", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}
+            {{ form_errors(form.autreAide) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.autreAide, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            {{ form_label(form.autreAideOrigine, "Origine", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-2 col-lg-2 control-label'}}) }}
+            {{ form_errors(form.autreAideOrigine) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                {{ form_widget(form.autreAideOrigine, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.totalPlan, "Total", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-3 col-lg-3 control-label'}}) }}
+            {{ form_errors(form.totalPlan) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.totalPlan, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group marginTop40 hidden">
+            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                <p>
+                    J'accepte que la banque acc&egrave;de &agrave; mes donn&eacute;es pour travailler le plan
+                    de financement et le flux de tr&eacute;sorerie
+                </p>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 noMargin noPadding checkboxstyle text-right">
+                {{ form_row(form.isBanqueAccess) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+</div>

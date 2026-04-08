@@ -1,0 +1,138 @@
+{# beneficiaireTypeKey => exists in read demandes and beneficiaire.type : exists in add/Edit demandes #}
+{% set beneficiaireTypeKey = (beneficiaireTypeKey is defined) ? beneficiaireTypeKey : beneficiaire.type|split(' | ')[0] %}
+{% if '0' == beneficiaireTypeKey %}
+    {% set classBlocAvisImpositionConjoint = '' %}
+    {% set classBlocRevenuFiscalConjoint = '' %}
+    {% set labelFieldAvisImpositionDemandeur = constant('App\\Entity\\Demande_::LABEL_FIELD_AVIS_IMPOSITION_DEMANDEUR_PARTICULIER') %}
+    {% set texteInfoBulleAvisImpositionDemandeur = constant('App\\Entity\\Demande_::INFO_BULLE_HTML_AVIS_IMPOSITION_DEMANDEUR_PARTICULIER') %}
+    {% set labelFieldNombrePersonneFoyer = constant('App\\Entity\\Demande_::LABEL_FIELD_NOMBRE_PERSONNE_FOYER_PARTICULIER') %}
+    {% set labelFieldRevenuFiscalDemandeur = constant('App\\Entity\\Demande_::LABEL_FIELD_REVENU_FISCAL_DEMANDEUR_PARTICULIER') %}
+    {% set labelFieldRevenuFiscalFoyer = constant('App\\Entity\\Demande_::LABEL_FIELD_REVENU_FISCAL_FOYER_PARTICULIER') %}
+{% elseif '1' == beneficiaireTypeKey %}
+    {% set classBlocAvisImpositionConjoint = 'hidden' %}
+    {% set classBlocRevenuFiscalConjoint = 'hidden' %}
+    {% set labelFieldAvisImpositionDemandeur = constant('App\\Entity\\Demande_::LABEL_FIELD_AVIS_IMPOSITION_DEMANDEUR_SCI') %}
+    {% set texteInfoBulleAvisImpositionDemandeur = constant('App\\Entity\\Demande_::INFO_BULLE_HTML_AVIS_IMPOSITION_DEMANDEUR_SCI') %}
+    {% set labelFieldNombrePersonneFoyer = constant('App\\Entity\\Demande_::LABEL_FIELD_NOMBRE_PERSONNE_FOYER_SCI') %}
+    {% set labelFieldRevenuFiscalDemandeur = constant('App\\Entity\\Demande_::LABEL_FIELD_REVENU_FISCAL_DEMANDEUR_SCI') %}
+    {% set labelFieldRevenuFiscalFoyer = constant('App\\Entity\\Demande_::LABEL_FIELD_REVENU_FISCAL_FOYER_SCI') %}
+{% endif %}
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc hidden" id="bloc-revenu">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Votre Revenu</legend>
+
+        <ul id="custom-control_avisImposition" class="list_error"></ul>
+        {{ form_errors(form.demande_travaux.avisImposition) }}
+        <div class="form-group">
+            {{ form_label(form.demande_travaux.avisImposition, labelFieldAvisImpositionDemandeur ~ ":", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label'}}) }}
+            <div class="document-tip">
+                <a role="button"
+                   tabindex="0"
+                   data-container="body"
+                   data-toggle="popover"
+                   data-trigger="focus"
+                   data-placement="top"
+                   data-content="{{ texteInfoBulleAvisImpositionDemandeur }}"
+                >
+                    <i class="glyphicon glyphicon-question-sign"></i>
+                </a>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ form_widget(form.demande_travaux.avisImposition) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xs-offset-0 col-sm-offset-0 col-md-offset-5 col-lg-offset-5">
+            {% if travaux.demande_travaux and travaux.demande_travaux.avisImpositionAlt %}
+            <p>
+                <a href="{{ path(path_location, {'demandeId': travaux.demande_travaux.id, 'typeFile': 2, 'extension': travaux.demande_travaux.avisImpositionUrl, 'typeDemande': 1}) }}" target="_blank">
+                    Voir le document
+                </a>
+            </p>
+            {% endif %}
+        </div>
+
+        <div id="bloc-avisImpositionConjoint" class="{{ classBlocAvisImpositionConjoint }}">
+            <ul id="custom-control_avisImpositionConjoint" class="list_error"></ul>
+            {{ form_errors(form.demande_travaux.avisImpositionConjoint) }}
+            <div class="form-group">
+                {{ form_label(form.demande_travaux.avisImpositionConjoint, "Avis d'imposition du conjoint:", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label'}}) }}
+                <div class="document-tip">
+                    <a role="button"
+                       tabindex="0"
+                       data-container="body"
+                       data-toggle="popover"
+                       data-trigger="focus"
+                       data-placement="top"
+                       data-content="{{ constant('App\\Entity\\Demande_::INFO_BULLE_HTML_AVIS_IMPOSITION_CONJOINT') }}"
+                    >
+                        <i class="glyphicon glyphicon-question-sign"></i>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                    {{ form_widget(form.demande_travaux.avisImpositionConjoint) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xs-offset-0 col-sm-offset-0 col-md-offset-5 col-lg-offset-5">
+            {% if travaux.demande_travaux and travaux.demande_travaux.avisImpositionConjointAlt %}
+                <p>
+                    <a href="{{ path(path_location, {'demandeId': travaux.demande_travaux.id, 'typeFile': 11, 'extension': travaux.demande_travaux.avisImpositionConjointUrl, 'typeDemande': 1}) }}" target="_blank">
+                        Voir le document
+                    </a>
+                </p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.demande_travaux.nbPersFoyer, labelFieldNombrePersonneFoyer, {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label'}}) }}
+            {{ form_errors(form.demande_travaux.nbPersFoyer) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ form_widget(form.demande_travaux.nbPersFoyer, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.demande_travaux.revenu1, labelFieldRevenuFiscalDemandeur, {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label'}}) }}
+            {{ form_errors(form.demande_travaux.revenu1) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ form_widget(form.demande_travaux.revenu1, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group {{ classBlocRevenuFiscalConjoint }}">
+            {{ form_label(form.demande_travaux.revenu2, "Revenu fiscal de référence du conjoint (n-1 ou n-2)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label'}}) }}
+            {{ form_errors(form.demande_travaux.revenu2) }}
+            <div class="document-tip">
+                <a role="button"
+                   tabindex="0"
+                   data-container="body"
+                   data-toggle="popover"
+                   data-trigger="focus"
+                   data-placement="top"
+                   data-content="{{ constant('App\\Entity\\Demande_::INFO_BULLE_HTML_REVENU_FISCAL_CONJOINT') }}"
+                >
+                    <i class="glyphicon glyphicon-question-sign"></i>
+                </a>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ form_widget(form.demande_travaux.revenu2, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.demande_travaux.revenu3, labelFieldRevenuFiscalFoyer, {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label'}}) }}
+            {{ form_errors(form.demande_travaux.revenu3) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ form_widget(form.demande_travaux.revenu3, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

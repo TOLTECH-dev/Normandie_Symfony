@@ -1,0 +1,52 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_demande_inc_module') }}
+    {{ encore_entry_link_tags('backOffice_demande_auditEnergie_examine') }}
+{% endblock %}
+
+{% block contents %}
+{% if is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_CLIENT') %}
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 marginBottom40 hidden" id="content-wrapper">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div id="container-title">
+            <h2>Instruire une demande d'{{ demandeTypeLabel }}: Dossier n°{{ demande.id }}</h2>
+            {{ include('BackOffice/Demande/AuditEnergie/inc/back.html.twig') }}
+        </div>
+    </div>
+
+<input type="hidden" value="{{ beneficiaire.type }}" id="box-typeBeneficiaire" />
+
+{{ form_start(form_instruction, {'attr': {'class': 'form-horizontal', 'id': 'form_examineAuditEnergie'}}) }}
+
+{{ form_errors(form_instruction) }}
+
+{{ include('BackOffice/Demande/inc/module.html.twig') }}
+{{ include('BackOffice/Demande/AuditEnergie/inc/form_instruction/JP.html.twig') }}
+{{ include('BackOffice/Demande/AuditEnergie/inc/form_instruction/JP_reason.html.twig') }}
+{{ include('BackOffice/Demande/AuditEnergie/inc/form_instruction/JP_reason_autre.html.twig') }}
+{{ include('BackOffice/Demande/AuditEnergie/inc/form_instruction/KBIS.html.twig') }}
+{{ include('BackOffice/Demande/AuditEnergie/inc/form_instruction/KBIS_reason.html.twig') }}
+{{ include('BackOffice/Demande/AuditEnergie/inc/form_instruction/KBIS_reason_autre.html.twig') }}
+{{ include('BackOffice/Demande/AuditEnergie/inc/form_instruction/AI.html.twig') }}
+{{ include('BackOffice/Demande/AuditEnergie/inc/form_instruction/AI_reason.html.twig') }}
+{{ include('BackOffice/Demande/AuditEnergie/inc/form_instruction/AI_reason_autre.html.twig') }}
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-submit">
+    <div class="form-group">
+        {{ form_widget(form_instruction.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+    </div>
+</div>
+
+{{ form_rest(form_instruction) }}
+
+{{ form_end(form_instruction) }}
+
+</div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_demande_examineDemande_auditEnergie_index') }}
+{% endblock %}

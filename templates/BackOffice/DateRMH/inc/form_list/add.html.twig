@@ -1,0 +1,51 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-formAdd">
+    <fieldset>
+
+        {{ form_start(formAdd, {'attr': {'class': 'form-horizontal', 'id': 'form_addDateRMH'}}) }}
+        {{ form_errors(formAdd) }}
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(formAdd.dateRMH) }}</div>
+        <div class="form-group">
+            {{ form_label(formAdd.dateRMH, "Date RMH", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ form_widget(formAdd.dateRMH, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(formAdd.enabled) }}</div>
+        <div class="form-group bloc-dateInactif">
+            {{ form_label(formAdd.enabled, "Actif", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {% if dateRMH.enabled is null  %}
+                    {{ form_widget(formAdd.enabled, {'attr': {'class': 'checkboxstyle', 'checked': 'checked'}}) }}
+                {% else %}
+                    {{ form_widget(formAdd.enabled, {'attr': {'class': 'checkboxstyle'}}) }}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(formAdd.dateInactif) }}</div>
+        <div class="form-group noMarginBottom">
+            {{ form_label(formAdd.dateInactif, "Date Inactif", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ form_widget(formAdd.dateInactif, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc bloc-submit">
+            <div>
+                {{ form_widget(formAdd.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+            </div>
+        </div>
+
+        {{ form_rest(formAdd) }}
+        {{ form_end(formAdd) }}
+
+    </fieldset>
+</div>

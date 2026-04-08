@@ -1,0 +1,225 @@
+/*******************************************
+    BLOC JUSTIFICATIF PROPRIETE CONFORME
+*******************************************/
+#bloc-JP {
+
+}
+
+/*******************************************
+    BLOC JUSTIFICATIF PROPRIETE CASE
+*******************************************/
+#bloc-JPcase {
+
+}
+
+#bloc-JPcase label {
+    font-weight: inherit;
+}
+
+#bloc-JPcase input {
+    position: absolute;
+    left: -9999px;
+}
+
+#bloc-JPcase label {
+    display: block;
+    position: relative;
+    margin: 0 40px;
+    padding: 8px 15px 8px 31px;
+    border: 3px solid #fff;
+    border-radius: 15px;
+    color: #fff;
+    /*background-color: #d9534f;*/
+    background-color: rgba(150,150,150, 0.8);
+    /*box-shadow: 0 0 20px rgba(0, 0, 0, .2);*/
+    white-space: pre-line;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color .2s, box-shadow .2s;
+}
+
+#bloc-JPcase label::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 10px;
+    width: 16px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    transition: background-color .2s;
+}
+
+/*
+#bloc-JPcase label:first-of-type {
+    transform: translateX(-40px);
+}
+
+#bloc-JPcase label:last-of-type {
+    transform: translateX(40px);
+}
+
+#bloc-JPcase label:hover, #bloc-JPcase input:focus + label {
+    box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+}
+*/
+
+#bloc-JPcase input:checked + label {
+    background-color: #5cb85c;
+}
+
+#bloc-JPcase input:checked + label::before {
+    background-color: #fff;
+}
+
+/*******************************************
+            BLOC KBIS CONFORME
+*******************************************/
+#bloc-KBIS {
+
+}
+
+/*******************************************
+            BLOC KBIS CASE
+*******************************************/
+#bloc-KBIScase {
+
+}
+
+#bloc-KBIScase label {
+    font-weight: inherit;
+}
+
+#bloc-KBIScase input {
+    position: absolute;
+    left: -9999px;
+}
+
+#bloc-KBIScase label {
+    display: block;
+    position: relative;
+    margin: 0 100px;
+    padding: 8px 15px 8px 31px;
+    border: 3px solid #fff;
+    border-radius: 15px;
+    color: #fff;
+    /*background-color: #d9534f;*/
+    background-color: rgba(150,150,150, 0.8);
+    /*box-shadow: 0 0 20px rgba(0, 0, 0, .2);*/
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color .2s, box-shadow .2s;
+}
+
+#bloc-KBIScase label::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 10px;
+    width: 16px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    transition: background-color .2s;
+}
+
+/*
+#bloc-KBIScase label:first-of-type {
+    transform: translateX(-40px);
+}
+
+#bloc-KBIScase label:last-of-type {
+    transform: translateX(40px);
+}
+
+#bloc-KBIScase label:hover, #bloc-KBIScase input:focus + label {
+    box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+}
+*/
+
+#bloc-KBIScase input:checked + label {
+    background-color: #5cb85c;
+}
+
+#bloc-KBIScase input:checked + label::before {
+    background-color: #fff;
+}
+
+
+/*******************************************
+            BLOC AI CONFORME
+*******************************************/
+#bloc-AI {
+
+}
+
+/*******************************************
+            BLOC AI CASE
+*******************************************/
+#bloc-AIcase {
+
+}
+
+#bloc-AIcase label {
+    font-weight: inherit;
+}
+
+#bloc-AIcase input {
+    position: absolute;
+    left: -9999px;
+}
+
+#bloc-AIcase label {
+    display: block;
+    position: relative;
+    margin: 0 100px;
+    padding: 8px 15px 8px 31px;
+    border: 3px solid #fff;
+    border-radius: 15px;
+    color: #fff;
+    /*background-color: #d9534f;*/
+    background-color: rgba(150,150,150, 0.8);
+    /*box-shadow: 0 0 20px rgba(0, 0, 0, .2);*/
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color .2s, box-shadow .2s;
+}
+
+#bloc-AIcase label::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 10px;
+    width: 16px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    transition: background-color .2s;
+}
+
+/*
+#bloc-AIcase label:first-of-type {
+    transform: translateX(-40px);
+}
+
+#bloc-AIcase label:last-of-type {
+    transform: translateX(40px);
+}
+
+#bloc-AIcase label:hover, #bloc-AIcase input:focus + label {
+    box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+}
+*/
+
+#bloc-AIcase input:checked + label {
+    background-color: #5cb85c;
+}
+
+#bloc-AIcase input:checked + label::before {
+    background-color: #fff;
+}

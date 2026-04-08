@@ -1,0 +1,61 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_core_datepicker') }}
+    {{ encore_entry_link_tags('backOffice_remboursement_inc_module') }}
+    {{ encore_entry_link_tags('backOffice_remboursement_inc_examine') }}
+{% endblock %}
+
+{% block contents %}
+    {% if is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_INSTRUCTEUR_UP') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 marginBottom40 hidden" id="content-wrapper">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="container-title">
+                <h2>Instruire un remboursement: Dossier n&deg;{{ demande.id }}</h2>
+                {% include 'BackOffice/Remboursement/AuditNumerique/inc/back.html.twig' with {'path_location_list': 'remboursement_list'} %}
+            </div>
+        </div>
+
+        {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id': 'form_examine'}}) }}
+
+            {{ form_errors(form) }}
+
+            {% set path_location = 'demande_document_bo' %}
+            {% set typeDemandeDocument = 8 %}
+            {% set formInstruction = form.remboursement_auditNumerique.instruction %}
+            {% set remboursementItem = (remboursement is defined and remboursement.remboursementAuditNumerique) ? remboursement.remboursementAuditNumerique : null %}
+            {% set remboursementItemType = 1 %}
+            {% set isDepot = false %}
+
+            {{ include('BackOffice/Remboursement/inc/module.html.twig') }}
+            {{ include('BackOffice/Remboursement/inc/form_examine/remise.html.twig') }}
+            {{ include('BackOffice/Remboursement/inc/form_examine/cheque.html.twig') }}
+            {{ include('BackOffice/Remboursement/inc/form_examine/cheque_reason.html.twig') }}
+            {{ include('BackOffice/Remboursement/inc/form_examine/cheque_reason_autre.html.twig') }}
+            {{ include('BackOffice/Remboursement/inc/form_examine/facture.html.twig') }}
+            {{ include('BackOffice/Remboursement/inc/form_examine/facture_reason.html.twig') }}
+            {{ include('BackOffice/Remboursement/inc/form_examine/facture_reason_autre.html.twig') }}
+            {{ include('BackOffice/Remboursement/inc/form_examine/RIB.html.twig') }}
+            {{ include('BackOffice/Remboursement/inc/form_examine/RIB_reason.html.twig') }}
+            {{ include('BackOffice/Remboursement/inc/form_examine/RIB_reason_autre.html.twig') }}
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-submit">
+                <div class="form-group">
+                    {{ form_widget(form.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+                </div>
+            </div>
+
+            {{ form_rest(form) }}
+
+        {{ form_end(form) }}
+
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_remboursement_auditNumerique_formExamine_index') }}
+    {{ encore_entry_script_tags('backOffice_remboursement_checkIBAN') }}
+{% endblock %}

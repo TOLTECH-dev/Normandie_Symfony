@@ -1,0 +1,19 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-situation">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Situation pour ce logement</legend>
+
+        <input type="hidden" value="{{ logement.typeHabitation }}" id="box-situation" />
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.situation) }}</div>
+        <div class="form-group">
+            {{ form_label(form.situation, "Votre situation", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.situation, {'attr': {'class': 'checkboxstyle'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

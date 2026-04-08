@@ -1,0 +1,77 @@
+{% extends "FrontOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('frontOffice_demande_devis_add_edit') }}
+{% endblock %}
+
+{% block contents %}
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-2"
+         id="title-wrapper">
+        <div id="container-title">
+            <h2>Modifier ma demande d'aide Travaux (Volet technique)</h2>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-2 hidden"
+         id="content-wrapper">
+
+        {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id': 'form_devis'}}) }}
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 alert-danger">
+            <div>
+                {{ form_errors(form) }}
+            </div>
+        </div>
+
+        {% set path_location = 'demande_document_fo' %}
+        {% set disabled_button_popupValidation = '1' %}
+        {% set hidden_niveauField = 'hidden ' %}
+        {% if
+            (travaux.demande_travaux.audit is defined and travaux.demande_travaux.audit)
+            or '2' != informationANAH %}
+            {% set disabled_button_popupValidation = '0' %}
+            {% set hidden_niveauField = '' %}
+        {% endif %}
+
+        {{ include('FrontOffice/Demande/Devis/inc/form_devis/audit.html.twig') }}
+        {{ include('FrontOffice/Demande/Devis/inc/form_devis/document.html.twig') }}
+        {{ include('FrontOffice/Demande/Devis/inc/form_devis/revenuFiscal.html.twig') }}
+        {{ include('FrontOffice/Demande/Devis/inc/form_devis/type.html.twig') }}
+        {{ include('FrontOffice/Demande/Devis/inc/form_devis/plan.html.twig') }}
+        {{ include('FrontOffice/Demande/Devis/inc/form_devis/acte_engagement.html.twig') }}
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc bloc-submit">
+            <div class="form-group">
+                <button type="button" id="button_popupValidation"
+                        class="col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success">
+                    Valider
+                </button>
+            </div>
+            <div>
+                {{ include('FrontOffice/Common/mentionsCNIL.html.twig') }}
+            </div>
+        </div>
+
+        <!-- Modal -->
+        {% set class_modal_difference_devis_et_plan_financement = 'modal fade' %}
+        {{ include('FrontOffice/Demande/Devis/inc/form_devis/_modal_difference_devis_et_plan_financement.html.twig') }}
+
+        <!-- Modal -->
+        {% set class_modal_renovation_globale_BBC_controle_devis = 'modal fade' %}
+        {{ include('FrontOffice/Demande/Devis/inc/form_devis/_modal_renovation_globale_BBC_controle_devis.html.twig') }}
+
+        {{ form_widget(form.valider, {'attr': {'class': 'hidden'}}) }}
+
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+
+        <div id="data-js-bundle" class="hidden" data-prefix-pathname-bundle="{{ prefix_pathname_bundle_fo }}">
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('frontOffice_demande_formDevis_index') }}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+{% endblock %}

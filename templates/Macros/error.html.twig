@@ -1,0 +1,23 @@
+{# Popup lors de la redirection du reset password #}
+{% for key, messages in app.session.flashbag.all() %}
+{% for message in messages %}
+    {% if 'flag' != key %}
+    <div id="notification" class="alert alert-{{ key }} alert-dismissible col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 notification" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <p class="text-center">{{ message }}</p>
+    </div>
+    {% endif %}
+{% endfor %}
+{% endfor %}
+
+{# Popup lors de la connexion de l'espace login #}
+{% if error is defined and error is not null %}
+<div id="notification" class="alert alert-danger alert-dismissible col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 notification" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <p class="text-center">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+</div>
+{% endif %}

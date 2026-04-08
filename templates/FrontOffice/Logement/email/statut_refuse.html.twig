@@ -1,0 +1,20 @@
+{% block body_html %}
+    <p>Bonjour,</p>
+    <p>Votre demande d'inscription au Ch&egrave;que &eacute;co-&eacute;nergie Normandie a bien &eacute;t&eacute; enregistr&eacute;e. Malheureusement, nous sommes au regret de vous informer que celle-ci n'est pas &eacute;ligible au dispositif pour la raison suivante :
+        <ul>
+        {% for motifLabel in motifLabelArray %}
+            <li>{{ motifLabel|raw }}</li>
+        {% endfor %}
+        </ul>
+    </p>
+    {% if isRefusSARE is not defined or not isRefusSARE %}
+        <p>Cependant, nous vous encourageons &agrave; prendre contact avec un Conseiller Habitat & Energie qui pourra vous renseigner sur les autres possibilit&eacute;s d'aides existantes.</p>
+    {% else %}
+        <p>Par cons&eacute;quent, aucune suite ne peut &ecirc;tre donn&eacute;e &agrave; votre demande.</p>
+        <p>Merci de votre compr&eacute;hension.</p>
+    {% endif %}
+    <p>Bien cordialement,</p>
+
+    <p>Service Ch&egrave;que &eacute;co-&eacute;nergie<br>
+    R&eacute;gion Normandie</p>
+{% endblock %}

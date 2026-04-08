@@ -1,0 +1,12 @@
+{% extends 'FrontOffice/Demande/email/base.html.twig' %}
+{% import 'Macros/document_manquant.html.twig' as document_manquant %}
+
+{% block content %}
+    <p>Votre dossier de demande de <i>&quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie - Travaux&quot;</i> a bien &eacute;t&eacute; pris en compte.</p>
+
+    <p>
+        Vous pouvez, si vous le souhaitez, continuer de compl&eacute;ter votre dossier d'inscription.<br>
+        Pour cela, vous devez vous munir des pi&egrave;ces suivantes qui restent &agrave; t&eacute;l&eacute;charger :
+    </p>
+    {{ document_manquant.format_document_manquant(listDocManquant) }}
+{% endblock content %}

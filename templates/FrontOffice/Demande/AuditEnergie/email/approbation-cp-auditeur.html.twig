@@ -1,0 +1,13 @@
+{% extends 'FrontOffice/Demande/email/base.html.twig' %}
+{% import 'Macros/adresse_postale_emails.html.twig' as macro_adresse_postale %}
+
+{% block content %}
+<p class="text-justify">Nous vous informons que <u>le dossier de demande d'aide n° {{ demandeId }}</u> pour lequel vous avez &eacute;t&eacute; identifi&eacute; par <u>{{ civilite }} {{ beneficiairePrenom|capitalize }} {{ beneficiaireNom|upper }}</u> comme son auditeur, a &eacute;t&eacute; approuv&eacute; par la Commission Permanente de la R&eacute;gion Normandie.</p>
+
+<p class="text-justify">Apr&egrave;s la r&eacute;alisation de l'audit, remise du rapport et pr&eacute;sentation des sc&eacute;narios de r&eacute;novation au particulier, vous devrez :</p>
+
+<ul class="text-justify">
+    <li>Accepter le <i>&quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie&quot;</i> remis par le particulier pour paiement partiel de votre facture apr&egrave;s avoir  v&eacute;rifi&eacute; que la partie &quot;mandat&quot;, situ&eacute;e au verso, a bien &eacute;t&eacute; compl&eacute;t&eacute;e et sign&eacute;e par le b&eacute;n&eacute;ficiaire</li>
+    <li>T&eacute;l&eacute;charger l'ensemble des pi&egrave;ces n&eacute;cessaires au paiement (rapport d'audit, ch&egrave;que &eacute;co-&eacute;nergie et facture acquitt&eacute;e)</li>
+</ul>
+{% endblock content %}

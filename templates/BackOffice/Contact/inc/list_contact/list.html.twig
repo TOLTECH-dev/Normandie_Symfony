@@ -1,0 +1,111 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom40">
+    <div id="container-title">
+         <h2>Liste des Contacts</h2>
+    </div>
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom10">
+    <p class="text-center"> 
+        <button id="button_addContact"
+                class="btn btn-primary btn-xs"
+                type="button"
+                title="Cr&eacute;er un Contact"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                data-container="body"
+                data-original-title="Cr&eacute;er un Contact"
+                data-contactUrl="{{ path('contact_addEdit') }}"
+        >   
+        <span class="glyphicon glyphicon-plus"></span>
+        Ajouter un Contact
+        </button>
+    </p>
+</div>
+
+<table cellspacing="0" id="table_list_contact" class="table table-striped table-bordered big_table">
+    <thead>
+        <tr>
+            <th class="breakWord col0">Type</th>
+            <th class="breakWord col1">Nom</th>
+            <th class="breakWord col2">Pr&eacute;nom</th>
+            <th class="breakWord col3">Email</th>
+            <th class="breakWord col4">T&eacute;l&eacute;phone</th>
+            <th class="breakWord col5">Action</th>
+        </tr>
+
+        {% if list_contact is not empty %}
+        <tr class="filterrow">
+            <th class="with_select">Type</th>
+            <th class="with_search">Nom</th>
+            <th class="with_search">Pr&eacute;nom</th>
+            <th class="with_search">Email</th>
+            <th class="with_search">T&eacute;l&eacute;phone</th>
+            <th class="text-center">
+                <button class="btn btn-danger btn-xs clear_search_input"
+                        type="button"
+                        role="button"
+                        title="Vider les champs de recherche"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        data-container="body"
+                        data-original-title="Vider les champs de recherche"
+                >
+                    <i class="glyphicon glyphicon-erase"></i>
+                </button>                    
+            </th>
+        </tr>            
+        {% endif %}
+    </thead>
+
+    <tbody>
+        {% for item in list_contact %}
+            <tr>
+                <td class="breakWord">{{ item.type|split(' | ')[1]|capitalize }}</td>
+                <td class="breakWord">{{ item.nom|upper }}</td>
+                <td class="breakWord">{{ item.prenom|capitalize }}</td>
+                <td class="breakWord">{{ item.email }}</td>
+                <td class="breakWord">{{ item.telephone }}</td>
+                <td class="text-center">
+                    <button class="btn btn-warning btn-xs button_editContact"
+                            type="button"
+                            title="Modifier le Contact"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-container="body"
+                            data-contactUrl="{{ path('contact_addEdit', {'contactId': item.id}) }}"
+                            data-original-title="Modifier le Contact"
+                    >
+                        <i class="glyphicon glyphicon-pencil"></i>
+                    </button>
+
+                    <button class="btn btn-danger btn-xs button_deleteContact"
+                            type="button"
+                            title="Supprimer le Contact"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-container="body"
+                            data-contactUrl="{{ path('contact_delete', {'contactId': item.id}) }}"
+                            data-original-title="Supprimer le Contact"
+                    >
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal Form -->
+<div class="modal fade modalBackdrop modal_contact" id="modal_contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <legend class="modal-title text-center" id="myModalLabel">
+                    <span class="legend-icon"></span>&nbsp;<span id="modal_contact-titleText"></span>
+                </legend>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>

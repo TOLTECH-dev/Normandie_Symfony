@@ -1,0 +1,8 @@
+import './styles/backOffice/common/menu.css'
+import './styles/backOffice/common/tooltip.css'
+import './styles/backOffice/common/header.css'
+import './styles/backOffice/core/layout_core.css'
+import './styles/backOffice/core/form.css'
+import './styles/backOffice/core/datatable/bootstrap_datatable.css'
+import './styles/backOffice/core/datatable/bootstrap.css'
+import './js/backOffice'

@@ -1,0 +1,18 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc hidden" id="bloc-KBIScaseAutre">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;KBIS: Si Autres, Veuillez pr&eacute;cisez.</legend>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form_instruction.instruction_travaux.KBISreasonAutre) }}</div>
+        <div class="form-group">
+            {{ form_label(form_instruction.instruction_travaux.KBISreasonAutre, "Autre motif de non-conformité", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_instruction.instruction_travaux.KBISreasonAutre, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

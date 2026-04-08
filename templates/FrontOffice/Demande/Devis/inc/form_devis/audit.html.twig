@@ -1,0 +1,72 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-audit">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Votre Audit</legend>
+
+        {% if travaux and travaux.demande_travaux %}
+            <input type="hidden" value="{{ travaux.demande_travaux.audit }}" id="box-demandeTravauxAudit" />
+        {% else %}
+            <input type="hidden" value="" id="box-demandeTravauxAudit" />
+        {% endif %}
+
+        {% if auditE %}
+            <input type="hidden" value="1" id="box-demandeAuditE" />
+            {% if auditE and auditE.demande_auditEnergie %}
+                <input type="hidden" value="{{ auditE.demande_auditEnergie.auditeurId }}" id="box-demandeAuditeur" />
+            {% else %}
+                <input type="hidden" value="" id="box-demandeAuditeur" />
+            {% endif %}
+        {% else %}
+            <input type="hidden" value="0" id="box-demandeAuditE" />
+            <input type="hidden" value="" id="box-demandeAuditeur" />
+        {% endif %}
+
+        {% if auditeur and auditeur.partenaireIdentification %}
+            <input type="hidden" value="{{ auditeur.partenaireIdentification.raisonSociale }}" id="box-demandeAuditeurslug" />
+        {% else %}
+            <input type="hidden" value="" id="box-demandeAuditeurslug" />
+        {% endif %}
+
+        {{ form_row(form.auditeur_id, {'attr': {'class': 'hidden'}}) }}
+
+        <div class="form-group" id="bloc-devisAuditeur">
+            <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label" for="devisAuditeur">Auditeur retenu</label>
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8" id="box-devisAuditeur">
+
+            </div>
+        </div>
+
+        <ul id="custom-control_audit" class="list_error"></ul>
+        {{ form_errors(form.audit) }}
+        <div class="form-group">
+            {{ form_label(form.audit, "Audit Région Normandie ou Audit énergétique national", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label', 'id': 'box-labelAudit'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {% if devis and devis.auditAlt %}
+                    <p class="lineHeight30 noMargin">
+                        <a href="{{ path(path_location, {'demandeId': devis.id, 'typeFile': 3, 'extension': devis.auditUrl, 'typeDemande': 2}) }}" target="_blank">
+                            Voir le document
+                        </a>
+                    </p>
+                {% elseif remboursement is defined
+                    and remboursement
+                    and remboursement.remboursementAuditEnergie is defined
+                    and remboursement.remboursementAuditEnergie
+                    and remboursement.remboursementAuditEnergie.depot is defined
+                    and remboursement.remboursementAuditEnergie.depot.auditAlt is defined
+                    and remboursement.remboursementAuditEnergie.depot.auditAlt
+                %}
+                    <p class="lineHeight30 noMargin">
+                        <a href="{{ path(path_location, {'demandeId': remboursement.remboursementAuditEnergie.depot.id, 'typeFile': 3, 'extension': remboursement.remboursementAuditEnergie.depot.auditUrl, 'typeDemande': 4}) }}" target="_blank">
+                            Voir le document
+                        </a>
+                    </p>
+                {% endif %}
+
+                {{ form_widget(form.audit) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

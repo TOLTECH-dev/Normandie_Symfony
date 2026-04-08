@@ -1,0 +1,40 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-climatisation">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Autres &eacute;quipements</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.climatisation, "Climatisation", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.climatisation) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.climatisation, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.climatisation, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.climatisation, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.climatisationTypeVentilation, "Ventilation", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.climatisationTypeVentilation) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.climatisationTypeVentilation, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.climatisationTypeVentilation, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.climatisationTypeVentilation, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

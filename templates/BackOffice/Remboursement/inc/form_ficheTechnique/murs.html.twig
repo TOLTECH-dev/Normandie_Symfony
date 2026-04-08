@@ -1,0 +1,105 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-murs">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Murs
+            <span class="header-popover">
+                <a role="button"
+                   tabindex="0"
+                   data-container="body"
+                   data-toggle="popover"
+                   data-trigger="focus"
+                   data-placement="top"
+                   data-content="Dans le cas o&ugrave; il existe des parois diff&eacute;rentes, prendre la plus repr&eacute;sentative et laisser un commentaire."
+                >
+                    <i class="glyphicon glyphicon-question-sign"></i>
+                </a>
+            </span>
+        </legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(formFicheTechnique.ficheTechnique_initial.mursSurface, "Surface (m²)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(formFicheTechnique.ficheTechnique_initial.mursSurface, {'attr': attrDefault}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_initial.mursSurface) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(formFicheTechnique.ficheTechnique_BBC.mursSurface, {'attr': attrDefault}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_BBC.mursSurface) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(formFicheTechnique.ficheTechnique_prescription.mursSurface, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_prescription.mursSurface) }}
+            </div>
+            <div class="flex4">
+                {{ form_widget(formFicheTechnique.ficheTechnique_finChantier.mursSurface, {'attr': {'class': 'form-control finChantier-mursSurface'}}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_finChantier.mursSurface) }}
+                <ul id="error-finChantier-mursSurface" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(formFicheTechnique.ficheTechnique_initial.mursR, "R (m².K/W)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(formFicheTechnique.ficheTechnique_initial.mursR, {'attr': attrDefault}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_initial.mursR) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(formFicheTechnique.ficheTechnique_BBC.mursR, {'attr': attrDefault}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_BBC.mursR) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(formFicheTechnique.ficheTechnique_prescription.mursR, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_prescription.mursR) }}
+            </div>
+            <div class="flex4">
+                {{ form_widget(formFicheTechnique.ficheTechnique_finChantier.mursR, {'attr': {'class': 'form-control finChantier-mursR'}}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_finChantier.mursR) }}
+                <ul id="error-finChantier-mursR" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(formFicheTechnique.ficheTechnique_initial.mursEtancheite, "Information étanchéité à l'air et migration vapeur d'eau", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_initial.mursEtancheite) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(formFicheTechnique.ficheTechnique_initial.mursEtancheite, {'attr': attrDefault}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(formFicheTechnique.ficheTechnique_BBC.mursEtancheite, {'attr': attrDefault}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(formFicheTechnique.ficheTechnique_prescription.mursEtancheite, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+            </div>
+            <div class="flex4">
+                {{ form_widget(formFicheTechnique.ficheTechnique_finChantier.mursEtancheite, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(formFicheTechnique.ficheTechnique_initial.mursJonctionMursPlanchers, "Jonction murs / planchers y compris intermédiaires", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_initial.mursJonctionMursPlanchers) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(formFicheTechnique.ficheTechnique_initial.mursJonctionMursPlanchers, {'attr': attrDefault}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(formFicheTechnique.ficheTechnique_BBC.mursJonctionMursPlanchers, {'attr': attrDefault}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(formFicheTechnique.ficheTechnique_prescription.mursJonctionMursPlanchers, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+            </div>
+            <div class="flex4">
+                {{ form_widget(formFicheTechnique.ficheTechnique_finChantier.mursJonctionMursPlanchers, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

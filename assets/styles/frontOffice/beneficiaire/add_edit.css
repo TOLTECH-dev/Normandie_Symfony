@@ -1,0 +1,88 @@
+/*******************************************
+            BLOC IDENTIFICATION
+*******************************************/
+#bloc-identification {
+
+}
+
+#bloc-identification input[type=radio] {
+    vertical-align: bottom;
+}
+#bloc-identification .checkboxstyle label {
+    line-height: 0;
+    margin-left: 5px;
+    margin-right: 10px;
+}
+
+#bloc-identification .checkboxstyle label::after {
+    content: "";
+}
+
+#bloc-identification #box_information p {
+    color: #FF0000;
+}
+
+
+/*******************************************
+            BLOC ADRESSE
+*******************************************/
+#bloc-adresse {
+
+}
+
+#checkbox-addressDisplay input[type=checkbox] {
+    vertical-align: bottom;
+}
+#checkbox-addressDisplay label {
+    line-height: 15px;
+    padding-left: 0;
+}
+
+/*******************************************
+            BLOC SITUATION
+*******************************************/
+#bloc-situation {
+
+}
+
+/*******************************************
+            BLOC DISPOSITIF
+*******************************************/
+#bloc-dispositif {
+
+}
+
+#bloc-structureConseiller {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#bloc-dispositif input[type=checkbox] {
+    vertical-align: bottom;
+    width: 50px;
+}
+#bloc-dispositif .checkboxstyle label {
+    line-height: 0;
+    margin-right: 10px;
+    padding-top: 0;
+}
+
+/*******************************************
+            BLOC STRUCTURE
+*******************************************/
+#bloc-structure {
+
+}
+
+.isReadonly {
+    pointer-events: none;
+    background: repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -webkit-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -moz-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -ms-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -o-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+}
+
+.isReadonly > input[type="checkbox"]:not(:checked)  {
+    opacity: 0.5;
+}

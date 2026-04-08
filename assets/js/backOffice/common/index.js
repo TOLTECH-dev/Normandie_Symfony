@@ -1,0 +1,2 @@
+import './etiquetteEnergetique'
+import './ficheTechniqueCheckData'

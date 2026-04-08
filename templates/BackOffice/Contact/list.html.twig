@@ -1,0 +1,28 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_contact_list') }}
+    {{ encore_entry_link_tags('backOffice_contact_add_edit') }}
+    {{ encore_entry_link_tags('backOffice_newsletter_view') }}
+    {{ encore_entry_link_tags('backOffice_newsletter_list') }}
+{% endblock %}
+
+{% block contents %}
+{% if is_granted('ROLE_CLIENT')
+    or is_granted('ROLE_ADMIN')
+%}
+<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+    {{ include('BackOffice/Newsletter/inc/list_newsletter/list.html.twig') }}
+<hr class="bloc-limit">
+{{ include('BackOffice/Contact/inc/list_contact/list.html.twig') }}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_contact_index') }}
+    {{ encore_entry_script_tags('backOffice_newsletter_index') }}
+{% endblock %}

@@ -1,0 +1,34 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-document">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Vos Devis</legend>
+
+        <ul id="custom-control_devisDocument" class="list_error"></ul>
+        <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 smallPadding">
+            {{ form_row(form.demande_travaux_devis_upload) }}
+
+            <p class="box_addDocument">
+                <a href="#" id="add_document" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-plus"></i>&nbsp;Ajouter un devis</a>
+            </p>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.totalDevis, "Total", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form.totalDevis) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                {{ form_widget(form.totalDevis, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        {% for item in devis.demandeTravauxDevisUpload %}
+            {% if item.devisDocumentAlt %}
+                <input type="hidden" value="{{ path(path_location, {'demandeId': item.id, 'typeFile': 5, 'extension': item.devisDocumentUrl, 'typeDemande': 2}) }}" data-extension="{{ item.devisDocumentUrl }}" class="devis_upload_document" />
+            {% else %}
+                <input type="hidden" value="" class="devis_upload_document" />
+            {% endif %}
+        {% endfor %}
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

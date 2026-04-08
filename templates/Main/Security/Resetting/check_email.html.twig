@@ -1,0 +1,29 @@
+{% extends "Main/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('resettingCheckEmail') }}
+{% endblock %}
+
+{% block content %}
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="container-title">
+            <h2>R&eacute;initialisation du mot de passe</h2>
+        </div>
+
+        {#
+        {{ include('whiteLabelMainBundle:Macros:error.html.twig') }}
+        #}
+
+        <p>
+            Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.<br>
+            Remarque : Vous ne pouvez demander un nouveau mot de passe que toutes les heures. <br>
+            <br>
+            Si vous ne recevez pas un email, vérifiez votre dossier spam ou essayez à nouveau.
+        </p>
+
+        <div class="col-xs-12 col-sm-12 container-submit">
+            <a href="{{ path('web_homepage') }}" class="btn btn-warning">Retour &agrave; l'accueil</a>
+        </div>
+    </div>
+{% endblock %}

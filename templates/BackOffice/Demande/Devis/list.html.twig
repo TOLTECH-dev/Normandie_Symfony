@@ -1,0 +1,145 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_demande_devis_list') }}
+{% endblock %}
+
+{% block contents %}
+    {% if is_granted('ROLE_CONSEILLER') or is_granted('ROLE_AUDITEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom40">
+                <div id="container-title">
+                    <h2>Instruction Technique</h2>
+                </div>
+            </div>
+
+            <table cellspacing="0" id="table_list_demande" class="table table-striped table-bordered big_table">
+                <thead>
+                    <tr>
+                        <th class="breakWord col0">N°</th>
+                        <th class="breakWord col1">B&eacute;n&eacute;ficiaire</th>
+                        <th class="breakWord col2">Logement</th>
+                        <th class="breakWord col3">Statut de la Demande Travaux</th>
+                        <th class="breakWord col4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in listDevis %}
+
+                        {% set btnFicheTechniqueType = '' %}
+                        {% if is_granted('ROLE_AUDITEUR') %}
+                            {% if item.ficheTechniqueId is not null and '0' == item.statutFicheTechnique %}
+                                {% set btnFicheTechniqueType = 'reprendre' %}
+                             {% elseif item.ficheTechniqueId is not null and '1' == item.statutFicheTechnique %}
+                                    {% set btnFicheTechniqueType = 'modifier' %}
+                            {% endif %}
+                        {% else %}
+                            {% if item.ficheTechniqueId is not null and ('0' == item.statutFicheTechnique or '1' != item.isValidationConseiller) %}
+                                {% set btnFicheTechniqueType = 'reprendre' %}
+                            {% elseif item.ficheTechniqueId is not null and '1' == item.statutFicheTechnique and '1' == item.isValidationConseiller %}
+                                {% set btnFicheTechniqueType = 'modifier' %}
+                            {% endif %}
+                        {% endif %}
+
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.nom|upper }} {{ item.prenom|capitalize }}</td>
+                            <td>{{ item.codePostal }} {{ item.ville }}</td>
+                            <td>{{ item.statutSlug }}</td>
+
+                            <td class="text-center">
+                                {% if (is_granted('ROLE_CONSEILLER') or is_granted('ROLE_AUDITEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN'))
+                                    and (item.statutId in listStatutForFicheTechniqueAccess)
+                                %}
+                                    {% if 'reprendre' == btnFicheTechniqueType %}
+                                        <a href="{{ path('demande_devis_ficheTechnique_reexamine', {'devisId': item.devisId, 'ficheTechniqueId': item.ficheTechniqueId}) }}"
+                                           class="btn btn-warning btn-xs"
+                                           role="button"
+                                           data-toggle="tooltip"
+                                           data-placement="bottom"
+                                           data-container="body"
+                                           title="Reprendre la Fiche technique"
+                                        >
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                        </a>
+                                    {% elseif 'modifier' == btnFicheTechniqueType %}
+                                        <a href="{{ path('demande_devis_ficheTechnique_reexamine', {'devisId': item.devisId, 'ficheTechniqueId': item.ficheTechniqueId}) }}"
+                                           class="btn btn-success btn-xs"
+                                           role="button"
+                                           data-toggle="tooltip"
+                                           data-placement="bottom"
+                                           data-container="body"
+                                           title="Modifier la fiche technique"
+                                        >
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ path('demande_devis_ficheTechnique_examine', {'devisId': item.devisId}) }}"
+                                           class="btn btn-primary btn-xs"
+                                           role="button"
+                                           data-toggle="tooltip"
+                                           data-placement="bottom"
+                                           data-container="body"
+                                           title="Renseigner la fiche technique"
+                                        >
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                        </a>
+                                    {% endif %}
+
+                                {% endif %}
+
+                                {% if is_granted('ROLE_CONSEILLER') or is_granted('ROLE_ADMIN') %}
+                                    {% if '0' == item.statutInstruction  %}
+                                        <a href="{{ path('demande_devis_examine', {'devisId': item.devisId, 'logementId': item.logementId}) }}"
+                                           class="btn btn-primary btn-xs"
+                                           role="button"
+                                           data-toggle="tooltip"
+                                           data-placement="bottom"
+                                           data-container="body"
+                                           title="Instruire une demande"
+                                        >
+                                            <i class="glyphicon glyphicon-play"></i>
+                                        </a>
+                                    {% elseif '1' == item.statutInstruction %}
+                                        {% if item.statutId in ['24', '25', '35', '36', '37'] %}
+                                            <a href="{{ path('demande_devis_examine', {'devisId': item.devisId, 'logementId': item.logementId}) }}"
+                                               class="btn btn-warning btn-xs"
+                                               role="button"
+                                               data-toggle="tooltip"
+                                               data-placement="bottom"
+                                               data-container="body"
+                                               title="R&eacute;-instruire une demande"
+                                            >
+                                                <i class="glyphicon glyphicon-edit"></i>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ path('demande_devis_examine', {'devisId': item.devisId, 'logementId': item.logementId}) }}"
+                                               class="btn btn-default btn-xs"
+                                               role="button"
+                                               data-toggle="tooltip"
+                                               data-placement="bottom"
+                                               data-container="body"
+                                               title="R&eacute;-instruire une demande"
+                                            >
+                                                <i class="glyphicon glyphicon-edit"></i>
+                                            </a>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_demande_listDemande_appel_datatables') }}
+    {{ encore_entry_script_tags('backOffice_demande_listDemande_popover') }}
+    {{ encore_entry_script_tags('coreList') }}
+{% endblock %}

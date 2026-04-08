@@ -1,0 +1,13 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+
+    globals:
+        date_reference_convert: '%env(DATE_REFERENCE_CONVERT)%'
+        fc_js_url: '%env(FC_JS_URL)%'
+        app_is_https: '%env(bool:APP_IS_HTTPS)%'
+        prefix_pathname_bundle_fo: 'fo'
+        prefix_pathname_bundle_bo: 'bo'
+
+when@test:
+    twig:
+        strict_variables: true

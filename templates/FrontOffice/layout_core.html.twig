@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=10">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="apple-touch-icon" href="{{ asset('build/images/frontOffice/favicon/apple-touch-icon.png') }}" sizes="180x180">
+    <link rel="icon" href="{{ asset('build/images/frontOffice/favicon/favicon-32x32.png') }}" type="image/png" sizes="32x32">
+    <link rel="icon" href="{{ asset('build/images/frontOffice/favicon/favicon-16x16.png') }}" type="image/png" sizes="16x16">
+    <link rel="mask-icon" href="{{ asset('build/images/frontOffice/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="manifest" href="{{ asset('build/images/frontOffice/favicon/manifest.json') }}">
+
+    <title>
+        {% block title %}
+            Espace B&eacute;n&eacute;ficiaire
+        {% endblock %}
+    </title>
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_link_tags('frontOffice') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        {{ encore_entry_script_tags('frontOffice') }}
+    {% endblock %}
+</head>
+<body>
+    {% set path = app.request.attributes.get('_route') %}
+    {{ render(controller('App\\Controller\\FrontOfficeCommonController::layoutHeader', {'path': path})) }}
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc-content">
+                    {{ include('Macros/error.html.twig') }}
+
+                    {% block contents %}
+
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#
+    {{ render(controller('whiteLabelFrontOfficeBundle:Common:layoutFooter')) }}
+    #}
+</body>
+</html>

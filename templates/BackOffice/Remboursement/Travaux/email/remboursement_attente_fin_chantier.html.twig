@@ -1,0 +1,6 @@
+{% extends 'BackOffice/Remboursement/email/base.html.twig' %}
+
+{% block content %}
+    <p>Vous avez r&eacute;alis&eacute; des travaux chez {{ civilite|capitalize }} {{ beneficiairePrenom|capitalize }} {{ beneficiaireNom|upper }}, {{ adresseTravaux }}.</p>
+    <p>Afin de finaliser le dossier de remboursement, nous vous demandons de bien vouloir compl&eacute;ter sur l'extranet, la fiche technique (Colonne "Fin de travaux") en vous appuyant sur les devis et factures t&eacute;l&eacute;charg&eacute;s et d'y int&eacute;grer les fichiers .pdf (infiltrom&eacute;trie, ventilation et audit mis à jour par l'auditeur apr&egrave;s travaux).</p>
+{% endblock content %}

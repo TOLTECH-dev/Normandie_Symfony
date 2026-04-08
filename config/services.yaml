@@ -1,0 +1,266 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    locale: 'fr'
+    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
+
+    app_root_dossier_data_symfony: '%env(APP_ROOT_DOSSIER_DATA_SYMFONY)%'
+    app_as400_folder_in: '%env(APP_AS400_FOLDER_IN)%'
+    app_as400_folder_out: '%env(APP_AS400_FOLDER_OUT)%'
+
+    date_reference: '%env(DATE_REFERENCE)%'
+    date_reference_convert: '%env(DATE_REFERENCE_CONVERT)%'
+
+    logout_redirection_fo: '%env(LOGOUT_REDIRECTION_FO)%'
+    logout_redirection_bo: '%env(LOGOUT_REDIRECTION_BO)%'
+    url_fo: '%env(URL_FO)%'
+    url_bo: '%env(URL_BO)%'
+
+    production_auditEnergie: '%env(PRODUCTION_AUDIT_ENERGIE)%'
+    production_auditNumerique: '%env(PRODUCTION_AUDIT_NUMERIQUE)%'
+    production_travauxNiveau1_2: '%env(PRODUCTION_TRAVAUX_NIVEAU_1_2)%'
+    production_travauxNiveau_BBC1: '%env(PRODUCTION_TRAVAUX_NIVEAU_BBC1)%'
+    production_travauxNiveau_BBC2: '%env(PRODUCTION_TRAVAUX_NIVEAU_BBC2)%'
+
+    production_operation:
+        - '%production_auditEnergie%'
+        - '%production_auditNumerique%'
+        - '%production_travauxNiveau1_2%'
+        - '%production_travauxNiveau_BBC1%'
+        - '%production_travauxNiveau_BBC2%'
+
+    production_demat_value: '%env(PRODUCTION_DEMAT_VALUE)%'
+    production_top_reedition_value: '%env(PRODUCTION_TOP_REEDITION_VALUE)%'
+
+    rmh_file_numero_departement: '%env(RMH_FILE_NUMERO_DEPARTEMENT)%'
+    rmh_file_code_collectivite: '%env(RMH_FILE_CODE_COLLECTIVITE)%'
+    rmh_file_numero_train_virement: '%env(RMH_FILE_NUMERO_TRAIN_VIREMENT)%'
+    rmh_file_code_nature: '%env(RMH_FILE_CODE_NATURE)%'
+    rmh_file_code_monnaie: '%env(RMH_FILE_CODE_MONNAIE)%'
+    rmh_file_libelle_operation: '%env(RMH_FILE_LIBELLE_OPERATION)%'
+    rmh_file_prefix: '%env(RMH_FILE_PREFIX)%'
+
+    rating_from_conseiller_to_auditeur: '%env(RATING_FROM_CONSEILLER_TO_AUDITEUR)%'
+    rating_from_region_to_renovateur: '%env(RATING_FROM_REGION_TO_RENOVATEUR)%'
+
+    email_region_paiement: '%env(EMAIL_REGION_PAIEMENT)%'
+    email_region_instruction: '%env(EMAIL_REGION_INSTRUCTION)%'
+    email_prestataire_instruction: '%env(EMAIL_PRESTATAIRE_INSTRUCTION)%'
+
+    app_date_passage_montant_travaux_niveau_3_BBC: '%env(APP_DATE_PASSAGE_MONTANT_TRAVAUX_NIVEAU_3_BBC)%'
+    app_date_debut_SARE: '%env(APP_DATE_DEBUT_SARE)%'
+    app_date_us_passage_montant_auditEnergie: '%env(APP_DATE_US_PASSAGE_MONTANT_AUDIT_ENERGIE)%'
+    app_date_passage_montant_auditRegion: '%env(APP_DATE_PASSAGE_MONTANT_AUDIT_REGION)%'
+    app_date_us_nouvel_instructeur: '%env(APP_DATE_US_NOUVEL_INSTRUCTEUR)%'
+    app_date_limite_creation_demande_member: '%env(APP_DATE_LIMITE_CREATION_DEMANDE_MEMBER)%'
+    app_date_limite_creation_demande_conseiller: '%env(APP_DATE_LIMITE_CREATION_DEMANDE_CONSEILLER)%'
+
+    app_export_ADEME_A03_structure: '%env(APP_EXPORT_ADEME_A03_STRUCTURE)%'
+    app_export_ADEME_A03_type_acte: '%env(APP_EXPORT_ADEME_A03_TYPE_ACTE)%'
+    app_export_ADEME_A03_type_logement: '%env(APP_EXPORT_ADEME_A03_TYPE_LOGEMENT)%'
+    app_export_ADEME_A03_rapport_audit_DTG_remis: '%env(APP_EXPORT_ADEME_A03_RAPPORT_AUDIT_DTG_REMIS)%'
+
+    app_export_ADEME_A05_structure: '%env(APP_EXPORT_ADEME_A05_STRUCTURE)%'
+    app_export_ADEME_A05_type_acte: '%env(APP_EXPORT_ADEME_A05_TYPE_ACTE)%'
+    app_export_ADEME_A05_type_logement: '%env(APP_EXPORT_ADEME_A05_TYPE_LOGEMENT)%'
+    app_export_ADEME_A05_rapport_audit_DTG_remis: '%env(APP_EXPORT_ADEME_A05_RAPPORT_AUDIT_DTG_REMIS)%'
+
+    is_production: '%env(IS_PRODUCTION)%'
+    app_is_https: '%env(APP_IS_HTTPS)%'
+
+    security_time_expire_user_ip: '%env(SECURITY_TIME_EXPIRE_USER_IP)%'
+    security_time_expire_user_show_recaptcha: '%env(SECURITY_TIME_EXPIRE_USER_SHOW_RECAPTCHA)%'
+    security_max_login_failure_attempts: '%env(SECURITY_MAX_LOGIN_FAILURE_ATTEMPTS)%'
+    security_lockout_duration: '%env(SECURITY_LOCKOUT_DURATION)%'
+
+    fc_js_url: '%env(FC_JS_URL)%'
+
+    mailer_address_from: '%env(MAILER_ADDRESS_FROM)%'
+
+    resetting_retry_ttl: '%env(RESETTING_RETRY_TTL)%'
+    app_logo_path: '%kernel.project_dir%/public/build/images/frontOffice/logo/'
+
+    app_api_clea_base_url: '%env(APP_API_CLEA_BASE_URL)%'
+    app_api_clea_client_id: '%env(APP_API_CLEA_CLIENT_ID)%'
+    app_api_clea_client_secret: '%env(APP_API_CLEA_CLIENT_SECRET)%'
+    app_api_clea_user_id: '%env(APP_API_CLEA_USER_ID)%'
+    app_api_clea_is_data_production: '%env(APP_API_CLEA_IS_DATA_PRODUCTION)%'
+
+    session_max_idle_time: '%env(SESSION_MAX_IDLE_TIME)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: [ 'controller.service_arguments' ]
+
+    App\Security\Subscriber\LogoutEventSubscriber:
+        arguments:
+            $urlBo: '%url_bo%'
+            $urlFo: '%url_fo%'
+            $logoutRedirectionBo: '%logout_redirection_bo%'
+            $logoutRedirectionFo: '%logout_redirection_fo%'
+
+    App\Listener\CspNonceInjectorListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -100 }
+
+    App\Service\HistoriqueService:
+        calls:
+            - [setDemandeService, ['@App\Service\DemandeServiceFO']]
+
+    App\Service\DemandeServiceBO:
+        calls:
+            - [ setDemandeServiceFO, [ '@App\Service\DemandeServiceFO' ] ]
+
+    App\Service\MailerService:
+        arguments:
+            $defaultFrom: '%mailer_address_from%'
+
+    App\Service\AdminService:
+        arguments:
+            $dateReferenceConvert: '%date_reference_convert%'
+            $appRootDossierDataSymfony: '%app_root_dossier_data_symfony%'
+
+    App\Service\DocumentAccessChecker:
+        arguments:
+            $appDateUsNouvelInstructeur: '%app_date_us_nouvel_instructeur%'
+
+
+    App\Service\DateCPService:
+        arguments:
+            $dateUsPassageMontantAuditEnergie: '%app_date_us_passage_montant_auditEnergie%'
+            $datePassageMontantAuditRegion: '%app_date_passage_montant_auditRegion%'
+
+    App\Service\TitreService:
+        arguments:
+            $appDateUsNouvelInstructeur: '%app_date_us_nouvel_instructeur%'
+            $appAs400FolderIn: '%app_as400_folder_in%'
+            $appDatePassageMontantTravauxNiveau3Bbc: '%app_date_passage_montant_travaux_niveau_3_BBC%'
+            $appRootDossierDataSymfony: '%app_root_dossier_data_symfony%'
+            $projectRoot: '%kernel.project_dir%'
+
+
+    App\Service\DemandeTravauxDevisService:
+        arguments:
+            $projectDataPath: '%app_root_dossier_data_symfony%'
+            $productionTravauxNiveauBBC2: '%production_travauxNiveau_BBC2%'
+
+    App\Service\CommentaireService:
+        arguments:
+            $emailRegionPaiement: '%email_region_paiement%'
+            $emailRegionInstruction: '%email_region_instruction%'
+            $emailPrestataireInstruction: '%email_prestataire_instruction%'
+            $mailerAddressFrom: '%mailer_address_from%'
+
+    App\Service\DateRMHService:
+        arguments:
+            $productionTravauxNiveauBBC1: '%production_travauxNiveau_BBC1%'
+            $productionTravauxNiveauBBC2: '%production_travauxNiveau_BBC2%'
+            $rmhFilePrefix: '%rmh_file_prefix%'
+            $rmhFileNumeroDepartement: '%rmh_file_numero_departement%'
+            $rmhFileCodeCollectivite: '%rmh_file_code_collectivite%'
+            $rmhFileNumeroTrainVirement: '%rmh_file_numero_train_virement%'
+            $rmhFileCodeNature: '%rmh_file_code_nature%'
+            $rmhFileCodeMonnaie: '%rmh_file_code_monnaie%'
+            $rmhFileLibelleOperation: '%rmh_file_libelle_operation%'
+            $appRootDossierDataSymfony: '%app_root_dossier_data_symfony%'
+
+    App\Service\ProductionService:
+        arguments:
+            $productionTravauxNiveauBBC1: '%production_travauxNiveau_BBC1%'
+            $productionTravauxNiveauBBC2: '%production_travauxNiveau_BBC2%'
+            $productionTopReeditionValue: '%production_top_reedition_value%'
+            $productionDematValue: '%production_demat_value%'
+            $appAs400FolderOut: '%app_as400_folder_out%'
+            $appRootDossierDataSymfony: '%app_root_dossier_data_symfony%'
+            $isProduction: '%is_production%'
+            $mailerAddressFrom: '%mailer_address_from%'
+
+    App\Service\AdminFormService: ~
+
+    App\Service\DocumentService:
+        arguments:
+            $rootUploadDir: '%app_root_dossier_data_symfony%'
+            $rmhFilePrefix: '%rmh_file_prefix%'
+
+    App\Command\DeleteDocumentTravauxRemboursementTermineCommand:
+        arguments:
+            $productionTravauxNiveauBBC1: '%production_travauxNiveau_BBC1%'
+            $productionTravauxNiveauBBC2: '%production_travauxNiveau_BBC2%'
+
+    App\Service\RollbackDocumentService:
+        arguments:
+            $appRootDossierDataSymfony: '%app_root_dossier_data_symfony%'
+
+    App\Command\ListDeletedDocumentTravauxRemboursementTermineCommand:
+        arguments:
+            $appRootDossierDataSymfony: '%app_root_dossier_data_symfony%'
+            $productionTravauxNiveauBBC1: '%production_travauxNiveau_BBC1%'
+            $productionTravauxNiveauBBC2: '%production_travauxNiveau_BBC2%'
+
+    App\Command\ExportADEMECommand:
+        arguments:
+            $mailerAddressFrom: '%mailer_address_from%'
+            $appRootDossierDataSymfony: '%app_root_dossier_data_symfony%'
+
+    App\Command\ProcessDeleteDocumentCommand:
+        arguments:
+            $rootUploadDir: '%app_root_dossier_data_symfony%'
+            $productionTravauxNiveauBBC1: '%production_travauxNiveau_BBC1%'
+            $productionTravauxNiveauBBC2: '%production_travauxNiveau_BBC2%'
+
+    App\Command\RollbackDeletedDocumentTravauxRemboursementTermineCommand:
+        arguments:
+            $productionTravauxNiveauBBC1: '%production_travauxNiveau_BBC1%'
+            $productionTravauxNiveauBBC2: '%production_travauxNiveau_BBC2%'
+
+    App\Service\APIService:
+        arguments:
+            $appApiCleaBaseUrl: '%app_api_clea_base_url%'
+            $appApiCleaClientId: '%app_api_clea_client_id%'
+            $appApiCleaClientSecret: '%app_api_clea_client_secret%'
+
+    App\Service\CarnetInformationLogementService:
+        arguments:
+            $appApiCleaUserId: '%app_api_clea_user_id%'
+            $appApiCleaIsDataProduction: '%app_api_clea_is_data_production%'
+            $appRootFolderDataSymfony: '%app_root_dossier_data_symfony%'
+
+    App\Command\CarnetInformationLogementCommand:
+        arguments:
+            $productionTravauxNiveauBBC2: '%production_travauxNiveau_BBC2%'
+
+    App\Command\UpdateFicheTechniqueSurfaceHabitableCommand:
+        arguments:
+            $loggerUpdateFicheTechnique: '@monolog.logger.command_update_fiche_technique'
+
+    App\EventListener\ExceptionListener:
+#        arguments:
+#            $urlFO: '%url_fo%'
+#            $urlBO: '%url_bo%'
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    App\Security\Listener\ActivityHandlerListener:
+        arguments:
+            $maxIdleTime: '%session_max_idle_time%'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

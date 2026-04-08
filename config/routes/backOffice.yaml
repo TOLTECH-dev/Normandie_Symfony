@@ -1,0 +1,870 @@
+###################################
+###########  Security  ############
+###################################
+admin_user_login:
+  path:     /bo_login
+  defaults: { _controller: App\Security\SecurityController::loginAdmin }
+
+admin_user_logout:
+  path:     /bo_logout
+  methods: [GET]
+
+###################################
+###    Autocomplete Routing     ###
+###################################
+bo_autocomplete_listCity:
+  path:     /168E46D2986D011C9864866FCB37291BA772E56C9D1AC2C6{codePostal}26880543E88535164454BBFE58A3829B9348DFD304B3DC4496C22065CC1B3CED35BCC14AE3E76E53
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateListCity }
+  requirements:
+    codePostal: \d+
+  options:
+    expose: true
+
+bo_autocomplete_listAddress:
+  path:     /CFE9798AC674606ECF6CFFF101612A59338112C2CA5337D8{insee}090C14AE9B863C2F78795FE903FBCE8F6B13C98238BD9A9BA2CD6EFD52841B75094F6F3938E0F57C
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateListAddress }
+  requirements:
+    insee: \d+
+  options:
+    expose: true
+
+bo_autocomplete_listStructure:
+  path:     /561DDA4215C9DCEE{logementId}A1236D2D960C9906{insee}1FAA17C53D0D6487{type}82558D619828088E{nombrePersonneFoyer}0AF6E0D01D7B556343C3088CDB4922D3{beneficiaireId}0A6E3897676FF65A{revenuFiscalRef}2D71123869EEF2D3{structureId}
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateListStructure, structureId: 0 }
+  requirements:
+    logementId: \d+
+    insee: \d+
+    type: \d{1}
+    nombrePersonneFoyer: \d+
+    beneficiaireId: \d+
+    revenuFiscalRef: \d+
+    structureId: \d+
+  options:
+    expose: true
+
+bo_autocomplete_listConseiller:
+  path:     /EBA7ADD1D9B308631E24770C9D533E75513DFF37664D4AEE{structureId}ADA61CBBC323EB32EA6075C638773B18F18B28970B40D2AF4FFC08E1F9C6E7EA341B2759C857D720
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateListConseiller }
+  requirements:
+    structureId: \d+
+  options:
+    expose: true
+
+bo_autocomplete_listPartenaire:
+  #   /backoffice/ajax_auto_complete/update_list_partenaire/{type}
+  path:     /017ea7b66ccf424b9cc24b053a375df556d1315c082ff49d{type}9598ecfa96da2006dd6518c4f396197db4193aa3b974ec7e2040f0ea8a07a879c126d42f61fb3ccf
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateListPartenaire }
+  requirements:
+    type: \d+
+  options:
+    expose: true
+
+###################################
+###       Homepage Routing      ###
+###################################
+bo_dashboard:
+  path:     /2A5253425D96E69DCCCA7A5651BF602B1FF3BFD0789D55265B12DDAFB8C1FFAA6A3740497997A5341AB8158BE4B28EBB77F8FB973CA3227830B30CDF83B6C249
+  defaults: { _controller: App\Controller\HomepageController::index }
+  methods: [GET]
+
+###################################
+###       Demande Routing       ###
+###################################
+demande_list_all:
+  path:     /694F83AC9EB8CB8387728215CF5C99972A0AF791A633A586DDB0586ECD5DE5B1C9546D5FB8BBEBB097606C1A09FADFC4152BE2BCB62ACA1BB25A4B850FE07E0C
+  defaults: { _controller: App\Controller\DemandeController::listAll }
+
+demande_list_all_ajax:
+  path:     /DD2D8051DB8125BC7F19769BA283322B04C696F31CF4930971E731E0BBE9EDD71830B50847AB8C31B6A81E936F882FBE9EF28DC48D2B531959C9A606F7A1DA75
+  defaults: { _controller: App\Controller\DemandeController::listAllAjax }
+
+demande_list_bo:
+  path:     /D96516E110E1691898F5939FA609DD97E6A8D4391627407B3CDDBFF29AEA12A83E91D80BBDA25ADE23C3BFE5C3BE9D6B2906E1F8BE482A97A8EE55499249F1BA
+  defaults: { _controller: App\Controller\DemandeController::list }
+
+demande_create_commentaire:
+  path:     /F0CD7{demandeId}16389149E49429552E7035219DC9A1ECB6576A43B553D37D47A92026C1F82833D9BBF0AFD750CC2EAC52CECC52168FDCB5543F678A9CECC4750B0C8DCBE
+  defaults: { _controller: App\Controller\DemandeController::createCommentaire, demandeId: 0 }
+  requirements:
+    demandeId: \d+
+  condition: "request.isXmlHttpRequest()"
+  options:
+    expose: true
+
+demande_view:
+  path:     /7F256{demandeId}36CDEC912AB0BE1F57442E7D2B6B975594DE56F1548CC3C121FBB8E176DFDBDA2A6E50306E505BAB7F9FA5FBEEA129B0915CBD6869B3FE4E0C4375FDF6C
+  defaults: { _controller: App\Controller\DemandeController::view }
+  requirements:
+    demandeId: \d+
+
+demande_edit:
+  path:     /677BDD5A0047DAE490D135FB1DED482DA984321C22B34532EE99DE91156D428A9B73866959494798E1B4023D18E111219AE3B93780C744E29110C4A4A4B{demandeId}80DD3
+  defaults: { _controller: App\Controller\DemandeController::edit }
+  requirements:
+    demandeId: \d+
+
+demande_delete:
+  path:     /752536641D3D2A2D98976F{demandeId}349D30D7888CD9053E8EB24AEFFC069787F9EC477A8CDF41F01D21EABA23B9ABB17A3F811773694510E119AB06EE0AE3CDD6C33B91
+  defaults: { _controller: App\Controller\DemandeController::delete }
+  requirements:
+    demandeId: \d+
+
+demande_deny:
+  path:     /470AB29F680A3020D44F5E{demandeId}7E26DE9197169CF20A419D25816CBE74D2B2AC07AC398CD1E87CCBEA93A8EDEAD2D98F9F62E325CCF849C74927BAD65EAFBEBC1821
+  defaults: { _controller: App\Controller\DemandeController::deny }
+  requirements:
+    demandeId: \d+
+
+demande_assign_contacts:
+  path:     /5E791913E07340613ECA41C812B1EE4AA9F664EE4DD9771CB4BD876B1DC29A42A6BFA6809033DD20AB726AEF93AA386B395232BF208F0846A30FF533EDA{demandeId}D6FF8
+  defaults: { _controller: App\Controller\DemandeController::assignContacts }
+  requirements:
+    demandeId: \d+
+
+demande_update_niveau_aide_travaux_devis:
+  path :    /2f51709a480084d1478f5b{demandeId}907acf8ebfd0bcec72b744{devisId}99a1163327d30a97df684ab047b4cd35e1f7ce954aca8fe9cd6b6feabba73b70bf72ae757f5d744dd488
+  defaults: { _controller: App\Controller\DemandeController::updateNiveauAideTravauxDevis }
+  requirements:
+    demandeId: \d+
+    devisId: \d+
+
+demande_reactive:
+  path:     /ebcb8060699023{demandeId}25b96b16587efb17fa2a773049ea13758db68a072e7f0af4a0eb1c663e3be5eb8c1c41fdf1407868d7596cbd2bb3e47ed6e1aa271e7ef25172
+  defaults: { _controller: App\Controller\DemandeController::reactive }
+  requirements:
+    demandeId: \d+
+
+demande_fiche_liaison_bo:
+  path:     /{demandeId}18B6323704127059A12F706B3392A0A3307FA6A2438C4131DB0A18103227D8285644D78AAB96535B6C303173B228D4E338EAFDE8F2B1E4D02A0ABB4FA859F3BE
+  defaults: { _controller: App\Controller\DemandeController::generateFicheLiaison }
+  requirements:
+    demandeId: \d+
+
+demande_document_bo:
+  path:     /9{typeDemande}E372C29FFB7669C24BF14FFDF885374A85608C771180373F3BD46F3DD01895CDE4AE1D52EDA7BE518D16CABBE74F36{demandeId}13B64FCC8ED118115C007CB595280A26{typeFile}0{extension}
+  defaults: { _controller: App\Controller\DocumentController::viewBO }
+  requirements:
+    demandeId: \d+
+    typeFile: \d+
+    extension: pdf|jpeg|jpg|png|xml|txt
+    typeDemande: \d+
+
+demande_historique:
+  path:     /907834ea68b50bdfeb98acd3d0f97bc386eea494188f340923e784d05edf387dab31dd189de42dbc36a3d84e97c834{demandeId}0bc872f60ed741f55941233159e53b2a{redirectRoute}33
+  defaults: { _controller: App\Controller\HistoriqueController::list, redirectRoute: 'demande_list_all'}
+  requirements:
+    demandeId: \d+
+  options:
+    expose: true
+
+demande_export:
+  path:     /6D5F241CC65A855A9D05EC30CCAB02C7BC21A6566F69AF1A1837D2A5F411ECB2B93B1950F85E43025A9BA96A9508F41243FE62FF83836EBA8E56DA8121610306
+  defaults: { _controller: App\Controller\DemandeController::export }
+
+###################################
+###    Audit Energie Routing    ###
+###################################
+demande_auditEnergie_examine:
+  path:     /919646563DE60AD2AA034C4F61B9EC3BAF663C01FC7BC39F83E25B1BBC8CA9D25F9FE115251993B1027CAABA1B56F4B84D65ED3FD6BD9DA535EAA33{demandeId}9DAAFE738
+  defaults: { _controller: App\Controller\InstructionAuditEnergieController::examine }
+  requirements:
+    demandeId: \d+
+
+demande_auditEnergie_reexamine:
+  path:     /A28E6BA10BC33F07F2B1E8540AD6B125DD05C181A6BDF65FC495D363463F31FCBFF87000B887B4369185DB834CCC4574A70561D6EBE1851BB838B8{demandeId}32A0F{instructionId}B9BA2
+  defaults: { _controller: App\Controller\InstructionAuditEnergieController::reexamine }
+  requirements:
+    demandeId: \d+
+    instructionId: \d+
+
+###################################
+###       Travaux Routing       ###
+###################################
+demande_travaux_examine:
+  path:     /3954B2BCF22FAB8CEEDA50FEB0DC7D4EEFC1B0014D7DF7A6D87815D5F8D2AF1550571495BA3F49FF66F9190D670A7ACB067946463AF44B17C49AC95{demandeId}7DEEDFADA
+  defaults: { _controller: App\Controller\InstructionTravauxController::examine }
+  requirements:
+    demandeId: \d+
+
+demande_travaux_reexamine:
+  path:     /183DCC062B2CF1D37116D8F19D2A221CAB81BBE2E905F582D59C0A4CE2653E7CA4452E518ED96A520B257531EF78D5486365FD059330B0DB57C7B2{demandeId}CD185{instructionId}44AF6
+  defaults: { _controller: App\Controller\InstructionTravauxController::reexamine }
+  requirements:
+    demandeId: \d+
+    instructionId: \d+
+
+###################################
+###       Devis Routing         ###
+###################################
+demande_devis_list:
+  path:     /DCFC993937A7B5F03EEEAD85AECCA53A8510D3FA5DCDC3D89C9F4E65AB26D94204C7BF8A122D6D958A3743B5D4C60202DA2541B321E4F9D2418CC3AB363E6F72
+  defaults: { _controller: App\Controller\DemandeController::listDevis }
+
+demande_devis_examine:
+  path:     /6561C661F3FB65E039673DDD481A1870457BA34051E9715BB97DAA2E080E80892D4644C7DD849A848CB9293F4B2359C6F412774BEF92F4{devisId}F64CF09E8{logementId}740E26293
+  defaults: { _controller: App\Controller\InstructionDevisController::examine }
+  requirements:
+    devisId: \d+
+    logementId: \d+
+
+demande_devis_ficheTechnique_examine:
+  path:     /77438E272DE24D8719EE1AC496BCD1C71A5097C2651B403938A0410A6A6CFA36DC3AE586E4FF010647BDAF313BAC498C87331219338F64A05888B3D{devisId}0E4DDBFD8
+  defaults: { _controller: App\Controller\InstructionDevisController::examineFicheTechnique }
+  requirements:
+    devisId: \d+
+
+demande_devis_ficheTechnique_reexamine:
+  path:     /B5B0454D1D2FE455FE99F13025492DFC72215B5ABE5E1395758B832DD82A96CE181549C59E90FD745BF9C3558E072FF75CE6229E676CB2D7BA375B{devisId}07E27{ficheTechniqueId}32441
+  defaults: { _controller: App\Controller\InstructionDevisController::reexamineFicheTechnique }
+  requirements:
+    devisId: \d+
+    ficheTechniqueId: \d+
+
+###################################
+###        DateCP Routing       ###
+###################################
+dateCP_list:
+  path:     /581ECF47D9248E32EBD2157FFF418EDA24FC7270B903F6C4C066D335C4EB3899F08E3A3DB929D94DAD63FBDE7B520CB15391DAA4A78379EC033423BFDE5B0201
+  defaults: { _controller: App\Controller\DateCPController::list }
+
+dateCP_assign:
+  path:     /99051237B5F7DC1D1625BA56FB65B91BC54B1DA31482A19EE70F1B3DFA8E9030C3D002E5DAE225EC716ACF977824{flag}5F1F469DE{logementId}807DB67AC{beneficiaireId}D3639C106{demandeId}25E7FED61
+  defaults: { _controller: App\Controller\DateCPController::assign }
+  requirements:
+    demandeId: \d+
+    beneficiaireId: \d+
+    logementId: \d+
+    flag: \d+
+
+dateCP_export:
+  path:     /6F8E42B169F5367EFAF367C9A56F3C4EFA4B6E9205814AC9A9EBF2311D93C06D01EB3D350F67CEF59D5D730C6F2329B00C07FD8CF452387320A1C3E{dateCPId}B205550EC
+  defaults: { _controller: App\Controller\DateCPController::export }
+  requirements:
+    dateCPId: \d+
+
+###################################
+###      Partenaire Routing     ###
+###################################
+partenaire_list:
+  path:     /B9BD15E2B{type}93B131509E4B516BFDE3EC98B869345BA294517AE43C935C1EF747BF7B8F844F25AA52602B56BDE634352E57B584B0D21EAA548BD85666E5CA14FAB
+  defaults: { _controller: App\Controller\PartenaireController::list }
+  requirements:
+    type: \d+
+
+partenaire_view_rating:
+  path:     /74F56FB0EC8DF639AE3AD8A500EC7C60077F0EC2A2F0263943BE2BD13184948903{partenaireId}CF390104C5F3002F67B7A429814A814039{partenaireType}C4B29D8D0DA2B9EB21231C0DD90E
+  defaults: { _controller: App\Controller\PartenaireController::viewRating, partenaireId: 0, partenaireType: -1 }
+  requirements:
+    partenaireId: \d+
+    partenairetype: \d+
+  condition: "request.isXmlHttpRequest()"
+
+partenaire_add:
+  path:     /BE0FE554DDA653FA23851D27A2A653A9978AA1308FA1D67D2B6AB7E5B4216A422A4AAA9D16396DC548E7AA2B87E7F09347983BDCED11D927566C273{type}EADEA03F2
+  defaults: { _controller: App\Controller\PartenaireController::add }
+  requirements:
+    type: \d+
+
+partenaire_view:
+  path:     /AF183{partenaireId}A9EA5{type}B97797E06C9C2769125FBA0411C3E47F3508A8C4882D38D3BD626EC4871B8DFB4A682606350388F5C7A8F8AB495355275583AA5DC9B3A26B8B2F58
+  defaults: { _controller: App\Controller\PartenaireController::view }
+  requirements:
+    partenaireId: \d+
+    type: \d+
+
+partenaire_edit:
+  path:     /2C64F66DAF14A3D6834654F0CC2CAFBD5{partenaireId}9CD990DA3BC94DEE004A16C7D8EE787D9{type}3E29925AF5E048E673BD9DD02B345538833183AC90A4F4C02751022F223420
+  defaults: { _controller: App\Controller\PartenaireController::edit }
+  requirements:
+    partenaireId: \d+
+    type: \d+
+
+partenaire_export:
+  path:       /A5A6B2B45B7013B62654626D8ABCFCFBFDD4CD36274E4CD0172CCC3339DC40A3AB8677016E9EFAF60FBC727CCE3168FC4E5FE3E21DCA393958D1D40{type}40ED58EE9
+  defaults: { _controller: App\Controller\PartenaireController::export }
+  requirements:
+    type: \d+
+
+partenaire_export_rating:
+  path:     /FBB48A9A1A55A5B0302A64D3E4B1CC2BCB0BC516347057D50EC43BE13FA0A2B27458EB4B4089DBAD5601787A71B667F1625DEBFA6F66DA{partenaireType}CBFB2505B{partenaireId}9BB27A855
+  defaults: { _controller: App\Controller\PartenaireController::exportRating, partenaireId: 0, partenaireType: -1 }
+  requirements:
+    partenaireId: \d+
+    partenaireType: \d+
+
+###################################
+###      Structure Routing      ###
+###################################
+structure_list:
+  path:     /77D6D8D61697B9FF0F6AB19FF40EC15EA799FC50F6AEAC04777E49DD48CD2B3F4AA0D55C09E288EF68CA26B3F65D7EB7D6BAF053A3F338501C64D040D60800B1
+  defaults: { _controller: App\Controller\StructureController::list }
+
+structure_add:
+  path:     /68130B0CC322FEC852ADFA0B580E641105BCAD5B04F992A7C37398C7516CF5EA8C409FEC9A1F01E9BFF7487C3F6BCDAEF1A733EAE75CC1F513DAC520EAC017B5
+  defaults: { _controller: App\Controller\StructureController::add }
+
+structure_view:
+  path:     /1A028{structureId}F150D01E575C41BFCA4F25674C4B15494299770855878B764F0A883B30A4344681A37F02C868A3A6A65B04E94B2ECA2E354CE7A81BF1C36B265D5DDF621
+  defaults: { _controller: App\Controller\StructureController::view }
+  requirements:
+    structureId: \d+
+
+structure_edit:
+  path:     /D00110BE8CEBB0DF3E681462F53AD0A39A75729F5513135FE41692A61CCC5C0B108276F83839DC0451A3F2F063E4EEF035555994DD9732AE6505DE05EE3{structureId}76FEB
+  defaults: { _controller: App\Controller\StructureController::edit }
+  requirements:
+    structureId: \d+
+
+###################################
+###         EPCI Routing        ###
+###################################
+EPCI_list:
+  path:     /0834D1F7116CA9534BFCA6141E651C11274E21554718ADBF6ACF572AB141D924A902EFFC9508B7E89A60B05B01DCE46C08E732B8892AD9FF479941C6EB410A75
+  defaults: { _controller: App\Controller\EPCIController::list }
+
+EPCI_add:
+  path:     /FC7496C76BE6B573A591A8D3545574B9CCC7EB5ED86FC2D90A0A263AC73C7A79F58EE1CAAC379F3A3A7EC59F76B3146A4AEA1EE7F4778752FD76A07CDF6DD040
+  defaults: { _controller: App\Controller\EPCIController::add }
+
+EPCI_view:
+  path:     /B0E95{EPCIId}E13F062464FBBDCF0D8C95EC8E149EA28F098A50E166E057A46C610FC0CBF2057C4F169BFA79B0BBFB3C57B04DA788AF238D96ED807D214EDD2DDBC1E79
+  defaults: { _controller: App\Controller\EPCIController::view }
+  requirements:
+    EPCIId: \d+
+
+EPCI_edit:
+  path:     /06756355D518DA904E00BE9B2D520873F95AF6DBA158403F1205025C5D91A0E0DB3ABDE45511234F56BF44B3724FE0EB9431FEEC809D18E51E58045075B{EPCIId}3768A
+  defaults: { _controller: App\Controller\EPCIController::edit }
+  requirements:
+    EPCIId: \d+
+
+###################################
+###     Orientation Routing     ###
+###################################
+orientation_list:
+  path:     /D57764F2B7C6380B13C5516A82CDDB07F0EEBEE6E5D259D00FA40C0C2D7AE365D4220D7A14FB4615882B630C833E00CFB46E0AE13557626A8767DD3B83025DB0
+  defaults: { _controller: App\Controller\OrientationController::list }
+
+orientation_add:
+  path:     /1EB7387E4B847DDD29A49B7BC1EF5827855CAC5DDA4B19105C947955022E2CC29233A33BE8C914112DBD622D91A3878659346AD503A919D6285D453{villeId}0A95DAEA4
+  defaults: { _controller: App\Controller\OrientationController::add }
+  requirements:
+    villeId: \d+
+
+orientation_view:
+  path:     /0D973{orientationId}82D91CB92A05715CB3339AA7617808329C203AFE399ABE908B40283D52393EE57503897B6E7FC5DD100CCA4623626BB38C46DA4B32F5E3866A72E105F96
+  defaults: { _controller: App\Controller\OrientationController::view }
+  requirements:
+    orientationId: \d+
+
+orientation_edit:
+  path:     /C86D06AA22D6612916C0641F7E8ACC8D7EEC8E34195B6761AF52A5FBA31669611A25725C735E35402DE51CE68AB579806EF2709FA5D23D2B57E9953226C{orientationId}2A9B2
+  defaults: { _controller: App\Controller\OrientationController::edit }
+  requirements:
+    orientationId: \d+
+
+###################################
+###     ANAHCritere Routing     ###
+###################################
+ANAHCritere_list:
+  path:     /464C8532756649DE5C8838AE82A8E0EF10CF2D725364333FC50353D50152AF83E0E9304FDF9CC6427BFAE4CFB2D2C3B9BE1A0C7B261C02640F3F0F6E97B7C79D
+  defaults: { _controller: App\Controller\ANAHCritereController::list }
+
+###################################
+###       Banque Routing        ###
+###################################
+banque_list:
+  path:     /C729ECFB246EE15B47A2E414AC15372B0BB016833D521A47EA7805779D7C88050411292E6B906B9CD1BFA8272607A7B1E8000199C622A6691973A36CFB2B4367
+  defaults: { _controller: App\Controller\BanqueController::list }
+
+banque_add:
+  path:     /5A10ECB728EBC35181C26C091A3AB57AB7581DBD8F9594A4487220CDE26440C53553AB67C5F683D7372D5AB7BC9E1D3BB2E30B38FD27F83B6AFF27D101F94750
+  defaults: { _controller: App\Controller\BanqueController::add }
+
+banque_view:
+  path:     /09509{banqueId}7F287D407AC6A9A9F71774B41A8C56998E97E7BD50FC5594973E55544B96BFB0C633F0AC4CD96DA61682873372B7A1E354DF9E4387F7DA8A7B5835E6F84
+  defaults: { _controller: App\Controller\BanqueController::view }
+  requirements:
+    banqueId: \d+
+
+banque_edit:
+  path:     /ED7B089DDD3E63FB8F99A43F4C93A89E272C710B28033420B3E30EED858712AD14C745F6A7C178D206ACE47B55F5B4EF66C4E0F9C470EC782952AE4DF64{banqueId}738D8
+  defaults: { _controller: App\Controller\BanqueController::edit }
+  requirements:
+    banqueId: \d+
+
+banque_enabled:
+  path:     /394E44612C7DE29FCAADBADF7D7FBD28A{banqueId}BB6CAFC6C880646D8A43ED98CA0EFD91A{flag}26B3B358F6E44086289C9DE92055F3BF62B945541FE529D4E72739D4A0CA4C
+  defaults: { _controller: App\Controller\BanqueController::enabled }
+  requirements:
+    banqueId: \d+
+    flag: \d+
+
+###################################
+###     Production Routing      ###
+###################################
+production_list:
+  path:    /91CFD7AC960C96B1F93A1B80258C7AE8766017226AE1CDD09AF9795C4043195452203527E5E2B8776EC9A54567C49132A9FE06D9938A5B34ECDCBA405674FEC1
+  defaults: { _controller: App\Controller\ProductionController::list }
+
+###################################
+###        Titre Routing        ###
+###################################
+titre_list:
+  path:     /BC5B845A292418C5FB5594262FAEE5FB377E78A61F1B7329862D5DF0A4E837B417E6D86DC65B9EBEE5A62F778E7AF174B74CF97C18E128D72F6F4F40C93B00A0
+  defaults: { _controller: App\Controller\TitreController::list }
+
+titre_list_ajax:
+  path:     /E31EC9DA885C4125538CF22A7EE00F4018138F22095DB6E8A95D2654705148DDE542014E9391BE4075B6A06142254EC40E121A75A12393BFF0E4D6D3C8D10044
+  defaults: { _controller: App\Controller\TitreController::listAjax }
+
+titre_attestationNonReception_export:
+  path:     /03E096937A7877EABDBC219E08D6EDC9BDCF5A00E68D45DF28{titreId}E74A6C34A6F7C7535B3916D9E8DEE3A1307B830E668605413D4B278667C58038F835590A0E4ABA
+  defaults: { _controller: App\Controller\TitreController::exportAttestationNonReception }
+  requirements:
+    titreId: \d+
+
+###################################
+###     Conseiller Routing      ###
+###################################
+conseiller_beneficiaire_list:
+  #   /backoffice/conseiller/beneficiaire_list
+  path:     /a2b58e6b8edc08bf588f66ab6dce5a35b0842562a8a947f8015a6717043e17dbc976458c459cfcfde64abc93c31dc6dc84cf50d842a25378edc05a88570c9bb9
+  defaults: { _controller: App\Controller\ConseillerController::beneficiaireList }
+
+conseiller_beneficiaire_list_ajax:
+  #   /backoffice/conseiller/beneficiaire_list_ajax
+  path:     /4c8ef860a487bd294d628ec15cfdcd9c4b497233c64215b29c8c99432c21936d0f56369f6d0144e3b453b506d18570ef50c5419edfa889b76b34b3b545cba5dd
+  defaults: { _controller: App\Controller\ConseillerController::beneficiaireListAjax }
+  options:
+    expose: true
+
+conseiller_beneficiaire_add:
+  #   /backoffice/conseiller/beneficiaire_add
+  path:     /8be1c3384bc77e2671b9c1f91013b8019446fdc482a1b64d74dee4c4ed04dd5d66332d835b41439dbdd6bf38f4e37bdfa716c03854125e8acb40be365fac0086
+  defaults: { _controller: App\Controller\ConseillerController::beneficiaireAdd }
+
+conseiller_beneficiaire_view:
+  #   /backoffice/conseiller/beneficiaire_view/{beneficiaireId}
+  path:     /821161ef1{beneficiaireId}22fe217357f42fd68ea3d264461affbb1a1771e54e3f200c3ad516f5c05862315fbdf71e24138291171d24cdb6a16442e17f1a1e4d181ee02a0d208
+  defaults: { _controller: App\Controller\ConseillerController::beneficiaireView }
+  requirements:
+    beneficiaireId: \d+
+  options:
+    expose: true
+
+conseiller_beneficiaire_edit:
+  #   /backoffice/conseiller/beneficiaire_edit/{beneficiaireId}
+  path:     /7adb83b2e{beneficiaireId}82bde720f110db00680351aa5f5457d4a7063ef25ef5b4382cb96851dd3bf4fcfdc80c4ffd61ad03d505b79c244408045c2271de88a276f3b963d8d
+  defaults: { _controller: App\Controller\ConseillerController::beneficiaireEdit }
+  requirements:
+    beneficiaireId: \d+
+
+conseiller_logement_list:
+  #   /backoffice/conseiller/logement_list/{beneficiaireId}
+  path:     /ff85c03e4{beneficiaireId}e3bde7221fb4ff5553943b01551ce3863959d1ee44bdd671231986a2cfc2117f264bd9a551882dc46dc1f2fbdd46a935f30a901a14a91145fb73f5a
+  defaults: { _controller: App\Controller\ConseillerController::logementList }
+  requirements:
+    beneficiaireId: \d+
+
+conseiller_logement_add:
+  #   /backoffice/conseiller/logement_add/{beneficiaireId}
+  path:     /9044fa1c0{beneficiaireId}1c65ad0689558e0202825a4b344954464d67edd3dc68e9c0e8abb2a9d5b1b1db76de7a6029263d258360b8d2bfb3607428b12df51769683ac431fe3
+  defaults: { _controller: App\Controller\ConseillerController::logementAdd }
+  requirements:
+    beneficiaireId: \d+
+
+conseiller_logement_view:
+  #   /backoffice/conseiller/logement_view/{beneficiaireId}/{logementId}
+  path:     /4c4f6bf07{beneficiaireId}8caf8c35b{logementId}195f320210fdfff04575a2c67d537c95e20f28708ba92bbd742598f9f96622a88b77816e5f3b0e5a53194efa752186168d9a6679565dd5
+  defaults: { _controller: App\Controller\ConseillerController::logementView }
+  requirements:
+    beneficiaireId: \d+
+    logementId: \d+
+
+conseiller_logement_edit:
+  #   /backoffice/conseiller/logement_edit/{beneficiaireId}/{logementId}
+  path:     /b54c95b7e{beneficiaireId}cfdc37350{logementId}e148c8bb81762b87614f8cc40babf7f0ba5b4a33a5be4e3d32a0a1e3fca879b354672a491fc7003f46b5488ddb45867bd5d62067f7308d
+  defaults: { _controller: App\Controller\ConseillerController::logementEdit }
+  requirements:
+    beneficiaireId: \d+
+    logementId: \d+
+
+conseiller_demande_list:
+  #   /backoffice/conseiller/demande_list/{beneficiaireId}
+  path:     /046354a5f{beneficiaireId}d3d821638330aae9cf4278e730211c0f915fc511448742d61fb130502834dcece6dc09d21a1b4f9bf4d7c30023ae48f41425d2058df3aa2c167f617
+  defaults: { _controller: App\Controller\ConseillerController::demandeList }
+  requirements:
+    beneficiaireId: \d+
+
+conseiller_demande_auditEnergie_add:
+  #   /backoffice/conseiller/demande_auditEnergie_add/{beneficiaireId}/{logementId}/{type}
+  path:     /ffd5ff1eb{beneficiaireId}af28c48ed{logementId}b15141736{type}8cd7ef5036913b835e45f099eb60e863429819a60502852ec2cb8a4adf4de158b09fb9d36c77cfc3f86681488f5a4a7087a18
+  defaults: { _controller: App\Controller\ConseillerController::demandeAuditEnergieAdd }
+  requirements:
+    beneficiaireId: \d+
+    logementId: \d+
+    type: \d+
+
+conseiller_demande_auditEnergie_view:
+  #   /backoffice/conseiller/demande_auditEnergie_view/{beneficiaireId}/{demandeId}
+  path:     /f8c357d1c{beneficiaireId}6ff92d871{demandeId}113732746e040c7a08d83f909ef52e0ea4a399e49c1ab5dc2442d9ed06c23e32eb37219d4d20656bf2c71df8d8858a552d620b7f915039
+  defaults: { _controller: App\Controller\ConseillerController::demandeAuditEnergieView }
+  requirements:
+    beneficiaireId: \d+
+    demandeId: \d+
+
+conseiller_demande_auditEnergie_edit:
+  #   /backoffice/conseiller/demande_auditEnergie_edit/{beneficiaireId}/{demandeId}
+  path:     /95287f4e6{beneficiaireId}60012e2f0{demandeId}702255ef4d7098e33d50d4078b00e606a7d319c7e0ef81dfdb3aa5db51b4c6db3089130a61124d05029807a9c4cc95cbe69021bb3fd601
+  defaults: { _controller: App\Controller\ConseillerController::demandeAuditEnergieEdit }
+  requirements:
+    beneficiaireId: \d+
+    demandeId: \d+
+
+conseiller_demande_auditNumerique_add:
+  #   /backoffice/conseiller/demande_auditNumerique_add/{beneficiaireId}/{logementId}/{type}
+  path:     /89cb355ca{beneficiaireId}bc38a653e{logementId}8044835ca{type}f40c9949e6cf5c4539a9467cd1c5bc2b954c2719c4a532633387e5b8e6c767627fa588630bc7d75e849b48f0dee2019c4fa2c
+  defaults: { _controller: App\Controller\ConseillerController::demandeAuditNumeriqueAdd }
+  requirements:
+    beneficiaireId: \d+
+    logementId: \d+
+    type: \d+
+
+conseiller_demande_auditNumerique_view:
+  #   /backoffice/conseiller/demande_auditNumerique_view/{beneficiaireId}/{demandeId}
+  path:     /b7f8e7ac6{beneficiaireId}8cb50cd60{demandeId}a00f8a3532d13a01f1a099ea7440fe90a93f89a37a6ce9d6e1343d4e0554d79bb3e4bd47eb03910e4cb9768a071cabf9101054da6e7ec0
+  defaults: { _controller: App\Controller\ConseillerController::demandeAuditNumeriqueView }
+  requirements:
+    beneficiaireId: \d+
+    demandeId: \d+
+
+conseiller_demande_auditNumerique_edit:
+  #   /backoffice/conseiller/demande_auditNumerique_edit/{beneficiaireId}/{demandeId}
+  path:     /de4deebfe{beneficiaireId}c4f628473{demandeId}d2662bc88797886d12f9cedbecb0a03ce7bd757748e404a38c11f089d1a42dd5fa423a95c835bfb88ae1d2d6604a8fbd9e2c16b3724326
+  defaults: { _controller: App\Controller\ConseillerController::demandeAuditNumeriqueEdit }
+  requirements:
+    beneficiaireId: \d+
+    demandeId: \d+
+
+conseiller_demande_travaux_add:
+  #   /backoffice/conseiller/demande_travaux_add/{beneficiaireId}/{logementId}
+  path:     /1d5745ce6{beneficiaireId}f86d9ecee{logementId}b28acd0143319d66fb00b8429cdc0f5acedbf3a73b6ff094111cf02e77dc0fa03f341f26f144907dda67f4efb7dfc8ed4cf6b4664828c1
+  defaults: { _controller: App\Controller\ConseillerController::demandeTravauxAdd }
+  requirements:
+    beneficiaireId: \d+
+    logementId: \d+
+
+conseiller_demande_travaux_view:
+  #   /backoffice/conseiller/demande_travaux_view/{beneficiaireId}/{demandeId}
+  path:     /cfd3b0cf9{beneficiaireId}277317be9{demandeId}50d813007360f5c6e89a1b1a19633303568f06d6705be3ed94db4fcfa7c128f31536ea0e7633dbad1ae7ef40e72ab9a7a0378e025f2fba
+  defaults: { _controller: App\Controller\ConseillerController::demandeTravauxView }
+  requirements:
+    beneficiaireId: \d+
+    demandeId: \d+
+
+conseiller_demande_travaux_edit:
+  #   /backoffice/conseiller/demande_travaux_edit/{beneficiaireId}/{demandeId}
+  path:     /c8f465021{beneficiaireId}254cd405a{demandeId}27ac011bd266487d9a127373cbba9302956511aa0ccc3c754c766d5512484e0c91c2eed9be7b1e95a5255a855da05bdc58bd3e678ec81c
+  defaults: { _controller: App\Controller\ConseillerController::demandeTravauxEdit }
+  requirements:
+    beneficiaireId: \d+
+    demandeId: \d+
+
+conseiller_demande_devis_add:
+  #   /backoffice/conseiller/demande_devis_add/{beneficiaireId}/{logementId}/{demandeId}
+  path:     /2d9e1af7c{beneficiaireId}3c380521a{logementId}f1cfc9b88{demandeId}da3dc76db462829873d77ee3c5ede361dc21529039ae065e0c16ce311661431e3b9351005aa3722cfff05a06f67ed5493e4f7
+  defaults: { _controller: App\Controller\ConseillerController::demandeDevisAdd }
+  requirements:
+    beneficiaireId: \d+
+    logementId: \d+
+    demandeId: \d+
+
+conseiller_demande_devis_view:
+  #   /backoffice/conseiller/demande_devis_view/{beneficiaireId}/{devisId}
+  path:     /f7f81bb19{beneficiaireId}36a5b14c0{devisId}c473c93849c09700268e2133941a38f1ee616cd33f33cbb5d4bf911b7f2ad5b3fd89959fe09b9954ce1e8cc127e8c503b08307478443c2
+  defaults: { _controller: App\Controller\ConseillerController::demandeDevisView }
+  requirements:
+    beneficiaireId: \d+
+    devisId: \d+
+
+conseiller_demande_devis_edit:
+  #   /backoffice/conseiller/demande_devis_edit/{beneficiaireId}/{devisId}
+  path:     /74d641565{beneficiaireId}ca463414a{devisId}b715cab5af1da2832669af6d6949a38a8aa7a57d602d172551be2ea507e2f1d2d43a0d49055bae06ed96cbd2de0167c0b38f68e2cd270a
+  defaults: { _controller: App\Controller\ConseillerController::demandeDevisEdit }
+  requirements:
+    beneficiaireId: \d+
+    devisId: \d+
+
+###################################
+###       Admin Routing         ###
+###################################
+admin_list:
+  path:     /6B02448C70A3C77DF08BC055327B495390396B017143FA8C49C753900748A52B91869F366EC0B3471FB1EA3AD28AD52AF6934BE5F89706FDA6A37C4119220B75
+  defaults: { _controller: App\Controller\AdminController::list }
+
+admin_list_ajax:
+  path:     /1AA14D75EF7F40684C7E3A47FEF8A70A7B47FD46BFDF2CF3195C1D76FBCDFA5BF6F740AE63C33E25AB9256D1A4B9BA5E4E52E76160E99727E829C72EB224B61E
+  defaults: { _controller: App\Controller\AdminController::listAjax }
+
+admin_add:
+  path:    /8C3E0A9B9C09BE05BA1C811651D6EADF11E41AE8F9CDADC47B6BDA80B3629DE2247496E758C83C85BCB4F49E20DA8865309C7FDEBA6DB3356CFA2AFF8A8E5F94
+  defaults: { _controller: App\Controller\AdminController::add }
+
+admin_view:
+  path:    /D642A{userId}C19217141BF15615F2C34D18AF2627C056242640BB89DCFC66B1515F3FE1621EBF058FEE8D63294AB559321FF579A266393384B7637521BB60A863C1432
+  defaults: { _controller: App\Controller\AdminController::view }
+  requirements:
+    userId: \d+
+
+admin_edit:
+  path:    /FFB32D4D744FD6743CF5579DBAB80FB50A136C19CDF842DC871B1DA1D790DB5F52E0B383C9113690EB3C4606DF395F895E8542C1C2568797340C0639615{userId}987B3
+  defaults: { _controller: App\Controller\AdminController::edit }
+  requirements:
+    userId: \d+
+
+admin_delete:
+  path:    /d2915e8e3a32ddaca{userId}2bd2c51d9ab90031d17ae82dbe75d3decd5b3e79b2baa3eda5383afe3648ae868e8441f7b1a0451d357f6b22b6634937b3b7f7d37533c0e
+  defaults: { _controller: App\Controller\AdminController::delete }
+  requirements:
+    userId: \d+
+
+admin_enabled:
+  path:    /B00F2FD60B914182CEB5B6085DE5EBB56{userId}6150BF4CE27E66BB845AC0650F3B9EABB7B82774699BB74622090A004907EBC{flag}7C88BFF4C2B09112B6456CFD77D73CDC
+  defaults: { _controller: App\Controller\AdminController::enabled }
+  requirements:
+    userId: \d+
+    flag: \d+
+
+admin_import:
+  path:    /C582558B8880DED023E7883EF75A34FA859E874941B64488A292BF64D7154BA46BB659550D615AE103C9DA815E5BCB2FD1B14AE488854F9E95BBF28C5F2CD25C
+  defaults: { _controller: App\Controller\AdminController::import }
+
+###################################
+###     Bénéficiaire Routing    ###
+###################################
+beneficiaire_list_all:
+  path:   /B9BD15E2B93B131509E4B516BFDE3EC98B869345BA294517AE43C935C1EF747BF7B8F844F25AA52602B56BDE634352E57B584B0D21EAA548BD85666E5CA14FAB
+  defaults: { _controller: App\Controller\BeneficiaireController::listAll }
+
+beneficiaire_list_all_ajax:
+  path:     /FC402C3B1CCBD9E9E914C9004CAE113C05957FAFCC6B0A3404D5A661307839CDA951C7695E6BA474A3DFC75F7D03769815E9BC5DF5329E5A96B41B0B5701CB22
+  defaults: { _controller: App\Controller\BeneficiaireController::listAllAjax }
+
+beneficiaire_delete:
+  path:    /25994279FC6ADF463420E29CC45F26D481564E0FC880F6105DD48BC4DB160E7FE81F766C7B44ED04E671569F35E5194511D7A81B9D8DAA30C1DC537FEC4{beneficiaireId}6373D
+  defaults: {_controller: App\Controller\BeneficiaireController::delete }
+  requirements:
+    beneficiaireId: \d+
+
+###################################
+###       Logement Routing      ###
+###################################
+logement_delete:
+  path:     /9D5F7623DAAEF557387C4CA0414DCA0D0BCB7D034295DA7A0C6EA7786E0923DD4A7E2D431B6F311F1CC51F60FF19881DE5430805DAE0D59B37E7B7F83E5{logementId}864F8
+  defaults: { _controller: App\Controller\LogementController::delete }
+  requirements:
+    logementId: \d+
+
+###################################
+###     Remboursement Routing   ###
+###################################
+remboursement_list:
+  path:     /D8BB08990FB71B53E65073787BDA90EA5485AD7C955000E5A5607FB437B5C917DC55ED4D56CF177FACE2561D205CC0157EF21AD1FE9504DDD768FEE7F4FB4D3C
+  defaults: { _controller: App\Controller\RemboursementController::list }
+
+remboursement_list_ajax:
+  path:     /671769C8F47BFE0E89C9428EA000BCABEE756D4A428939ED94A6FCF9485AB883FE009322FDD51E3F2B5C87EFE24A1741447EB4BC17B50898A2E5557857740AD0
+  defaults: { _controller: App\Controller\RemboursementController::listAjax }
+  options:
+    expose: true
+
+remboursement_deny:
+  path:     /393950FA9C5D358887FFD7{remboursementId}D84D43CA6369C1A77BA29621135CD156457D81077E7C88D58CFA0786BAF0BC3EFEE8AFB651F619DCA89CC333EF355638E36CE1EC89
+  defaults: { _controller: App\Controller\RemboursementController::deny }
+  requirements:
+    remboursementId: \d+
+
+remboursement_export:
+  path:     /C7D32D644A0E7BCABE8D307C9C89D3F6D8717D853BC8FD615FCB338DC24991BF05487E13AFF1AB76B26BC3D8F53EB21CC6504D792CAD34677AA16715B2D0E8DC
+  defaults: { _controller: App\Controller\RemboursementController::export }
+
+##########################################################
+###         Remboursement Audit Energie Routing        ###
+##########################################################
+remboursement_auditEnergie_examine:
+  path:     /F98934EB243D664EFAC7E14CA92CB8E8AC1DB57434CABF0E24904C3570FD4B45B72D968F72F5020EE4F42392C26BA710159D954CBBDFDB2CD8C44A4{titreId}7AE693AFD
+  defaults: { _controller: App\Controller\RemboursementAuditEnergieController::examine }
+  requirements:
+    titreId: \d+
+  options:
+    expose: true
+
+remboursement_auditEnergie_reexamine:
+  path:     /ADD5A048EB1698C3F52DB9CB1A82B2D912DC1F386222445186E229D64FF98DCF57D23D17C9A1A7FD5CFA217E53084184E3F35C8DCBA1A3E7C3E2912A3CE{remboursementId}D9CBC
+  defaults: { _controller: App\Controller\RemboursementAuditEnergieController::reexamine }
+  requirements:
+    remboursementId: \d+
+  options:
+    expose: true
+
+remboursement_auditEnergie_addDepot:
+  path:     /334A8DF4BB18FC3803DEEF661EBB487AB54527A52BB8F64F3802720C9172CB195CD1463123E2D60F9540F62203E83E1F9C68E744F210B2476578BC4{demandeId}4CC100D2D
+  defaults: { _controller: App\Controller\RemboursementAuditEnergieController::addDepot }
+  requirements:
+    demandeId: \d+
+  options:
+    expose: true
+
+remboursement_auditEnergie_editDepot:
+  path:     /E8ECDBC285F107B3D87CB064FE1467D31B9E40741494A6750BD12347A61853E409DD29FC2C441844F81C64AA7234EFF3C58BCA9C2F5241A008490094B1D{remboursementId}E8085
+  defaults: { _controller: App\Controller\RemboursementAuditEnergieController::editDepot }
+  requirements:
+    remboursementId: \d+
+  options:
+    expose: true
+
+############################################################
+###         Remboursement Audit Numerique Routing        ###
+############################################################
+remboursement_auditNumerique_examine:
+  path:     /639C25851AE792D25D838A7CB93D649A1EC879CA7D69783E9C829CC9F2A696124EC7C0BAA3AEF23FB3DF86362B34CC2826CE227A3F71356FFE1C12A{titreId}A0FD449FB
+  defaults: { _controller: App\Controller\RemboursementAuditNumeriqueController::examine }
+  requirements:
+    titreId: \d+
+  options:
+    expose: true
+
+remboursement_auditNumerique_reexamine:
+  path:     /B03F0EADBCABBA02D2599EB8ABE7DB159F710759E1319BBB59339C68454BFB0EEA08D54F2B743CEA88672B5F542B1BC893ACBA15AF148B7DACBCF573E3E{remboursementId}4B2E4
+  defaults: { _controller: App\Controller\RemboursementAuditNumeriqueController::reexamine }
+  requirements:
+    remboursementId: \d+
+  options:
+    expose: true
+
+remboursement_auditNumerique_addDepot:
+  path:     /3EA3BCAD9C6A4E81C1D3A30A0F6288D6F89754DC552CD2A2E200104E237AF5B8621AD4E926F7B520BE277BE6DEB789ECF330C1F36B8DA6D17C6F4DE{demandeId}9C3BA8518
+  defaults: { _controller: App\Controller\RemboursementAuditNumeriqueController::addDepot }
+  requirements:
+    demandeId: \d+
+  options:
+    expose: true
+
+remboursement_auditNumerique_editDepot:
+  path:     /DB483DBB221276DFAF985A6C17325B877DFDBDB294493D94D794433DCDBDD33336C4D101CA371DCF24A435B5AE1913CB2A6F551FF9C5186A588483416D3{remboursementId}A4D9C
+  defaults: { _controller: App\Controller\RemboursementAuditNumeriqueController::editDepot }
+  requirements:
+    remboursementId: \d+
+  options:
+    expose: true
+
+############################################################
+###             Remboursement Travaux Routing            ###
+############################################################
+remboursement_travaux_examine:
+  path:     /4EC6398306DFA50908091B860381809388D48532A0E55C603515FA5154C5E2C1C39DB2AA00BE3373A136D5B3A5DBDE3EDD86A96D5E9A49{titreId}C325D55B8D06FCACAE
+  defaults: { _controller: App\Controller\RemboursementTravauxController::examine }
+  requirements:
+    titreId: \d+
+  options:
+    expose: true
+
+remboursement_travaux_reexamine:
+  path:     /CA172F991F881066B638BD6802B11BC359337F620F66632E41EBA2BA81C644612455A93B3A2EAD74C3CEB8A435E9D971DEEB8E8EF5A66D5C71FD4B{remboursementId}67D2B02D2C
+  defaults: { _controller: App\Controller\RemboursementTravauxController::reexamine }
+  requirements:
+    remboursementId: \d+
+  options:
+    expose: true
+
+remboursement_travaux_examineFicheTechnique:
+  path:     /8362E9FF3798BC8ACF98965DA18A2E0FD67026EAFA4FA29A9B86CFA509E13A35D489581845843D22927A09CB27F5715DA591B0AC42176C412A32F02{titreId}80D2B6CBF
+  defaults: { _controller: App\Controller\RemboursementTravauxController::examineFicheTechnique }
+  requirements:
+    titreId: \d+
+  options:
+    expose: true
+
+remboursement_travaux_reexamineFicheTechnique:
+  path:     /E0F02871885EC2263EE1CB9D363FD1A910F36BF5F3F8AC3BB12DD2256F060A565732DA37535ABB516ED5145291505E832EC75DB9164C13E0B8D39F60980{remboursementId}93853
+  defaults: { _controller: App\Controller\RemboursementTravauxController::reexamineFicheTechnique }
+  requirements:
+    remboursementId: \d+
+  options:
+    expose: true
+
+###################################
+###         RMH Routing         ###
+###################################
+dateRMH_list:
+  path:     /1D8F6B3F14A693280C004D798BD0F2CED213DC15E2589B0D2B585DCE800993DE22D99F4C060E3AF67532F33349C5132C200A5DD939CB9ADC36F0EBB54A8F66A2
+  defaults: { _controller: App\Controller\DateRMHController::list }
+
+dateRMH_assign:
+  path:     /761EB5BA7CC01262522890A0FF1437DF7E879CFBA3450C42B5323CABE9255D3A9D797A16430B828616BFF12ECDDC{flag}C6F1A5AD7{logementId}6258CA016{beneficiaireId}544F29CF7{remboursementId}DC3585310
+  defaults: { _controller: App\Controller\DateRMHController::assign }
+  requirements:
+    remboursementId: \d+
+    beneficiaireId: \d+
+    logementId: \d+
+    flag: \d+
+
+dateRMH_recapitulatifPreRMH_export:
+  path:     /0AA456FDAC350BB{dateRMHId}EDE521BA59FC2E28B19381A36A28D85D75A5F8364722EE836669C17840423EA833C30723A3E39E8F00832CBA849E524DEADF5B817560E953F
+  defaults: { _controller: App\Controller\DateRMHController::exportRecapitulatifPreRMH }
+  requirements:
+    dateRMHId: \d+
+
+dateRMH_documentRMH_export:
+  path:     /A37D470F82B93C6{dateRMHId}3FC884BF604B402344DD833A116CE8EA23B284F6B867043A51A4AF132B3B6C7B693E3798F7533B9A30A2B49C4FC47B9B31A6BCD873BDDE1A8
+  defaults: { _controller: App\Controller\DateRMHController::exportDocumentRMH }
+  requirements:
+    dateRMHId: \d+
+
+dateRMH_documentRMH_download:
+  path:     /52451A794F3841F{dateRMHId}02AB1E91F3EA1CF2A0CF753871002822F10EAAC8A57622850E628F5B4B9E866319FCD21C70FE04D8D61500251686BA3417430A58EB59E6A13
+  defaults: { _controller: App\Controller\DateRMHController::downloadDocumentRMH }
+  requirements:
+    dateRMHId: \d+
+
+###################################
+###       Contact Routing       ###
+###################################
+contact_list:
+  path:     /970CB3DD9A7EEE59DDC41DED447453D4184BA061B6A5953A0BF89927D24412EF1809187FB7A4A5D851C0278F04C6E0FE20ED6EEEE17E70D852B54428F05FFFE0
+  defaults: { _controller: App\Controller\ContactController::list }
+
+contact_addEdit:
+  path:     /8EF0F97FE56620ABB0FC8D57E9D9CC750E59620085DC354DB8436B8ED6265FBF3AC8DD02A4D364594C47918C4BEF04635AA5215B478854846E7394427DA{contactId}83761
+  defaults: { _controller: App\Controller\ContactController::addEdit, contactId: 0 }
+  requirements:
+    contactId: \d+
+  condition: "request.isXmlHttpRequest()"
+
+contact_delete:
+  path:     /B7EA5FC20288849ACF11D19AA05EE82A3192468F75B3AD297D2B08F5A9F6B559109DCE3A93439A0BAE5EC3E060AAAC8D892204AC078D5E43ADD2A965C38{contactId}FF10B
+  defaults: { _controller: App\Controller\ContactController::delete, contactId: 0 }
+  requirements:
+    contactId: \d+
+  condition: "request.isXmlHttpRequest()"
+
+###################################
+###      Newsletter Routing     ###
+###################################
+newsletter_add:
+  path:     /597D0D28845E68908675B19451ED354B01399320198FCBCAB996478DF54414AA3CD95C712252D6318C41C62A1FF6CD66CA98B773A0468DDF918AFDCFC53465FA
+  defaults: { _controller: App\Controller\NewsletterController::add }
+newsletter_view:
+  path:     /6628E0C37F181C3C320334258E3F2A70F{newsletterId}BF3907E4C972F581C823FA0B2A2ACCDDBA77AD7A0554F87CAF332CFA5D30FA123C7D2CEA56C3C6DAE99ADC4D3EF9AAF
+  defaults: { _controller: App\Controller\NewsletterController::view}
+  requirements:
+    newsletterId: \d+
+
+###################################
+###      Document Routing     ###
+###################################
+document_help_view:
+  path:     /AAD7EBCB5D522AC64A9D132FF9B90AAD1BE08B19D007A7454B3D41578F2C5508EB4502DC0C155C2F8123C084E778BAFEC1544DC401009A54F755298158215274
+  defaults: { _controller: App\Controller\DocumentController::viewHelp }
+

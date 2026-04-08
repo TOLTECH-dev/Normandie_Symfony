@@ -1,0 +1,89 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom40">
+    <div class="container-title">
+        <h2>Liste des Newsletters</h2>
+    </div>
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom10">
+    <p class="text-center">            
+        <a href="{{ path('newsletter_add') }}"
+           class="btn btn-primary btn-xs"
+           type="button"
+           title="Envoyer une Newsletter"
+           data-toggle="tooltip"
+           data-placement="bottom"
+           data-container="body"
+           data-original-title="Envoyer une Newsletter"
+           >
+            <span class="glyphicon glyphicon-send"></span>
+            Envoyer une Newsletter
+        </a>            
+    </p>
+</div>
+
+<table cellspacing="0" id="table_list_newsletter" class="table table-striped table-bordered big_table">
+    <thead>
+        <tr>
+            <th class="breakWord col00">Date d&apos;envoi</th>
+            <th class="breakWord col11">Objet de la Newsletter</th>             
+            <th class="breakWord col22">Action</th>
+        </tr>
+
+        {% if list_newsletter is not  empty %}
+            <tr class="filterrow">
+                <th class="with_select">Date d&apos;envoi</th>
+                <th class="with_search">Objet de la Newsletter</th>               
+                <th class="text-center">
+                    <button class="btn btn-danger btn-xs clear_search_input"
+                            type="button"
+                            role="button"
+                            title="Vider les champs de recherche"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-container="body"
+                            data-original-title="Vider les champs de recherche"
+                    >
+                        <i class="glyphicon glyphicon-erase"></i>
+                    </button>                    
+                </th>
+            </tr>                
+        {% endif %}
+    </thead>
+
+    <tbody>
+        {% for item in list_newsletter %}
+            <tr>
+                <td class="breakWord"> {{ item.DateCreation|date("d/m/Y") }} </td>
+                <td class="breakWord"> {{ item.Subject }} </td>
+                <td class="text-center">
+                    <button class="btn btn-primary btn-xs button_viewNewsletter"
+                            type="button"
+                            title="Consulter la Newsletter"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-container="body"
+                            data-NewsletterUrl="{{ path('newsletter_view', {'newsletterId': item.Id}) }}"
+                            data-original-title="Consulter la Newsletter"
+                    >
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>                        
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="modal fade modalBackdrop modal_newsletter" id="modal_newsletter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <legend class="modal-title text-center" id="myModalLabel">
+                    <span class="legend-icon"></span>&nbsp;<span id="modal_newsletter-titleText"></span>
+                </legend>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+

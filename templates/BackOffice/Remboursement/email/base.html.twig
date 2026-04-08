@@ -1,0 +1,16 @@
+{% block body_html %}
+    {% block header %}
+        <p>R&eacute;f&eacute;rence dossier : {{ demandeId }}</p>
+
+        <p>Bonjour,</p>
+    {% endblock header %}
+
+    {% block content %}{% endblock content %}
+
+    {% block footer %}
+        <p>Bien cordialement,</p>
+
+        <p>Service Ch&egrave;que &eacute;co-&eacute;nergie</p>
+        <p style="line-height:1px;">R&eacute;gion Normandie</p>
+    {% endblock footer %}
+{% endblock %}

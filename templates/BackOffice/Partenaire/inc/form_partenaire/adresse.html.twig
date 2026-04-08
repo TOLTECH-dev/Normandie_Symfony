@@ -1,0 +1,100 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-adresse">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Adresse</legend>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_adresse.adresse1, "Adresse 1", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_adresse.adresse1) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_adresse.adresse1, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_adresse.adresse2, "Adresse 2", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_adresse.adresse2) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_adresse.adresse2, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_adresse.codePostal, "Code Postal", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_adresse.codePostal) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_adresse.codePostal, {'attr': {'class': 'form-control'}}) }}
+
+                <span id="match"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_adresse.ville, "Commune", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_adresse.ville) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_adresse.ville, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_adresse.departement, "Département", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_adresse.departement) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_adresse.departement, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_adresse.telFixe, "Téléphone fixe", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_adresse.telFixe) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_adresse.telFixe, {'attr': {'class': 'form-control', 'title': '0x-xx-xx-xx-xx'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_adresse.telMobile, "Téléphone mobile", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_adresse.telMobile) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_adresse.telMobile, {'attr': {'class': 'form-control', 'title': '0x-xx-xx-xx-xx'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_adresse.email, "Email entreprise", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_adresse.email) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_adresse.email, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_adresse.siteInternet, "Site internet", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_partenaire.partenaire_adresse.siteInternet) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_adresse.siteInternet, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form_partenaire.partenaire_adresse.complement) }}</div>
+        <div class="form-group">
+            {{ form_label(form_partenaire.partenaire_adresse.complement, "Information complémentaire", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_partenaire.partenaire_adresse.complement, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

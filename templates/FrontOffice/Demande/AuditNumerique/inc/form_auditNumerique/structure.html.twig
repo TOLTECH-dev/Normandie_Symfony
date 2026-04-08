@@ -1,0 +1,43 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-structure">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Rappel de votre Accompagnateur R&eacute;nov&rsquo; conventionn&eacute; avec la R&eacute;gion</legend>
+
+        <input type="hidden" value="{{ formDisplay[0] }}" id="box-formDisplayStructure" />
+        <input type="hidden" value="{{ formDisplay[1] }}" id="box-formDisplayConseiller" />
+
+        <div class="form-group" id="bloc-structureDisplay">
+            <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label required" for="input-structure">Structure</label>
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8" id="box-structure">
+
+            </div>
+        </div>
+        {{ form_row(form.demande_auditNumerique.structure_id, {'attr': {'class': 'hidden'}}) }}
+
+        <div class="form-group hidden" id="bloc-conseillerDisplay">
+            <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label required" for="input-conseiller">Conseiller</label>
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8" id="box-conseiller">
+
+            </div>
+        </div>
+        {{ form_row(form.demande_auditNumerique.conseiller_id, {'attr': {'class': 'hidden'}}) }}
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>
+
+{# vars necessary for the ajax structure list #}
+{% if auditN is not null and auditN.beneficiaireId is not empty %}
+    {#  Edition mode #}
+    {% set beneficiaireId = auditN.beneficiaireId %}
+    {% set logementId = auditN.logementId %}
+    {% set isCreation = '0' %}
+{% else %}
+    {#  Creation mode #}
+    {% set beneficiaireId = app.request.attributes.get('beneficiaireId') %}
+    {% set logementId = app.request.attributes.get('logementId') %}
+    {% set isCreation = '1' %}
+{% endif %}
+<input type="hidden" value="{{ beneficiaireId }}" id="beneficiaireId" />
+<input type="hidden" value="{{ logementId }}" id="logementId" />
+<input type="hidden" value="{{ isCreation }}" id="isCreation" />

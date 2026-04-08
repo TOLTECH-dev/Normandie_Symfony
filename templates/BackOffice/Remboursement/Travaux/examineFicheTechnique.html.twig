@@ -1,0 +1,64 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+{% form_theme form 'Main/Form/fields.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_remboursement_travaux_examineFicheTechnique') }}
+{% endblock %}
+
+{% block contents %}
+    {% if is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom40">
+                <div id="container-title">
+                    <h2>Renseigner la Fiche Technique: Dossier n&deg;{% if demandeId is defined %}{{ demandeId }}{% else %}{{ remboursement.demandeId }}{% endif %}</h2>
+                    {% include 'BackOffice/Remboursement/Travaux/inc/back.html.twig' with {'path_location_list': 'remboursement_list'} %}
+                </div>
+            </div>
+
+            {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id': 'form_examineFicheTechnique'}}) }}
+
+                {{ form_errors(form) }}
+
+                {% set path_location = 'demande_document_bo' %}
+                {% set formFicheTechnique = form.remboursement_travaux.ficheTechnique %}
+                {% set remboursementItem = (remboursement is defined and remboursement.remboursementTravaux) ? remboursement.remboursementTravaux : null %}
+                {% set attrDefault = {'class': 'form-control', 'readonly': true} %}
+                {% set attrCheckboxMultiple = {'class': 'isReadonly', 'readonly': true} %}
+                {% set attrTypeVentilation = {'class': 'form-control isReadonly', 'readonly': true} %}
+                {% set attrValidation = {'class': 'form-control hidden'} %}
+                {% set classCheckboxMultiple = 'isReadonly' %}
+
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/document.html.twig') }}
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/type.html.twig') }}
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/surface.html.twig') }}
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/toiture.html.twig') }}
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/murs.html.twig') }}
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/menuiseries.html.twig') }}
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/plancherBas.html.twig') }}
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/chauffage.html.twig') }}
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/ECS.html.twig') }}
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/climatisation.html.twig') }}
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/CEP.html.twig') }}
+                {{ include('BackOffice/Remboursement/inc/form_ficheTechnique/validation.html.twig') }}
+
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-submit">
+                    <div class="form-group">
+                        {{ form_widget(form.valider, {'label': 'Enregistrer saisie', 'attr': {'class': 'valider-fiche-technique col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-info'}}) }}
+                    </div>
+                </div>
+
+                {{ form_rest(form) }}
+
+            {{ form_end(form) }}
+
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_common_etiquetteEnergetique') }}
+    {{ encore_entry_script_tags('backOffice_common_ficheTechniqueCheckData') }}
+    {{ encore_entry_script_tags('backOffice_remboursement_travaux_formExamineFicheTechnique_index') }}
+{% endblock %}

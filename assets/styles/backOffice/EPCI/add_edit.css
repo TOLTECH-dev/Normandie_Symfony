@@ -1,0 +1,154 @@
+/*******************************************
+            BLOC IDENTIFICATION
+*******************************************/
+#bloc-identification {
+
+}
+
+/*******************************************
+            BLOC ADRESSE
+*******************************************/
+#bloc-adresse {
+
+}
+
+/*******************************************
+    BLOC INFORMATIONS COMPLEMENTAIRES
+*******************************************/
+#bloc-information {
+
+}
+
+/*******************************************
+            BLOC PARTICIPATION SARE
+*******************************************/
+#bloc-participation-SARE {
+
+}
+
+/*******************************************
+            BLOC POINT ENTREE STRUCTURE
+*******************************************/
+#bloc-point-entree-structure {
+
+}
+
+/*******************************************
+            BLOC STATUT
+*******************************************/
+#bloc-statut {
+
+}
+
+#bloc-statut input[type=checkbox] {
+    vertical-align: bottom;
+}
+#bloc-statut .bloc-dateInactif label {
+    line-height: 30px;
+    padding-top: 0 !important;
+}
+
+/*******************************************
+            BLOC CONTACT
+*******************************************/
+#bloc-contact, .EPCI_contact label, .new_EPCI_contact label {
+    text-align: left;
+}
+
+.EPCI_contact, .new_EPCI_contact {
+    display: flex;
+    justify-content: space-around;
+}
+
+.EPCI_contact label, .new_EPCI_contact label {
+    margin-bottom: 0;
+    padding-top: 5px;
+}
+
+.EPCI_contact > input, .new_EPCI_contact > input {
+    margin: 0 5px;
+}
+
+.EPCI_contact input[type=text],
+.EPCI_contact input[type=email],
+.EPCI_contact select,
+.new_EPCI_contact input[type=text],
+.new_EPCI_contact input[type=email],
+.new_EPCI_contact select
+{
+    width: 88%;
+    margin-right: 12%;
+    height: 34px;
+}
+
+#bloc-contact .form-group, #bloc-contact .form-horizontal {
+    margin-left: 0;
+}
+
+#bloc-contact select {
+    height: 34px;
+}
+
+#bloc-contact .box_addContact {
+    text-align: right;
+    margin-top: 10px;
+    margin-right: -15px;
+}
+
+#bloc-contact .box_deleteContact {
+    text-align: right;
+    margin-top: -28px;
+    margin-right: -16px;
+    width: 30px;
+    position: absolute;
+    right: 0;
+}
+
+
+/*******************************************
+            BLOC PERMANENCE
+*******************************************/
+#bloc-permanence {
+    text-align: left;
+}
+
+.box-epci_permanence:not(:first-child) {
+    margin-top: 50px;
+    margin-bottom: 25px;
+    vertical-align: middle;
+}
+
+.epci_permanence label {
+    text-align: right;
+    padding-right: 20px;
+    line-height: 30px;
+}
+
+.epci_permanence div:nth-child(7) label, .epci_permanence div:nth-child(8) label {
+    vertical-align: top;
+    line-height: inherit;
+}
+
+.epci_permanence input, .epci_permanence textarea {
+    width: 65%;
+    margin-bottom: 10px;
+}
+
+#bloc-permanence .form-group, #bloc-permanence .form-horizontal {
+    margin-left: 0;
+}
+
+#bloc-permanence .box_addPermanence {
+    text-align: right;
+    margin-top: 35px;
+    margin-right: -15px;
+}
+
+#bloc-permanence .box_deletePermanence {
+    text-align: right;
+    margin-top: -2px;
+    margin-right: -15px;
+    width: 185px;
+    position: absolute;
+    right: 0;
+}

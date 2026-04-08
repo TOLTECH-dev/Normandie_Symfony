@@ -1,0 +1,17 @@
+{% extends 'BackOffice/Remboursement/email/base.html.twig' %}
+{% import 'Macros/document_manquant.html.twig' as document_manquant %}
+{% import 'Macros/adresse_postale_emails.html.twig' as macro_adresse_postale %}
+
+{% block content %}
+    <p>Suite &agrave; l'audit r&eacute;alis&eacute; chez <i>{{ civilite }} {{ beneficiairePrenom|capitalize }} {{ beneficiaireNom|upper }}</i> correspondant au dossier de demande d'aide n° <i>{{ demandeId }}</i>, vous nous avez fait parvenir une demande de remboursement &quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie&quot; qui est incompl&egrave;te. Il manque :</p>
+    {{ document_manquant.format_document_manquant(listDocManquant) }}
+
+    <p>Nous vous invitons &agrave; nous {% if listDocManquant|length>1 %}les {% else %}l'{% endif %}envoyer dans les meilleurs d&eacute;lais &agrave; l'adresse suivante :</p>
+    <p>
+        {% if not isAdresseUp %}
+            {{ macro_adresse_postale.show_address_docaposte_html() }}
+        {% else %}
+            {{ macro_adresse_postale.show_address_ct_lire_coll_html() }}
+        {% endif %}
+    </p>
+{% endblock content %}

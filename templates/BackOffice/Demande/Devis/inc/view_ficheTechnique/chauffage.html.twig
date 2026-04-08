@@ -1,0 +1,96 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-chauffage">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Chauffage</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Energie</label>
+            </div>
+            <div class="flex1 bloc-selectMultiple fontSize9">
+                {% if ficheTechnique.ficheTechnique_initial.chauffageEnergie is not empty %}
+                    <ul>
+                        {% for item in ficheTechnique.ficheTechnique_initial.chauffageEnergie %}
+                            <li>{{ pathologieVentilationArray[item] }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex2 bloc-selectMultiple fontSize9">
+                {% if ficheTechnique.ficheTechnique_BBC.chauffageEnergie is not empty %}
+                    <ul>
+                        {% for item in ficheTechnique.ficheTechnique_BBC.chauffageEnergie %}
+                            <li>{{ pathologieVentilationArray[item] }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex3 bloc-selectMultiple fontSize9">
+                {% if ficheTechnique.ficheTechnique_prescription.chauffageEnergie is not empty %}
+                    <ul>
+                        {% for item in ficheTechnique.ficheTechnique_prescription.chauffageEnergie %}
+                            <li>{{ pathologieVentilationArray[item] }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 bloc-selectMultiple fontSize9">
+                    {% if ficheTechnique.ficheTechnique_finChantier.chauffageEnergie is not empty %}
+                        <ul>
+                            {% for item in ficheTechnique.ficheTechnique_finChantier.chauffageEnergie %}
+                                <li>{{ pathologieVentilationArray[item] }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-center">-</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Equipement</label>
+            </div>
+            <div class="flex1 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_initial.chauffageEquipement %}
+                    {{ ficheTechnique.ficheTechnique_initial.chauffageEquipement }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex2 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_BBC.chauffageEquipement %}
+                    {{ ficheTechnique.ficheTechnique_BBC.chauffageEquipement }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex3 marginTop7 fontSize9">
+                {% if ficheTechnique.ficheTechnique_prescription.chauffageEquipement %}
+                    {{ ficheTechnique.ficheTechnique_prescription.chauffageEquipement }}
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 marginTop7 fontSize9">
+                    {% if ficheTechnique.ficheTechnique_finChantier.chauffageEquipement %}
+                        {{ ficheTechnique.ficheTechnique_finChantier.chauffageEquipement }}
+                    {% else %}
+                        <p class="text-center">-</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

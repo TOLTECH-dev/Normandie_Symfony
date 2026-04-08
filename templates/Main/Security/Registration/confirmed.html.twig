@@ -1,0 +1,28 @@
+{% extends "Main/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('registerConfirmed') }}
+{% endblock %}
+
+{% block content %}
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="container-title">
+            <h2>Création de compte</h2>
+        </div>
+
+        {#
+        {{ include('whiteLabelMainBundle:Macros:error.html.twig') }}
+        #}
+
+        <p class="text-center">
+            Félicitations {{ username }}, votre compte est maintenant activé.
+        </p>
+
+        <br><br>
+
+        <div class="col-xs-12 col-sm-12 container-submit">
+            <a href="{{ path('web_homepage') }}" class="btn btn-warning">Retour à l'accueil</a>
+        </div>
+    </div>
+{% endblock %}

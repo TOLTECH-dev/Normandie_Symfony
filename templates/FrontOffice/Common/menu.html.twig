@@ -1,0 +1,25 @@
+{% block admin_menu %}
+    {% set arrayPath = path|split('_') %}
+    <ul id="fo_menu">
+        {% if '0' == beneficiaireId %}
+            <li class="{{ ('beneficiaire' == arrayPath[0]) ? 'active' : ('fo' == arrayPath[0]) ? 'active' : '' }}">
+                <a href="{{ path('beneficiaire_add', {'userId': user_id}) }}">Mon compte</a>
+            </li>
+        {% else %}
+            <li class="{{ ('beneficiaire' == arrayPath[0]) ? 'active' : ('fo' == arrayPath[0]) ? 'active' : '' }}">
+                <a href="{{ path('beneficiaire_view', {'beneficiaireId': beneficiaireId}) }}">Mon compte</a>
+            </li>
+        {% endif %}
+
+        {% if '0' != beneficiaireId %}
+            <li class="{{ ('logement' == arrayPath[0]) ? 'active' : '' }}">
+                <a href="{{ path('logement_list', {'beneficiaireId': beneficiaireId}) }}">Mon logement</a>
+            </li>
+            {% if countDemande > 0 %}
+            <li class="{{ ('demande' == arrayPath[0]) ? 'active' : '' }}">
+                <a href="{{ path('demande_list_fo', {'beneficiaireId': beneficiaireId}) }}">Mes demandes</a>
+            </li>
+            {% endif %}
+        {% endif %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,16 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-instruction">
+    <hr class="bloc-limit">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Validation Instruction Technique</legend>
+
+        <div class="form-group" id="box-instructionDossierConforme">
+            {{ form_label(form.instructionDossierConforme, "Dossier conforme (validation des devis, du plan de financement et de la compatibilité BBC)?", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form.instructionDossierConforme) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.instructionDossierConforme, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+</div>

@@ -1,0 +1,54 @@
+/*******************************************
+            BLOC CONDITION
+*******************************************/
+#bloc-information {
+
+}
+
+#bloc-information h5 {
+    color: #FF0000;
+}
+
+/*******************************************
+            BLOC CONDITION
+*******************************************/
+#bloc-condition {
+
+}
+
+#bloc-condition input[type=checkbox] {
+    vertical-align: bottom;
+}
+#bloc-condition .checkboxstyle label {
+    line-height: 0;
+    margin-right: 10px;
+}
+
+/*******************************************
+            BLOC STRUCTURE
+*******************************************/
+#bloc-structure {
+
+}
+
+/*******************************************
+            BLOC AUDITEUR
+*******************************************/
+#bloc-auditeur {
+
+}
+
+/*******************************************
+            BLOC SIGNATURE
+*******************************************/
+#bloc-signature {
+
+}
+
+#bloc-signature input[type=checkbox] {
+    vertical-align: bottom;
+}
+#bloc-signature .checkboxstyle label {
+    line-height: 0;
+    margin-right: 10px;
+}

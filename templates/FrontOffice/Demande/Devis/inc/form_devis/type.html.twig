@@ -1,0 +1,59 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-type">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Votre Type de Demande</legend>
+
+        <div class="form-group">
+            {{ form_label(form.isBonificationAide, "Je souhaite obtenir la bonification de l'aide", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form.isBonificationAide) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.isBonificationAide, {'attr': {'class': 'checkboxstyle'}}) }}
+            </div>
+        </div>
+
+        <input type="hidden" id="disabled_button_popupValidation_niveau" value="{{ disabled_button_popupValidation }}" />
+        {% if '1' == disabled_button_popupValidation %}
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc marginTop20">
+                <p id="bloc-type-niveau">
+                    <i class="glyphicon glyphicon-warning-sign"></i>&nbsp;
+                    Vous n'&ecirc;tes pas &eacute;ligible au dispositif
+                </p>
+            </div>
+        {% endif %}
+
+        <div class="form-group {{ hidden_niveauField }}">
+            {{ form_label(form.niveau, "Niveau d'aide", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form.niveau) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.niveau, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <input type="hidden" value="{{ devis.renovateurId }}" id="box-valueRenovateur" />
+        <div class="form-group hidden" id="box-renovateur">
+            {{ form_label(form.renovateur_id, "Rénovateur", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form.renovateur_id) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.renovateur_id, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+    <div id="data-js-demande-niveau" class="hidden"
+         data-niveau-sortie-passoire-value="{{ constant('App\\Entity\\Demande_travaux_devis::DEMANDE_TYPE_NIVEAU_SORTIE_PASSOIRE_VALUE') }}"
+         data-niveau-etape1-bbc-rge-value="{{ constant('App\\Entity\\Demande_travaux_devis::DEMANDE_TYPE_NIVEAU_ETAPE1_BBC_RGE_VALUE') }}"
+         data-niveau-etape1-bbc-renovateur-value="{{ constant('App\\Entity\\Demande_travaux_devis::DEMANDE_TYPE_NIVEAU_ETAPE1_BBC_RENOVATEUR_VALUE') }}"
+         data-niveau-renovation-globale-bbc-value="{{ constant('App\\Entity\\Demande_travaux_devis::DEMANDE_TYPE_NIVEAU_RENOVATION_GLOBALE_BBC_VALUE') }}"
+    ></div>
+    <div id="data-js-demande-montant" class="hidden"
+         data-montant-bonification-aide="{{ constant('App\\Entity\\Demande_travaux_devis::BONIFICATION_SUPPLEMENT_AIDE_REGION_MONTANT') }}"
+         data-montant-sortie-passoire="{{ constant('App\\Entity\\Demande_travaux_devis::DEMANDE_TYPE_NIVEAU_SORTIE_PASSOIRE_MONTANT') }}"
+         data-montant-etape1-bbc-rge="{{ constant('App\\Entity\\Demande_travaux_devis::DEMANDE_TYPE_NIVEAU_ETAPE1_BBC_RGE_MONTANT') }}"
+         data-montant-etape1-bbc-renovateur="{{ constant('App\\Entity\\Demande_travaux_devis::DEMANDE_TYPE_NIVEAU_ETAPE1_BBC_RENOVATEUR_MONTANT') }}"
+         data-montant-renovation-globale-bbc="{{ constant('App\\Entity\\Demande_travaux_devis::DEMANDE_TYPE_NIVEAU_RENOVATION_GLOBALE_BBC_MONTANT') }}"
+    ></div>
+</div>

@@ -1,0 +1,21 @@
+/*******************************************
+            BLOC IDENTIFICATION
+*******************************************/
+#bloc-identification {
+
+}
+
+/*******************************************
+            BLOC STATUT
+*******************************************/
+#bloc-statut {
+
+}
+
+#bloc-statut input[type=checkbox] {
+    vertical-align: bottom;
+}
+#bloc-statut .bloc-dateInactif label {
+    line-height: 30px;
+    padding-top: 0 !important;
+}

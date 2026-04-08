@@ -1,0 +1,26 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-acte-engagement">
+    <hr class="bloc-limit">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Votre Acte d'engagement dans le cadre d'un accompagnement par un Espace Conseil France R&eacute;nov'</legend>
+
+        <ul id="custom-control_acteEngagement" class="list_error"></ul>
+        {{ form_errors(form.acteEngagement) }}
+        <div class="form-group">
+            {{ form_label(form.acteEngagement, "Votre acte d'engagement", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {% if devis and devis.acteEngagementAlt %}
+                    <p class="lineHeight30 noMargin">
+                        <a href="{{ path(path_location, {'demandeId': devis.id, 'typeFile': 15, 'extension': devis.acteEngagementUrl, 'typeDemande': 2}) }}" target="_blank">
+                            Voir le document
+                        </a>
+                    </p><br />
+                {% endif %}
+
+                {{ form_widget(form.acteEngagement) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+</div>

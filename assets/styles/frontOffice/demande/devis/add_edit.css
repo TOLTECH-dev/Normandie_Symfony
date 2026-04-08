@@ -1,0 +1,138 @@
+/*******************************************
+            BLOC AUDIT
+*******************************************/
+#bloc-audit {
+
+}
+
+#whitelabel_frontofficebundle_demande_travaux_devis_audit {
+    margin-left: 0;
+}
+
+/*******************************************
+            BLOC DOCUMENT
+*******************************************/
+#bloc-document {
+
+}
+
+.demande_travaux_devis_upload {
+    display: flex;
+    height: 90px;
+    justify-content: space-around;
+}
+
+.demande_travaux_devis_upload > div > label {
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+.demande_travaux_devis_upload > div {
+    margin: 0 5px;
+}
+
+.custom-file {
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    height: 30px;
+    margin: auto;
+    outline: 0;
+    position: relative;
+    width: 250px;
+}
+.custom-file:after {
+    border-radius: 5px;
+    color: #fff;
+    display: block;
+    font-size: 20px;
+    height: 100%;
+    left: 0;
+    line-height: 60px;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    transition: 200ms all ease;
+    width: 100%;
+}
+
+#bloc-document .box_addDocument {
+    margin-top: 5px;
+    margin-right: -15px;
+    text-align: right;
+}
+
+#bloc-document .box_deleteDocument {
+    height: 1px;
+    margin-top: -65px;
+    position: absolute;
+    right: -25px;
+    text-align: right;
+    width: 30px;
+}
+
+/*******************************************
+            BLOC REVENU FISCAL
+*******************************************/
+#bloc-revenuFiscal {
+    color: red;
+    text-align: center;
+}
+
+#bloc-revenuFiscal p {
+    margin: 0;
+    padding: 0;
+}
+
+/*******************************************
+            BLOC TYPE AIDE
+*******************************************/
+#bloc-type {
+
+}
+
+#bloc-type-niveau {
+    font-weight: bold;
+    color: red;
+    text-align: center;
+}
+
+#bloc-type-niveau p {
+    margin: 0;
+    padding: 0;
+}
+
+/*******************************************
+            BLOC PLAN
+*******************************************/
+#bloc-plan {
+
+}
+
+#bloc-plan .checkboxstyle label {
+    line-height: 0;
+    margin-right: 10px;
+}
+
+#bloc-plan input[type=checkbox] {
+    vertical-align: bottom;
+}
+
+/*******************************************
+            BLOC ACTE ENGAGEMENT
+*******************************************/
+#bloc-acte-engagement {
+
+}
+
+#whitelabel_frontofficebundle_demande_travaux_devis_acteEngagement {
+    margin-left: 0;
+}
+
+/*******************************************
+            BLOC CONFIRMATION
+*******************************************/
+.bloc-confirmation {
+    height: 190px;
+}

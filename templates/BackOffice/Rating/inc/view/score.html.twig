@@ -1,0 +1,37 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc bloc-score">
+    {% if partenaireType is defined %}
+        {% if 0 == partenaireType %}
+            {% set textFrom = 'les Conseillers' %}
+            {% set textTo = 'L\'Auditeur' %}
+        {% elseif 1 == partenaireType %}
+            {% set textFrom = 'la Région' %}
+            {% set textTo = 'Le Rénovateur' %}
+        {% endif %}
+    {% else %}
+        {% set textFrom = '' %}
+        {% set textTo = '' %}
+    {% endif %}
+    <fieldset>
+        <legend><span class="legend-icon"></span>&nbsp;Notation par {{ textFrom }}</legend>
+
+        <p class="text-center bold noMargin">
+            {% set scoreRating = score.countMauvais + score.countMoyen + score.countParfait %}
+            {{ textTo }} a re&ccedil;u {{ scoreRating }} notations.
+        </p>
+
+        <div id="score_flex">
+            <p class="marginTop20" id="score_flex1">
+                <span class="scoreParfait">&nbsp;Bon</span><br>
+                <span class="scoreMoyen">&nbsp;Moyen</span><br>
+                <span class="scoreMauvais">&nbsp;Mauvais</span>
+            </p>
+            <p class="marginTop20" id="score_flex2">
+                <span class="countScoreParfait">&nbsp;<span>{{ score.countParfait }} ({{ score.percentParfait }}%)</span></span><br>
+                <span class="countScoreMoyen">&nbsp;<span>{{ score.countMoyen }} ({{ score.percentMoyen }}%)</span></span><br>
+                <span class="countScoreMauvais">&nbsp;<span>{{ score.countMauvais }} ({{ score.percentMauvais }}%)</span></span>
+            </p>
+        </div>
+
+    </fieldset>
+
+</div>

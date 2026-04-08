@@ -1,0 +1,10 @@
+{% extends 'FrontOffice/Demande/email/base.html.twig' %}
+
+{% block content %}
+    <p>Votre dossier de demande de <i>&quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie / {{ demandeTypeLabel }}&quot;</i> va &ecirc;tre pris en compte.</p>
+    <p>Vous recevrez prochainement un courriel vous indiquant la compl&eacute;tude administrative ou non de votre dossier.</p>
+
+    {% if auditeur is defined and auditeur == 1 %}
+        <p>Vous n'avez pas encore s&eacute;lectionn&eacute; votre auditeur conventionn&eacute;, nous vous invitons &agrave; le faire et votre conseiller &quot;Habitat &amp; Energie&quot; peut vous accompagner dans votre d&eacute;marche.</p>
+    {% endif %}
+{% endblock content %}

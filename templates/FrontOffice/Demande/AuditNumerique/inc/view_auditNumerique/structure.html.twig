@@ -1,0 +1,22 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-structure">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Rappel de votre Accompagnateur R&eacute;nov&rsquo; conventionn&eacute; avec la R&eacute;gion</legend>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Structure :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ demande.structureId ? demande.structureNom : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Conseiller :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ demande.conseillerId ? demande.conseillerPrenom ~ ' ' ~ demande.conseillerNom|upper : '-' }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

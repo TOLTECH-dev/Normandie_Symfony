@@ -1,0 +1,17 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-KBIS">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Conformit&eacute; statut de la SCI (ne pas instruire les autres documents)</legend>
+
+        <div class="form-group">
+            {{ form_label(form_instruction.instruction_auditEnergie.KBISconformite, "Statut de la SCI conforme", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_instruction.instruction_auditEnergie.KBISconformite) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form_instruction.instruction_auditEnergie.KBISconformite, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

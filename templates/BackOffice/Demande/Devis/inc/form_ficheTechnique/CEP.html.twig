@@ -1,0 +1,197 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-CEP">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;R&eacute;sultats</legend>
+
+        <div class="flex-wrapper" id="bloc-CEP-calcul">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.CEP, "CEP (kWh/m².an)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.CEP, {'attr': {'class': 'form-control initial-CEP'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.CEP) }}
+                <ul id="error-initial-CEP" class="list_error"></ul>
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.CEP, {'attr': {'class': 'form-control BBC-CEP'}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.CEP) }}
+                <ul id="error-BBC-CEP" class="list_error"></ul>
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.CEP, {'attr': {'class': 'form-control prescription-CEP'}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.CEP) }}
+                <ul id="error-prescription-CEP" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.CEPGES, "GES (Kg eq CO2 /m².an)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.CEPGES, {'attr': {'class': 'form-control initial-CEPGES'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.CEPGES) }}
+                <ul id="error-initial-CEPGES" class="list_error"></ul>
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.CEPGES, {'attr': {'class': 'form-control BBC-CEPGES'}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.CEPGES) }}
+                <ul id="error-BBC-CEPGES" class="list_error"></ul>
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.CEPGES, {'attr': {'class': 'form-control prescription-CEPGES'}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.CEPGES) }}
+                <ul id="error-prescription-CEPGES" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.CEPEtiquetteEnergetique, "Etiquette énergétique", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.CEPEtiquetteEnergetique, {'attr': {'class': 'form-control initial-etiquetteEnergetique'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.CEPEtiquetteEnergetique) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.CEPEtiquetteEnergetique, {'attr': {'class': 'form-control BBC-etiquetteEnergetique'}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.CEPEtiquetteEnergetique) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.CEPEtiquetteEnergetique, {'attr': {'class': 'form-control prescription-etiquetteEnergetique'}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.CEPEtiquetteEnergetique) }}
+            </div>
+        </div>
+
+        <div class="flex-wrapper" id="bloc-Ubat-calcul">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.CEPUbat, "Ubât (W/m².K)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.CEPUbat, {'attr': {'class': 'form-control initial-CEPUbat'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.CEPUbat) }}
+                <ul id="error-initial-CEPUbat" class="list_error"></ul>
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.CEPUbat, {'attr': {'class': 'form-control BBC-CEPUbat'}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.CEPUbat) }}
+                <ul id="error-BBC-CEPUbat" class="list_error"></ul>
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.CEPUbat, {'attr': {'class': 'form-control prescription-CEPUbat'}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.CEPUbat) }}
+                <ul id="error-prescription-CEPUbat" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.CEPUbatBase, "Ubât base (W/m².K)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.CEPUbatBase, {'attr': {'class': 'form-control initial-CEPUbatBase'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.CEPUbatBase) }}
+                <ul id="error-initial-CEPUbatBase" class="list_error"></ul>
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.CEPUbatBase, {'attr': {'class': 'form-control BBC-CEPUbatBase', 'readonly': true}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.CEPUbatBase) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.CEPUbatBase, {'attr': {'class': 'form-control prescription-CEPUbatBase', 'readonly': true}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.CEPUbatBase) }}
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.CEPQ4Pa_surf, "Q4 (m³/h.m²)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.CEPQ4Pa_surf, {'attr': {'class': 'form-control initial-CEPQ4Pa_surf'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.CEPQ4Pa_surf) }}
+                <ul id="error-initial-CEPQ4Pa_surf" class="list_error"></ul>
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.CEPQ4Pa_surf, {'attr': {'class': 'form-control BBC-CEPQ4Pa_surf'}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.CEPQ4Pa_surf) }}
+                <ul id="error-BBC-CEPQ4Pa_surf" class="list_error"></ul>
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.CEPQ4Pa_surf, {'attr': {'class': 'form-control prescription-CEPQ4Pa_surf'}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.CEPQ4Pa_surf) }}
+                <ul id="error-prescription-CEPQ4Pa_surf" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0"></div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.informationControleurChantier, {'attr': {'class': 'form-control hidden'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.informationControleurChantier, {'attr': {'class': 'form-control hidden '}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.informationControleurChantier, {'attr': {'class': 'form-control hidden'}}) }}
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0"></div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.infiltrometrieDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.infiltrometrieDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.infiltrometrieDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+        </div>
+
+        {{ form_widget(form.ficheTechnique_initial.isValeurQ4CalculeeConforme, {'attr': {'class': 'hidden'}}) }}
+        {{ form_widget(form.ficheTechnique_BBC.isValeurQ4CalculeeConforme, {'attr': {'class': 'hidden'}}) }}
+        {{ form_widget(form.ficheTechnique_prescription.isValeurQ4CalculeeConforme, {'attr': {'class': 'hidden'}}) }}
+
+        <div class="flex-wrapper">
+            <div class="flex0"></div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.ventilationDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.ventilationDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.ventilationDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+        </div>
+
+        {{ form_widget(form.ficheTechnique_initial.isSystemeVentilationConforme, {'attr': {'class': 'hidden'}}) }}
+        {{ form_widget(form.ficheTechnique_BBC.isSystemeVentilationConforme, {'attr': {'class': 'hidden'}}) }}
+        {{ form_widget(form.ficheTechnique_prescription.isSystemeVentilationConforme, {'attr': {'class': 'hidden'}}) }}
+
+        <div class="flex-wrapper">
+            <div class="flex0"></div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.auditApresTravauxDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.auditApresTravauxDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.auditApresTravauxDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+        </div>
+
+        {{ form_widget(form.ficheTechnique_initial.isValoriserRenovation, {'attr': {'class': 'hidden'}}) }}
+        {{ form_widget(form.ficheTechnique_BBC.isValoriserRenovation, {'attr': {'class': 'hidden'}}) }}
+        {{ form_widget(form.ficheTechnique_prescription.isValoriserRenovation, {'attr': {'class': 'hidden'}}) }}
+
+        {{ form_widget(form.ficheTechnique_initial.valoriserRenovationJustification, {'attr': {'class': 'hidden'}}) }}
+        {{ form_widget(form.ficheTechnique_BBC.valoriserRenovationJustification, {'attr': {'class': 'hidden '}}) }}
+        {{ form_widget(form.ficheTechnique_prescription.valoriserRenovationJustification, {'attr': {'class': 'hidden'}}) }}
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

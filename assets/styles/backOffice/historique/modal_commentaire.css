@@ -1,0 +1,79 @@
+/*******************************************
+                BLOC MODAL
+*******************************************/
+.modal {
+    margin-top: 60px;
+}
+.modal legend {
+    border: 0;
+}
+div.modal_formCommentaire .modal-dialog {
+    overflow-y: initial !important;
+    width: 85%;
+}
+div.modal_formCommentaire .modal-header legend {
+    border: 0 !important;
+    color: #77b636 !important;
+}
+div.modal_formCommentaire .modal-body {
+    padding-top: 0 !important;
+}
+
+/*******************************************
+                BLOC CONTENT
+*******************************************/
+#bloc-content {
+    align-items: stretch;
+    display: flex;
+    justify-content: space-around;
+}
+#bloc-content legend {
+    font-size: 1.4em;
+}
+
+
+
+.bloc-commentaireForm {
+    border-right: 1px solid #e5e5e5;
+    width: 100%;
+}
+.bloc-commentaireForm .form-group, .bloc-commentaireForm textarea {
+    width: 100% !important;
+}
+.box-recipient label:not(:first-child) {
+    padding-left: 30px;
+    text-align: left;
+    font-weight: normal;
+    width: 100%;
+    position: relative;
+    top: -2px;
+    left: 0;
+}
+
+.box-recipient input {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    margin: 0;
+    margin-bottom: -15px;
+    vertical-align: bottom;
+    float: left;
+    *overflow: hidden;
+}
+
+
+
+.bloc-commentaireList {
+}
+.bloc-commentaire {
+    display: block;
+    font-size: 0.95em;
+    max-height: 300px !important;
+    overflow-y: auto;
+    width: 100%;
+}
+.bloc-commentaire hr {
+    border-top: 1px dashed #ddd;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

@@ -1,0 +1,81 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-surface">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Surface</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.surfaceHabitable, "Surface habitable (SHAB en m²)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.surfaceHabitable, {'attr': {'class': 'form-control initial-surfaceHabitable'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.surfaceHabitable) }}
+                <ul id="error-initial-surfaceHabitable" class="list_error"></ul>
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.surfaceHabitable, {'attr': {'class': 'form-control BBC-surfaceHabitable'}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.surfaceHabitable) }}
+                <ul id="error-BBC-surfaceHabitable" class="list_error"></ul>
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.surfaceHabitable, {'attr': {'class': 'form-control prescription-surfaceHabitable'}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.surfaceHabitable) }}
+                <ul id="error-prescription-surfaceHabitable" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.surfaceSRT, "SRT (m²)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.surfaceSRT, {'attr': {'class': 'form-control initial-surfaceSRT'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.surfaceSRT) }}
+                <ul id="error-initial-surfaceSRT" class="list_error"></ul>
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.surfaceSRT, {'attr': {'class': 'form-control BBC-surfaceSRT'}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.surfaceSRT) }}
+                <ul id="error-BBC-surfaceSRT" class="list_error"></ul>
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.surfaceSRT, {'attr': {'class': 'form-control prescription-surfaceSRT'}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.surfaceSRT) }}
+                <ul id="error-prescription-surfaceSRT" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.surfacePathologies, "Pathologies", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.surfacePathologies) }}
+            </div>
+            <div class="flex1 bloc-selectMultiple" id="bloc-initialSurfacePathologies">
+                {{ form_widget(form.ficheTechnique_initial.surfacePathologies) }}
+            </div>
+            <div class="flex2 bloc-selectMultiple">
+                {{ form_widget(form.ficheTechnique_BBC.surfacePathologies, {'attr': {'class': 'hidden'}}) }}
+            </div>
+            <div class="flex3 bloc-selectMultiple">
+                {{ form_widget(form.ficheTechnique_prescription.surfacePathologies, {'attr': {'class': 'hidden'}}) }}
+            </div>
+        </div>
+
+        <div class="flex-wrapper hidden" id="bloc-surfacePathologiesAutre">
+            <div class="flex0">
+                {{ form_errors(form.ficheTechnique_initial.surfacePathologiesAutre) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.surfacePathologiesAutre, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.surfacePathologiesAutre, {'attr': {'class': 'hidden'}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.surfacePathologiesAutre, {'attr': {'class': 'hidden'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

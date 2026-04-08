@@ -1,0 +1,82 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-menuiseries">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Menuiseries ext&eacute;rieures</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.menuiseriesExterieuresSurface, "Surface (m²)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.menuiseriesExterieuresSurface, {'attr': {'class': 'form-control initial-menuiseriesExterieuresSurface'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.menuiseriesExterieuresSurface) }}
+                <ul id="error-initial-menuiseriesExterieuresSurface" class="list_error"></ul>
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.menuiseriesExterieuresSurface, {'attr': {'class': 'form-control BBC-menuiseriesExterieuresSurface'}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.menuiseriesExterieuresSurface) }}
+                <ul id="error-BBC-menuiseriesExterieuresSurface" class="list_error"></ul>
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.menuiseriesExterieuresSurface, {'attr': {'class': 'form-control prescription-menuiseriesExterieuresSurface'}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.menuiseriesExterieuresSurface) }}
+                <ul id="error-prescription-menuiseriesExterieuresSurface" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.menuiseriesExterieuresUW, "Uw (W/m².K)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.menuiseriesExterieuresUW, {'attr': {'class': 'form-control initial-menuiseriesExterieuresUW'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.menuiseriesExterieuresUW) }}
+                <ul id="error-initial-menuiseriesExterieuresUW" class="list_error"></ul>
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.menuiseriesExterieuresUW, {'attr': {'class': 'form-control BBC-menuiseriesExterieuresUW'}}) }}
+                {{ form_errors(form.ficheTechnique_BBC.menuiseriesExterieuresUW) }}
+                <ul id="error-BBC-menuiseriesExterieuresUW" class="list_error"></ul>
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.menuiseriesExterieuresUW, {'attr': {'class': 'form-control prescription-menuiseriesExterieuresUW'}}) }}
+                {{ form_errors(form.ficheTechnique_prescription.menuiseriesExterieuresUW) }}
+                <ul id="error-prescription-menuiseriesExterieuresUW" class="list_error"></ul>
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.menuiseriesModePose, "Information sur mode de pose et traitement jonction isolant / retour de tableau", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.menuiseriesModePose) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.menuiseriesModePose, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.menuiseriesModePose, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.menuiseriesModePose, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(form.ficheTechnique_initial.menuiseriesTypeProtectionsSolaires, "Type de protections solaires", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+                {{ form_errors(form.ficheTechnique_initial.menuiseriesTypeProtectionsSolaires) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(form.ficheTechnique_initial.menuiseriesTypeProtectionsSolaires, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(form.ficheTechnique_BBC.menuiseriesTypeProtectionsSolaires, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(form.ficheTechnique_prescription.menuiseriesTypeProtectionsSolaires, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

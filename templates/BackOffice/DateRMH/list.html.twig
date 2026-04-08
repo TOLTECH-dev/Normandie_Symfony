@@ -1,0 +1,196 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_core_datepicker') }}
+    {{ encore_entry_link_tags('backOffice_dateRMH_list') }}
+    {{ encore_entry_link_tags('backOffice_dateRMH_add_edit') }}
+{% endblock %}
+
+{% block contents %}
+{% if is_granted('ROLE_CLIENT')
+    or is_granted('ROLE_ADMIN')
+%}
+<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom40">
+        <div id="container-title">
+            <h2>Dates de RMH</h2>
+        </div>
+    </div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom10">
+    <p class="text-center">
+        <span data-toggle="modal" data-target="#modal-addDateRMH">
+            <button type="button"
+                    class="btn btn-primary btn-xs"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    data-container="body"
+                    title="Cr&eacute;er une Date RMH"
+            >
+                <i class="glyphicon glyphicon-plus"></i> <span class="bold">Cr&eacute;er une Date RMH</span>
+            </button>
+        </span>
+    </p>
+
+    <!-- Modal Add Date RMH -->
+    <div class="modal fade modalBackdrop" id="modal-addDateRMH" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-center" id="myModalLabel">Ajouter une Date RMH</h4>
+                </div>
+                <div class="modal-body">
+                    {{ include('BackOffice/DateRMH/inc/form_list/add.html.twig') }}
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table cellspacing="0" id="table_list_dateRMH" class="table table-striped table-bordered big_table">
+    <thead>
+        <tr>
+            <th class="breakWord col0">Date RMH</th>
+            <th class="breakWord col1">Nombre de remboursement</th>
+            <th class="breakWord col2">Statut</th>
+            <th class="breakWord col3">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in list_dateRMH %}
+            <tr>
+                <td class="text-center"><span class="hidden">{{ item.dateRMH|date('Ymd') }}</span>{{ item.dateRMH|date('d/m/Y') }}</td>
+
+                {% set countRemboursement = 0 %}
+                {% for remboursement in list_remboursement %}
+                    {% if (remboursement.dateRMHId == item.id) %}
+                        {% set countRemboursement = remboursement.countRemboursement %}
+                    {% endif %}
+                {% endfor %}
+                <td class="text-center">{{ countRemboursement }}</td>
+
+                {% if 0 == item.enabled %}
+                    {% set statut = 'Inactif' ~ ' depuis le ' ~ item.dateInactif|date('d/m/Y') %}
+                {% elseif 1 == item.enabled %}
+                    {% set statut = 'Actif' %}
+                {% endif %}
+                <td>{{ statut }}</td>
+
+                <td class="text-center">
+                    {% if 1 != item.rgpd %}
+                        <span data-toggle="modal" data-target="#modal-editDateRMH_{{ item.id }}">
+                            <button type="button"
+                                    class="btn btn-warning btn-xs"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    data-container="body"
+                                    title="Modifier la Date RMH"
+                            >
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </button>
+                        </span>
+
+                        <!-- Modal Edit Date RMH -->
+                        <div class="modal fade modalBackdrop" id="modal-editDateRMH_{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title text-center" id="myModalLabel">Modifier une Date RMH</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{ include('BackOffice/DateRMH/inc/form_list/edit.html.twig') }}
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a  href="{{ path('dateRMH_recapitulatifPreRMH_export', {'dateRMHId': item.id}) }}"
+                            class="btn btn-primary btn-xs"
+                            role="button"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-container="body"
+                            title="T&eacute;l&eacute;charger r&eacute;capitulatif pr&eacute;-RMH"
+                            target="_blank"
+                        >
+                            <i class="glyphicon glyphicon-list-alt"></i>
+                        </a>
+
+                        {% if countRemboursement != 0 %}
+                            {% if item.dateExport is null %}
+				<span class="flagLoading_documentRMH_export">
+                                <a href="{{ path('dateRMH_documentRMH_export', {'dateRMHId': item.id}) }}"
+                                   class="btn btn-primary btn-xs"
+                                   role="button"
+                                   data-toggle="tooltip"
+                                   data-placement="bottom"
+                                   data-container="body"
+                                   title="G&eacute;n&eacute;rer les fichiers du RMH"
+                                   target="_self">
+                                    <i class="glyphicon glyphicon-paste"></i>
+                                </a>
+				</span>
+                            {% else %}
+                                <a href="{{ path('dateRMH_documentRMH_download', {'dateRMHId': item.id}) }}"
+                                   class="btn btn-success btn-xs"
+                                   role="button"
+                                   data-toggle="tooltip"
+                                   data-placement="bottom"
+                                   data-container="body"
+                                   title="T&eacute;l&eacute;charger les documents RMH"
+                                   target="_self">
+                                    <i class="glyphicon glyphicon-download-alt"></i>
+                                </a>
+
+                                <span data-toggle="modal" data-target="#modal-cancelRMH">
+                                    <button type="button"
+                                            class="btn btn-danger btn-xs button-cancelRMH"
+                                            data-toggle="tooltip"
+                                            data-placement="bottom"
+                                            data-container="body"
+                                            title="Annuler le RMH"
+                                    >
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                        <input type="hidden" name="dateRMHId_{{ item.id }}" value="{{ item.id }}" />
+                                    </button>
+                                </span>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+
+        <!-- Modal Cancel RMH -->
+        <div class="modal fade modalBackdrop" id="modal-cancelRMH" tabindex="-1" role="dialog" aria-labelledby="modal-cancelRMHLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center" id="myModalLabel">Confirmer l'annulation du RMH</h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ include('BackOffice/DateRMH/inc/form_list/cancel.html.twig') }}
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </tbody>
+</table>
+
+</div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_dateRMH_index') }}
+{% endblock %}

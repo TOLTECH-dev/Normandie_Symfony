@@ -1,0 +1,22 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-structure">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Mon Accompagnateur R&eacute;nov&rsquo; conventionn&eacute; avec la R&eacute;gion</legend>
+
+        <p class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bold italic">
+            * Vous devez s&eacute;lectionner une structure qui vous accompagnera et qui sera votre seul interloculeur
+        </p>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.structure_rattachement_id) }}</div>
+        <div class="form-group">
+            {{ form_label(form.structure_rattachement_id, "Structure de rattachement", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.structure_rattachement_id, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        {{ form_row(form.conseiller_rattachement_id) }}
+
+    </fieldset>
+</div>

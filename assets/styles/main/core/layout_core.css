@@ -1,0 +1,34 @@
+html,
+body {
+    font-family: Arial, Calibri, sans-serif;
+    font-size: 13px;
+    min-width: 800px;
+}
+body { padding-top: 60px; }
+
+.bold { font-weight: bold; }
+.italic { font-style: italic;font-size: 12px; }
+.clear { clear: both; }
+.text-center { text-align: center; }
+
+.marginTop50 { margin-top: 50px; }
+.marginLeft10 { margin-left: 10px; }
+
+form button { text-align: right; }
+legend { font-size: 16px;margin-top: 6px; }
+a:focus, a:hover, a.no-underline { outline: 0;text-decoration: none; }
+.popover{ max-width: none;width: 600px; }
+
+.modalBackdrop { background-color: rgba(0, 0, 0, 0.3); }
+#bloc-submit, .bloc-submit {
+    padding: 20px 0;
+    text-align: center;
+}
+.document-tip { float: left;margin-left: -15px; }
+
+#notification, .notification { margin-bottom: 10px;font-weight: bold; }
+.required:after { content: " *";color: #D20A28; }
+
+.bloc-content { padding: 15px; }
+.text-xs-center { text-align: center; }
+.g-recaptcha { display: inline-block; }

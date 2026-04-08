@@ -1,0 +1,80 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-surface">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Surface</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Surface habitable (m<sup>2</sup>)</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.surfaceHabitable }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.surfaceHabitable }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.surfaceHabitable }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.surfaceHabitable }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">SRT (m<sup>2</sup>)</label>
+            </div>
+            <div class="flex1 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_initial.surfaceSRT }}
+            </div>
+            <div class="flex2 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_BBC.surfaceSRT }}
+            </div>
+            <div class="flex3 form-control fontSize9">
+                {{ ficheTechnique.ficheTechnique_prescription.surfaceSRT }}
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4 form-control fontSize9">
+                    {{ ficheTechnique.ficheTechnique_finChantier.surfaceSRT }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0 text-right">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Pathologies</label>
+            </div>
+            <div class="flex1 bloc-selectMultiple fontSize9">
+                {% if ficheTechnique.ficheTechnique_initial.surfacePathologies is not empty %}
+                <ul>
+                    {% for item in ficheTechnique.ficheTechnique_initial.surfacePathologies %}
+                        {% set surfacePathologiesAutreLabel = '' %}
+                        {% if '| autre' in item and ficheTechnique.ficheTechnique_initial.surfacePathologiesAutre %}
+                            {% set surfacePathologiesAutreLabel = ' : ' ~ ficheTechnique.ficheTechnique_initial.surfacePathologiesAutre %}
+                        {% endif %}
+                        <li>{{ pathologieVentilationArray[item] ~ surfacePathologiesAutreLabel }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                    <p class="text-center">-</p>
+                {% endif %}
+            </div>
+            <div class="flex2">
+
+            </div>
+            <div class="flex3">
+
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+                <div class="flex4">
+
+                </div>
+            {% endif %}
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

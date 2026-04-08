@@ -1,0 +1,153 @@
+/*******************************************
+            G E N E R I Q U E
+*******************************************/
+fieldset legend {
+    border: 0;
+    margin-bottom: 10px;
+    padding: 0 30px;
+    text-align: center;
+    width: inherit;
+}
+
+/*******************************************
+            BLOC FRANCE CONNECT
+*******************************************/
+#bloc-franceConnect {
+    padding: 10px;
+    text-align: center;
+}
+
+#bloc-franceConnect .franceConnect-logo {
+    margin-top: 10px;
+    width: 200px;
+}
+
+#bloc-franceConnect .franceConnect-tip {
+    margin-top: 10px;
+    color: #222;
+}
+
+/*******************************************
+            BLOC SEPARATION
+*******************************************/
+#bloc-separation fieldset {
+    border-top: 1px solid #EEE;
+    padding: inherit;
+}
+
+#bloc-separation fieldset legend {
+    color: #000;
+}
+
+/*******************************************
+            BLOC ACCES AU COMPTE
+*******************************************/
+#bloc-login {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+
+
+#bloc-login fieldset {
+    border: 1px solid #EEE;
+    padding: inherit;
+}
+#bloc-login fieldset legend {
+    color: #e9661f;
+}
+#bloc-login .container-submit {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    text-align: center;
+}
+.text-color-legend {
+    color: #e9661f;
+}
+
+
+#container-create .container-submit {
+    justify-content: space-around;
+}
+
+
+
+#container-connect .container-login {
+    padding: 10px 0;
+    max-width: 450px;
+    width: 100% !important;
+    margin: auto;
+    font-size: 12px;
+}
+#container-connect .container-login fieldset {
+    padding: 10px;
+}
+#container-connect .container-login label {
+    line-height: 30px;
+    text-align: right;
+}
+#container-connect .container-login input[type=text], #container-connect .container-login input[type=password] {
+    height: 30px;
+    margin-bottom: 10px;
+    -webkit-appearance: none;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-top: 1px solid #c0c0c0;
+    /* border-radius: 2px; */
+    padding: 0 8px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+#container-connect .container-login input[type=text]:hover, #container-connect .container-login input[type=password]:hover {
+    border: 1px solid #b9b9b9;
+    border-top: 1px solid #a0a0a0;
+    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+#container-connect .container-login input[type=submit] {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+
+
+#container-connect .container-checkbox {
+    text-align: right;
+}
+#container-connect .container-checkbox input[type=checkbox] {
+    vertical-align: bottom;
+}
+#container-connect .container-checkbox input[type=checkbox] + label {
+    line-height: 0;
+}
+
+
+
+#container-connect .container-submit {
+    justify-content: flex-end;
+}
+#container-connect .submit-padding {
+    padding: 0;
+}
+
+
+
+#container-connect .container-help {
+    color: #222;
+    font-size: 11px;
+    opacity: 0.6;
+    text-align: right;
+}
+#container-connect .container-help a {
+    color: #222;
+    display: inline-block;
+    font-weight: 400;
+    opacity: 0.6;
+    text-decoration: none;
+    transition: opacity ease 0.5s;
+}

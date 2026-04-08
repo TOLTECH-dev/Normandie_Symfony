@@ -1,0 +1,21 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc marginTop20">
+    <fieldset>
+
+{{ form_start(form, {'action': path('contact_delete'), 'attr': {'class': 'form-horizontal', 'id': 'form_deleteContact'}}) }}
+{{ form_errors(form) }}
+
+<p class="text-center">
+    Etes-vous certain de vouloir supprimer le Partenaire Contact <span class="bold">{{ contact.prenom|capitalize }}&nbsp;{{ contact.nom|upper }}</span>?
+</p>
+
+<div class="bloc-submit">
+    <input type="submit" value="Supprimer" class="btn btn-danger text-center" />
+    <button type="button" class="btn btn-secondary marginLeft10" data-dismiss="modal">Annuler</button>
+</div>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}
+
+    </fieldset>
+</div>
+&nbsp;

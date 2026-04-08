@@ -1,0 +1,43 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc marginBottom20" id="bloc-document">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Document</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label paddingTop7">Fichier XML</label>
+            </div>
+            <div class="flex1 marginTop7">
+                &nbsp;
+            </div>
+            <div class="flex2 marginTop7">
+                &nbsp;
+            </div>
+            <div class="flex3 marginTop7">
+                <p class="fontSize9 text-center">
+                {% if ficheTechnique and ficheTechnique.ficheTechnique_prescription and ficheTechnique.ficheTechnique_prescription.ficheTechniqueDocumentUrl %}
+                    <a href="{{ path('demande_document_bo', {'demandeId': ficheTechnique.ficheTechnique_prescription.id, 'typeFile': 4, 'extension': ficheTechnique.ficheTechnique_prescription.ficheTechniqueDocumentUrl, 'typeDemande': 3}) }}" target="_blank">
+                        Voir le document
+                    </a>
+                {% else %}
+                    Aucun document t&eacute;l&eacute;charg&eacute;
+                {% endif %}
+                </p>
+            </div>
+            {% if demande.remboursementFicheTechniqueId %}
+            <div class="flex4 marginTop7">
+                <p class="fontSize9 text-center">
+                {% if ficheTechnique and ficheTechnique.ficheTechnique_finChantier and ficheTechnique.ficheTechnique_finChantier.ficheTechniqueDocumentUrl %}
+                    <a href="{{ path('demande_document_bo', {'demandeId': ficheTechnique.ficheTechnique_finChantier.id, 'typeFile': 4, 'extension': ficheTechnique.ficheTechnique_finChantier.ficheTechniqueDocumentUrl, 'typeDemande': 3}) }}" target="_blank">
+                        Voir le document
+                    </a>
+                {% else %}
+                    Aucun document t&eacute;l&eacute;charg&eacute;
+                {% endif %}
+                </p>
+            </div>
+            {% endif %}
+        </div>
+
+    </fieldset>
+
+</div>

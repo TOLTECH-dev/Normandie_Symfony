@@ -1,0 +1,28 @@
+.col0 { width: 40px; }
+.col1 { width: 40px; }
+.col2 { width: 8% !important; }
+.col3 { width: 8% !important; }
+.col4 { }
+.col5 { width: 8% !important; }
+.col6 { width: 8% !important; }
+.col7 { width: 10% !important; }
+.col8 { width: 40px; }
+.col_action { width: 100px; }
+
+tr[id="filterrow"] th input, tr[id="filterrow"] th select {
+    width: 100%;
+    font-size: 11px;
+    height: 30px;
+}
+tfoot {
+    display: table-header-group;
+}
+
+body .popover {
+    width: auto;
+    max-width: 500px;
+}
+
+div#table_list_remboursement_filter {
+    display: none !important;
+}

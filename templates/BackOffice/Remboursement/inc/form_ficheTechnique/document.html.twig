@@ -1,0 +1,39 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc marginBottom20" id="bloc-document">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Document</legend>
+
+        {{ form_errors(formFicheTechnique.ficheTechnique_initial.ficheTechniqueDocument) }}
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(formFicheTechnique.ficheTechnique_initial.ficheTechniqueDocument, "Fichier XML", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(formFicheTechnique.ficheTechnique_initial.ficheTechniqueDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(formFicheTechnique.ficheTechnique_BBC.ficheTechniqueDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(formFicheTechnique.ficheTechnique_prescription.ficheTechniqueDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file hidden'}}) }}
+            </div>
+            <div class="flex4">
+                <ul id="custom-control_documentXML_finChantier" class="list_error"></ul>
+
+                {{ form_widget(formFicheTechnique.ficheTechnique_finChantier.ficheTechniqueDocument, {'attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 custom-file'}}) }}
+                {% if remboursement is defined and
+                    remboursementItem and
+                    remboursementItem.ficheTechnique and
+                    remboursementItem.ficheTechnique.ficheTechnique_finChantier and
+                    remboursementItem.ficheTechnique.ficheTechnique_finChantier.ficheTechniqueDocumentUrl %}
+                    <div class="lineHeight30">
+                        <a href="{{ path(path_location, {'demandeId': remboursementItem.ficheTechnique.ficheTechnique_finChantier.id, 'typeFile': 4, 'extension': remboursementItem.ficheTechnique.ficheTechnique_finChantier.ficheTechniqueDocumentUrl, 'typeDemande': 3}) }}" target="_blank">
+                            Voir le document
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </fieldset>
+
+</div>

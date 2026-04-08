@@ -1,0 +1,45 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-validation">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Validation Fiche Technique</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_errors(form.ficheTechnique_initial.informationValidation) }}
+            </div>
+
+            <div class="flex1">
+                <p class="custom-titre-btn-oui-non">Valider la situation initiale</p>
+                <div class="onoffswitch">
+                    {{ form_widget(form.ficheTechnique_initial.informationValidation, {'attr': {'class': 'onoffswitch-checkbox initial-validation-fiche-technique'}}) }}
+                    <label class="onoffswitch-label" for="{{ form.ficheTechnique_initial.informationValidation.vars.id }}">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex2">
+                <p class="custom-titre-btn-oui-non">Valider le sc&eacute;nario BBC</p>
+                <div class="onoffswitch">
+                    {{ form_widget(form.ficheTechnique_BBC.informationValidation, {'attr': {'class': 'onoffswitch-checkbox BBC-validation-fiche-technique'}}) }}
+                    <label class="onoffswitch-label" for="{{ form.ficheTechnique_BBC.informationValidation.vars.id }}">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex3 checkboxstyle">
+                <p class="custom-titre-btn-oui-non">Valider la prescription travaux</p>
+                <div class="onoffswitch">
+                    {{ form_widget(form.ficheTechnique_prescription.informationValidation, {'attr': {'class': 'onoffswitch-checkbox prescription-validation-fiche-technique'}}) }}
+                    <label class="onoffswitch-label" for="{{ form.ficheTechnique_prescription.informationValidation.vars.id }}">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+</div>

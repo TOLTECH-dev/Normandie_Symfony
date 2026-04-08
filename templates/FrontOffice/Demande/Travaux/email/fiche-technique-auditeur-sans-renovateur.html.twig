@@ -1,0 +1,10 @@
+{% extends 'FrontOffice/Demande/email/base.html.twig' %}
+
+{% block content %}
+    <p>Dans le cadre du <i>&quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie&quot;</i>, vous avez r&eacute;alis&eacute; un audit pour le dossier n°{{ demandeId }}, {{ civilite|capitalize }} {{ beneficiairePrenom|capitalize }} {{ beneficiaireNom|upper }}, {{ adresseTravaux }}.</p>
+
+    <p>
+        Ce client a ensuite effectu&eacute; une demande de ch&egrave;que &quot;Travaux&quot;. Par cons&eacute;quent, nous vous demandons de bien vouloir compl&eacute;ter sur l'extranet la fiche technique (colonnes &quot;Situation initiale&quot;, &quot;Sc&eacute;nario BBC&quot; et &quot;Travaux correspondant aux devis&quot;) en vous appuyant sur les devis t&eacute;l&eacute;charg&eacute;s.<br>
+        Pour toute question, vous pouvez contacter le Conseiller Habitat &amp; Energie en charge de ce dossier.
+    </p>
+{% endblock content %}

@@ -1,0 +1,173 @@
+<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+
+    <table cellspacing="0" id="table_list_demande" class="table table-striped table-bordered small_table">
+        <thead>
+            <tr>
+                <th class="col0">R&eacute;f&eacute;rence dossier</th>
+                <th class="col1">Type de demande</th>
+                <th class="col2">Nom du logement</th>
+                <th class="col3">Statut</th>
+                <th class="col4">Date de demande</th>
+                <th class="col5">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set arrayDemandeType = static_function('App\\Entity\\Demande_', 'demandeType') %}
+
+            {% for item in demande %}
+
+                {% set demandeTypeLibelle = (item.demandeType is not empty) ? arrayDemandeType[item.demandeType] : '' %}
+
+                {% if item.demandeType in [
+                    constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE'),
+                    constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE')
+                ]
+                %}
+                    {% set route_name_demande_view = 'demande_auditEnergie_view' %}
+                {% elseif
+                    item.demandeType in [
+                    constant('App\\Entity\\Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE'),
+                    constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE')
+                ]
+                %}
+                    {% set route_name_demande_view = 'demande_auditNumerique_view' %}
+                {% elseif constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == item.demandeType %}
+                    {% set route_name_demande_view = 'demande_travaux_view' %}
+                {%  endif %}
+
+                {% set route_name_demande_devis_view = 'demande_devis_view' %}
+                {% if is_backoffice is defined and is_backoffice is not empty  %}
+                    {% set path_demande_view  = path(prefix_pathname ~ route_name_demande_view, {'beneficiaireId': item.beneficiaireId, 'demandeId': item.demandeId}) %}
+                    {% if item.devisId %}
+                        {% set path_demande_devis_view = path(prefix_pathname ~ route_name_demande_devis_view, {'beneficiaireId': item.beneficiaireId, 'devisId': item.devisId}) %}
+                    {% endif %}
+                {% else %}
+                    {% set path_demande_view = path(prefix_pathname ~ route_name_demande_view, {'demandeId': item.demandeId}) %}
+                    {% if item.devisId %}
+                        {% set path_demande_devis_view = path(route_name_demande_devis_view, {'devisId': item.devisId})  %}
+                    {% endif %}
+                {% endif %}
+
+                <tr>
+                    <td class="text-center">{{ item.demandeId }}</td>
+                    <td>
+                        <a href="{{ path_demande_view }}"
+                           data-toggle="tooltip"
+                           data-placement="bottom"
+                           data-container="body"
+                           title="Afficher la demande"
+                        >
+                            {{ demandeTypeLibelle }}
+                        </a>
+                    </td>
+                    <td>{{ item.logementNom }}</td>
+
+                    {% set statutFont = 'statut_black' %}
+                    {% if 0 == item.statutColor %}
+                        {% set statutFont = 'statut_red' %}
+                    {% elseif 1 == item.statutColor %}
+                        {% set statutFont = 'statut_orange' %}
+                    {% elseif 2 == item.statutColor %}
+                        {% set statutFont = 'statut_green' %}
+                    {% endif %}
+                    <td class="{{ statutFont }}">
+
+                        {{ item.statutSlug }}
+                        <span class="statut-tip">
+                            <a role="button"
+                               tabindex="0"
+                               data-container="body"
+                               data-toggle="popover"
+                               data-trigger="focus"
+                               data-placement="top"
+                               data-content="{{ item.statutDescriptionFormatted|raw }}"
+                            >
+                                <i class="glyphicon glyphicon-question-sign"></i>
+                            </a>
+                        </span>
+
+                    </td>
+                    <td>{{ item.dateCreation|date('d-m-Y') }}</td>
+                    <td class="text-center">
+                        {% if demandeTypeLibelle == 'Travaux' %}
+
+                            {% if (is_backoffice is not defined or is_backoffice is empty)
+                                and (constant('App\\Entity\\Demande_statut::STATUS_14') == item.demandeStatut) %}
+                                <a href="{{ path('demande_fiche_liaison_fo', {'demandeId': item.demandeId}) }}"
+                                   class="btn btn-success btn-xs"
+                                   role="button"
+                                   data-toggle="tooltip"
+                                   data-placement="bottom"
+                                   data-container="body"
+                                   title="T&eacute;l&eacute;charger la Fiche Liaison"
+                                   target="_blank">
+                                    <i class="glyphicon glyphicon-file"></i>
+                                </a>
+                            {% endif %}
+
+                            {% if item.demandeStatut not in ['15'] %}
+                                {% if item.devisId is null %}
+                                    <a href="{{ path(prefix_pathname ~ 'demande_devis_add', {'beneficiaireId': item.beneficiaireId, 'logementId': item.logementId, 'demandeId': item.demandeId}) }}"
+                                       class="btn btn-primary btn-xs"
+                                       role="button"
+                                       data-toggle="tooltip"
+                                       data-placement="bottom"
+                                       data-container="body"
+                                       title="T&eacute;l&eacute;chargement de mes devis et renseignement du plan de financement"
+                                    >
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                    </a>
+                                {% elseif item.devisId is not null %}
+                                    <a href="{{ path_demande_devis_view }}"
+                                       class="btn btn-primary btn-xs"
+                                       role="button"
+                                       data-toggle="tooltip"
+                                       data-placement="bottom"
+                                       data-container="body"
+                                       title="T&eacute;l&eacute;chargement de mes devis et renseignement du plan de financement"
+                                    >
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if is_backoffice is not defined or is_backoffice is empty %}
+                            <a href=""
+                               class="btn btn-primary btn-xs button_frise_avancement"
+                               role="button"
+                               data-toggle="tooltip"
+                               data-placement="bottom"
+                               data-container="body"
+                               data-friseAvancementUrl="{{ path('demande_view_step', {'demandeId': item.demandeId}) }}"
+                               data-demandeId="{{ item.demandeId }}"
+                               data-original-title="Voir l&apos;avancement du dossier"
+                            >
+                                <i class="glyphicon glyphicon-option-horizontal"></i>
+                            </a>
+                        {% endif %}
+
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+    {% if is_backoffice is not defined or is_backoffice is empty %}
+        <div class="modal fade modalBackdrop modal_frise_avancement" id="modal_frise_avancement" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <legend class="modal-title text-center" id="myModalLabel">
+                            <span class="legend-icon"></span>&nbsp;<span id="modal_titleText"></span>
+                        </legend>
+                    </div>
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+</div>

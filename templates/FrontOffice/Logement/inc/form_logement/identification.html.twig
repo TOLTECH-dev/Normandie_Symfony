@@ -1,0 +1,28 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-identification">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Identification</legend>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.nom) }}</div>
+        <div class="form-group">
+            {{ form_label(form.nom, "Nom de votre logement", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.isDifferent) }}</div>
+        <div class="form-group" id="bloc-identificationCheckbox" style="display:none;">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right">
+                {{ form_widget(form.isDifferent, {'attr': {'class': 'control-label'}}) }}
+            </div>
+
+            {{ form_label(form.isDifferent, "L'adresse du logement est différente de l'adresse renseignée précédemment.", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-8 col-lg-8 control-label text-left'}}) }}
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

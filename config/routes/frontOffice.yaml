@@ -1,0 +1,272 @@
+###################################
+###   FOSUser Custom Routing    ###
+###################################
+fos_user_profile_show:
+  path:     /profile
+  defaults: { _controller: App\Controller\UserController::show }
+
+
+###################################
+###    Autocomplete Routing     ###
+###################################
+fo_autocomplete_listCity:
+  #   /frontoffice/ajax_auto_complete/update_list_city/{codePostal}
+  path:     /6785375b{codePostal}0eb6632048db757bd29491639e3a048ef076750a51683524033f8a962936bdd66a97ff0b4fc01092330d6556ae1b18354fe3453238d93653852a5b96
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateListCity }
+  requirements:
+    codePostal: \d+
+  options:
+    expose: true
+
+fo_autocomplete_listAddress:
+  #   /frontoffice/ajax_auto_complete/update_list_address/{insee}
+  path:     /db0462da{insee}c8f96d380b622547e9ad231e33e1f01feb2e8a832d01e0099acb72a4093aafeac3d97fe98793f6b2ffbdd262a7a30638e9489308de733956399bf90a
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateListAddress }
+  requirements:
+    insee: \d+
+  options:
+    expose: true
+
+fo_autocomplete_listStructure:
+  #   /frontoffice/ajax_auto_complete/update_list_structure/{logementId}/{insee}/{type}/{nombrePersonneFoyer}/{beneficiaireId}/{revenuFiscalRef}/{structureId}
+  path:     /709ea1b1{logementId}73780b1f{insee}39a62eec{type}2a2e9295{nombrePersonneFoyer}8b54335a{beneficiaireId}852636e3{revenuFiscalRef}3a390305{structureId}1316e13725f3829f5e17cc4b8a89d02727369496db4f32d203b530c6be515b7649c2e03a
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateListStructure, structureId: 0 }
+  requirements:
+    logementId: \d+
+    insee: \d+
+    type: \d{1}
+    nombrePersonneFoyer: \d+
+    beneficiaireId: \d+
+    revenuFiscalRef: \d+
+    structureId: \d+
+  options:
+    expose: true
+
+fo_autocomplete_listConseiller:
+  #   /frontoffice/ajax_auto_complete/update_list_conseiller/{structureId}
+  path:     /efc02b78{structureId}132fed0cd58a51bab9b7b83ad7a972d2e6b57c95bc8a17b5d2273ff2feaf5a259b7b3075979d6865f84bc2100d60a94a9c856258788417c3b08af9d2
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateListConseiller }
+  requirements:
+    structureId: \d+
+  options:
+    expose: true
+
+fo_autocomplete_listPartenaire:
+  #   /frontoffice/ajax_auto_complete/update_list_partenaire/{type}
+  path:     /ad6da470{type}898605901ee82a294545ce0d6bf4caa5acba68d2e9a4cf4f3dcf97059fc9c050d77f0ae2ae1bb22a140b749dc4fcc11f4a265ba1cd33df85fadd0ba4
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateListPartenaire }
+  requirements:
+    type: \d+
+  options:
+    expose: true
+
+fo_security_form:
+  #   /frontoffice/ajax_auto_complete/update_security_form
+  path:     /6E42E17152EEF10DB713DC2DC802765794C9BB1D75F62C62145CB5A4AC29597FAAA45D97215EC1A9A45A0537E988BD0A4DA66395D53459925A8F0FD527602DE4
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateSecurityForm }
+  options:
+    expose: true
+
+###################################
+###       Homepage Routing      ###
+###################################
+fo_dashboard:
+  path:     /8B6717D4A69717640022F88307D828D95CE99BCE944F418E58445D1C65CD5FE00F5CB774D8F26FD7C56DD95942B3E29463F880BE78514FC8DFD78807D3B20DBC
+  defaults: { _controller: App\Controller\FrontOfficeHomePageController::index }
+
+###################################
+###    Bénéficiaire Routing     ###
+###################################
+beneficiaire_add:
+  #   /frontoffice/beneficiaire/add/{userId}
+  path:    /a0fc88e985f4{userId}876803e52d3d6ddceb4348d7587bf20798831bc0d3c6b8bd0e83208268f6b6093e70336165611b253b0861128690a181c1bfa8b5b8f9e0aceec5
+  defaults: {_controller: App\Controller\BeneficiaireController::add }
+  requirements:
+    userId: \d+
+
+beneficiaire_view:
+  #   /frontoffice/beneficiaire/view/{beneficiaireId}
+  path:    /8749ad877d6d{beneficiaireId}5c637d917a071b2bb625db74d02d088bfd7d466dcddd5c3a6c5f56dbad540211611899cd1b6a7d93241ecf9a541dddc574b6fac056508640862f
+  defaults: {_controller: App\Controller\BeneficiaireController::view }
+  requirements:
+    beneficiaireId: \d+
+
+beneficiaire_edit:
+  #   /frontoffice/beneficiaire/edit/{beneficiaireId}
+  path:    /98149d5c1d41{beneficiaireId}b0ff8b9b6996f9381c740b137baf71fcad5421ebcafab8b5569ffb8ea294370261cf7767ad06eb8feb266eedc45eaa477a29994fb0cc2b701cda
+  defaults: {_controller: App\Controller\BeneficiaireController::edit }
+  requirements:
+    beneficiaireId: \d+
+
+###################################
+###       Logement Routing      ###
+###################################
+logement_list:
+  #   /frontoffice/logement/list/{beneficiaireId}
+  path:     /59664{beneficiaireId}d543309d237cc96de56776b0ad377b2c0754d87e0db8c09add6a94685da9d7dbbaf363a633a327920a9efc938374021cf879fd5ba61bf3a42c811b92894
+  defaults: { _controller: App\Controller\LogementController::list }
+  requirements:
+    beneficiaireId: \d+
+
+logement_add:
+  #   /frontoffice/logement/add/{beneficiaireId}
+  path:     /4001f{beneficiaireId}34b6c5ed1b5e30e6cb5985c3843d567037c65e0ae4f6594cccc529d66650f5cfe3c12d94e876cc826093447fd7be51df5d35bb147c7699a90457e0e9a02
+  defaults: { _controller: App\Controller\LogementController::add }
+  requirements:
+    beneficiaireId: \d+
+
+logement_view:
+  #   /frontoffice/logement/view/{logementId}
+  path:     /51d44{logementId}bb27dac607d46450886e29a9c8e391749bb40117c03376362a6b6c24cd5ca534c90b323364773c5e881904c67c8038dc4c3f18ac297f4dda48383b275a8
+  defaults: { _controller: App\Controller\LogementController::view }
+  requirements:
+    logementId: \d+
+
+logement_edit:
+  #   /frontoffice/logement/edit/{logementId}
+  path:     /d7dbf{logementId}116f92ba2cae7e1bcea4f4d9da77e75a9b9cb15725f6e043916234f37e6914bf36981cea080311e317b53b9c136063267a1fcadc4463b429dbaf09fce6f
+  defaults: { _controller: App\Controller\LogementController::edit }
+  requirements:
+    logementId: \d+
+
+###################################
+###       Demande Routing       ###
+###################################
+demande_list_fo:
+  #   /frontoffice/demande/list/{beneficiaireId}
+  path:     /8930dfc41{beneficiaireId}691dd1e68d64e34e6471587f5b0f2166e587723907cb30ce16febd6f812eb06c685120ab8912ac64c5d498fa74da7834396368752d929383a245075
+  defaults: { _controller: App\Controller\FrontOfficeDemandeController::list }
+  requirements:
+    beneficiaireId: \d+
+
+demande_document_fo:
+  #   /frontoffice/document/view_fo/{demandeId}/{typeFile}/{extension}/{typeDemande}
+  path:     /d88a72d59{demandeId}643d5f7fa{typeFile}2bb6bc87a{extension}d1a2502d8{typeDemande}af0147c4a258c5048684fe96de7bd9c4f2d61dc60cceedfd42cf7922e1073b4aa54603a7d7e5d9c818fbf358523c
+  defaults: { _controller: App\Controller\DocumentController::viewFO }
+  requirements:
+    demandeId: \d+
+    typeFile: \d+
+    extension: pdf|jpeg|jpg|png|xml|txt
+    typeDemande: \d+
+
+demande_fiche_liaison_fo:
+  #   /frontoffice/demande/generate_fiche_liaison/{demandeId}
+  path:    /e15caa3a9{demandeId}ca1e6564a8c12ba35e66bfc210304df6e24ed0f59d8dfac9ac77cb84ffeb09cafa61813ca5c99c2ed75d5e9aae7ea5970c9a74fc9ac4459a1636d49
+  defaults: { _controller: App\Controller\FrontOfficeDemandeController::generateFicheLiaison}
+  requirements:
+    demandeId: \d+
+
+demande_view_step:
+  #   /frontoffice/demande/view_step/{demandeId}
+  path:     /10fc81858{demandeId}3c9926343eef22b90abc9310190101f99cc9f3e159361f533cf6abd28fdde7ac171dacab3c9da02c65fbd75d84e61d35a475749f3f6c51a388b7e4c
+  defaults: { _controller: App\Controller\FrontOfficeDemandeController::viewStep , demandeId: 0 }
+  requirements:
+    demandeId: \d+
+  condition: "request.isXmlHttpRequest()"
+
+###################################
+###    Audit Energie Routing    ###
+###################################
+demande_auditEnergie_add:
+  #   /frontoffice/demande_audit_energie/add/{beneficiaireId}/{logementId}/{type}
+  path:     /16cb{beneficiaireId}99fc{logementId}ba68{type}93af207b9087cc37103cc43d53b855d93fc2f28272755f4efe8718aa2675705048e7a8c3a777b5930f88dae13973b661323e0bda740288798e9c
+  defaults: { _controller: App\Controller\DemandeAuditEnergieController::add }
+  requirements:
+    beneficiaireId: \d+
+    logementId: \d+
+    type: \d+
+
+demande_auditEnergie_view:
+  #   /frontoffice/demande_audit_energie/view/{demandeId}
+  path:     /70f6{demandeId}3b08e31621820d3c35ba113fb5be5cae024d967a3e8c42779c9b4689baf7a6b99cf77a9af875c54286548c69a860588b01bc725c0014a5e9ba6e11250560
+  defaults: { _controller: App\Controller\DemandeAuditEnergieController::view }
+  requirements:
+    demandeId: \d+
+
+demande_auditEnergie_edit:
+  #   /frontoffice/demande_audit_energie/edit/{demandeId}
+  path:     /1f2f{demandeId}bed1072f183debc3a2f7fa0f870b08a5a338953d8714a5ba953fe15b278397c56bb4fb0750eae2c85b0bbe43a31ff0d5d15f78c98b5b0d11ad94a5308df7
+  defaults: { _controller: App\Controller\DemandeAuditEnergieController::edit }
+  requirements:
+    demandeId: \d+
+
+###################################
+###   Audit Numérique Routing   ###
+###################################
+demande_auditNumerique_add:
+  #   /frontoffice/demande_audit_numerique/add/{beneficiaireId}/{logementId}/{type}
+  path:     /454378{beneficiaireId}6b61f6{logementId}0a2e5a{type}06d19eb0ef411198fb93ddad63204b63de79a15bc4972468bbc2c8ec825df20b13749b5d478029509c69c6c441e1ebaf555f1a8c2e43a6
+  defaults: { _controller: App\Controller\DemandeAuditNumeriqueController::add }
+  requirements:
+    beneficiaireId: \d+
+    logementId: \d+
+    type: \d+
+
+demande_auditNumerique_view:
+  #   /frontoffice/demande_audit_numerique/view/{demandeId}
+  path:     /dfcc35{demandeId}437362b099be538c4e9fe5794ad855faf8a35d263fca85e25b76eda54eab46c7aa7a3f56eac6d2099fe48630c8b8bfd54f0276ad9fe2523983fc898baf
+  defaults: { _controller: App\Controller\DemandeAuditNumeriqueController::view }
+  requirements:
+    demandeId: \d+
+
+demande_auditNumerique_edit:
+  #   /frontoffice/demande_audit_numerique/edit/{demandeId}
+  path:     /69b2ff{demandeId}082b716adb41af3d01f61e9c4e0bd5f0fa872864399fbd70a4bd6c10abc91bb8d8d386bee72839df013f5d0182f60c8c62efdaa5819d69e4ac432aba94
+  defaults: { _controller: App\Controller\DemandeAuditNumeriqueController::edit }
+  requirements:
+    demandeId: \d+
+
+###################################
+###       Travaux Routing       ###
+###################################
+demande_travaux_add:
+  #   /frontoffice/demande_travaux/add/{beneficiaireId}/{logementId}
+  path:     /bfd4f0504460{beneficiaireId}336869e0f629{logementId}54e07620755c409eee2194d297d87102d800f1f642fc861fff4cf84387dde37560c8628d58a6c82b81aaab89861c65dc9f438f20
+  defaults: { _controller: App\Controller\DemandeTravauxController::add }
+  requirements:
+    beneficiaireId: \d+
+    logementId: \d+
+
+demande_travaux_view:
+  #   /frontoffice/demande_travaux/view/{demandeId}
+  path:     /b12791828cea{demandeId}eb1faab5d598a1073cf4e433b9f7504786197144e2a5cb07f73233d773e861a137339bb41dda23edfb3126f0699174a8cf0dc192f93a1e09ffeb
+  defaults: { _controller: App\Controller\DemandeTravauxController::view }
+  requirements:
+    demandeId: \d+
+
+demande_travaux_edit:
+  #   /frontoffice/demande_travaux/edit/{demandeId}
+  path:     /41446ce087d0{demandeId}7d7da0fa24c8201fee7c9a196916e6757ca4be5c75e35bea1b05997c1ca94cff98b237c6cbce918f07b19e3d3b6c4f360ad706688ac1c1180a08
+  defaults: { _controller: App\Controller\DemandeTravauxController::edit }
+  requirements:
+    demandeId: \d+
+
+###################################
+###       Devis Routing         ###
+###################################
+demande_devis_add:
+  #   /frontoffice/demande_devis/add/{beneficiaireId}/{logementId}/{demandeId}
+  path:     /5f72092{beneficiaireId}1bde2ce{logementId}3d41a56{demandeId}4b6c3703dc884ce4ce8961623930c04ae9d8a3d34bf32edc4a611e0edda26f6a92c70041bcc3e93f8777104d35f5ca3f386b4c05b95
+  defaults: { _controller: App\Controller\DemandeDevisController::add }
+  requirements:
+    beneficiaireId: \d+
+    logementId: \d+
+    demandeId: \d+
+
+demande_devis_view:
+  #   /frontoffice/demande_devis/view/{devisId}
+  path:     /a43a816{devisId}0147993d12b2090dae324bb0055b6f34c7f22637113aa8a3a93302db200c282282ee380482d1fc4f48371680e8252b446eef9a558d33a439acd7d47ce
+  defaults: { _controller: App\Controller\DemandeDevisController::view }
+  requirements:
+    devisId: \d+
+
+demande_devis_edit:
+  #   /frontoffice/demande_devis/edit/{devisId}
+  path:     /24ca997{devisId}d56bcfd1da134853cd08a4daccc3394977263c5cc35480fc241b1b69a39e80ab710c2de25e1c8b8d242ec1adc14e6c04971acdb806c8ea204e6d66218
+  defaults: { _controller: App\Controller\DemandeDevisController::edit }
+  requirements:
+    devisId: \d+
+
+
+
+

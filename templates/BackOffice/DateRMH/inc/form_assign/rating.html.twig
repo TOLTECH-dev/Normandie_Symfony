@@ -1,0 +1,59 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-rating">
+    <hr class="bloc-limit">
+
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;&Eacute;valuez le R&eacute;novateur <span class="bold">{{ renovateur ? renovateur.partenaireIdentification.raisonSociale|upper : '' }}</span></legend>
+
+        {% if  remboursement.RemboursementTravaux and remboursement.RemboursementTravaux.rating and remboursement.RemboursementTravaux.rating.score %}
+            {% set initScore = remboursement.RemboursementTravaux.rating.score %}
+        {% else %}
+            {% set initScore = null %}
+        {% endif %}
+        <div id="js-initScore"
+             style="display:none;"
+             data-initScore="{{ initScore }}"
+        >
+        </div>
+
+        {% if remboursement.RemboursementTravaux and remboursement.RemboursementTravaux.rating and remboursement.RemboursementTravaux.rating.commentaire %}
+            {% set initCommentaire = remboursement.RemboursementTravaux.rating.commentaire %}
+        {% else %}
+            {% set initCommentaire = null %}
+        {% endif %}
+        <div id="js-initCommentaire"
+             style="display:none;"
+             data-initCommentaire="{{ initCommentaire }}"
+        >
+        </div>
+
+        {{ form_widget(form.rating.score, {'attr': {'class': 'hidden'}}) }}
+        <div class="rating">
+            <span id="star1">
+                <input type="radio" id="input1" name="rating" value="1" class="button_score" data-score="1" />
+                <label for="input1" title="Mauvais"></label>
+            </span>
+
+            <span id="star2">
+                <input type="radio" id="input2" name="rating" value="2" class="button_score" data-score="2" />
+                <label for="input2" title="Moyen">
+                </label>
+            </span>
+
+            <span id="star3">
+                <input type="radio" id="input3" name="rating" value="3" class="button_score" data-score="3" />
+                <label for="input3" title="Bon"></label>
+            </span>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.rating.commentaire, "Commentaire", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form.rating.commentaire) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.rating.commentaire, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+        <br>
+
+    </fieldset>
+</div>

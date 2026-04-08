@@ -1,0 +1,138 @@
+<style type="text/css">
+    <!--
+    .smallText {
+        font-family: Arial, Calibri, sans-serif;
+        font-size: 10px;
+        color: #0a0a0a;
+    }
+
+    .text {
+        font-family: Arial, Calibri, sans-serif;
+        font-size: 12px;
+        color: #0a0a0a;
+    }
+
+    .textGris {
+        font-family: Arial, Calibri, sans-serif;
+        font-size: 12px;
+        color: #767676;
+    }
+
+    .textBold {
+        font-family: Arial, Calibri, sans-serif;
+        font-size: 12px;
+        color: #0a0a0a;
+        font-weight: bold;
+    }
+
+    .title1 {
+        font-family: Arial, Calibri, sans-serif;
+        font-size: 16px;
+        color: #77b636;
+    }
+
+    .title2 {
+        font-family: Arial, Calibri, sans-serif;
+        font-size: 14px;
+        color: #77b636;
+    }
+
+    hr.orange {
+        display:block;
+        height: 1px;
+        margin: 0;
+        padding:0;
+        background-color: #e9661f;
+        border:0;
+        text-align: center;
+    }
+
+    hr.gris {
+        display:block;
+        height: 1px;
+        margin: 0;
+        padding:0;
+        background-color: #C5C5EC;
+        border:0;
+        text-align: center;
+    }
+
+    .legend-icon {
+        background: #8dccc4;
+        color: #002200;
+        width: 6mm;
+        height: 0.5mm;
+        display: inline-block;
+        margin: 0;
+        border: 0;
+        border-radius: 2.5mm 0 2.5mm 0;
+        -webkit-border-radius: 2.5mm 0 2.5mm 0;
+        -moz-border-radius: 2.5mm 0 2.5mm 0;
+    }
+
+    .countScoreParfait, .countScoreMoyen, .countScoreMauvais {
+        font-family: Arial, Calibri, sans-serif;
+        font-size: 12px;
+        color: #767676;
+    }
+
+    .circle {
+        height: 8px;
+        width: 8px;
+        display: inline-block;
+        border-radius: 4px 4px 4px 4px;
+        -webkit-border-radius: 4px 4px 4px 4px;
+        -moz-border-radius: 4px 4px 4px 4px;
+    }
+
+    .circleScoreParfait {
+        background-color: #51a351;
+    }
+    .circleScoreMoyen {
+        background-color: #F89406;
+    }
+    .circleScoreMauvais {
+        background-color: #BD362F;
+    }
+
+    .scoreParfait, .scoreMoyen, .scoreMauvais {
+        color: #767676;
+    }
+    -->
+</style>
+<page>
+
+    {% if partenaireType is defined %}
+        {% if 0 == partenaireType %}
+            {% set textFrom = 'les Conseillers' %}
+            {% set textTo = 'L\'Auditeur' %}
+        {% elseif 1 == partenaireType %}
+            {% set textFrom = 'la Région' %}
+            {% set textTo = 'Le Rénovateur' %}
+        {% endif %}
+    {% else %}
+        {% set textFrom = '' %}
+        {% set textTo = '' %}
+    {% endif %}
+
+    <table cellpadding="0" cellspacing="5" align="center" border="0" style="margin-top: 8px;">
+        <tr>
+            <td><div class="legend-icon">&nbsp;</div></td>
+            <td class="title1">Evaluation de {{ partenaireRaisonSociale }}</td>
+        </tr>
+    </table>
+
+    <div class="smallText" style="text-align: right;">Edit&eacute; le {{ 'now'|date('d/m/Y') }}</div>
+    <br>
+
+    {% if 1 == partenaireType %}
+        {{ include('BackOffice/Rating/inc/export/score.html.twig') }}
+
+        <br>
+        <div><hr class="gris"></div>
+        <br>
+    {% endif %}
+
+    {{ include('BackOffice/Rating/inc/export/commentaire.html.twig') }}
+
+</page>

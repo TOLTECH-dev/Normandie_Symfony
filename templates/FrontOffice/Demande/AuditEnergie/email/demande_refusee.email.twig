@@ -1,0 +1,6 @@
+{% extends 'FrontOffice/Demande/email/base.html.twig' %}
+
+{% block content %}
+    Votre dossier de demande de &quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie / {{ demandeTypeLabel }}&quot; a été refusé pour le motif suivant :
+    {{ demandeMotifRefus }}
+{% endblock content %}

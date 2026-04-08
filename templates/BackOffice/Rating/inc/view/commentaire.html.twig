@@ -1,0 +1,31 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc bloc-commentaire">
+    <fieldset>
+        <legend><span class="legend-icon"></span>&nbsp;Historique des commentaires</legend>
+
+        <div class="bloc-commentaireList">
+            {% for item in listCommentaire %}
+                <p class="bold noMargin">
+                    {{ item.ratingAuteur }} &nbsp;&nbsp;&nbsp; Dossier n&deg;{{ item.demandeId }} - {{ item.ratingDate }} :
+                </p>
+
+                {% if '1' == item.ratingScore %}
+                    <span class="scoreMauvais">&nbsp;Mauvais</span>
+                {% elseif '2' == item.ratingScore %}
+                    <span class="scoreMoyen">&nbsp;Moyen</span>
+                {% elseif '3' == item.ratingScore %}
+                    <span class="scoreParfait">&nbsp;Bon</span>
+                {% endif %}
+                <p class="marginTop7 marginBottom20">{{ item.ratingCommentaire|nl2br }}</p>
+
+                {% if loop.last %}
+                    &nbsp;
+                {% else %}
+                    <hr>
+                {% endif %}
+            {% else %}
+                <p class="text-center bold">Aucun commentaire.</p>
+            {% endfor %}
+        </div>
+
+    </fieldset>
+</div>

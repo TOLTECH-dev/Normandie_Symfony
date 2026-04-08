@@ -1,0 +1,62 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-situation">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Situation</legend>
+
+        <div id="bloc-situationFamille">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.situationFamille) }}</div>
+            <div class="form-group">
+                {{ form_label(form.situationFamille, "Situation familiale", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                    {{ form_widget(form.situationFamille, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" value="{{ beneficiaire.nomConjoint }}" id="box-nomConjoint" />
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 bloc-nomConjoint"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error bloc-nomConjoint">{{ form_errors(form.nomConjoint) }}</div>
+        <div class="form-group hidden bloc-nomConjoint">
+            {{ form_label(form.nomConjoint, "Nom du conjoint", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.nomConjoint, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <input type="hidden" value="{{ beneficiaire.prenomConjoint }}" id="box-prenomConjoint" />
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 bloc-prenomConjoint"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error bloc-prenomConjoint">{{ form_errors(form.prenomConjoint) }}</div>
+        <div class="form-group hidden bloc-prenomConjoint">
+            {{ form_label(form.prenomConjoint, "Prénom du conjoint", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.prenomConjoint, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.nbPersFoyer) }}</div>
+        <div class="form-group">
+            {{ form_label(form.nbPersFoyer, "Nombre de personnes constituant le foyer", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label', 'id': 'labelNbPersFoyer'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.nbPersFoyer, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 wrapper_error">{{ form_errors(form.revenuFiscalRef) }}</div>
+        <div class="form-group">
+            {{ form_label(form.revenuFiscalRef, "Revenu fiscal de référence du foyer (n-1 ou n-2)", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label', 'id': 'labelRevenuFiscalRef'}}) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.revenuFiscalRef, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

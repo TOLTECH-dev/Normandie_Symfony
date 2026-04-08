@@ -1,0 +1,11 @@
+/*******************************************
+    BLOC FORM STRUCTURE DE RATTACHEMENT
+*******************************************/
+.bloc-structureRattachement {
+
+}
+
+.bloc-structureRattachement label {
+    line-height: 18px;
+    padding-top: 0 !important;
+}

@@ -1,0 +1,470 @@
+{% extends 'BackOffice/Remboursement/email/base.html.twig' %}
+
+{% block header %}{% endblock header %}
+{% block footer %}{% endblock footer %}
+
+{% block content %}
+    <!DOCTYPE html>
+    <html lang="fr" dir="ltr" xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:v="urn:schemas-microsoft-com:vml"
+          xmlns:o="urn:schemas-microsoft-com:office:office">
+        <head>
+            <title>&quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie - Travaux&quot;</title>
+            <!--[if !mso]><!-->
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <!--<![endif]-->
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <style type="text/css">
+              #outlook a { padding:0; }
+              body { margin:0; padding:0; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+              table, td { border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; }
+              img { border:0; height:auto; line-height:100%; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; }
+              p { display:block; margin:13px 0; }
+            </style>
+            <!--[if mso]>
+            <noscript>
+                <xml>
+                    <o:OfficeDocumentSettings>
+                        <o:AllowPNG/>
+                        <o:PixelsPerInch>96</o:PixelsPerInch>
+                    </o:OfficeDocumentSettings>
+                </xml>
+            </noscript>
+            <![endif]-->
+            <style type="text/css">
+              @media only screen and (min-width:480px) {
+                .mj-column-per-100 { width:100% !important; max-width:100%; }
+              }
+            </style>
+            <style media="screen and (min-width:480px)">
+              .moz-text-html .mj-column-per-100 { width:100% !important; max-width:100%; }
+            </style>
+            <style type="text/css">
+              [owa] .mj-column-per-100 { width:100% !important; max-width:100%; }
+            </style>
+            <style type="text/css">
+              @media only screen and (max-width:479px) {
+                table.mj-full-width-mobile { width:100% !important; }
+                td.mj-full-width-mobile { width:auto !important; }
+              }
+            </style>
+        </head>
+        <body style="word-spacing:normal; background-color:#F4F4F4;">
+            <div style="background-color:#F4F4F4;" role="main" lang="fr" dir="ltr">
+                <!-- Lien Consulter la version en ligne -->
+                <div style="background:transparent; background-color:transparent; margin:0px auto; max-width:600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                           role="presentation" style="background:transparent; background-color:transparent; width:100%;">
+                        <tbody>
+                            <tr>
+                                <td style="direction:ltr; font-size:0px; padding:0px 15px 0px 15px; padding-right:15px; text-align:center;">
+                                    <div class="mj-column-per-100 mj-outlook-group-fix"
+                                         style="font-size:0px; text-align:left; direction:ltr; display:inline-block; vertical-align:top; width:100%;">
+                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="left"
+                                                        style="font-size:0px; padding:0px 16px 0px 16px; padding-top:0px; padding-bottom:0px; word-break:break-word;">
+                                                        <div style="font-family:Verdana, Helvetica, Arial, sans-serif; font-size:13px; line-height:1; text-align:left; color:#000000;">
+                                                            <p class="text-build-content" style="text-align:center; margin:10px 0; margin-top:10px; margin-bottom:10px;">&nbsp;</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="background:#ffffff; background-color:#ffffff; margin:0px auto; max-width:600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                           role="presentation" style="background:#ffffff; background-color:#ffffff; width:100%;">
+                        <tbody>
+                            <tr>
+                                <td style="direction:ltr; font-size:0px; padding:0px 0px 0px 0px; text-align:center;">
+                                    <div class="mj-column-per-100 mj-outlook-group-fix"
+                                         style="font-size:0px; text-align:left; direction:ltr; display:inline-block; vertical-align:middle; width:100%;">
+                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                               style="vertical-align:middle;" width="100%">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="center"
+                                                        style="font-size:0px; padding:16px 16px 16px 16px; word-break:break-word;">
+                                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                                               style="border-collapse:collapse; border-spacing:0px;"
+                                                               class="mj-full-width-mobile">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="width:100px;" class="mj-full-width-mobile" align="center">
+                                                                        <img alt="logo"
+                                                                             src="LOGO-NORMANDIE-EMAIL"
+                                                                             style="border:none; display:block; outline:none; text-decoration:none; height:94px; width:100%; max-width:100px; font-size:13px;"
+                                                                             width="100" height="94" />
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="background:#FFFFFF; background-color:#FFFFFF; margin:0px auto; max-width:600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                           role="presentation" style="background:#FFFFFF; background-color:#FFFFFF; width:100%;">
+                        <tbody>
+                            <tr>
+                                <td style="direction:ltr; font-size:0px; padding:10px 15px 10px 15px; padding-right:15px; text-align:center;">
+                                    <div class="mj-column-per-100 mj-outlook-group-fix"
+                                         style="font-size:0px; text-align:left; direction:ltr; display:inline-block; vertical-align:top; width:100%;">
+                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                               style="vertical-align:top;" width="100%">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="left"
+                                                        style="font-size:0px; padding:0px 16px 0px 16px; padding-top:0px; padding-bottom:0px; word-break:break-word;">
+                                                        <div style="font-family:Verdana, Helvetica, Arial, sans-serif; font-size:13px; line-height:1; text-align:left; color:#000000;">
+                                                            <p class="text-build-content"
+                                                               style="line-height:28px; margin:10px 0; margin-top:10px;">
+                                                                <span style="color:#272F36; font-family:Arial; font-size:16px;">
+                                                                    Bonjour,
+                                                                </span>
+                                                            </p>
+                                                            <p class="text-build-content"
+                                                               style="line-height:28px; margin:10px 0;">
+                                                                <span style="color:#272F36; font-family:Arial; font-size:16px;">
+                                                                    Vos travaux sont d&eacute;sormais termin&eacute;s et nous avons le plaisir de vous informer que votre &quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie - Travaux&quot; n&deg; {{ demandeId }} vous sera vers&eacute; sous 15 jours.
+                                                                </span>
+                                                            </p>
+                                                            <p class="text-build-content"
+                                                               style="line-height:28px; margin:10px 0;">
+                                                                <span style="color:#272F36; font-family:Arial; font-size:16px;">
+                                                                    Par ailleurs, le saviez-vous ? Depuis le 1er janvier 2023, la loi impose, aux propri&eacute;taires r&eacute;alisant des travaux d&rsquo;am&eacute;lioration &eacute;nerg&eacute;tique, la mise en place d&rsquo;un Carnet d&rsquo;Information du Logement (
+                                                                </span>
+                                                                <a class="link-build-content"
+                                                                   style="color:inherit; text-decoration:none;"
+                                                                   target="_blank"
+                                                                   href="https://www.legifrance.gouv.fr/jorf/article_jo/JORFARTI000043957107">
+                                                                    <span style="color:#272F36; font-family:Arial; font-size:16px;">
+                                                                        <u>article 167 de la loi Climat et r&eacute;silience</u>
+                                                                    </span>
+                                                                </a>
+                                                                <span style="color:#272F36; font-family:Arial; font-size:16px;">).&nbsp;</span>
+                                                            </p>
+                                                            <p class="text-build-content"
+                                                               style="line-height:28px; margin:10px 0; margin-bottom:10px;">
+                                                                <span style="color:#272F36; font-family:Arial; font-size:16px;">
+                                                                    La R&eacute;gion Normandie vous propose d&rsquo;utiliser CL&Eacute;A*, solution num&eacute;rique de Carnet d&rsquo;Information du Logement d&eacute;velopp&eacute;e par l&rsquo;association QUALITEL, association &agrave; but non lucratif qui a pour mission l&rsquo;am&eacute;lioration de la qualit&eacute; du logement.
+                                                                </span>
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="background:#FFFFFF; background-color:#FFFFFF; margin:0px auto; max-width:600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                           role="presentation" style="background:#FFFFFF; background-color:#FFFFFF; width:100%;">
+                        <tbody>
+                        <tr>
+                            <td style="direction:ltr; font-size:0px; padding:0px 16px 0px 16px; text-align:center;">
+                                <div class="mj-column-per-100 mj-outlook-group-fix"
+                                     style="font-size:0px; text-align:left; direction:ltr; display:inline-block; vertical-align:top; width:100%;">
+                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                           style="vertical-align:top;" width="100%">
+                                        <tbody>
+                                            <tr>
+                                                <td align="left"
+                                                    style="background:#f2f2f2; font-size:0px; padding:10px 25px; padding-top:0px; padding-bottom:0px; word-break:break-word;">
+                                                    <div style="font-family:Verdana, Helvetica, Arial, sans-serif; font-size:13px; letter-spacing:normal; line-height:1; text-align:left; color:#000000;">
+                                                        <p class="text-build-content"
+                                                           style="line-height:26px; text-align:center; margin:10px 0; margin-top:10px; margin-bottom:10px;">
+                                                            <span style="color:#000000; font-family:Arial, sans-serif; font-size:18px;">
+                                                                Pour constituer le Carnet d&rsquo;Information de votre Logement CL&Eacute;A, vous pouvez :
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left"
+                                                    style="background:#f2f2f2; font-size:0px; padding:0px 16px 0px 16px; padding-top:0px; padding-bottom:0px; word-break:break-word;">
+                                                    <div style="font-family:Verdana, Helvetica, Arial, sans-serif; font-size:13px; line-height:1; text-align:left; color:#000000;">
+                                                        <ul>
+                                                            <li style="line-height:26px;">
+                                                                <span style="color:#000000; font-family:Arial; font-size:16px;">
+                                                                    <b>ouvrir gratuitement un compte puis le compl&eacute;ter vous-m&ecirc;me</b> avec les informations de votre logement et de votre r&eacute;novation,&nbsp;
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" vertical-align="middle"
+                                                    style="background:#f2f2f2; font-size:0px; padding:10px 25px; word-break:break-word;">
+                                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                                           style="border-collapse:separate; line-height:100%;">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td align="center" bgcolor="#000000" role="presentation"
+                                                                style="border:none; border-radius:3px; cursor:auto; mso-padding-alt:10px 25px; background:#000000;"
+                                                                valign="middle">
+                                                                <a href="https://clea.qualitel.org/inscription/particulier"
+                                                                   style="display:inline-block; background:#000000; color:#ffffff; font-family:Verdana, Helvetica, Arial, sans-serif; font-size:16px; font-weight:normal; line-height:120%; margin:0; text-decoration:none; text-transform:none; padding:10px 25px; mso-padding-alt:0px; border-radius:3px;"
+                                                                   target="_blank">
+                                                                    <span style="color:#ffffff; font-family:Verdana, Helvetica, Arial, sans-serif; font-size:15px;">
+                                                                        + Cr&eacute;er mon carnet CL&Eacute;A
+                                                                    </span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left"
+                                                    style="background:#f2f2f2; font-size:0px; padding:0px 16px 0px 16px; padding-top:0px; padding-bottom:0px; word-break:break-word;">
+                                                    <div style="font-family:Verdana, Helvetica, Arial, sans-serif; font-size:13px; line-height:1; text-align:left; color:#000000;">
+                                                        <ul>
+                                                            <li style="line-height:26px;">
+                                                                <span style="color:#000000; font-family:Arial; font-size:16px;">
+                                                                    <b>choisir de b&eacute;n&eacute;ficier d&rsquo;un CL&Eacute;A renseign&eacute; avec les informations de votre dossier Ch&egrave;que &eacute;co-&eacute;nergie Normandie**</b> (adresse, audit, factures et, en cas de r&eacute;novation BBC, rapport des tests de fin de chantier), <b>au prix de 18 &euro; TTC</b> (co&ucirc;t fixe, sans abonnement).&nbsp;
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" vertical-align="middle"
+                                                    style="background:#f2f2f2; font-size:0px; padding:10px 25px; word-break:break-word;">
+                                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                                           style="border-collapse:separate; line-height:100%;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td align="center" bgcolor="#000000" role="presentation"
+                                                                    style="border:none; border-radius:3px; cursor:auto; mso-padding-alt:10px 25px; background:#000000;"
+                                                                    valign="middle">
+                                                                    <a href="{{ carnetInformationLogementEmailRedirect }}" data-toggle="modal"
+                                                                       style="display:inline-block; background:#000000; color:#ffffff; font-family:Verdana, Helvetica, Arial, sans-serif; font-size:16px; font-weight:normal; line-height:120%; margin:0; text-decoration:none; text-transform:none; padding:10px 25px; mso-padding-alt:0px; border-radius:3px;"
+                                                                       target="_blank">
+                                                                        <p style="display:inline-block; background:#000000; color:#ffffff; font-family:Verdana, Helvetica, Arial, sans-serif; font-size:16px; font-weight:normal; line-height:120%; margin:0; text-decoration:none; text-transform:none; padding:10px 25px; mso-padding-alt:0px; border-radius:3px;">
+                                                                            <span style="color:#ffffff; font-size:15px;">
+                                                                                + B&eacute;n&eacute;ficier d'un carnet CL&Eacute;A initialis&eacute; au prix de 18 &euro; HT
+                                                                            </span>
+                                                                        </p>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left"
+                                                    style="background:#f2f2f2; font-size:0px; padding:0px 35px 0px 35px; padding-top:0px; padding-bottom:0px; word-break:break-word;">
+                                                    <div style="font-family:Verdana, Helvetica, Arial, sans-serif; font-size:13px; letter-spacing:normal; line-height:1; text-align:left; color:#000000;">
+                                                        <p class="text-build-content" style="line-height:27px; margin:10px 0; margin-top:10px; margin-bottom:10px;">
+                                                            <span style="color:#000000; font-family:Arial, sans-serif;">
+                                                                Si vous choisissez la formule CL&Eacute;A initialis&eacute;, vous recevrez un lien de premi&egrave;re connexion vous invitant &agrave; personnaliser votre mot de passe et &agrave; acc&eacute;der &agrave; votre compte. Le lien de paiement vous sera envoy&eacute; les jours suivants par l&rsquo;Association QUALITEL.
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="background:#000000; background-color:#000000; margin:0px auto; max-width:600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                           role="presentation" style="background:#000000; background-color:#000000; width:100%;">
+                        <tbody>
+                            <tr>
+                                <td style="direction:ltr; font-size:0px; padding:32px 16px 32px 16px; text-align:center;">
+                                    <div class="mj-column-per-100 mj-outlook-group-fix"
+                                         style="font-size:0px; text-align:left; direction:ltr; display:inline-block; vertical-align:bottom; width:100%;">
+                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                               style="vertical-align:bottom;" width="100%">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="center" style="font-size:0px; padding:0px 16px 0px 16px; word-break:break-word;">
+                                                        <!-- Réseaux sociaux -->
+                                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none; display:inline-table;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td aria-hidden="true" style="padding:4px; vertical-align:middle;">
+                                                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#000000; border-radius:50%; width:30px;">
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <td style="padding:8px 0px 8px 0px; font-size:0; height:30px; vertical-align:middle; width:30px;">
+                                                                                    <a href="https://www.facebook.com/regionormandie" target="_blank">
+                                                                                        <img alt="Logo" height="30" src="https://static.mailjet.com/ico-social/facebook.png" style="border-radius:50%; display:block;" width="30" />
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                    <td style="vertical-align:middle; padding:4px 4px 4px 0;">
+                                                                        <a href="https://www.facebook.com/regionormandie" style="color:#333333; font-size:13px; font-family:Ubuntu, Helvetica, Arial, sans-serif; line-height:22px; text-decoration:none;" target="_blank">⠀</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <!-- Autres réseaux sociaux -->
+                                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none; display:inline-table;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td aria-hidden="true" style="padding:4px; vertical-align:middle;">
+                                                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#000000; border-radius:50%; width:30px;">
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <td style="padding:8px 0px 8px 0px; font-size:0; height:30px; vertical-align:middle; width:30px;">
+                                                                                    <a href="https://x.com/regionnormandie" target="_blank">
+                                                                                        <img alt="" height="30" src="https://static.mailjet.com/ico-social/twitter-x.png" style="border-radius:50%; display:block;" width="30" />
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                    <td style="vertical-align:middle; padding:4px 4px 4px 0;">
+                                                                        <a href="https://x.com/regionnormandie" style="color:#333333; font-size:13px; font-family:Ubuntu, Helvetica, Arial, sans-serif; line-height:22px; text-decoration:none;" target="_blank">⠀</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+
+                                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none; display:inline-table;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td aria-hidden="true" style="padding:4px; vertical-align:middle;">
+                                                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#000000; border-radius:50%; width:30px;">
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <td style="padding:8px 0px 8px 0px; font-size:0; height:30px; vertical-align:middle; width:30px;">
+                                                                                    <a href="https://www.instagram.com/regionnormandie/" target="_blank">
+                                                                                        <img alt="Logo" height="30" src="https://static.mailjet.com/ico-social/instagram.png" style="border-radius:50%; display:block;" width="30" />
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                    <td style="vertical-align:middle; padding:4px 4px 4px 0;">
+                                                                        <a href="https://www.instagram.com/regionnormandie/" style="color:#333333; font-size:13px; font-family:Ubuntu, Helvetica, Arial, sans-serif; line-height:22px; text-decoration:none;" target="_blank">⠀</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+
+                                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none; display:inline-table;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td aria-hidden="true" style="padding:4px; vertical-align:middle;">
+                                                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#000000; border-radius:50%; width:30px;">
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <td style="padding:8px 0px 8px 0px; font-size:0; height:30px; vertical-align:middle; width:30px;">
+                                                                                    <a href="https://www.youtube.com/channel/UC9s2CkAjMpC4AaJROJEFQzA" target="_blank">
+                                                                                        <img alt="Logo" height="30" src="https://static.mailjet.com/ico-social/youtube.png" style="border-radius:50%; display:block;" width="30" />
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                    <td style="vertical-align:middle; padding:4px 4px 4px 0;">
+                                                                        <a href="https://www.youtube.com/channel/UC9s2CkAjMpC4AaJROJEFQzA" style="color:#333333; font-size:13px; font-family:Ubuntu, Helvetica, Arial, sans-serif; line-height:22px; text-decoration:none;" target="_blank">⠀</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+
+                                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none; display:inline-table;">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td aria-hidden="true" style="padding:4px; vertical-align:middle;">
+                                                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#000000; border-radius:50%; width:30px;">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td style="padding:8px 0px 8px 0px; font-size:0; height:30px; vertical-align:middle; width:30px;">
+                                                                                    <a href="https://fr.linkedin.com/company/r%C3%A9gion-normandie" target="_blank">
+                                                                                        <img alt="" height="30" src="https://static.mailjet.com/ico-social/linkedin.png" style="border-radius:50%; display:block;" width="30" />
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="vertical-align:middle; padding:4px 4px 4px 0;">
+                                                                    <a href="https://fr.linkedin.com/company/r%C3%A9gion-normandie" style="color:#333333; font-size:13px; font-family:Ubuntu, Helvetica, Arial, sans-serif; line-height:22px; text-decoration:none;" target="_blank">⠀</a>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Mentions légales -->
+                                                <tr>
+                                                    <td align="left" style="font-size:0px; padding:10px 25px; padding-top:0px; padding-bottom:0px; word-break:break-word;">
+                                                        <div style="font-family:Verdana, Helvetica, Arial, sans-serif; font-size:13px; letter-spacing:normal; line-height:1; text-align:left; color:#000000;">
+                                                            <p class="text-build-content" style="margin:10px 0; margin-top:10px;">
+                                                                <span style="color:#ffffff; font-family:Arial, sans-serif; font-size:11px;">
+                                                                    * Cette proposition n&rsquo;a pas de caract&egrave;re obligatoire et d&rsquo;autres fournisseurs peuvent proposer ce type de support num&eacute;rique
+                                                                </span>
+                                                            </p>
+                                                            <p class="text-build-content" style="margin:10px 0;">
+                                                                <span style="color:#ffffff; font-family:Arial, sans-serif; font-size:11px;">
+                                                                    ** En optant pour la solution CL&Eacute;A renseign&eacute;e, vous consentez au transfert des donn&eacute;es n&eacute;cessaires et d&eacute;tenues par la R&eacute;gion &agrave; l&rsquo;association Qualitel qui deviendra ensuite Responsable de vos donn&eacute;es concernant le dispositif CL&Eacute;A (La R&eacute;gion restant Responsable des donn&eacute;es li&eacute;es &agrave; l&rsquo;attribution des ch&egrave;ques &eacute;co-&eacute;nergie).
+                                                                </span>
+                                                            </p>
+                                                            <p class="text-build-content" style="margin:10px 0; margin-bottom:10px;">
+                                                                <span style="color:#ffffff; font-family:Arial, sans-serif; font-size:11px;">
+                                                                    Pour toute question sur le traitement de vos donn&eacute;es dans ce dispositif, vous pouvez contacter le D&eacute;l&eacute;gu&eacute; &agrave; la Protection des Donn&eacute;es :
+                                                                </span>
+                                                                <a class="link-build-content" style="color:inherit; text-decoration:none;" href="mailto:dpo@normandie.fr">
+                                                                    <span style="color:#ffffff; font-family:Arial, sans-serif; font-size:11px;"><u>dpo@normandie.fr</u></span>
+                                                                </a>
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </body>
+    </html>
+{% endblock %}

@@ -1,0 +1,163 @@
+/*******************************************
+            G E N E R I Q U E
+*******************************************/
+.form-group {
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+
+fieldset legend {
+    border: 0;
+    color: #77b636;
+    width: inherit;
+    padding-top: 15px;
+}
+
+.legend-icon {
+    display: inline-block;
+    width: 18px;
+    height: 12px;
+    background: #8dccc4;
+    border-radius: 7px 0 7px 0;
+    -webkit-border-radius: 7px 0 7px 0;
+    -moz-border-radius: 7px 0 7px 0;
+}
+
+label {
+    text-align: right;
+}
+
+.row label {
+    font-size: 0.95em;
+}
+
+input[type=text], input[type=email] {
+    font-size: 12px;
+    height: 30px;
+    -webkit-appearance: none;
+    border: 1px solid #d9d9d9;
+    border-top: 1px solid #EEE;
+    /* border-radius: 2px; */
+    padding: 0 8px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+select option, textarea, .form-control {
+    font-size: 12px;
+}
+
+input {
+    outline: 0;
+}
+
+input:-moz-read-only {
+    background: repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -webkit-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -moz-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -ms-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -o-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+}
+input:read-only {
+    background: repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -webkit-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -moz-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -ms-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+    background: -o-repeating-linear-gradient(135deg, rgba(119,182,54,0.5) 1px, rgba(119,182,54,0.5) .10em, #fff calc(.15em + 1px), #fff .65em) !important;
+}
+
+.bloc-limit {
+    margin: 20px 0 0 0;
+    padding: 0;
+    height: 2px;
+    background: linear-gradient(to right, rgba(255,255,255,1) 0%,rgba(239,239,239,1) 50%,rgba(255,255,255,1) 100%);
+}
+
+
+
+/* Reset Select */
+/*
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    outline: 0;
+    box-shadow: none;
+    border: 0 !important;
+    background: #77b636;
+    background-image: none;
+}
+*/
+/* Custom Select */
+.custom-select {
+    /*
+    position: relative;
+    display: block;
+    width: 20em;
+    height: 3em;
+    */
+    line-height: 3;
+    /*
+    background: #77b636;
+    overflow: hidden;
+    */
+    border-radius: .25em;
+}
+/*
+select {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0 0 0 .5em;
+    color: #fff;
+    cursor: pointer;
+}
+*/
+select::-ms-expand {
+    display: none;
+}
+select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}
+/* Arrow */
+.custom-select::after {
+    content: '\25BC';
+    position: absolute;
+    top: 0;
+    right: 16px;
+    bottom: 0;
+    padding: 0 1em;
+    background: #77b636;
+    pointer-events: none;
+    color: #FFF;
+}
+/* Transition */
+.custom-select:hover::after {
+    color: #FFF;
+}
+.custom-select::after {
+    -webkit-transition: .25s all ease;
+    -o-transition: .25s all ease;
+    transition: .25s all ease;
+}
+select option {
+    padding: 5px;
+}
+
+
+
+ul.list_error, .wrapper_error > ul {
+    padding: 0;
+}
+ul.list_error li, .wrapper_error > ul li {
+    list-style-type: none;
+    color: red;
+    text-align: left;
+}
+ul.list_error li::before, .wrapper_error > ul li::before {
+    content: '\03a7';
+    margin-right: 5px;
+    font-weight: bold;
+}

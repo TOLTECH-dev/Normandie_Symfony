@@ -1,0 +1,29 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-form">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Date de commission pour le dossier n°{{ demande.id }}</legend>
+
+{{ form_start(form, {'attr': {'class': 'form-horizontal', 'id': 'form_assignDateCP'}}) }}
+
+{{ form_errors(form) }}
+
+<div class="form-group">
+    {{ form_label(form.dateCP, "Date de commission", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+    {{ form_errors(form.dateCP) }}
+
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        {{ form_widget(form.dateCP, {'attr': {'class': 'form-control'}}) }}
+    </div>
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-submit">
+    <div class="form-group">
+        {{ form_widget(form.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+    </div>
+</div>
+
+{{ form_rest(form) }}
+
+{{ form_end(form) }}
+
+    </fieldset>
+</div>

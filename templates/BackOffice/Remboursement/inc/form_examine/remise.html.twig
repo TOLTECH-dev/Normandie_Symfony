@@ -1,0 +1,25 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-remise">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Remise</legend>
+
+        <div class="form-group">
+            {{ form_label(formInstruction.dateCheque, "Date de réception du chèque", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(formInstruction.dateCheque) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(formInstruction.dateCheque, {'attr': {'class': 'form-control datepickerClass' }}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(formInstruction.numeroRemiseRSI, "N° remise RSI", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(formInstruction.numeroRemiseRSI) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(formInstruction.numeroRemiseRSI, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+</div>

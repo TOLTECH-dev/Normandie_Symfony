@@ -1,0 +1,69 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-document">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Vos Devis</legend>
+        {% set arrayDevisType = static_function('App\\Entity\\Demande_travaux_devis_upload', 'arrayDemandeTypeTravaux') %}
+        {% set arrayBonification = static_function('App\\Entity\\Demande_travaux_devis_upload', 'arrayBonification') %}
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Type de travaux</th>
+                    {% if 'demande_view' == app.request.attributes.get('_route') %}
+                        <th>Biosourc&eacute;</th>
+                    {% endif %}
+                    <th>Montant total TTC</th>
+                    {% if 'demande_view' == app.request.attributes.get('_route') %}
+                        <th>Entreprise RGE</th>
+                    {% endif %}
+                    {% if 'demande_view' == app.request.attributes.get('_route') %}
+                        <th>Bonification</th>
+                    {% endif %}
+                    <th>Devis</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in devis_upload %}
+                    <tr>
+                        <td>{{ (item.demandeTravauxDevisUploadType) ? arrayDevisType[item.demandeTravauxDevisUploadType] : '-' }}</td>
+                        {% if 'demande_view' == app.request.attributes.get('_route') %}
+                            <td class="text-left">
+                                {{ item.demandeTravauxDevisUploadBiosource ? item.demandeTravauxDevisUploadBiosource|split(' | ')[1]|replace({'_': ' '})|upper : '-' }}
+                            </td>
+                        {% endif %}
+                        <td>{{ item.demandeTravauxDevisUploadMontant|number_format(2, '.', ' ') }}&euro;</td>
+                        {% if 'demande_view' == app.request.attributes.get('_route') %}
+                            <td class="text-left">
+                                {{ item.demandeTravauxDevisUploadEntrepriseRGE ? item.demandeTravauxDevisUploadEntrepriseRGE|split(' | ')[1]|replace({'_': ' '})|upper : '-' }}
+                            </td>
+                            <td class="text-left">
+                                {{ item.demandeTravauxDevisUploadBonification ? arrayBonification[item.demandeTravauxDevisUploadBonification]|upper : '-' }}
+                            </td>
+                        {% endif %}
+                        <td>
+                            {% if item.demandeTravauxDevisUploadId and item.demandeTravauxDevisUploadDevisDocumentAlt %}
+                                <a href="{{ path(path_location, {'demandeId': item.demandeTravauxDevisUploadId, 'typeFile': 5, 'extension': item.demandeTravauxDevisUploadDevisDocumentUrl, 'typeDemande': 2}) }}" target="_blank">
+                                    Voir le document
+                                </a>
+                            {% else %}
+                                Aucun document t&eacute;l&eacute;charg&eacute;
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <th colspan="4" class="text-center">Aucun devis enregistr&eacute;.</th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Total Devis :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ devis.devisTotalDevis|number_format(2, '.', ' ') }}&euro;
+            </div>
+        </div>
+        
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

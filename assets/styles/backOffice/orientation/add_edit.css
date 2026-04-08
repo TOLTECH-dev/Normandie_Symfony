@@ -1,0 +1,51 @@
+/*******************************************
+            BLOC IDENTIFICATION
+*******************************************/
+#bloc-identification {
+
+}
+
+/*******************************************
+        BLOC STRUCTURE INFERIEUR
+*******************************************/
+#bloc-structureInferieur {
+}
+
+.box-add-structureInferieur {
+    text-align: right!important;
+}
+
+.box-delete-structureInferieur {
+    height: 1px;
+    margin-top: -36px;
+    position: absolute;
+    right: -30px;
+    text-align: right;
+    width: 30px;
+}
+
+/*******************************************
+        BLOC STRUCTURE SUPERIEUR
+*******************************************/
+#bloc-structureSuperieur {
+}
+
+.box-add-structureSuperieur {
+    text-align: right!important;
+}
+
+.box-delete-structureSuperieur {
+    height: 1px;
+    margin-top: -36px;
+    position: absolute;
+    right: -30px;
+    text-align: right;
+    width: 30px;
+}
+
+/*******************************************
+            BLOC EPCI
+*******************************************/
+#bloc-EPCI {
+
+}

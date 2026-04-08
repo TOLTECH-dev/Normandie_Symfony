@@ -1,0 +1,32 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_banque_view') }}
+{% endblock %}
+
+{% block contents %}
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 marginBottom40 hidden" id="content-wrapper">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="container-title">
+                <h2>Consulter une banque</h2>
+                <a href="{{ path('banque_edit', {'banqueId': banque.id}) }}"
+                   class="btn btn-warning btn-xs"
+                   role="button"
+                   id="button_position1"
+                   data-toggle="tooltip"
+                   data-placement="bottom"
+                   data-container="body"
+                   title="Modifier la Banque"
+                >
+                    <i class="glyphicon glyphicon-edit"></i>
+                </a>
+                {{ include('BackOffice/Banque/inc/back.html.twig') }}
+            </div>
+        </div>
+
+        {{ include('BackOffice/Banque/inc/view_banque/identification.html.twig') }}
+        {{ include('BackOffice/Banque/inc/view_banque/statut.html.twig') }}
+
+    </div>
+{% endblock %}

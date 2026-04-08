@@ -1,0 +1,28 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-addProduction">
+    <fieldset>
+        {{ form_start(form) }}
+
+        <input class="count_data" type="hidden" data-value="{{ count_data_json }}">
+        <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+            <div id="bloc-selectAll">
+                <input type="checkbox" value="" id="checkAll" />
+                <label for="checkAll">Tout cocher</label>
+            </div>
+
+            <hr>
+
+            <div id="bloc-selectMultiple">
+                {{ form_widget(form.type) }}
+                {{ form_widget(form.niveau) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc bloc-submit">
+            <div class="form-group">
+                {{ form_widget(form.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+            </div>
+        </div>
+
+        {{ form_end(form) }}
+    </fieldset>
+</div>

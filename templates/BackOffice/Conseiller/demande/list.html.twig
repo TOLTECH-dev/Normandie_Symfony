@@ -1,0 +1,28 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('frontOffice_demande_list') }}
+    {{ encore_entry_link_tags('frontOffice_demande_view_step') }}
+    {{ encore_entry_link_tags('frontOffice_common_menu') }}
+{% endblock %}
+
+{% block contents %}
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1" id="title-wrapper">
+        <div id="container-title">
+            <h2>Suivi des Demandes</h2>
+        </div>
+
+        {% set is_backoffice = true %}
+        {% set prefix_pathname = constant('App\\Utils\\DefaultServiceUtils::PREFIX_PATHNAME_ASSISTANT_BENEFICIAIRE') ~ '_' %}
+
+        {{ include('FrontOffice/Demande/inc/list_demande/content.html.twig') }}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('frontOffice_demande_listDemande_index') }}
+    {{ encore_entry_script_tags('coreList') }}
+{% endblock %}

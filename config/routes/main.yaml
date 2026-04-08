@@ -1,0 +1,88 @@
+backOffice:
+  resource: ./backOffice.yaml
+  prefix: /admin
+
+frontOffice:
+  resource: ./frontOffice.yaml
+  prefix: /member
+
+web_homepage:
+  path:     /
+  defaults: { _controller: App\Controller\HomePageController::index }
+
+user_login:
+  path: /login
+  defaults: { _controller: App\Security\SecurityController::loginUser }
+
+user_logout:
+  path:     /logout
+  methods: [GET]
+
+user_registration:
+  path: /registration
+  defaults: { _controller: App\Controller\RegistrationController::register }
+  methods: [GET,POST]
+
+user_registration_check_email:
+  path: /registration/check-email
+  defaults: { _controller: App\Controller\RegistrationController::checkEmail }
+  methods: [GET]
+
+user_registration_confirm:
+  path: /registration/confirm/{token}
+  defaults: { _controller: App\Controller\RegistrationController::confirm }
+  methods: [GET]
+
+user_register_confirmed:
+  path: /confirmed
+  defaults: { _controller: App\Controller\RegistrationController::registerConfirmed }
+
+user_resetting_request:
+  path: /resetting/request
+  defaults: { _controller: App\Controller\ResettingController::request }
+  methods: [GET]
+
+user_resetting_send_email:
+  path: /resetting/send-email
+  defaults: { _controller: App\Controller\ResettingController::sendEmail }
+  methods: [GET,POST]
+
+user_resetting_check_email:
+  path: /resetting/check-email
+  defaults: { _controller: App\Controller\ResettingController::checkEmail }
+  methods: [GET]
+
+user_resetting_reset:
+  path: /resetting/{token}
+  defaults: { _controller: App\Controller\ResettingController::reset }
+  methods: [GET,POST]
+
+franceconnect_callback:
+  path:     /franceconnect_callback
+  defaults: { _controller: App\Controller\FranceConnectController::callback }
+
+franceconnect_check:
+  path:     /franceconnect_check
+  defaults: { _controller: App\Controller\FranceConnectController::check }
+
+carnet_information_logement_view:
+  path: /carnet_information_logement/view/{token}
+  defaults: { _controller: App\Controller\CarnetInformationLogementController::view }
+  requirements:
+    token: \w{128}
+
+# Route pour ouvrir la modal depuis le mail
+carnet_information_logement_email_redirect:
+  path: /carnet_information_logement/email_redirect/{demandeId}/{token}
+  defaults: { _controller: App\Controller\CarnetInformationLogementController:emailRedirect }
+  requirements:
+    demandeId: \d+
+    token: \w{128}
+
+carnet_information_logement_confirm_creation:
+  path: /carnet_information_logement/confirm_creation/{demandeId}/{token}
+  defaults: { _controller: App\Controller\CarnetInformationLogementController::confirmCreation }
+  requirements:
+    demandeId: \d+
+    token: \w{128}
+

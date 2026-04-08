@@ -1,0 +1,79 @@
+/*******************************************
+            BLOC DOCUMENT
+*******************************************/
+#bloc-document {
+
+}
+
+/*******************************************
+            BLOC CONDITION
+*******************************************/
+#bloc-condition {
+
+}
+
+#bloc-condition input[type=checkbox] {
+    vertical-align: bottom;
+}
+#bloc-condition .checkboxstyle label {
+    line-height: 0;
+    margin-right: 10px;
+}
+
+
+/*******************************************
+            BLOC DECLARATION
+*******************************************/
+#bloc-declaration {
+
+}
+
+#bloc-declaration .checkboxstyle label {
+    display: block;
+    position: relative;
+    margin-top: -22px;
+    padding-left: 35px;
+    cursor: pointer;
+    text-align: left;
+    font-weight: inherit;
+}
+
+#bloc-declaration .checkboxstyle label::after {
+    content: "";
+}
+
+/*******************************************
+            BLOC REVENU
+*******************************************/
+#bloc-revenu {
+
+}
+
+/*******************************************
+            BLOC STRUCTURE
+*******************************************/
+#bloc-structure {
+
+}
+
+/*******************************************
+            BLOC AUDITEUR
+*******************************************/
+#bloc-auditeur {
+
+}
+
+/*******************************************
+            BLOC SIGNATURE
+*******************************************/
+#bloc-signature {
+
+}
+
+#bloc-signature input[type=checkbox] {
+    vertical-align: bottom;
+}
+#bloc-signature .checkboxstyle label {
+    line-height: 0;
+    margin-right: 10px;
+}

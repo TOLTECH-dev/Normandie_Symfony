@@ -1,0 +1,13 @@
+/*******************************************
+            BLOC TYPE AIDE
+*******************************************/
+#bloc-type-niveau {
+    font-weight: bold;
+    color: red;
+    text-align: center;
+}
+
+#bloc-type-niveau p {
+    margin: 0;
+    padding: 0;
+}

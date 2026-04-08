@@ -1,0 +1,46 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-ECS">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;ECS</legend>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(formFicheTechnique.ficheTechnique_initial.ECSEnergie, "Energie", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_initial.ECSEnergie) }}
+            </div>
+            <div class="flex1 bloc-selectMultiple {{ classCheckboxMultiple }}">
+                {{ form_widget(formFicheTechnique.ficheTechnique_initial.ECSEnergie, {'attr': attrCheckboxMultiple}) }}
+            </div>
+            <div class="flex2 bloc-selectMultiple {{ classCheckboxMultiple }}">
+                {{ form_widget(formFicheTechnique.ficheTechnique_BBC.ECSEnergie, {'attr': attrCheckboxMultiple}) }}
+            </div>
+            <div class="flex3 bloc-selectMultiple isReadonly">
+                {{ form_widget(formFicheTechnique.ficheTechnique_prescription.ECSEnergie, {'attr': {'class': 'isReadonly', 'readonly': true}}) }}
+            </div>
+            <div class="flex4 bloc-selectMultiple">
+                {{ form_widget(formFicheTechnique.ficheTechnique_finChantier.ECSEnergie) }}
+            </div>
+        </div>
+
+        <div class="flex-wrapper">
+            <div class="flex0">
+                {{ form_label(formFicheTechnique.ficheTechnique_initial.ECSEquipement, "Equipement", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-12 col-lg-12 control-label'}}) }}
+                {{ form_errors(formFicheTechnique.ficheTechnique_initial.ECSEquipement) }}
+            </div>
+            <div class="flex1">
+                {{ form_widget(formFicheTechnique.ficheTechnique_initial.ECSEquipement, {'attr': attrDefault}) }}
+            </div>
+            <div class="flex2">
+                {{ form_widget(formFicheTechnique.ficheTechnique_BBC.ECSEquipement, {'attr': attrDefault}) }}
+            </div>
+            <div class="flex3">
+                {{ form_widget(formFicheTechnique.ficheTechnique_prescription.ECSEquipement, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+            </div>
+            <div class="flex4">
+                {{ form_widget(formFicheTechnique.ficheTechnique_finChantier.ECSEquipement, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

@@ -1,0 +1,98 @@
+{% extends "BackOffice/layout_core.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_admin_list') }}
+{% endblock %}
+
+{% block contents %}
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom40">
+            <div id="container-title">
+                <h2>Liste des Utilisateurs</h2>
+            </div>
+        </div>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom10">
+                <p class="text-center">
+                    <a href="{{ path('admin_add') }}"
+                       class="btn btn-primary btn-xs"
+                       role="button"
+                       data-toggle="tooltip"
+                       data-placement="bottom"
+                       data-container="body"
+                       title="Cr&eacute;er un nouvel Utilisateur"
+                    >
+                        <i class="glyphicon glyphicon-plus"></i> <span class="bold">Cr&eacute;er un Utilisateur</span>
+                    </a>
+                </p>
+            </div>
+        {% endif %}
+
+        <table cellspacing="0" id="table_list_user" class="table table-striped table-bordered small_table">
+            <thead>
+            <tr>
+                <th class="col0 col_id with_search header" data-fieldCode="id">N°</th>
+                <th class="col1 col_username with_search header" data-fieldCode="username">Login</th>
+                <th class="col3 col_firstname with_search header" data-fieldCode="firstname">Pr&eacute;nom</th>
+                <th class="col2 col_lastname with_search header" data-fieldCode="lastname">Nom</th>
+                <th class="col4 col_email with_search header" data-fieldCode="email">Email</th>
+                <th class="col5 col_enabled with_select header" data-fieldCode="enabled">Etat</th>
+                <th class="col6 col_profil with_select header" data-fieldCode="roles">Profil</th>
+                <th class="col7 col_last_login with_search header" data-fieldCode="lastLogin">Date de derni&egrave;re connexion</th>
+                <th class="col8 col_action header" data-fieldCode="action">Actions</th>
+            </tr>
+            </thead>
+            {% if recordsTotal is not empty %}
+                <tfoot>
+                <tr id="filterrow">
+                    <th class="with_search">N&deg;</th>
+                    <th class="with_search">Login</th>
+                    <th class="with_search">Pr&eacute;nom</th>
+                    <th class="with_search">Nom</th>
+                    <th class="with_search">Email</th>
+                    <th class="with_select">Etat</th>
+                    <th class="with_select">Profil</th>
+                    <th class="with_search">Date de derni&egrave;re connexion</th>
+                    <th class="text-center">
+                        <button type="button"
+                                role="button"
+                                class="btn btn-danger btn-xs"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-container="body"
+                                title="Vider les champs de recherche"
+                                id="clear_search_input"
+                        >
+                            <i class="glyphicon glyphicon-erase"></i>
+                        </button>
+                    </th>
+                </tr>
+                </tfoot>
+            {% endif %}
+
+            <tbody>
+            <div id="js-options" class="hidden"
+                 data-array-select-options="{{ arraySelectOptions|json_encode|e('html_attr') }}"
+            ></div>
+            <div id="js-roles" class="hidden"
+                 data-is-admin="{% if is_granted('ROLE_ADMIN') %}1{% else %}0{% endif %}"
+                 data-roles="{{ constant('ROLES_LABEL', user)|json_encode|e('html_attr') }}"
+            >
+            </div>
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_admin_index') }}
+{#    {{ encore_entry_script_tags('coreList') }}#}
+{#    {{ encore_entry_script_tags('backOffice_core_list_jquery_datatable') }}#}
+{#    {{ encore_entry_script_tags('backOffice_core_list_bootstrap_datatable') }}#}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ asset('js/fos_js_routes.json') }}"></script>
+{% endblock %}

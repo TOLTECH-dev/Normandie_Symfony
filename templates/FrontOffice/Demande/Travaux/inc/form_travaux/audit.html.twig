@@ -1,0 +1,112 @@
+{% set typeBeneficiaire = beneficiaire.type|split(' | ') %}
+{% if '0' == typeBeneficiaire[0] %}
+    {% set textePieceComplementaire = 'Pièce complémentaire' %}
+    {% set texteInfoBulle = constant('INFO_BULLE_HTML_PIECE_COMPLEMENTAIRE_PARTICULIER', travaux) %}
+{% elseif '1' == typeBeneficiaire[0] %}
+    {% set textePieceComplementaire = 'Statut de la SCI' %}
+    {% set texteInfoBulle = constant('INFO_BULLE_HTML_PIECE_COMPLEMENTAIRE_SCI', travaux) %}
+{% endif %}
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-audit">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Votre Maison</legend>
+
+        <div class="form-group">
+            {{ form_label(form.demande_travaux.audit, "Avez-vous précédemment bénéficié d'un Chèque Audit Région Normandie?", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-7 col-lg-7 control-label'}}) }}
+            {{ form_errors(form.demande_travaux.audit) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                {{ form_widget(form.demande_travaux.audit, {'attr': {'class': 'checkboxstyle'}}) }}
+            </div>
+        </div>
+
+
+
+        <ul id="custom-control_justificatifPropriete" class="list_error"></ul>
+        {{ form_errors(form.demande_travaux.justificatifPropriete) }}
+        <div class="form-group">
+            {{ form_label(form.demande_travaux.justificatifPropriete, "Justificatif de propriété:", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-7 col-lg-7 control-label'}}) }}
+
+            <div class="document-tip">
+                <a role="button"
+                   tabindex="0"
+                   data-container="body"
+                   data-toggle="popover"
+                   data-trigger="focus"
+                   data-placement="top"
+                   data-content="{{ constant('INFO_BULLE_HTML_JUSTIFICATIF_DE_PROPRIETE', travaux) }}"
+                >
+                    <i class="glyphicon glyphicon-question-sign"></i>
+                </a>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                {{ form_widget(form.demande_travaux.justificatifPropriete) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xs-offset-0 col-sm-offset-0 col-md-offset-7 col-lg-offset-7">
+            {% if travaux.demande_travaux and travaux.demande_travaux.justificatifProprieteAlt %}
+            <p>
+                <a href="{{ path(path_location, {'demandeId': travaux.demande_travaux.id, 'typeFile': 0, 'extension': travaux.demande_travaux.justificatifProprieteUrl, 'typeDemande': 1}) }}" target="_blank">
+                    Voir le document
+                </a>
+            </p>
+            {% else %}
+                {% if auditE and auditE.demande_auditEnergie and auditE.demande_auditEnergie.justificatifProprieteAlt %}
+                <p>
+                    <a href="{{ path(path_location, {'demandeId': auditE.demande_auditEnergie.id, 'typeFile': 0, 'extension': auditE.demande_auditEnergie.justificatifProprieteUrl, 'typeDemande': 0}) }}" target="_blank">
+                        Voir le document
+                    </a>
+                </p>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <ul id="custom-control_pieceComplement" class="list_error"></ul>
+        {{ form_errors(form.demande_travaux.pieceComplement) }}
+        <div class="form-group">
+            {{ form_label(form.demande_travaux.pieceComplement, textePieceComplementaire ~ ":", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-7 col-lg-7 control-label'}}) }}
+
+            <div class="document-tip">
+                <a role="button"
+                   tabindex="0"
+                   data-container="body"
+                   data-toggle="popover"
+                   data-trigger="focus"
+                   data-placement="top"
+                   data-content="
+                        {{ texteInfoBulle }}
+                    "
+                >
+                    <i class="glyphicon glyphicon-question-sign"></i>
+                </a>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                {{ form_widget(form.demande_travaux.pieceComplement) }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xs-offset-0 col-sm-offset-0 col-md-offset-7 col-lg-offset-7">
+            {% if travaux.demande_travaux and travaux.demande_travaux.pieceComplementAlt %}
+            <p>
+                <a href="{{ path(path_location, {'demandeId': travaux.demande_travaux.id, 'typeFile': 1, 'extension': travaux.demande_travaux.pieceComplementUrl, 'typeDemande': 1}) }}" target="_blank">
+                    Voir le document
+                </a>
+            </p>
+            {% else %}
+                {% if auditE and auditE.demande_auditEnergie and auditE.demande_auditEnergie.pieceComplementAlt %}
+                <p>
+                    <a href="{{ path(path_location, {'demandeId': auditE.demande_auditEnergie.id, 'typeFile': 1, 'extension': auditE.demande_auditEnergie.pieceComplementUrl, 'typeDemande': 0}) }}" target="_blank">
+                        Voir le document
+                    </a>
+                </p>
+                {% endif %}
+            {% endif %}
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

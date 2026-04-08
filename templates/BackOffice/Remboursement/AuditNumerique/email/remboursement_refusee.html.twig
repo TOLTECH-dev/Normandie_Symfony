@@ -1,0 +1,6 @@
+{% extends 'BackOffice/Remboursement/email/base.html.twig' %}
+
+{% block content %}
+    <p>Votre dossier de remboursement de votre <i>&quot;Ch&egrave;que &eacute;co-&eacute;nergie Normandie / {{ demandeTypeLabel }}&quot;</i> a &eacute;t&eacute; refus&eacute; pour le motif suivant :</p>
+    <p>{{ remboursementMotifRefus }}</p>
+{% endblock content %}

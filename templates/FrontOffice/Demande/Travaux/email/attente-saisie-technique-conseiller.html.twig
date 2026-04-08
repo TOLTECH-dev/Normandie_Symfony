@@ -1,0 +1,7 @@
+{% extends 'FrontOffice/Demande/email/base.html.twig' %}
+
+{% block content %}
+    <p>
+        Afin de compl&eacute;ter la demande d'aide Travaux de {{ civilite|capitalize }} {{ beneficiairePrenom|capitalize }} {{ beneficiaireNom|upper }} correspondant au dossier n&deg;{{ demandeId }}, nous vous demandons de bien vouloir compl&eacute;ter ou valider la fiche technique sur la plateforme <i>&quot;Ch&egrave;que &eacute;co-&eacute;nergie&quot;</i>.
+    </p>
+{% endblock content %}

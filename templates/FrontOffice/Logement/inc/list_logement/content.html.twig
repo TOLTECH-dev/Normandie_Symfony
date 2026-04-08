@@ -1,0 +1,164 @@
+<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        {% if list_logement is not empty %}
+            {% for item in list_logement %}
+
+                {% set currentDataForDemandeActionByLogement = dataForDemandeActionByLogement[item.id] is defined and dataForDemandeActionByLogement[item.id] is not empty ? dataForDemandeActionByLogement[item.id] : [] %}
+                
+                {% if is_backoffice is defined and is_backoffice is not empty  %}
+                    {% set path_logement_view  = path(prefix_pathname ~ 'logement_view', {'beneficiaireId': beneficiaireId, 'logementId': item.id}) %}
+                {% else %}
+                    {% set path_logement_view = path(prefix_pathname ~ 'logement_view', {'logementId': item.id}) %}
+                {% endif %}
+
+                {% if loop.first %}
+                    <div class="row-logement">
+                    <div class="item-logement">
+                        <a href="{{ path(prefix_pathname ~ 'logement_add', {'beneficiaireId': beneficiaireId}) }}" class="no-underline" id="button_addLogement1">
+                            <img src="{{ asset('build/images/frontOffice/logement/maison_plus.svg') }}" alt="Ajouter un logement" />
+
+                            <div class="box-label-logement">
+                                <p class="label-logement bold"></p>
+                            </div>
+                        </a>
+                        <div></div>
+                    </div>
+                {% endif %}
+
+                <div class="item-logement">
+                    <img src="{{ asset('build/images/frontOffice/logement/maison_simple.svg') }}" alt="Ajouter un logement" />
+
+                    <div class="action-logement">
+                        <a href="{{ path_logement_view }}"
+                           class="btn btn-primary btn-sm"
+                           role="button"
+                           data-toggle="tooltip"
+                           data-placement="bottom"
+                           data-container="body"
+                           title="Consulter le logement"
+                        >
+                            <i class="glyphicon glyphicon-search"></i>
+                        </a>
+                    </div>
+
+                    <div class="box-label-logement">
+                        <p class="label-logement bold">{{ item.nom|capitalize }}</p>
+                    </div>
+
+                    {% if isShowDemandeCreateAction is not empty %}
+
+                        {% if true == currentDataForDemandeActionByLogement['logementStatutIsEligible'] %}
+
+                            <p class="label-demande bold">
+                                <span>
+                                    <a role="button"
+                                       class="btn btn-primary btn-sm"
+                                       tabindex="0"
+                                       data-container="body"
+                                       data-toggle="popover"
+                                       data-trigger="focus"
+                                       data-placement="top"
+                                       data-content="
+                                            {# Audit énergie Région Normandie / Numérique #}
+                                            {% if true == currentDataForDemandeActionByLogement['demandeAuditERegionExistanteIsMsg'] %}
+                                                <p>Vous avez déjà fait une demande &laquo;Audit énergétique Région Normandie&raquo;.</p>
+
+                                                {# LE LIEN VERS CREATION AUDIT NUMERIQUE EST RETIRE TEMPORAIREMENT #}
+                                                {#    {% if nombreDemandeAuditN > 0 %}#}
+                                                {#        <p>Vous avez déjà fait une demande &laquo;Audit Numérique&raquo;.</p>#}
+                                                {#    {% else %}#}
+                                                {#        <p><a href='{{ path('demande_auditNumerique_add', {'beneficiaireId': item.beneficiaireId, 'logementId': item.id}) }}' class='no-underline'>Déposer une demande &laquo;Audit Numérique&raquo;</a></p>#}
+                                                {#    {% endif %}#}
+                                            {% else %}
+                                                {% if true == currentDataForDemandeActionByLogement['demandeAuditERegionIsAddAction'] %}
+                                                    <p><a href='{{ path(prefix_pathname ~ 'demande_auditEnergie_add', {'beneficiaireId': item.beneficiaireId, 'logementId': item.id, 'type': constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE')}) }}' class='no-underline'>Déposer une demande &laquo;Audit énergétique Région Normandie&raquo;</a></p>
+                                                {% else %}
+                                                    {% if true == currentDataForDemandeActionByLogement['demandeAuditERegionDemandeAuditEEnCoursIsMsg'] %}
+                                                        <p>Impossibilité de déposer une demande d'aide &laquo;Audit énergétique Région Normandie&raquo; (car demande &laquo;Audit énergétique et scénarios&raquo; en cours)</p>
+                                                    {% elseif true == currentDataForDemandeActionByLogement['demandeAuditERegionDemandeTravauxEnCoursIsMsg'] %}
+                                                        <p>Impossibilité de déposer une demande d'aide &laquo;Audit énergétique Région Normandie&raquo; (car demande &laquo;Travaux&raquo; en cours)</p>
+                                                    {% endif %}
+                                                {% endif %}
+                                                {# TEXTE CREATION AUDIT NUMERIQUE EST RETIRE TEMPORAIREMENT #}
+                                                {#        <p>&laquo;Audit Numérique&raquo;: Vous devez faire une demande &laquo;Audit énergétique et scénarios&raquo; avant.</p>#}
+                                            {% endif %}
+
+                                            {# Mise à jour Audit énergétique et scénarios / Audit énergétique et scénarios #}
+                                            {% if true == currentDataForDemandeActionByLogement['demandeMiseAJourAuditEIsAddAction'] %}
+                                                <p><a href='{{ path(prefix_pathname ~ 'demande_auditNumerique_add', {'beneficiaireId': item.beneficiaireId, 'logementId': item.id, 'type': constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE')}) }}' class='no-underline'>Déposer une demande &laquo;Mise à jour Audit énergétique et scénarios&raquo;</a></p>
+                                            {% elseif true == currentDataForDemandeActionByLogement['demandeMiseAJourAuditEExistanteIsMsg'] %}
+                                                <p>Vous avez d&eacute;j&agrave; fait une demande &laquo;Mise à jour Audit &eacute;nerg&eacute;tique et sc&eacute;narios&raquo;.</p>
+                                            {% endif %}
+
+                                            {# Demande Travaux #}
+                                            {% if true == currentDataForDemandeActionByLogement['demandeTravauxExistanteIsMsg'] %}
+                                                <p>Vous avez d&eacute;j&agrave; fait une Demande de &laquo;Travaux&raquo;.</p>
+                                            {% else %}
+                                                {% if true == currentDataForDemandeActionByLogement['demandeTravauxIsAddAction'] %}
+                                                    <p><a href='{{ path(prefix_pathname ~ 'demande_travaux_add', {'beneficiaireId': item.beneficiaireId, 'logementId': item.id}) }}' class='no-underline'>D&eacute;poser une demande &laquo;Travaux&raquo;</a></p>
+                                                {% elseif (true == currentDataForDemandeActionByLogement['demandeTravauxDemandeAuditEAttenteDateRemboursementIsMsg']) %}
+                                                    <p>Vous ne pourrez d&eacute;poser une demande d'aide &laquo;Travaux&raquo; que lorsque votre demande d'aide &laquo;Audit&raquo; sera valid&eacute;e par la R&eacute;gion.</p>
+                                                {% endif %}
+                                            {% endif %}
+                                       "
+                                    >
+                                        <i class="glyphicon glyphicon-play"></i>&nbsp;Effectuer une demande de ch&egrave;que &eacute;co-&eacute;nergie
+                                    </a>
+                                </span>
+                            </p>
+                        {% elseif true == currentDataForDemandeActionByLogement['logementStatutIsRefuse'] %}
+                            <div class="box-label-logement">
+                                <p class="label-logement bold">{{ item.nom|capitalize }}</p>
+                            </div>
+
+                            <p class="label-demande bold">
+                                <span>
+                                    <a role="button"
+                                       class="btn btn-danger btn-sm"
+                                       tabindex="0"
+                                       data-container="body"
+                                       data-toggle="popover"
+                                       data-trigger="focus"
+                                       data-placement="top"
+                                       data-content="
+                                            <p>Votre demande n'est pas &eacute;ligible au dispositif pour la raison suivante :</p>
+                                             <ul>
+                                            {% for constantMotif in item.motif %}
+                                                {% if logementServiceData['motifList'][constantMotif] is defined %}
+                                                <li>{{ logementServiceData['motifList'][constantMotif] }}</li>
+                                                {% endif %}
+                                            {% endfor %}
+                                            </ul>
+                                            "
+                                    >
+                                        <i class="glyphicon glyphicon-alert"></i>&nbsp;Logement non &eacute;ligible
+                                    </a>
+                                </span>
+                            </p>
+                        {% endif %}
+
+                        {#             fin affichage bouton create demande              #}
+                    {% endif %}
+                    {#                        fin div item-logement #}
+                </div>
+
+                {% if loop.last %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="item-logement">
+                <a href="{{ path(prefix_pathname ~ 'logement_add', {'beneficiaireId': beneficiaireId}) }}" class="no-underline" id="button_addLogement2">
+                    <img src="{{ asset('build/images/frontOffice/logement/maison_plus.svg') }}" alt="Ajouter un logement" />
+
+                    <div class="box-label-logement">
+                        <p class="label-logement bold"></p>
+                    </div>
+                </a>
+                <div></div>
+            </div>
+        {% endif %}
+    </div>
+
+</div>

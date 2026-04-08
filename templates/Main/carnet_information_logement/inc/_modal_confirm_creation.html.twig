@@ -1,0 +1,24 @@
+<!-- Modal -->
+<div class="modal fade modalBackdrop" id="popupCarnetInformationLogementConfirmCreation" tabindex="-1" role="dialog" aria-labelledby="carnetInformationLogementModalLabel" data-backdrop="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center">Veuillez confirmer la cr&eacute;ation du Carnet d'information CL&Eacute;A</h4>
+            </div>
+            <div class="modal-body">
+
+                <form action="{{ path('carnet_information_logement_confirm_creation', {'demandeId': demandeId, token: token}) }}" method="post">
+                    <p class="text-center">&Ecirc;tes-vous certain de vouloir cr&eacute;er le Carnet d'information CL&Eacute;A ?</p>
+                    <div class="bloc-submit">
+                        <input type="submit" value="Valider" class="btn btn-success text-center" />
+                        <button type="button" class="btn btn-secondary marginLeft10 redirect-home" data-dismiss="modal">Annuler</button>
+                    </div>
+{#                    <input type="hidden" name="token" value="{{ token }}">#}
+                    {{ form_rest(formConfirmCarnetInformationLogementCreation) }}
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

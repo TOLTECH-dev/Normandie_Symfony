@@ -1,0 +1,21 @@
+.col0 { }
+.col1 { }
+.col2 { width: 40px; }
+.col3 { width: 40px; }
+.col4 { width: 50px; }
+.col5 { width: 40px; }
+.col6 { width: 45px; }
+.col7 { width: 45px; }
+.col_action { width:60px !important; }
+
+tr[id="filterrow"] th input, tr[id="filterrow"] th select {
+    width: 100%;
+    font-size: 11px;
+    height: 30px;
+}
+
+tfoot {
+    display: table-header-group;
+}
+
+.dataTables_filter { display: none; }

@@ -1,0 +1,15 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-form">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Date RMH pour le remboursement du dossier n&deg;{{ remboursement.demandeId }}</legend>
+
+        <div class="form-group">
+            {{ form_label(form.dateRMH, "Date de RMH à positionner", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form.dateRMH) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form.dateRMH, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+    </fieldset>
+</div>

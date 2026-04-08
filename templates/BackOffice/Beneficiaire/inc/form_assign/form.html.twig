@@ -1,0 +1,41 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc bloc-structureRattachement">
+    <fieldset>
+
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+        {{ form_errors(form) }}
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            {{ form_label(form.structure_rattachement_id, "Structure de rattachement", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form.structure_rattachement_id) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form.structure_rattachement_id, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="hidden col-xs-12 col-sm-12 col-md-12 col-lg-12" id="bloc-conseillerDisplay">
+            <label class="col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label" for="nomConseillerBeneficiaire">Nom conseiller de rattachement</label>
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                <select id="nomConseillerBeneficiaire" class="form-control">
+
+                </select>
+            </div>
+        </div>
+
+        {{ form_row(form.conseiller_rattachement_id) }}
+        {{ form_row(form.beneficiaire_id) }}
+        {{ form_widget(form.nbPersFoyer) }}
+        {{ form_widget(form.revenuFiscalRef) }}
+        {{ form_widget(form.INSEE) }}
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc bloc-submit">
+            <div>
+                {{ form_widget(form.valider, {'attr': {'class': 'col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xs-offset-0 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 btn btn-success'}}) }}
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+
+    </fieldset>
+</div>

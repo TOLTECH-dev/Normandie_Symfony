@@ -1,0 +1,36 @@
+<table cellpadding="0" cellspacing="0" align="left" border="0" style="margin-left: 90px;">
+    <tr>
+        <td><div class="legend-icon">&nbsp;</div></td>
+        <td class="title2">&nbsp;Notation par {{ textFrom }}</td>
+    </tr>
+</table>
+
+<br>
+
+<div class="textBold" style="text-align: center;">
+    {% set scoreRating = score.countMauvais + score.countMoyen + score.countParfait %}
+    {{ textTo }} a re&ccedil;u {{ scoreRating }} notations.
+</div>
+
+<br>
+
+<table cellpadding="0" cellspacing="5" align="left" border="0" style="margin-left: 90px;">
+    <tr>
+        <td><div class="circle circleScoreParfait"></div></td>
+        <td class="scoreParfait">Bon</td>
+        <td style="width: 50px;">&nbsp;</td>
+        <td><div class="countScoreParfait">&nbsp;<span>{{ score.countParfait }} ({{ score.percentParfait }}%)</span></div></td>
+    </tr>
+    <tr>
+        <td><div class="circle circleScoreMoyen"></div></td>
+        <td class="scoreMoyen">Moyen</td>
+        <td style="width: 50px;">&nbsp;</td>
+        <td><div class="countScoreMoyen">&nbsp;<span>{{ score.countMoyen }} ({{ score.percentMoyen }}%)</span></div></td>
+    </tr>
+    <tr>
+        <td><div class="circle circleScoreMauvais"></div></td>
+        <td class="scoreMauvais">Mauvais</td>
+        <td style="width: 50px;">&nbsp;</td>
+        <td><div class="countScoreMauvais">&nbsp;<span>{{ score.countMauvais }} ({{ score.percentMauvais }}%)</span></div></td>
+    </tr>
+</table>

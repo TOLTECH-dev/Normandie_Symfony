@@ -1,0 +1,44 @@
+{% extends "Main/layout_core.html.twig" %}
+
+{% block content %}
+    {{ include('Main/carnet_information_logement/inc/_modal_confirm_creation.html.twig') }}
+
+    <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', function() {
+        var modal = $('#popupCarnetInformationLogementConfirmCreation');
+        var redirectOnClose = true;
+
+        // — 1) Ouvrir automatiquement la modal —
+        if (typeof $ !== 'undefined') {
+          modal.modal('show');
+        }
+
+        // — 2) Si on clique Annuler
+        var cancelBtn = document.querySelector('#popupCarnetInformationLogementConfirmCreation .redirect-home');
+        if (cancelBtn) {
+          cancelBtn.addEventListener('click', function () {
+            redirectOnClose = true; // explicite
+          });
+        }
+
+        // — 3) Si le formulaire est soumis (clic sur Valider), on désactive la redirection auto —
+        var submitBtn = document.querySelector('#popupCarnetInformationLogementConfirmCreation form');
+        if (submitBtn) {
+          submitBtn.addEventListener('submit', function () {
+            redirectOnClose = false; // laisser Symfony rediriger sur sa propre action
+          });
+        }
+
+        // — 4) Lorsque la modal commence à se fermer (peu importe par quoi) —
+        modal.on('hide.bs.modal', function () {
+          // Si on a validé le formulaire, on laisse la redirection normale
+          if (redirectOnClose) {
+            modal.one('hidden.bs.modal', function () {
+              window.location.href = '{{ path("web_homepage") }}';
+            });
+          }
+        });
+      });
+    </script>
+{% endblock %}
+

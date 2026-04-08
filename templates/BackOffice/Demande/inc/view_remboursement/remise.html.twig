@@ -1,0 +1,22 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-remise">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Remise</legend>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Date de r&eacute;ception du ch&egrave;que :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ remboursementInstruction and remboursementInstruction.dateCheque ? remboursementInstruction.dateCheque|date('d/m/Y') : '-' }}
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">N&deg; remise RSI :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {{ remboursementInstruction and remboursementInstruction.numeroRemiseRSI ? remboursementInstruction.numeroRemiseRSI : '-' }}
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>
