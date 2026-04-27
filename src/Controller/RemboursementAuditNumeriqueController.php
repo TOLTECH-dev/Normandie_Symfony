@@ -532,7 +532,7 @@ class RemboursementAuditNumeriqueController extends AbstractController
     /**
      * Add depot audit numérique
      */
-    #[Security("is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_AUDITEUR') or is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
     public function addDepot(Request $request, int $demandeId): RedirectResponse|Response
     {
 

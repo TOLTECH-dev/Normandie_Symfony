@@ -248,6 +248,10 @@ services:
         arguments:
             $productionTravauxNiveauBBC2: '%production_travauxNiveau_BBC2%'
 
+    App\Command\ResendCleaEmailCommand:
+        arguments:
+            $productionTravauxNiveauBBC2: '%production_travauxNiveau_BBC2%'
+
     App\Command\UpdateFicheTechniqueSurfaceHabitableCommand:
         arguments:
             $loggerUpdateFicheTechnique: '@monolog.logger.command_update_fiche_technique'

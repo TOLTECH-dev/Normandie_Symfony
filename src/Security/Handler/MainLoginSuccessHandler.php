@@ -3,6 +3,7 @@
 namespace App\Security\Handler;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
@@ -13,14 +14,17 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
 class MainLoginSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     protected RouterInterface $router;
+    protected EntityManagerInterface $em;
 
     /**
      * LoginSuccessHandler constructor.
      * @param Router $router
+     * @param EntityManagerInterface $em
      */
-    public function __construct(RouterInterface $router)
+    public function __construct(RouterInterface $router, EntityManagerInterface $em)
     {
         $this->router = $router;
+        $this->em = $em;
     }
 
     /**
@@ -39,6 +43,12 @@ class MainLoginSuccessHandler implements AuthenticationSuccessHandlerInterface
          * @var User|null $user
          */
         $user = $token->getUser();
+
+        if ($user instanceof User) {
+            $user->setLastLogin(new \DateTime());
+            $this->em->persist($user);
+            $this->em->flush();
+        }
 
         if (
             in_array('ROLE_CONSEILLER', $roles, true) ||

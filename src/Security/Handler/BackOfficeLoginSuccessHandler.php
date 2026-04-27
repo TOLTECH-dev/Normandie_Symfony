@@ -55,6 +55,7 @@ class BackOfficeLoginSuccessHandler implements AuthenticationSuccessHandlerInter
         if ($user instanceof User) {
             // Au départ countFailedConnection peut être null
             $user->setCountFailedConnection(0);
+            $user->setLastLogin(new \DateTime());
             $this->em->persist($user);
             $this->em->flush();
         }
