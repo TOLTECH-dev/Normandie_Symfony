@@ -6,6 +6,7 @@
 parameters:
     locale: 'fr'
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
+    captcha_enabled: true
 
     app_root_dossier_data_symfony: '%env(APP_ROOT_DOSSIER_DATA_SYMFONY)%'
     app_as400_folder_in: '%env(APP_AS400_FOLDER_IN)%'
@@ -255,6 +256,10 @@ services:
     App\Command\UpdateFicheTechniqueSurfaceHabitableCommand:
         arguments:
             $loggerUpdateFicheTechnique: '@monolog.logger.command_update_fiche_technique'
+
+    App\Command\ExportDemandeCommand:
+        arguments:
+            $loggerExportDemande: '@monolog.logger.command_export_demande'
 
     App\EventListener\ExceptionListener:
 #        arguments:

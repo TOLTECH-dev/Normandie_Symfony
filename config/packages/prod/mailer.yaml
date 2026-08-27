@@ -1,0 +1,9 @@
+framework:
+    mailer:
+        # Adresse mise systématiquement en copie cachée sur TOUS les mails sortants.
+        # Permet d'archiver/vérifier les envois (diagnostic des plaintes de non-réception).
+        # L'adresse est définie via la variable MAILER_BCC dans .env.prod.local.
+        
+        # bcc retiré : plus d'archivage automatique des envois sortants
+        #headers:
+        #    bcc: '%env(MAILER_BCC)%'

@@ -13,6 +13,7 @@ use App\Entity\User;
 use App\Service\CarnetInformationLogementService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\PhpExecutableFinder;
 
 class CarnetInformationLogementController extends AbstractController
 {
@@ -83,8 +84,11 @@ class CarnetInformationLogementController extends AbstractController
 
                 // COMMANDE DE CREATION DU CARNET CLEA
                 // Asynchronous command
+                // Chemin absolu vers le binaire PHP : php-fpm tourne avec clear_env=yes,
+                // donc un 'php' nu est introuvable dans le PATH vidé du process enfant (sortie 127 silencieuse).
+                $phpBinaryPath = (new PhpExecutableFinder())->find() ?: 'php';
                 $process = new Process([
-                    'php',
+                    $phpBinaryPath,
                     'bin/console',
                     'normandie:carnetLogement',
                     '--demandeId=' . $demande->getId(),

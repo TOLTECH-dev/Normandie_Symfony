@@ -45,6 +45,9 @@ use App\Service\DemandeTravauxService;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class DemandeController extends AbstractController
 {
@@ -58,6 +61,9 @@ class DemandeController extends AbstractController
     private DemandeTravauxService $demandeTravauxService;
     private DemandeServiceFO $demandeServiceFO;
     private HistoriqueService $historiqueService;
+    private CacheInterface $cache;
+
+    private const COUNT_ALL_CACHE_TTL = 300;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -69,7 +75,8 @@ class DemandeController extends AbstractController
         DemandeAuditNumeriqueService $demandeAuditNumeriqueService,
         DemandeTravauxService $demandeTravauxService,
         DemandeServiceFO $demandeServiceFO,
-        HistoriqueService $historiqueService
+        HistoriqueService $historiqueService,
+        CacheInterface $cache
     )
     {
         $this->em = $em;
@@ -82,6 +89,23 @@ class DemandeController extends AbstractController
         $this->demandeTravauxService = $demandeTravauxService;
         $this->demandeServiceFO = $demandeServiceFO;
         $this->historiqueService = $historiqueService;
+        $this->cache = $cache;
+    }
+
+    /**
+     * Compte des dossiers sans filtre, mis en cache 5 min par utilisateur.
+     * La cle integre le username car les roles non-admin (CONSEILLER,
+     * AUDITEUR, RENOVATEUR, EPCI...) filtrent le perimetre via $queryWhere
+     * dans Demande_Repository::countAll().
+     */
+    private function getCachedRecordsTotal(Demande_Repository $repo, array $option): int
+    {
+        $key = 'demande_count_total_' . sha1($option['username'] . '|' . implode(',', $option['roles']));
+
+        return $this->cache->get($key, function (ItemInterface $item) use ($repo, $option): int {
+            $item->expiresAfter(self::COUNT_ALL_CACHE_TTL);
+            return $repo->countAll($option);
+        });
     }
 
     #[Security("is_granted('ROLE_CONSEILLER') or is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_AUDITEUR') or is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_EPCI') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') or is_granted('ROLE_TECHNIQUE')")]
@@ -98,7 +122,7 @@ class DemandeController extends AbstractController
                                 GET COUNT DEMANDE
         ///////////////////////////////////////////////////////////////// */
         $demandeRepository = $this->em->getRepository(Demande_::class);
-        $recordsTotal = $demandeRepository->countAll($option);
+        $recordsTotal = $this->getCachedRecordsTotal($demandeRepository, $option);
 
         /* /////////////////////////////////////////////////////////////////
                                 GET FORM LIST
@@ -138,8 +162,9 @@ class DemandeController extends AbstractController
                 'production_travauxNiveau_BBC2' => $this->getParameter('production_travauxNiveau_BBC2')
             ];
 
+            /** @var Demande_Repository $demandeRepository */
             $demandeRepository = $this->em->getRepository(Demande_::class);
-            $recordsTotal = $demandeRepository->countAll($option);
+            $recordsTotal = $this->getCachedRecordsTotal($demandeRepository, $option);
 
             /* START of POST variables coming from datatable */
             $draw = (int)$postData['draw'];
@@ -302,6 +327,18 @@ class DemandeController extends AbstractController
                 $recordsFiltered = $recordsTotal;
             }
             /* END of search */
+
+            // Comptes de commentaires en batch sur les seules demandes paginees
+            // (l'ancien LEFT JOIN historique_ + COUNT(h.id) dans findAllAjax
+            // explosait les lignes avant le GROUP BY sur ~23k dossiers).
+            if (!empty($data)) {
+                $demandeIds = array_map(static fn($row) => (int) $row['demandeId'], $data);
+                $countsByDemande = $demandeRepository->countCommentairesByDemandeIds($demandeIds);
+                foreach ($data as &$row) {
+                    $row['countCommentaire'] = $countsByDemande[(int) $row['demandeId']] ?? 0;
+                }
+                unset($row);
+            }
 
             $response = [
                 "draw" => $draw,
@@ -1544,17 +1581,47 @@ class DemandeController extends AbstractController
             $exportId = $exportDemande->getId();
             $this->em->clear();
 
-            // Asynchronous command
-            $process = new Process([
-                'php',
-                'bin/console',
-                'normandie:exportDemande',
-                '--exportId=' . $exportId,
-                '--env=' . $this->getParameter('kernel.environment')
-            ]);
+            // Lancement asynchrone "fire-and-forget" de la commande d'export.
+            //
+            // Piège (prod) : avec Process::start(), dès que cette méthode retourne, la
+            // variable locale $process est détruite → Process::__destruct() appelle
+            // stop(0) qui SIGKILL le process enfant AVANT la fin du bootstrap Symfony.
+            // La commande ne s'exécute alors jamais (aucun log, pas de mail) — alors
+            // qu'en CLI elle fonctionne, faute de destructeur qui s'interpose.
+            //
+            // Sous Linux on détache donc réellement le process via "nohup ... &" : le
+            // shell rend la main aussitôt (->run() retourne immédiatement) et le PHP est
+            // reparenté à init, donc il survit à la destruction de $process et s'exécute
+            // jusqu'au bout. (Sous Windows, dev, nohup n'existe pas : on garde le
+            // lancement natif détaché.)
+            $phpBinaryPath = (new PhpExecutableFinder())->find() ?: 'php';
+            $projectDir = $this->getParameter('kernel.project_dir');
+            $env = $this->getParameter('kernel.environment');
 
-            $process->setWorkingDirectory($this->getParameter('kernel.project_dir'));
-            $process->run();
+            if (DIRECTORY_SEPARATOR === '\\') {
+                // Windows (dev)
+                $process = new Process([
+                    $phpBinaryPath,
+                    'bin/console',
+                    'normandie:exportDemande',
+                    '--exportId=' . $exportId,
+                    '--env=' . $env,
+                ]);
+                $process->setWorkingDirectory($projectDir);
+                $process->disableOutput();
+                $process->start();
+            } else {
+                // Linux (prod) : détachement réel pour survivre au destructeur
+                $command = sprintf(
+                    'nohup %s bin/console normandie:exportDemande --exportId=%s --env=%s > /dev/null 2>&1 &',
+                    escapeshellarg($phpBinaryPath),
+                    (int) $exportId,
+                    escapeshellarg($env)
+                );
+                $process = Process::fromShellCommandline($command);
+                $process->setWorkingDirectory($projectDir);
+                $process->run();
+            }
 
             $request->getSession()->getFlashBag()->add(
                 'success',

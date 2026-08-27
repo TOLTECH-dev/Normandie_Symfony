@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Service\MailerService;
 use App\Utils\DefaultUtils;
 use Doctrine\DBAL\Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,13 +29,15 @@ class ExportDemandeCommand extends Command
     private DemandeServiceBO $demandeService;
     private MailerService $mailerService;
     private ParameterBagInterface $parameterBag;
+    private LoggerInterface $loggerExportDemande;
 
     public function __construct(
         ExportDemandeRepository $exportDemandeRepository,
         UserRepository          $userRepository,
         DemandeServiceBO        $demandeService,
         MailerService           $mailerService,
-        ParameterBagInterface   $parameterBag
+        ParameterBagInterface   $parameterBag,
+        LoggerInterface         $loggerExportDemande
     )
     {
         parent::__construct();
@@ -43,6 +46,7 @@ class ExportDemandeCommand extends Command
         $this->demandeService = $demandeService;
         $this->mailerService = $mailerService;
         $this->parameterBag = $parameterBag;
+        $this->loggerExportDemande = $loggerExportDemande;
     }
 
 
@@ -67,6 +71,9 @@ class ExportDemandeCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('Start Export Demande');
 
+        $exportId = $input->getOption('exportId');
+        $this->loggerExportDemande->info('Start Export Demande', ['exportId' => $exportId]);
+
         try {
             $data = $this->process($input);
             $result = $this->sendMail($data);
@@ -76,8 +83,20 @@ class ExportDemandeCommand extends Command
                     'L\'export Demande a été envoyé à %s',
                     $data['recipient']
                 ));
+                $this->loggerExportDemande->info('Export Demande envoyé', [
+                    'exportId'  => $exportId,
+                    'recipient' => $data['recipient'],
+                    'zip'       => basename($data['zipPath']),
+                ]);
             } else {
                 $io->error('L\'export Demande a échoué');
+                $this->loggerExportDemande->error(
+                    'Export Demande : échec de l\'envoi du mail (sendGeneriqueEmail a retourné 0)',
+                    [
+                        'exportId'  => $exportId,
+                        'recipient' => $data['recipient'] ?? null,
+                    ]
+                );
             }
 
             $io->success('End Export Demande');
@@ -85,6 +104,10 @@ class ExportDemandeCommand extends Command
 
         } catch (\Throwable $e) {
             $io->error($e->getMessage());
+            $this->loggerExportDemande->error('Export Demande : exception', [
+                'exportId'  => $exportId,
+                'exception' => $e,
+            ]);
             return Command::FAILURE;
         }
     }

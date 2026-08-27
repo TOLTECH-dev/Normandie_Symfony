@@ -27,6 +27,11 @@ framework:
         app: cache.adapter.redis
         default_redis_provider: '%env(REDIS_URL)%'
 
+when@dev:
+    framework:
+        cache:
+            app: cache.adapter.filesystem
+
 when@test:
     framework:
         test: true

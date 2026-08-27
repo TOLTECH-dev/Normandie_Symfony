@@ -27,8 +27,12 @@ class SecurityController extends AbstractController
         /* /////////////////////////////////////////////////////////////////
                                 GET RedisAdapter
         ///////////////////////////////////////////////////////////////// */
-        $cachedUserIsCaptchaItemValue = $this->cache->getItem(hash('sha512', $request->getClientIp()) . '-is-captcha');
-        $cachedUserIsCaptchaItemValue = ($cachedUserIsCaptchaItemValue->isHit()) ? $cachedUserIsCaptchaItemValue->get() : false;
+        $cachedUserIsCaptchaItemValue = false;
+
+        if ($this->getParameter('captcha_enabled')) {
+            $cachedUserIsCaptchaItemValue = $this->cache->getItem(hash('sha512', $request->getClientIp()) . '-is-captcha');
+            $cachedUserIsCaptchaItemValue = ($cachedUserIsCaptchaItemValue->isHit()) ? $cachedUserIsCaptchaItemValue->get() : false;
+        }
 
         if ($this->getUser()) {
             return $this->redirectToRoute('demande_list_all');
@@ -58,8 +62,12 @@ class SecurityController extends AbstractController
         /* /////////////////////////////////////////////////////////////////
                                 GET RedisAdapter
         ///////////////////////////////////////////////////////////////// */
-        $cachedUserIsCaptchaItemValue = $this->cache->getItem(hash('sha512', $request->getClientIp()) . '-is-captcha');
-        $cachedUserIsCaptchaItemValue = ($cachedUserIsCaptchaItemValue->isHit()) ? $cachedUserIsCaptchaItemValue->get() : false;
+        $cachedUserIsCaptchaItemValue = false;
+
+        if ($this->getParameter('captcha_enabled')) {
+            $cachedUserIsCaptchaItemValue = $this->cache->getItem(hash('sha512', $request->getClientIp()) . '-is-captcha');
+            $cachedUserIsCaptchaItemValue = ($cachedUserIsCaptchaItemValue->isHit()) ? $cachedUserIsCaptchaItemValue->get() : false;
+        }
 
         if ($this->getUser()) {
             return $this->redirectToRoute('fo_dashboard');

@@ -803,7 +803,7 @@ class RemboursementAuditNumeriqueController extends AbstractController
     /**
      * Edit depot audit numérique
      */
-    #[Security("is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_AUDITEUR') or is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
     public function editDepot(Request $request, int $remboursementId): RedirectResponse|Response
     {
         /* /////////////////////////////////////////////////////////////////

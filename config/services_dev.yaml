@@ -1,0 +1,12 @@
+parameters:
+    # Pas de reCAPTCHA sur les formulaires d'identification en dev
+    captcha_enabled: false
+
+services:
+    App\EventListener\ExceptionListener:
+        autowire: true
+        autoconfigure: false
+
+    App\Listener\CspNonceInjectorListener:
+        autowire: true
+        autoconfigure: false

@@ -28,3 +28,8 @@ yarn-error.log
 ###< docs ###
 
 /.claude/
+
+###> outils jetables de prod (ne jamais committer) ###
+/public/opcache-reset.php
+/public/php-binary-check.php
+###< outils jetables de prod ###

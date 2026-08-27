@@ -73,6 +73,11 @@ class FailureAttemptVerificationSubscriber implements EventSubscriberInterface
 
             if (isset($routeInfos['_route']) && in_array($routeInfos['_route'], $arrayRouteToCheck)) {
 
+                // Captcha désactivé (dev) : aucune vérification ni blocage lié au captcha
+                if (!$this->parameterBag->get('captcha_enabled')) {
+                    return;
+                }
+
                 $token = new CsrfToken('authenticate', $request->request->get('_csrf_token'));
                 $user = $this->userRepository->findOneBy(['username' => $request->request->get('_username')]);
 

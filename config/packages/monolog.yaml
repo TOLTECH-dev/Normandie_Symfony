@@ -5,6 +5,7 @@ monolog:
         - command_delete_documents
         - command_delete_account
         - command_update_fiche_technique
+        - command_export_demande
 
 when@dev:
     monolog:
@@ -13,11 +14,11 @@ when@dev:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
-                channels: ["!event", "!command_delete_documents", "!command_delete_account", "!command_update_fiche_technique"]
+                channels: ["!event", "!command_delete_documents", "!command_delete_account", "!command_update_fiche_technique", "!command_export_demande"]
             console:
                 type: console
                 process_psr_3_messages: false
-                channels: ["!event", "!doctrine", "!console", "!command_delete_documents", "!command_delete_account", "!command_update_fiche_technique"]
+                channels: ["!event", "!doctrine", "!console", "!command_delete_documents", "!command_delete_account", "!command_update_fiche_technique", "!command_export_demande"]
             command_delete_documents:
                 type: rotating_file
                 path: '%kernel.logs_dir%/command_delete_documents_%kernel.environment%.log'
@@ -36,6 +37,12 @@ when@dev:
                 level: debug
                 max_files: 60
                 channels: command_update_fiche_technique
+            command_export_demande:
+                type: rotating_file
+                path: '%kernel.logs_dir%/command_export_demande_%kernel.environment%.log'
+                level: debug
+                max_files: 60
+                channels: command_export_demande
 
 when@test:
     monolog:
@@ -99,3 +106,9 @@ when@prod:
                 level: debug
                 max_files: 60
                 channels: command_update_fiche_technique
+            command_export_demande:
+                type: rotating_file
+                path: '%kernel.logs_dir%/command_export_demande_prod.log'
+                level: debug
+                max_files: 60
+                channels: command_export_demande

@@ -87,7 +87,7 @@ class OrientationRepository extends ServiceEntityRepository
 
     /**
      * @param $logementId
-     * @return array
+     * @return int|false
      * @throws Exception
      */
     public function searchEPCIIdByLogement($logementId)
@@ -105,8 +105,8 @@ class OrientationRepository extends ServiceEntityRepository
         $statement = $this->_em
             ->getConnection()
             ->prepare($query);
-        $result = $statement->executeQuery();
+        $result = $statement->executeQuery($params);
 
-        return $result->fetchFirstColumn();
+        return $result->fetchOne();
     }
 }

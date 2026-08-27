@@ -350,15 +350,19 @@ class Demande_Repository extends ServiceEntityRepository
             }
         }
 
-        $query = "
-            SELECT  d.id, 
-                    r.id
+        // Inner query : on selectionne juste d.id, r.id avec GROUP BY pour
+        // dedupliquer les combinaisons (titre / remboursement multiples).
+        // On wrap dans un SELECT COUNT(*) afin que MariaDB ne materialise
+        // pas toutes les lignes cote serveur+PHP : ~23k lignes -> 1 ligne.
+        // Le LEFT JOIN instruction_ i a ete retire : il n'est reference
+        // ni dans le WHERE ni dans le SELECT, c'etait du travail pur perdu.
+        $innerQuery = "
+            SELECT 1
             FROM demande_ d
                 INNER JOIN beneficiaire b ON b.id = d.beneficiaire_id
                 INNER JOIN logement l ON l.id = d.logement_id
                 INNER JOIN demande_statut ds ON ds.id = d.statut_id
                 LEFT JOIN date_CP dCP ON dCP.id = d.dateCP_id
-                LEFT JOIN instruction_ i ON i.demande_id = d.id
                 LEFT JOIN demande_audit_energie dae ON d.demande_audit_energie_id = dae.id
                 LEFT JOIN structure_ s_dae ON dae.structure_id = s_dae.id
                 LEFT JOIN structure_identification si_dae ON s_dae.structure_identification_id = si_dae.id
@@ -370,7 +374,7 @@ class Demande_Repository extends ServiceEntityRepository
                 LEFT JOIN structure_identification si_dan ON s_dan.structure_identification_id = si_dan.id
                 LEFT JOIN structure_conseiller sc_dan ON (dan.conseiller_id = sc_dan.id)
                 LEFT JOIN partenaire_ p_dan ON dan.auditeur_id = p_dan.id
-                LEFT JOIN partenaire_identification pi_dan ON p_dan.partenaire_identification_id = pi_dan.id    
+                LEFT JOIN partenaire_identification pi_dan ON p_dan.partenaire_identification_id = pi_dan.id
                 LEFT JOIN demande_travaux dt ON d.demande_travaux_id = dt.id
                 LEFT JOIN structure_ s_dt ON dt.structure_id = s_dt.id
                 LEFT JOIN structure_identification si_dt ON s_dt.structure_identification_id = si_dt.id
@@ -379,10 +383,10 @@ class Demande_Repository extends ServiceEntityRepository
                 LEFT JOIN partenaire_ p_dtd ON dtd.renovateur_id = p_dtd.id
                 LEFT JOIN partenaire_identification pi_dtd ON p_dtd.partenaire_identification_id = pi_dtd.id
                 LEFT JOIN titre t ON t.demande_id = d.id
-                LEFT JOIN titre t2 ON t2.demande_id = t.demande_id AND t2.id != t.id 
+                LEFT JOIN titre t2 ON t2.demande_id = t.demande_id AND t2.id != t.id
                 LEFT JOIN remboursement_ r2 ON r2.demande_id = d.id AND r2.titre_id = t2.id
-                LEFT JOIN remboursement_ r ON r.titre_id = t.id 
-                LEFT JOIN remboursement_statut rs ON r.statut_id = rs.id 
+                LEFT JOIN remboursement_ r ON r.titre_id = t.id
+                LEFT JOIN remboursement_statut rs ON r.statut_id = rs.id
                 LEFT JOIN date_RMH dRMH ON dRMH.id = r.dateRMH_id " .
             $queryJoin .
             " WHERE (
@@ -396,12 +400,14 @@ class Demande_Repository extends ServiceEntityRepository
             GROUP BY d.id, r.id
         ";
 
+        $query = "SELECT COUNT(*) FROM (" . $innerQuery . ") AS sub";
+
         $statement = $this->_em
             ->getConnection()
             ->prepare($query);
         $result = $statement->executeQuery();
 
-        return $result->rowCount();
+        return (int) $result->fetchOne();
     }
 
 
@@ -553,7 +559,7 @@ class Demande_Repository extends ServiceEntityRepository
                     l.id AS logementId,
                     DATE_FORMAT(dRMH.date_RMH, '%Y/%m/%d') AS remboursementDate,
                     '' AS action,
-                    COUNT(h.id) AS countCommentaire,
+                    0 AS countCommentaire,
                     rs.description As remboursementStatutDescription,
                     rs.slug AS remboursementStatutSlug,
                     r.id AS remboursementId,
@@ -562,8 +568,6 @@ class Demande_Repository extends ServiceEntityRepository
                 INNER JOIN beneficiaire b ON b.id = d.beneficiaire_id
                 INNER JOIN logement l ON l.id = d.logement_id
                 INNER JOIN demande_statut ds ON ds.id = d.statut_id
-                LEFT JOIN historique_ h ON h.demande_id = d.id
-                    AND LOWER(h.action) = 'commentaire'
                 LEFT JOIN date_CP dCP ON dCP.id = d.dateCP_id
                 LEFT JOIN demande_audit_energie dae ON d.demande_audit_energie_id = dae.id
                 LEFT JOIN structure_ s_dae ON dae.structure_id = s_dae.id
@@ -610,6 +614,43 @@ class Demande_Repository extends ServiceEntityRepository
         $result = $statement->executeQuery();
 
         return $result->fetchAllAssociative();
+    }
+
+    /**
+     * Compte les commentaires (historique_.action = 'commentaire') pour un
+     * ensemble de demandes donne. Appele apres findAllAjax() pour eviter
+     * d'exploser la requete principale via un LEFT JOIN historique_ +
+     * COUNT(h.id) qui forcait un GROUP BY couteux sur ~23k lignes.
+     *
+     * @param int[] $demandeIds
+     * @return array<int, int> Map [demandeId => countCommentaire]
+     * @throws Exception
+     */
+    public function countCommentairesByDemandeIds(array $demandeIds): array
+    {
+        if (empty($demandeIds)) {
+            return [];
+        }
+
+        $ids = array_map('intval', $demandeIds);
+        $placeholders = implode(',', $ids);
+
+        $query = "
+            SELECT h.demande_id AS demande_id, COUNT(h.id) AS cnt
+            FROM historique_ h
+            WHERE h.demande_id IN (" . $placeholders . ")
+              AND LOWER(h.action) = 'commentaire'
+            GROUP BY h.demande_id
+        ";
+
+        $statement = $this->_em->getConnection()->prepare($query);
+        $rows = $statement->executeQuery()->fetchAllAssociative();
+
+        $map = [];
+        foreach ($rows as $row) {
+            $map[(int) $row['demande_id']] = (int) $row['cnt'];
+        }
+        return $map;
     }
 
     /**
