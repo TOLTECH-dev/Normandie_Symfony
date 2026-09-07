@@ -1,0 +1,103 @@
+framework:
+    cache:
+        pools:
+            # Pool dédié aux compteurs anti-bruteforce.
+            #
+            # Par défaut les limiteurs utilisent "cache.rate_limiter", qui est un enfant
+            # de "cache.app" : ils basculeraient donc sur le disque dès que le cache
+            # applicatif bascule (cf. le bloc "when@dev" de framework.yaml). C'est
+            # exactement la dépendance à APP_ENV qu'avait introduite le portage Symfony
+            # 5.4 de l'ancien mécanisme captcha — l'application legacy, elle, injectait
+            # un RedisAdapter explicite, insensible à l'environnement.
+            #
+            # On fixe donc Redis ici, indépendamment de "cache.app". Le fournisseur est
+            # celui déclaré par "framework.cache.default_redis_provider" (REDIS_URL).
+            cache.security_rate_limiter:
+                adapter: cache.adapter.redis
+
+    rate_limiter:
+        # Compteur par adresse IP seule : freine le balayage de plusieurs comptes depuis
+        # une même origine (attaque en largeur). Seuil volontairement haut pour ne pas
+        # pénaliser plusieurs utilisateurs légitimes partageant une sortie NAT.
+        login_ip:
+            policy: 'sliding_window'
+            cache_pool: cache.security_rate_limiter
+            limit: '%security_login_ip_max_attempts%'
+            interval: '%security_login_ip_interval%'
+
+        # Compteur par couple identifiant + IP : cas classique du bruteforce ciblé,
+        # mené depuis une origine unique.
+        login_username_ip:
+            policy: 'sliding_window'
+            cache_pool: cache.security_rate_limiter
+            limit: '%security_login_username_ip_max_attempts%'
+            interval: '%security_login_username_ip_interval%'
+
+        # Compteur par identifiant seul, sans l'IP. C'est le seul rempart contre une
+        # attaque distribuée changeant d'IP à chaque tentative (vulnérabilité V3 du
+        # rapport ALMOND NOR005-22) : les deux compteurs ci-dessus sont contournés dès
+        # que l'attaquant fait tourner ses origines.
+        login_username:
+            policy: 'sliding_window'
+            cache_pool: cache.security_rate_limiter
+            limit: '%security_login_username_max_attempts%'
+            interval: '%security_login_username_interval%'
+
+        # --- Formulaires publics hors authentification ---
+        # La recommandation R7 du rapport ALMOND NOR005-22 vise « tous les formulaires
+        # d'une application web », et le rapport cite explicitement le formulaire de
+        # réinitialisation de mot de passe (§3.2.2) au même titre que la connexion.
+
+        # Demande de réinitialisation, compteur par IP : borne le mail-bombing et le
+        # balayage d'identifiants depuis une même origine.
+        resetting_request_ip:
+            policy: 'sliding_window'
+            cache_pool: cache.security_rate_limiter
+            limit: '%security_resetting_request_ip_max_attempts%'
+            interval: '%security_resetting_request_ip_interval%'
+
+        # Demande de réinitialisation, compteur par identifiant saisi : empêche de
+        # harceler une boîte mail donnée depuis des origines multiples.
+        resetting_request_username:
+            policy: 'sliding_window'
+            cache_pool: cache.security_rate_limiter
+            limit: '%security_resetting_request_username_max_attempts%'
+            interval: '%security_resetting_request_username_interval%'
+
+        # Page de saisie du nouveau mot de passe. Le jeton est généré par
+        # UriSafeTokenGenerator (32 octets aléatoires) et n'est donc pas devinable :
+        # ce compteur est de la défense en profondeur, d'où un seuil large qui ne gêne
+        # pas un utilisateur butant sur la politique de mot de passe.
+        resetting_reset_ip:
+            policy: 'sliding_window'
+            cache_pool: cache.security_rate_limiter
+            limit: '%security_resetting_reset_ip_max_attempts%'
+            interval: '%security_resetting_reset_ip_interval%'
+
+        # Formulaire d'inscription : création de comptes en masse et mail-bombing via
+        # les courriels de confirmation.
+        registration_ip:
+            policy: 'sliding_window'
+            cache_pool: cache.security_rate_limiter
+            limit: '%security_registration_ip_max_attempts%'
+            interval: '%security_registration_ip_interval%'
+
+# Postes de développement : pas d'instance Redis en local, les compteurs retombent sur
+# le disque. Le comportement des limiteurs est identique, seul le stockage change.
+#
+# Pour reproduire localement les conditions de la recette et de la production (Redis
+# partagé), commenter ce bloc et renseigner REDIS_URL dans .env.dev.local.
+when@dev:
+    framework:
+        cache:
+            pools:
+                cache.security_rate_limiter:
+                    adapter: cache.adapter.filesystem
+
+# La suite de tests ne doit dépendre d'aucun service externe.
+when@test:
+    framework:
+        cache:
+            pools:
+                cache.security_rate_limiter:
+                    adapter: cache.adapter.filesystem

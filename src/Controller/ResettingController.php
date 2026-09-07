@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ResetPasswordType;
+use App\Security\RateLimiter\PublicFormRateLimiter;
 use App\Security\SecurityService;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,13 +37,26 @@ class ResettingController extends AbstractController
     }
 
     public function sendEmail(
-        Request         $request,
-        SecurityService $securityService,
-        UserService     $userService
+        Request               $request,
+        SecurityService       $securityService,
+        UserService           $userService,
+        PublicFormRateLimiter $rateLimiter
     ): Response
     {
+        $username = (string) $request->request->get('username');
+
+        // Anti-bruteforce (R7) : le compteur est consommé avant toute recherche en base, et
+        // sur l'identifiant saisi, pour que le formulaire se comporte de la même manière que
+        // le compte existe ou non.
+        $rateLimit = $rateLimiter->consumeResettingRequest($request, $username);
+
+        if (!$rateLimit->isAccepted()) {
+            $this->addFlash('danger', PublicFormRateLimiter::tooManyAttemptsMessage($rateLimit));
+
+            return $this->redirectToRoute('user_resetting_request');
+        }
+
         if ($securityService->captchaVerify($request)) {
-            $username = $request->request->get('username');
             $user = $userService->findByUsername(trim($username));
             $securityService->handleSendResettingEmail($user, $this->getParameter('resetting_retry_ttl'));
 
@@ -57,10 +71,26 @@ class ResettingController extends AbstractController
         }
     }
 
-    public function reset(Request $request, UserService $userService, $token): Response
+    public function reset(
+        Request               $request,
+        UserService           $userService,
+        PublicFormRateLimiter $rateLimiter,
+        $token
+    ): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('fo_dashboard');
+        }
+
+        // Anti-bruteforce (R7) : couvre aussi bien les accès répétés au lien (devinette de
+        // jeton) que le forçage de la politique de mot de passe, d'où une consommation dès
+        // l'entrée dans l'action et non à la seule soumission du formulaire.
+        $rateLimit = $rateLimiter->consumeResettingReset($request);
+
+        if (!$rateLimit->isAccepted()) {
+            $this->addFlash('danger', PublicFormRateLimiter::tooManyAttemptsMessage($rateLimit));
+
+            return $this->redirectToRoute('user_resetting_request');
         }
 
         $user = $userService->findByConfirmationToken($token);

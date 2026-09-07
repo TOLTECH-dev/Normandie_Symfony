@@ -35,5 +35,9 @@ when@dev:
 when@test:
     framework:
         test: true
+        # La suite de tests ne doit pas dépendre d'une instance Redis : les compteurs
+        # du RateLimiter, qui vivent dans le pool applicatif, sont stockés sur disque.
+        cache:
+            app: cache.adapter.filesystem
         session:
             storage_factory_id: session.storage.factory.mock_file

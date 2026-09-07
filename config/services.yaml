@@ -75,7 +75,22 @@ parameters:
     security_time_expire_user_ip: '%env(SECURITY_TIME_EXPIRE_USER_IP)%'
     security_time_expire_user_show_recaptcha: '%env(SECURITY_TIME_EXPIRE_USER_SHOW_RECAPTCHA)%'
     security_max_login_failure_attempts: '%env(SECURITY_MAX_LOGIN_FAILURE_ATTEMPTS)%'
-    security_lockout_duration: '%env(SECURITY_LOCKOUT_DURATION)%'
+
+    security_login_ip_max_attempts: '%env(int:SECURITY_LOGIN_IP_MAX_ATTEMPTS)%'
+    security_login_ip_interval: '%env(SECURITY_LOGIN_IP_INTERVAL)%'
+    security_login_username_ip_max_attempts: '%env(int:SECURITY_LOGIN_USERNAME_IP_MAX_ATTEMPTS)%'
+    security_login_username_ip_interval: '%env(SECURITY_LOGIN_USERNAME_IP_INTERVAL)%'
+    security_login_username_max_attempts: '%env(int:SECURITY_LOGIN_USERNAME_MAX_ATTEMPTS)%'
+    security_login_username_interval: '%env(SECURITY_LOGIN_USERNAME_INTERVAL)%'
+
+    security_resetting_request_ip_max_attempts: '%env(int:SECURITY_RESETTING_REQUEST_IP_MAX_ATTEMPTS)%'
+    security_resetting_request_ip_interval: '%env(SECURITY_RESETTING_REQUEST_IP_INTERVAL)%'
+    security_resetting_request_username_max_attempts: '%env(int:SECURITY_RESETTING_REQUEST_USERNAME_MAX_ATTEMPTS)%'
+    security_resetting_request_username_interval: '%env(SECURITY_RESETTING_REQUEST_USERNAME_INTERVAL)%'
+    security_resetting_reset_ip_max_attempts: '%env(int:SECURITY_RESETTING_RESET_IP_MAX_ATTEMPTS)%'
+    security_resetting_reset_ip_interval: '%env(SECURITY_RESETTING_RESET_IP_INTERVAL)%'
+    security_registration_ip_max_attempts: '%env(int:SECURITY_REGISTRATION_IP_MAX_ATTEMPTS)%'
+    security_registration_ip_interval: '%env(SECURITY_REGISTRATION_IP_INTERVAL)%'
 
     fc_js_url: '%env(FC_JS_URL)%'
 

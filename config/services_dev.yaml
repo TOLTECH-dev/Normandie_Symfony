@@ -1,6 +1,7 @@
 parameters:
-    # Pas de reCAPTCHA sur les formulaires d'identification en dev
-    captcha_enabled: false
+    # reCAPTCHA actif en dev : les cles de .env.dev.local sont les cles de test
+    # publiques de Google, valides sur n'importe quel domaine.
+    captcha_enabled: true
 
 services:
     App\EventListener\ExceptionListener:

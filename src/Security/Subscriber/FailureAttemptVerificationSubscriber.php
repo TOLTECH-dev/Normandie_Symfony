@@ -103,30 +103,14 @@ class FailureAttemptVerificationSubscriber implements EventSubscriberInterface
                     || (true == $cachedUserDataIsCaptcha && (!isset($captchaResponse) || !$isCaptchaOk))
                 ) {
                     /**
-                     * ------------------------------------------------------------------
-                     * AJOUT : ici on incrémente "countFailedConnection" côté utilisateur
-                     * car l'événement "LoginAuthenticationFailure" n'est pas appelé pour l'incrémenter.
-                     * ------------------------------------------------------------------
+                     * Le captcha court-circuite l'authentification : l'événement
+                     * LoginFailureEvent n'est jamais atteint, on incrémente donc ici le
+                     * compteur de traçabilité. Le blocage, lui, relève de login_throttling.
                      */
                     if (!empty($user) && $this->csrfTokenManager->isTokenValid($token) && (true === $user->isEnabled())) {
-                        $user->setCountFailedConnection($user->getCountFailedConnection() + 1);
+                        $user->setCountFailedConnection(($user->getCountFailedConnection() ?? 0) + 1);
+                        $this->entityManager->persist($user);
                         $this->entityManager->flush();
-
-                        // Vérification seuil et lock Redis: Si dépassement, crée un verrou temporaire Redis
-                        if ($user->getCountFailedConnection() >= $this->parameterBag->get('security_max_login_failure_attempts')) {
-                            $lockKey = hash('sha512', $this->request->getClientIp()) . '-lock';
-
-                            $cachedLock = $this->redisAdapter->getItem($lockKey);
-                            $cachedLock->set(true);
-                            $cachedLock->expiresAt(
-                                new \DateTime($this->parameterBag->get('security_lockout_duration'))
-                            ); // ex: '+5 minutes'
-                            $this->redisAdapter->save($cachedLock);
-
-                            $user->setCountFailedConnection(0);
-                            $this->entityManager->persist($user);
-                            $this->entityManager->flush();
-                        }
                     }
 
                     $session->getFlashBag()->add('danger', 'Captcha obligatoire');

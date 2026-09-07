@@ -45,6 +45,8 @@ class MainLoginSuccessHandler implements AuthenticationSuccessHandlerInterface
         $user = $token->getUser();
 
         if ($user instanceof User) {
+            // Réinitialisation du compteur de tentatives échouées en BDD
+            $user->setCountFailedConnection(0);
             $user->setLastLogin(new \DateTime());
             $this->em->persist($user);
             $this->em->flush();

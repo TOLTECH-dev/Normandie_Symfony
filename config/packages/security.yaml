@@ -37,6 +37,11 @@ security:
             provider: app_user_provider
             lazy: true
 
+            # Anti-bruteforce (V3 / R7 de l'audit ALMOND) : les seuils et les fenêtres
+            # sont portés par les limiteurs de config/packages/rate_limiter.yaml.
+            login_throttling:
+                limiter: App\Security\RateLimiter\LoginRateLimiter
+
             form_login:
                 enable_csrf: true
                 login_path: admin_user_login
@@ -58,6 +63,11 @@ security:
             user_checker: App\Security\UserChecker
             provider: app_user_provider
             lazy: true
+
+            # Anti-bruteforce (V3 / R7 de l'audit ALMOND) : les seuils et les fenêtres
+            # sont portés par les limiteurs de config/packages/rate_limiter.yaml.
+            login_throttling:
+                limiter: App\Security\RateLimiter\LoginRateLimiter
 
             form_login:
                 enable_csrf: true

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Event\UserRegistrationSuccessEvent;
 use App\Form\RegistrationFormType;
+use App\Security\RateLimiter\PublicFormRateLimiter;
 use App\Security\SecurityService;
 use App\Service\DemandeServiceBO;
 use App\Service\UserService;
@@ -29,7 +30,8 @@ class RegistrationController extends AbstractController
         Request                  $request,
         DemandeServiceBO         $demandeServiceBO,
         SecurityService          $securityService,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        PublicFormRateLimiter    $rateLimiter
     ): Response
     {
         if (empty($demandeServiceBO->checkIsOkDemandeCreateActionByDate())) {
@@ -53,6 +55,19 @@ class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            // Anti-bruteforce (R7) : borne la création de comptes en masse et le
+            // mail-bombing via les courriels de confirmation. Consommé à la soumission
+            // seulement, pour ne pas décompter le simple affichage du formulaire.
+            $rateLimit = $rateLimiter->consumeRegistration($request);
+
+            if (!$rateLimit->isAccepted()) {
+                $this->addFlash('danger', PublicFormRateLimiter::tooManyAttemptsMessage($rateLimit));
+
+                return $this->redirectToRoute('user_registration');
+            }
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
 
