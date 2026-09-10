@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Validator\Constraints\PasswordStrength;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -66,29 +67,24 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
 
+            // Non mappé : le mot de passe en clair ne transite pas par l'entité ; il est haché par
+            // UserService::registerUser() (Reco-15 : date du mot de passe et historique).
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'mapped' => false,
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
                 'required' => true,
                 'first_options'  => [
                     'label' => 'Mot de passe',
-                    'constraints' => [
-                        new Assert\NotBlank(),
-                        new Assert\Regex([
-                            'pattern' => '/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/',
-                            'message' => 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et au moins 8 caractères.'
-                        ]),
-                    ]
                 ],
                 'second_options' => [
                     'label' => 'Répéter le mot de passe',
-                    'constraints' => [
-                        new Assert\NotBlank(),
-                        new Assert\Regex([
-                            'pattern' => '/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/',
-                            'message' => 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et au moins 8 caractères.'
-                        ]),
-                    ],
+                ],
+                // Règles portées par le champ répété : elles ne s'appliquent qu'une fois les deux
+                // saisies identiques, sans message parasite sur le second champ.
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new PasswordStrength(),
                 ],
             ]);
     }

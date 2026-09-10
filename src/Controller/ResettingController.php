@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Form\ResetPasswordType;
+use App\Security\Password\PasswordChangeService;
 use App\Security\RateLimiter\PublicFormRateLimiter;
 use App\Security\SecurityService;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -84,6 +86,7 @@ class ResettingController extends AbstractController
     public function reset(
         Request               $request,
         UserService           $userService,
+        PasswordChangeService $passwordChangeService,
         PublicFormRateLimiter $rateLimiter,
         $token
     ): Response
@@ -124,14 +127,24 @@ class ResettingController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userService->handlePasswordReset($user);
+            $plainPassword = (string) $form->get('password')->getData();
 
-            $this->addFlash(
-                'success',
-                'Le mot de passe a été réinitialisé avec succès.'
-            );
+            // Contrôles liés au compte (Reco-15) : données personnelles, derniers mots de passe
+            $errors = $passwordChangeService->validate($user, $plainPassword);
+            foreach ($errors as $error) {
+                $form->get('password')->addError(new FormError($error));
+            }
 
-            return $this->redirectToRoute($this->isBackOfficeDomain() ? 'admin_user_login' : 'user_login');
+            if ([] === $errors) {
+                $userService->handlePasswordReset($user, $plainPassword);
+
+                $this->addFlash(
+                    'success',
+                    'Le mot de passe a été réinitialisé avec succès.'
+                );
+
+                return $this->redirectToRoute($this->isBackOfficeDomain() ? 'admin_user_login' : 'user_login');
+            }
         }
 
         return $this->render('Main/Security/Resetting/reset.html.twig', [

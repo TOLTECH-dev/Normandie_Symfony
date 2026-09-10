@@ -67,6 +67,17 @@
             <div class="row padding13">
                 {{ include('Macros/error.html.twig') }}
 
+                {# Avertissement d'expiration prochaine du mot de passe (Reco-15) #}
+                {% set passwordExpiresInDays = password_expires_in_days() %}
+                {% if passwordExpiresInDays is not null %}
+                    <div class="alert alert-warning col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 notification" role="alert">
+                        <p class="text-center">
+                            Votre mot de passe expire {{ passwordExpiresInDays > 1 ? 'dans ' ~ passwordExpiresInDays ~ ' jours' : 'd\'ici demain' }}.
+                            <a href="{{ path('admin_password_change') }}" class="alert-link">Le changer maintenant</a>
+                        </p>
+                    </div>
+                {% endif %}
+
                 {% block contents %}
                 {% endblock %}
             </div>

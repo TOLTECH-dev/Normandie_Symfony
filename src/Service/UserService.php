@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Security\Password\PasswordChangeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -20,6 +21,7 @@ class UserService
         private readonly UserRepository              $userRepository,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly RequestStack                $requestStack,
+        private readonly PasswordChangeService       $passwordChangeService,
     )
     {
     }
@@ -39,11 +41,9 @@ class UserService
         $user->setEmail($email);
         $user->setRoles($roles);
 
-        $hashedPassword = $this->hashPassword($user, $plainPassword);
-        $user->setPassword($hashedPassword);
-
         $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        // Hachage, date du mot de passe et historique (Reco-15) ; enregistre le compte
+        $this->passwordChangeService->change($user, $plainPassword);
 
         return $user;
     }
@@ -216,14 +216,13 @@ class UserService
 
     public function registerUser(User $user, string $plainPassword): void
     {
-        $hashedPassword = $this->hashPassword($user, $plainPassword);
-        $user->setPassword($hashedPassword);
         $user->setEmailCanonical($user->getEmail());
         $user->setUsernameCanonical($user->getUsername());
         $user->setEnabled(false);
         $user->setIsFranceConnect(false);
         $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        // Hachage, date du mot de passe et historique (Reco-15) ; enregistre le compte
+        $this->passwordChangeService->change($user, $plainPassword);
     }
 
     public function confirmUser(User $user): void
@@ -233,13 +232,13 @@ class UserService
         $this->entityManager->flush();
     }
 
-    public function handlePasswordReset(User $user): void
+    public function handlePasswordReset(User $user, string $plainPassword): void
     {
-        $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
         $user->setConfirmationToken(null);
         $user->setPasswordRequestedAt(null);
         $user->setEnabled(true);
-        $this->entityManager->flush();
+        // Hachage, date du mot de passe et historique (Reco-15) ; enregistre le compte
+        $this->passwordChangeService->change($user, $plainPassword);
     }
 
     /**

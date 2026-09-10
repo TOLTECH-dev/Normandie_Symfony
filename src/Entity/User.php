@@ -114,6 +114,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTime $passwordRequestedAt = null;
 
     /**
+     * Date du dernier mot de passe choisi par l'utilisateur, point de départ de son expiration
+     * (Reco-15, cf. App\Security\Password\PasswordExpirationPolicy). Null si inconnue.
+     */
+    #[ORM\Column(name: "password_changed_at", type: "datetime", nullable: true)]
+    private ?\DateTime $passwordChangedAt = null;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -565,6 +572,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->getPasswordRequestedAt() instanceof \DateTime &&
             $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
+    }
+
+    /**
+     * Get password changed at
+     */
+    public function getPasswordChangedAt(): ?\DateTime
+    {
+        return $this->passwordChangedAt;
+    }
+
+    /**
+     * Set password changed at
+     */
+    public function setPasswordChangedAt(?\DateTime $passwordChangedAt): self
+    {
+        $this->passwordChangedAt = $passwordChangedAt;
+        return $this;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Validator\Constraints\PasswordStrength;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -15,30 +16,24 @@ class ResetPasswordType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // Non mappé : l'empreinte actuelle du compte doit rester intacte jusqu'à l'enregistrement,
+            // pour contrôler la non-réutilisation des derniers mots de passe (PasswordChangeService).
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'mapped' => false,
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
                 'required' => true,
                 'first_options'  => [
                     'label' => 'Nouveau mot de passe',
-                    'constraints' => [
-                        new Assert\NotBlank(),
-                        new Assert\Regex([
-                            'pattern' => '/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/',
-                            'message' => 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et au moins 8 caractères.'
-                        ]),
-                    ]
                 ],
                 'second_options' => [
                     'label' => 'Répéter le nouveau mot de passe',
-                    'required' => true,
-                    'constraints' => [
-                        new Assert\NotBlank(),
-                        new Assert\Regex([
-                            'pattern' => '/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/',
-                            'message' => 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et au moins 8 caractères.'
-                        ]),
-                    ],
+                ],
+                // Contraintes portées par le champ répété, et non par chacun des deux champs : elles
+                // ne s'appliquent qu'une fois les deux saisies identiques, sans message parasite.
+                'constraints' => [
+                    new Assert\NotBlank(['message' => 'Veuillez saisir un nouveau mot de passe.']),
+                    new PasswordStrength(),
                 ],
             ]);
     }

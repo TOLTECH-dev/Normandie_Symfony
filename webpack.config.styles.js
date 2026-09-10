@@ -25,7 +25,6 @@ module.exports = (Encore) => {
         .addStyleEntry('register', './assets/styles/main/registration/register.css')
         .addStyleEntry('registerConfirmed', './assets/styles/main/registration/confirmed.css')
         .addStyleEntry('registerCheckEmail', './assets/styles/main/registration/check_email.css')
-        .addStyleEntry('resettingReset', './assets/styles/main/resetting/reset.css')
         .addStyleEntry('partenaireList', './assets/styles/backOffice/partenaire/list.css')
         .addStyleEntry('ratingView', './assets/styles/backOffice/rating/view.css')
 

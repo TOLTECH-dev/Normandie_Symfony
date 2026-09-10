@@ -100,6 +100,14 @@ parameters:
     security_mfa_username_max_attempts: '%env(int:SECURITY_MFA_USERNAME_MAX_ATTEMPTS)%'
     security_mfa_username_interval: '%env(SECURITY_MFA_USERNAME_INTERVAL)%'
 
+    # Expiration périodique des mots de passe (Reco-15, cf. App\Security\Password\PasswordExpirationPolicy).
+    # Comptes à privilèges uniquement : le guide ANSSI PG-078 recommande l'expiration pour ces comptes
+    # (R25) et la déconseille par défaut pour les comptes peu sensibles (R24).
+    security_password_expiration_roles: [ ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_INSTRUCTEUR, ROLE_INSTRUCTEUR_UP, ROLE_CLIENT ]
+    security_password_expiration_months: '%env(int:SECURITY_PASSWORD_EXPIRATION_MONTHS)%'
+    security_password_expiration_warning_days: '%env(int:SECURITY_PASSWORD_EXPIRATION_WARNING_DAYS)%'
+    security_password_history_size: '%env(int:SECURITY_PASSWORD_HISTORY_SIZE)%'
+
     fc_js_url: '%env(FC_JS_URL)%'
 
     mailer_address_from: '%env(MAILER_ADDRESS_FROM)%'
@@ -160,6 +168,17 @@ services:
         autoconfigure: false
         tags:
             - { name: kernel.event_subscriber, dispatcher: security.event_dispatcher.main }
+
+    # --- Expiration périodique des mots de passe (Reco-15) ---
+    App\Security\Password\PasswordExpirationPolicy:
+        arguments:
+            $expirationRoles: '%security_password_expiration_roles%'
+            $expirationMonths: '%security_password_expiration_months%'
+            $warningDays: '%security_password_expiration_warning_days%'
+
+    App\Security\Password\PasswordChangeService:
+        arguments:
+            $historySize: '%security_password_history_size%'
 
     App\Security\Subscriber\LogoutEventSubscriber:
         arguments:

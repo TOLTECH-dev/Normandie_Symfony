@@ -1,22 +1,14 @@
 {#
     Saisie du nouveau mot de passe, atteinte via le lien reçu par courriel.
-
-    Les identifiants password, password_repeat, pswd_*, result et password_match_message sont
-    utilisés par assets/js/main/passwordValidation.js (entrée resettingResetPassword) : ne pas
-    les renommer.
+    Champs du nouveau mot de passe : BackOffice/Security/_new_password_fields.html.twig.
 #}
 {% extends "Main/Security/Resetting/layout.html.twig" %}
 
 {% block title %}Nouveau mot de passe{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('resettingReset') }}
-{% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('resettingResetPassword') }}
+    {{ encore_entry_script_tags('passwordValidation') }}
 {% endblock %}
 
 {% block card %}
@@ -28,44 +20,14 @@
 
         {{ include('BackOffice/Security/_auth_messages.html.twig') }}
 
-        {{ form_start(form, {'action': path('user_resetting_reset', {'token': token}), 'attr': {'id': 'form_reset'}}) }}
+        {{ form_start(form, {'action': path('user_resetting_reset', {'token': token}), 'attr': {'id': 'form_reset', 'class': 'auth-password-form'}}) }}
 
             {# Erreurs globales (ex. jeton CSRF) #}
             {% for error in form.vars.errors %}
                 <div class="auth-alert" role="alert">{{ error.message }}</div>
             {% endfor %}
 
-            <div class="auth-password-rules" id="pswd_info">
-                <p>Votre mot de passe doit contenir :</p>
-                <ul>
-                    <li id="pswd_letter" class="invalid">une lettre minuscule</li>
-                    <li id="pswd_capital" class="invalid">une lettre majuscule</li>
-                    <li id="pswd_number" class="invalid">un chiffre</li>
-                    <li id="pswd_special_character" class="invalid">un caract&egrave;re sp&eacute;cial</li>
-                    <li id="pswd_length" class="invalid">au moins 12 caract&egrave;res</li>
-                </ul>
-            </div>
-
-            <div class="auth-field">
-                <div class="auth-field-label-row">
-                    <label for="password">{{ form.password.first.vars.label }}</label>
-                    <span id="result" aria-live="polite"></span>
-                </div>
-                {{ form_widget(form.password.first, {'id': 'password', 'attr': {'class': 'auth-input', 'autocomplete': 'new-password', 'aria-describedby': 'pswd_info'}}) }}
-                {# Le message « Les mots de passe ne correspondent pas » est rattaché à ce champ par RepeatedType #}
-                {% for error in form.password.vars.errors|merge(form.password.first.vars.errors) %}
-                    <p class="auth-field-error">{{ error.message }}</p>
-                {% endfor %}
-            </div>
-
-            <div class="auth-field">
-                <label for="password_repeat">{{ form.password.second.vars.label }}</label>
-                {{ form_widget(form.password.second, {'id': 'password_repeat', 'attr': {'class': 'auth-input', 'autocomplete': 'new-password'}}) }}
-                <small id="password_match_message" aria-live="polite" style="display:none;"></small>
-                {% for error in form.password.second.vars.errors %}
-                    <p class="auth-field-error">{{ error.message }}</p>
-                {% endfor %}
-            </div>
+            {{ include('BackOffice/Security/_new_password_fields.html.twig', {'field': form.password}) }}
 
             <button type="submit" class="auth-submit" name="_submit">Enregistrer le nouveau mot de passe</button>
 
