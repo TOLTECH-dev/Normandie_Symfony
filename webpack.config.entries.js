@@ -24,6 +24,9 @@ module.exports = (Encore) => {
         .addEntry('main', './assets/main.js')
         .addEntry('backOffice', './assets/backOffice.js')
         .addEntry('frontOffice', './assets/frontOffice.js')
+        // Création de compte bénéficiaire (templates/Main/Security/Registration/register.html.twig) :
+        // page autonome du gabarit layout_auth, qui ne charge pas l'entrée "main".
+        .addEntry('registerForm', ['./assets/js/main/passwordValidation.js', './assets/js/main/persistUsername.js'])
         .addEntry('app', './assets/app.js')
         .addEntry('coreList', './assets/js/backOffice/core_list/index.js')
         // Choix d'un nouveau mot de passe (réinitialisation, renouvellement) : pages autonomes du

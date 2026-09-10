@@ -1,26 +1,37 @@
-{% extends "Main/layout_core.html.twig" %}
+{#
+    Envoi du courriel d'activation après la création de compte (route user_registration_check_email,
+    RegistrationController::checkEmail).
 
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('registerCheckEmail') }}
-{% endblock %}
+    L'adresse affichée est celle que l'utilisateur vient de saisir : lue puis retirée de la session.
+#}
+{% extends "Main/Security/layout_auth.html.twig" %}
 
-{% block content %}
-    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="container-title">
-            <h2>Création de compte</h2>
+{% block title %}Vérifiez vos e-mails{% endblock %}
+
+{% block card %}
+    <div class="auth-card">
+        <div class="auth-card-header">
+            <div class="auth-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                    <path d="m3 7 9 6 9-6"></path>
+                </svg>
+            </div>
+            <h2 class="auth-card-title">V&eacute;rifiez vos e-mails</h2>
+            <p class="auth-card-subtitle">
+                Un e-mail a &eacute;t&eacute; envoy&eacute; &agrave; l'adresse <strong>{{ user.email }}</strong>. Il contient un lien
+                d'activation sur lequel il vous faudra cliquer afin d'activer votre compte.
+            </p>
         </div>
 
-        {#
-        {{ include('whiteLabelMainBundle:Macros:error.html.twig') }}
-        #}
+        {{ include('BackOffice/Security/_auth_messages.html.twig') }}
 
-        <p>Un e-mail a été envoyé à l'adresse {{ user.email }}. Il contient un lien d'activation sur lequel il vous faudra cliquer afin d'activer votre compte.</p>
+        <ul class="auth-info-list">
+            <li>Votre compte ne pourra &ecirc;tre utilis&eacute; qu'apr&egrave;s avoir cliqu&eacute; sur ce lien.</li>
+            <li>Vous pourrez ensuite vous connecter avec votre adresse e-mail et votre mot de passe.</li>
+            <li>Pensez &agrave; v&eacute;rifier vos courriers ind&eacute;sirables.</li>
+        </ul>
 
-        <br><br>
-
-        <div class="col-xs-12 col-sm-12 container-submit">
-            <a href="{{ path('web_homepage') }}" class="btn btn-warning">Retour à l'accueil</a>
-        </div>
+        <a href="{{ path('user_login') }}" class="auth-submit">Aller &agrave; la page de connexion</a>
     </div>
 {% endblock %}

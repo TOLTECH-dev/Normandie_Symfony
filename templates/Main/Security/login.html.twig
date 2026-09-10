@@ -1,136 +1,94 @@
-{% extends "Main/layout_core.html.twig" %}
+{#
+    Connexion à l'espace bénéficiaire (route user_login, SecurityController::loginUser).
+
+    Même ergonomie que la connexion au back-office (BackOffice/Security/login.html.twig).
+    Création de compte selon isShowDemandeCreateAction (date APP_DATE_LIMITE_CREATION_DEMANDE_MEMBER) :
+    - inscriptions ouvertes : lien « Créer un compte » sous la carte ;
+    - inscriptions fermées : information sur l'inscription par un conseiller, dans le panneau
+      d'identité sur grand écran, sous la carte sur petit écran (une seule version visible, cf.
+      auth_layout.css), pour ne pas allonger le panneau du formulaire.
+
+    L'identifiant des bénéficiaires est leur adresse e-mail (recopiée à la création de compte).
+    Le bouton FranceConnect, désactivé, figure dans l'historique git de ce fichier.
+#}
+{% extends "Main/Security/layout_auth.html.twig" %}
 {% import "Macros/captcha.html.twig" as captcha %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('mainLogin') }}
-{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {% if cachedUserIsCaptchaItemValue is defined and cachedUserIsCaptchaItemValue %}
-        <script src="https://www.google.com/recaptcha/api.js?hl=fr" type="text/javascript"></script>
+        <script src="https://www.google.com/recaptcha/api.js?hl=fr" type="text/javascript" async defer></script>
     {% endif %}
 {% endblock %}
 
-{% block content %}
-<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
+{% block brand_extra %}
+    {% if isShowDemandeCreateAction is empty %}
+        <div class="auth-notice auth-notice-brand">
+            {{ include('Main/Security/_registration_closed_notice.html.twig') }}
+        </div>
+    {% endif %}
+{% endblock %}
 
-    {{ include('Macros/error.html.twig') }}
+{% block card %}
+    <div class="auth-card">
+        <div class="auth-card-header">
+            <h2 class="auth-card-title">Connexion</h2>
+            <p class="auth-card-subtitle">Saisissez vos identifiants pour acc&eacute;der &agrave; votre espace personnel.</p>
+        </div>
 
-{#    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="bloc-franceConnect">#}
-{#        <p>#}
-{#            Se connecter avec FranceConnect: acc&egrave;der &agrave; tous les services en vous <br>#}
-{#            connectant sur ameli.fr, impots.gouv.fr, idn.laposte.fr, mobileconnectetmoi.fr etc...#}
-{#        </p>#}
+        {{ include('BackOffice/Security/_auth_messages.html.twig') }}
 
-{#        <a href="{{ path('kleegroup_franceconnect_franceconnect_login') }}">#}
-{#            <img#}
-{#                    src="{{ asset('build/images/main/logo/logo_FranceConnect.png') }}"#}
-{#                    alt="logo"#}
-{#                    class="franceConnect-logo"#}
-{#            >#}
-{#        </a>#}
+        <form action="{{ path('user_login') }}" method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
 
-{#        <p class="franceConnect-tip">#}
-{#            <a href="https://app.franceconnect.gouv.fr/en-savoir-plus" target="_blank" title="Qu'est-ce que FranceConnect ?">#}
-{#                Qu'est-ce que FranceConnect ?#}
-{#            </a>#}
-{#        </p>#}
-{#    </div>#}
+            <div class="auth-field">
+                <label for="username">Adresse e-mail</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}" class="auth-input"
+                       required="required" inputmode="email" autocomplete="username" autofocus />
+            </div>
 
+            <div class="auth-field">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="_password" class="auth-input"
+                       required="required" autocomplete="current-password" />
+            </div>
 
-
-{#    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="bloc-separation">#}
-{#        <fieldset>#}
-{#            <legend align="center">ou</legend>#}
-{#        </fieldset>#}
-{#    </div>#}
-
-
-
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop50" id="bloc-login">
-
-    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" id="container-create">
-        <fieldset>
-            <legend>Pas de compte?</legend>
-            {% if isShowDemandeCreateAction is not empty %}
-                <p>
-                    Si vous n'avez pas d'espace personnel, veuillez cliquer sur le lien ci-dessous pour en cr&eacute;er un et acc&eacute;der &agrave; votre espace personnel.
-                </p>
-
-                <div class="container-submit">
-                    <a href="{{ path('user_registration') }}" class="btn btn-warning">Créer un compte</a>
-                </div>
-            {% else %}
-                <div class="bold text-justify" id="text-revision-dispositif-aide">
-                    <p class="text-color-legend">Je n'ai pas de compte</p>
-                    <p>Pour b&eacute;n&eacute;ficier du Ch&egrave;que &eacute;co-&eacute;nergie Normandie, vous devez &ecirc;tre accompagn&eacute; par un conseiller d'une structure agr&eacute;&eacute;e Mon Accompagnateur R&eacute;nov' (MAR) par l'Anah et conventionn&eacute;e avec la R&eacute;gion (la liste des structures est &agrave; retrouver sur <a href="https://cheque-eco-energie.normandie.fr/trouver-un-conseiller" target="_blank">https://cheque-eco-energie.normandie.fr/trouver-un-conseiller</a>).</p>
-                    <p>Depuis mars 2025, les particuliers ne peuvent plus proc&eacute;der directement &agrave; leur inscription sur le site. Par cons&eacute;quent, nous vous invitons &agrave; demander &agrave; votre conseiller de cr&eacute;er votre compte et d'effectuer votre demande d'aide Audit / Travaux.  Vous serez ensuite inform&eacute; par mail de l'avancement de votre dossier.</p>
-                    <p>
-                        Merci de votre compr&eacute;hension.
-                    </p>
-                    <p>
-                        L'&eacute;quipe &laquo; Ch&egrave;que &eacute;co-&eacute;nergie Normandie &raquo;
-                    </p>
+            {% if cachedUserIsCaptchaItemValue is defined and cachedUserIsCaptchaItemValue %}
+                <div class="auth-captcha">
+                    {{ captcha.recaptcha(recaptcha_client_key, 'light') }}
                 </div>
             {% endif %}
-            <br>
-        </fieldset>
+
+            <button type="submit" class="auth-submit" id="_submit" name="_submit">Se connecter</button>
+        </form>
+
+        <div class="auth-card-footer">
+            <a href="{{ path('user_resetting_request') }}">Mot de passe oubli&eacute; ?</a>
+        </div>
     </div>
 
-    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" id="container-connect">
-        <fieldset>
-            <legend>J'acc&egrave;de &agrave; mon compte</legend>
+    {% if isShowDemandeCreateAction is not empty %}
+        <div class="auth-notice">
+            <h2 class="auth-notice-title">Pas encore de compte ?</h2>
+            <p>Si vous n'avez pas d'espace personnel, cr&eacute;ez-en un pour acc&eacute;der &agrave; votre espace personnel.</p>
+            <a href="{{ path('user_registration') }}" class="auth-notice-action">Cr&eacute;er un compte</a>
+        </div>
+    {% else %}
+        <div class="auth-notice auth-notice-panel">
+            {{ include('Main/Security/_registration_closed_notice.html.twig') }}
+        </div>
+    {% endif %}
 
-                <form action="{{ path("user_login") }}" method="post">
-                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
-                    <div class="container-login">
-
-                        <form>
-                            <div class="form-group">
-                                <label for="username" class="col-xs-12 col-sm-12 col-md-5 col-lg-5">Login</label>
-                                <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" placeholder="Login" class="col-xs-12 col-sm-12 col-md-7 col-lg-7" />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="password" class="col-xs-12 col-sm-12 col-md-5 col-lg-5">Mot de passe</label>
-                                <input type="password" id="password" name="_password" required="required" placeholder="Mot de passe" class="col-xs-12 col-sm-12 col-md-7 col-lg-7" />
-                            </div>
-
-                            {% if cachedUserIsCaptchaItemValue is defined and cachedUserIsCaptchaItemValue %}
-                                <div class="form-group">
-                                    {{ captcha.recaptcha(recaptcha_client_key) }}
-                                </div>
-                            {% endif %}
-
-                            <div class="container-submit">
-                                <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 submit-padding">
-                                    <input type="submit" class="btn btn-warning" id="_submit" name="_submit" value="Connexion" />
-                                </div>
-                            </div>
-                        </form>
-
-                        <div class="container-help">
-                            <a href="{{ path('user_resetting_request') }}">Mot de passe oubli&eacute;?</a>
-                        </div>
-                    </div>
-                </form>
-
-        </fieldset>
-    </div>
-    </div>
-
-
-{#    <!-- POUR MAINTENANCE -->#}
-{#    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop50" id="bloc-login">#}
-{#        <fieldset>#}
-{#            <legend style="padding: 0 500px"><h2>Site en maintenance</h2></legend>#}
-{#            <div class='text-center'>#}
-{#                <h4>Ch&egrave;que &eacute;co-&eacute;nergie Normandie est en cours de maintenance. Nous serons de retour tr&egrave;s bient&ocirc;t. Merci de votre patience.</h4>#}
-{#            </div>#}
-{#        </fieldset>#}
-{#    </div>#}
-
-</div>
+    {#
+        Pour maintenance : remplacer le contenu de ce bloc par
+        <div class="auth-card">
+            <div class="auth-card-header">
+                <h2 class="auth-card-title">Site en maintenance</h2>
+                <p class="auth-card-subtitle">Ch&egrave;que &eacute;co-&eacute;nergie Normandie est en cours de maintenance.
+                    Nous serons de retour tr&egrave;s bient&ocirc;t. Merci de votre patience.</p>
+            </div>
+        </div>
+    #}
 {% endblock %}
