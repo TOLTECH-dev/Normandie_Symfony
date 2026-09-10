@@ -12,10 +12,14 @@ use App\Entity\Remboursement_;
 use App\Entity\Remboursement_statut;
 use App\Entity\Structure_;
 use App\Entity\Titre;
+use App\Repository\Demande\DemandeListCriteria;
+use App\Repository\Demande\DemandeListSql;
 use App\Service\TitreService;
 use App\Utils\DefaultServiceUtils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
@@ -282,338 +286,103 @@ class Demande_Repository extends ServiceEntityRepository
     }
 
     /**
-     * @param $option
-     * @param string $where
-     * @return int
+     * Nombre de lignes de la consultation des dossiers pour le profil connecté, avec ou sans recherches.
+     *
+     * @param array<string, mixed>  $option  roles, username, production_travauxNiveau_BBC1 / BBC2
+     * @param array<string, string> $filters recherches validées (DemandeListCriteria)
+     *
      * @throws Exception
      */
-    public function countAll($option, $where='')
+    public function countAll(array $option, array $filters = []): int
     {
-        $queryJoin = "";
-        $queryWhere = "";
+        $listSql = $this->createListSql($option)->filterBy($filters);
 
-        $roles = $option['roles'];
-        $username = $option['username'];
-        $production_travauxNiveau_BBC1 = $option['production_travauxNiveau_BBC1'];
-        $production_travauxNiveau_BBC2 = $option['production_travauxNiveau_BBC2'];
-
-        $adminId = (int)substr($username, 1);
-
-        if (is_int($adminId)) {
-            if (in_array('ROLE_CONSEILLER', $roles)) {
-                $repo_structure = $this->_em->getRepository(Structure_::class);
-                $structure_id = $repo_structure->findByConseillerId($adminId);
-                $user_id_current = $structure_id['id'];
-
-                // La structure qui doit voir ses dossiers doit être la structure lié à la fiche du bénéficiaire
-                $queryJoin = "";
-                $queryWhere = " AND (
-                                    b.structure_rattachement_id =" . (int)$user_id_current . "
-                                )";
-            } elseif (in_array('ROLE_AUDITEUR', $roles)) {
-                $queryJoin = "
-                        LEFT JOIN partenaire_ p_dtd_aud ON dtd.auditeur_id = p_dtd_aud.id
-                        LEFT JOIN partenaire_statut ps_dtd_aud ON (p_dtd_aud.partenaire_statut_id = ps_dtd_aud.id AND ps_dtd_aud.enabled = '1')
-                        LEFT JOIN partenaire_identification pi_dtd_aud ON p_dtd_aud.partenaire_identification_id = pi_dtd_aud.id
-                    ";
-
-                $queryWhere = " AND ( " .
-                    "p_dae.id = '" .$adminId."' OR
-                         p_dan.id = '" .$adminId."' OR
-                         p_dtd_aud.id = '" .$adminId."' AND dt.audit = '1' ".
-                    ")";
-            } elseif (in_array('ROLE_RENOVATEUR', $roles)) {
-                $queryJoin = " LEFT JOIN partenaire_statut ps_dtd ON (p_dtd.partenaire_statut_id = ps_dtd.id AND ps_dtd.enabled = '1') ";
-
-                $queryWhere = " AND ( " .
-                    "dtd.renovateur_id = '" .$adminId."'".
-                    ")";
-            }  elseif (in_array('ROLE_EPCI', $roles)) {
-                $repo_EPCI = $this->_em->getRepository(EPCI_::class);
-                $EPCI_id = $repo_EPCI->findByContactId($adminId);
-                $user_id_current = $EPCI_id['id'];
-
-                $queryJoin = "
-                    LEFT JOIN up_ville uv ON l.INSEE = uv.code_insee
-                    LEFT JOIN orientation o ON uv.id = o.ville_id
-                ";
-
-                $queryWhere = " AND (
-                                    o.EPCI_id = " . (int)$user_id_current . "
-                                )
-                ";
-            } elseif (in_array('ROLE_TECHNIQUE', $roles)) {
-                $queryWhere = " AND ( " .
-                    "d.statut_id <> 15
-                        AND (dt.fiche_technique_id IS NOT NULL OR dt.travaux_devis_id IS NOT NULL)" .
-                    ")";
-            }
-        }
-
-        // Inner query : on selectionne juste d.id, r.id avec GROUP BY pour
-        // dedupliquer les combinaisons (titre / remboursement multiples).
-        // On wrap dans un SELECT COUNT(*) afin que MariaDB ne materialise
-        // pas toutes les lignes cote serveur+PHP : ~23k lignes -> 1 ligne.
-        // Le LEFT JOIN instruction_ i a ete retire : il n'est reference
-        // ni dans le WHERE ni dans le SELECT, c'etait du travail pur perdu.
-        $innerQuery = "
-            SELECT 1
-            FROM demande_ d
-                INNER JOIN beneficiaire b ON b.id = d.beneficiaire_id
-                INNER JOIN logement l ON l.id = d.logement_id
-                INNER JOIN demande_statut ds ON ds.id = d.statut_id
-                LEFT JOIN date_CP dCP ON dCP.id = d.dateCP_id
-                LEFT JOIN demande_audit_energie dae ON d.demande_audit_energie_id = dae.id
-                LEFT JOIN structure_ s_dae ON dae.structure_id = s_dae.id
-                LEFT JOIN structure_identification si_dae ON s_dae.structure_identification_id = si_dae.id
-                LEFT JOIN structure_conseiller sc_dae ON (dae.conseiller_id = sc_dae.id)
-                LEFT JOIN partenaire_ p_dae ON dae.auditeur_id = p_dae.id
-                LEFT JOIN partenaire_identification pi_dae ON p_dae.partenaire_identification_id = pi_dae.id
-                LEFT JOIN demande_audit_numerique dan ON d.demande_audit_numerique_id = dan.id
-                LEFT JOIN structure_ s_dan ON dan.structure_id = s_dan.id
-                LEFT JOIN structure_identification si_dan ON s_dan.structure_identification_id = si_dan.id
-                LEFT JOIN structure_conseiller sc_dan ON (dan.conseiller_id = sc_dan.id)
-                LEFT JOIN partenaire_ p_dan ON dan.auditeur_id = p_dan.id
-                LEFT JOIN partenaire_identification pi_dan ON p_dan.partenaire_identification_id = pi_dan.id
-                LEFT JOIN demande_travaux dt ON d.demande_travaux_id = dt.id
-                LEFT JOIN structure_ s_dt ON dt.structure_id = s_dt.id
-                LEFT JOIN structure_identification si_dt ON s_dt.structure_identification_id = si_dt.id
-                LEFT JOIN structure_conseiller sc_dt ON (dt.conseiller_id = sc_dt.id)
-                LEFT JOIN demande_travaux_devis dtd ON dt.travaux_devis_id = dtd.id
-                LEFT JOIN partenaire_ p_dtd ON dtd.renovateur_id = p_dtd.id
-                LEFT JOIN partenaire_identification pi_dtd ON p_dtd.partenaire_identification_id = pi_dtd.id
-                LEFT JOIN titre t ON t.demande_id = d.id
-                LEFT JOIN titre t2 ON t2.demande_id = t.demande_id AND t2.id != t.id
-                LEFT JOIN remboursement_ r2 ON r2.demande_id = d.id AND r2.titre_id = t2.id
-                LEFT JOIN remboursement_ r ON r.titre_id = t.id
-                LEFT JOIN remboursement_statut rs ON r.statut_id = rs.id
-                LEFT JOIN date_RMH dRMH ON dRMH.id = r.dateRMH_id " .
-            $queryJoin .
-            " WHERE (
-                        t.id IS NULL
-                        OR t.numero_operation NOT IN (" . $production_travauxNiveau_BBC1 . "," . $production_travauxNiveau_BBC2 . ")
-                        OR t.numero_operation = " . $production_travauxNiveau_BBC2 . " AND r2.statut_id = " . Remboursement_statut::STATUS_22 . "
-                        OR t.numero_operation = " . $production_travauxNiveau_BBC1 . " AND r.statut_id != " . Remboursement_statut::STATUS_22 . "
-                        OR t.numero_operation = " . $production_travauxNiveau_BBC1 . " AND r.id IS NULL
-            )" .
-            $queryWhere . $where . "
-            GROUP BY d.id, r.id
-        ";
-
-        $query = "SELECT COUNT(*) FROM (" . $innerQuery . ") AS sub";
-
-        $statement = $this->_em
-            ->getConnection()
-            ->prepare($query);
-        $result = $statement->executeQuery();
-
-        return (int) $result->fetchOne();
+        return (int) $this->_em->getConnection()->fetchOne($listSql->countQuery(), $listSql->getParams());
     }
 
-
     /**
+     * Page de la consultation des dossiers, lue en deux temps : couples (dossier, remboursement) de la
+     * page avec les seules jointures utiles au filtre et au tri, puis détail de ces seules lignes.
      *
-     * @param array<string, mixed> $option
-     * @param string               $orderBy
-     * @param string               $orderType
-     * @param int                  $start
-     * @param int                  $length
-     * @param string               $where
+     * @param array<string, mixed> $option roles, username, production_travauxNiveau_BBC1 / BBC2
      *
-     * @return array<int, mixed>
-     * @throws \Doctrine\DBAL\Exception
+     * @return list<array<string, mixed>>
+     *
+     * @throws Exception
      */
-    public function findAllAjax(array $option, string $orderBy, string $orderType, int $start, int $length, string $where = ''): array
+    public function findAllAjax(array $option, DemandeListCriteria $criteria): array
     {
-        $queryJoin = '';
-        $queryWhere = '';
+        $connection = $this->_em->getConnection();
+        $listSql = $this->createListSql($option)->filterBy($criteria->getFilters());
 
-        $roles = $option['roles'];
-        $username = $option['username'];
-        $production_travauxNiveau_BBC1 = (int)$option['production_travauxNiveau_BBC1'];
-        $production_travauxNiveau_BBC2 = (int)$option['production_travauxNiveau_BBC2'];
+        $pairs = $connection->fetchAllAssociative(
+            $listSql->pageQuery(
+                $criteria->getSortColumn(),
+                $criteria->getSortDirection(),
+                $criteria->getStart(),
+                $criteria->getLength()
+            ),
+            $listSql->getParams()
+        );
+        if ([] === $pairs) {
+            return [];
+        }
 
-        $adminId = (int)substr($username, 1);
+        $demandeIds = array_values(array_unique(array_map(static fn (array $pair): int => (int) $pair['demandeId'], $pairs)));
+        $rows = $connection->fetchAllAssociative(
+            DemandeListSql::detailQuery(),
+            ['ids' => $demandeIds],
+            ['ids' => ArrayParameterType::INTEGER]
+        );
 
-        if (is_int($adminId)) {
-            if (in_array('ROLE_CONSEILLER', $roles)) {
-                $repo_structure = $this->_em->getRepository(Structure_::class);
-                $structure_id = $repo_structure->findByConseillerId($adminId);
-                $user_id_current = $structure_id['id'];
+        $rowsByPair = [];
+        foreach ($rows as $row) {
+            $rowsByPair[$row['demandeId'] . '|' . $row['remboursementId']] ??= $row;
+        }
 
-                // La structure qui doit voir ses dossiers doit être la structure lié à la fiche du bénéficiaire
-                $queryJoin = '';
-                $queryWhere = ' AND (b.structure_rattachement_id = ' . (int)$user_id_current . ')';
-            } elseif (in_array('ROLE_AUDITEUR', $roles)) {
-                $queryJoin = '
-                        LEFT JOIN partenaire_ p_dtd_aud ON dtd.auditeur_id = p_dtd_aud.id
-                        LEFT JOIN partenaire_statut ps_dtd_aud ON (p_dtd_aud.partenaire_statut_id = ps_dtd_aud.id AND ps_dtd_aud.enabled = \'1\')
-                        LEFT JOIN partenaire_identification pi_dtd_aud ON p_dtd_aud.partenaire_identification_id = pi_dtd_aud.id
-                    ';
-
-                $queryWhere = ' AND (p_dae.id = ' . $adminId . ' OR p_dan.id = ' . $adminId . ' OR (p_dtd_aud.id = ' . $adminId . ' AND dt.audit = \'1\'))';
-            } elseif (in_array('ROLE_RENOVATEUR', $roles)) {
-                $queryJoin = ' LEFT JOIN partenaire_statut ps_dtd ON (p_dtd.partenaire_statut_id = ps_dtd.id AND ps_dtd.enabled = \'1\') ';
-
-                $queryWhere = ' AND (dtd.renovateur_id = ' . $adminId . ')';
-            } elseif (in_array('ROLE_EPCI', $roles)) {
-                $repo_EPCI = $this->_em->getRepository(EPCI_::class);
-                $EPCI_id = $repo_EPCI->findByContactId($adminId);
-                $user_id_current = $EPCI_id['id'];
-
-                $queryJoin = '
-                    LEFT JOIN up_ville uv ON l.INSEE = uv.code_insee
-                    LEFT JOIN orientation o ON uv.id = o.ville_id
-                ';
-
-                $queryWhere = ' AND (o.EPCI_id = ' . (int)$user_id_current . ')';
-            } elseif (in_array('ROLE_TECHNIQUE', $roles)) {
-                $queryWhere = ' AND (d.statut_id <> 15 AND (dt.fiche_technique_id IS NOT NULL OR dt.travaux_devis_id IS NOT NULL))';
+        // Ordre de la page ; un dossier supprimé entre les deux requêtes est simplement absent
+        $page = [];
+        foreach ($pairs as $pair) {
+            $row = $rowsByPair[$pair['demandeId'] . '|' . $pair['remboursementId']] ?? null;
+            if (null !== $row) {
+                $page[] = $row;
             }
         }
 
-        $query = "
-            SELECT  d.id AS demandeId,
-                    d.statut_description AS demandeStatutDescriptionFormatted,
-                    CASE d.type
-                        WHEN " . Demande_::DEMANDE_AUDIT_ENERGIE_TYPE . " THEN " . Demande_::DEMANDE_AUDIT_ENERGIE_TYPE . "
-                        WHEN " . Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE . " THEN " . Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE . "
-                        WHEN " . Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE . " THEN " . Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE . "
-                        WHEN " . Demande_::DEMANDE_TRAVAUX_TYPE . " THEN CASE SUBSTRING(dtd.niveau, 1, 1)
-                                          WHEN '0' THEN " . Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_1_CODE . "
-                                          WHEN '1' THEN " . Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_2_CODE . "
-                                          WHEN '2' THEN " . Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_2_RENOVATEUR_CODE . "
-                                          WHEN '3' THEN " . Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_BBC_RENOVATEUR_CODE . "
-                                          WHEN '4' THEN " . Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_BBC_BIOSOURCE_CODE . "
-                                          WHEN '6' THEN " . Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_SORTIE_PASSOIRE_CODE . "
-                                          WHEN '7' THEN " . Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_ETAPE1_BBC_RGE_CODE . "
-                                          WHEN '8' THEN " . Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_ETAPE1_BBC_RENOVATEUR_CODE . "
-                                          WHEN '9' THEN " . Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_RENOVATION_GLOBALE_BBC_CODE . "
-                                          ELSE " . Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_A_DEFINIR_CODE . "
-                                      END
-                        WHEN " . Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE . " THEN " . Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE . "
-                    END AS demandeType,
-                    dt.audit AS audit,
-                    ( SELECT dAuditE.id 
-                      FROM demande_ dAuditE
-                      LEFT JOIN remboursement_ rAuditE
-                          ON rAuditE.demande_id = dAuditE.id
-                          AND rAuditE.statut_id = " . Remboursement_statut::STATUS_20 . "
-                      WHERE dAuditE.logement_id = l.id 
-                          AND dAuditE.id <> d.id 
-                          AND (dAuditE.type = " . Demande_::DEMANDE_AUDIT_ENERGIE_TYPE . " OR dAuditE.type = " . Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE . ")
-                          AND dAuditE.statut_id <> " . Demande_statut::STATUS_15 . "
-                          AND rAuditE.demande_id IS NULL
-                      LIMIT 1
-                    ) AS auditEId,
-                    dtd.niveau AS travauxNiveauCheque,
-                    dtd.is_bonification_aide AS demandeTravauxDevisIsBonificationAide,
-                    CASE WHEN ('1 | sci' != b.type)
-                        THEN CONCAT(' ', UPPER(b.nom), ' ', CONCAT(UCASE(LEFT(b.prenom, 1)), LCASE(SUBSTRING(b.prenom, 2))))
-                        ELSE CONCAT_WS(' ', CONCAT(UCASE(LEFT(b.nom_SCI, 1)), LCASE(SUBSTRING(b.nom_SCI, 2))), '<br>', CONCAT(UPPER(b.nom), ' ', CONCAT(UCASE(LEFT(b.prenom, 1)), LCASE(SUBSTRING(b.prenom, 2)))))
-                    END AS beneficiaireIdentifiant,
-                    CONCAT(l.code_postal, ' ', l.ville) AS logement,
-                    DATE_FORMAT(d.date_creation, '%Y/%m/%d') AS demandeDateCreation,
-                    ds.slug AS demandeStatutSlug,
-                    ds.description AS demandeStatutDescription,
-                    CASE d.type
-                        WHEN " . Demande_::DEMANDE_AUDIT_ENERGIE_TYPE . " THEN
-                            CASE WHEN ('' != sc_dae.nom)
-                                THEN CONCAT(' ', si_dae.nom, ' - ', sc_dae.nom)
-                                ELSE si_dae.nom
-                            END
-                        WHEN " . Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE . " THEN
-                            CASE WHEN ('' != sc_dan.nom)
-                                THEN CONCAT(' ', si_dan.nom, ' - ', sc_dan.nom)
-                                ELSE si_dan.nom
-                            END
-                        WHEN " . Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE . " THEN
-                            CASE WHEN ('' != sc_dan.nom)
-                                THEN CONCAT(' ', si_dan.nom, ' - ', sc_dan.nom)
-                                ELSE si_dan.nom
-                            END                            
-                        WHEN " . Demande_::DEMANDE_TRAVAUX_TYPE . " THEN 
-                            CASE WHEN ('' != sc_dt.nom)
-                                THEN CONCAT(' ', si_dt.nom, ' - ', sc_dt.nom)
-                                ELSE si_dt.nom
-                            END
-                        WHEN " . Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE . " THEN
-                            CASE WHEN ('' != sc_dae.nom)
-                                THEN CONCAT(' ', si_dae.nom, ' - ', sc_dae.nom)
-                                ELSE si_dae.nom
-                            END                            
-                        ELSE NULL
-                    END AS structureConseiller,
-                    CASE d.type
-                        WHEN " . Demande_::DEMANDE_AUDIT_ENERGIE_TYPE . " THEN pi_dae.raison_sociale
-                        WHEN " . Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE . " THEN pi_dan.raison_sociale
-                        WHEN " . Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE . " THEN pi_dan.raison_sociale
-                        WHEN " . Demande_::DEMANDE_TRAVAUX_TYPE . " THEN  pi_dtd.raison_sociale
-                        WHEN " . Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE . " THEN pi_dae.raison_sociale
-                        ELSE NULL
-                    END AS partenaire,
-                    DATE_FORMAT(dCP.date_CP, '%Y/%m/%d') AS commissionDate,
-                    d.statut_id AS demandeStatutId,
-                    b.id AS beneficiaireId,
-                    b.type AS beneficiaireType,
-                    l.id AS logementId,
-                    DATE_FORMAT(dRMH.date_RMH, '%Y/%m/%d') AS remboursementDate,
-                    '' AS action,
-                    0 AS countCommentaire,
-                    rs.description As remboursementStatutDescription,
-                    rs.slug AS remboursementStatutSlug,
-                    r.id AS remboursementId,
-                    r.statut_description AS remboursementStatutDescriptionFormatted
-            FROM demande_ d
-                INNER JOIN beneficiaire b ON b.id = d.beneficiaire_id
-                INNER JOIN logement l ON l.id = d.logement_id
-                INNER JOIN demande_statut ds ON ds.id = d.statut_id
-                LEFT JOIN date_CP dCP ON dCP.id = d.dateCP_id
-                LEFT JOIN demande_audit_energie dae ON d.demande_audit_energie_id = dae.id
-                LEFT JOIN structure_ s_dae ON dae.structure_id = s_dae.id
-                LEFT JOIN structure_identification si_dae ON s_dae.structure_identification_id = si_dae.id
-                LEFT JOIN structure_conseiller sc_dae ON dae.conseiller_id = sc_dae.id
-                LEFT JOIN partenaire_ p_dae ON dae.auditeur_id = p_dae.id
-                LEFT JOIN partenaire_identification pi_dae ON p_dae.partenaire_identification_id = pi_dae.id
-                LEFT JOIN demande_audit_numerique dan ON d.demande_audit_numerique_id = dan.id
-                LEFT JOIN structure_ s_dan ON dan.structure_id = s_dan.id
-                LEFT JOIN structure_identification si_dan ON s_dan.structure_identification_id = si_dan.id
-                LEFT JOIN structure_conseiller sc_dan ON dan.conseiller_id = sc_dan.id
-                LEFT JOIN partenaire_ p_dan ON dan.auditeur_id = p_dan.id
-                LEFT JOIN partenaire_identification pi_dan ON p_dan.partenaire_identification_id = pi_dan.id    
-                LEFT JOIN demande_travaux dt ON d.demande_travaux_id = dt.id
-                LEFT JOIN structure_ s_dt ON dt.structure_id = s_dt.id
-                LEFT JOIN structure_identification si_dt ON s_dt.structure_identification_id = si_dt.id
-                LEFT JOIN structure_conseiller sc_dt ON dt.conseiller_id = sc_dt.id
-                LEFT JOIN demande_travaux_devis dtd ON dt.travaux_devis_id = dtd.id
-                LEFT JOIN partenaire_ p_dtd ON dtd.renovateur_id = p_dtd.id
-                LEFT JOIN partenaire_identification pi_dtd ON p_dtd.partenaire_identification_id = pi_dtd.id
-                LEFT JOIN titre t ON t.demande_id = d.id
-                LEFT JOIN titre t2 ON t2.demande_id = t.demande_id AND t2.id != t.id 
-                LEFT JOIN remboursement_ r2 ON r2.demande_id = d.id AND r2.titre_id = t2.id
-                LEFT JOIN remboursement_ r ON r.titre_id = t.id
-                LEFT JOIN remboursement_statut rs ON r.statut_id = rs.id
-                LEFT JOIN date_RMH dRMH ON dRMH.id = r.dateRMH_id " .
-            $queryJoin .
-            " WHERE (
-                        t.id IS NULL
-                        OR t.numero_operation NOT IN (".$production_travauxNiveau_BBC1.",".$production_travauxNiveau_BBC2.")
-                        OR t.numero_operation = ".$production_travauxNiveau_BBC2." AND r2.statut_id = " .Remboursement_statut::STATUS_22."
-                        OR t.numero_operation = ".$production_travauxNiveau_BBC1." AND r.statut_id != " .Remboursement_statut::STATUS_22."
-                        OR t.numero_operation = ".$production_travauxNiveau_BBC1." AND r.id IS NULL
-            )" .
-            $queryWhere . $where . "
-            GROUP BY d.id, r.id
-            ORDER BY " . $orderBy . ' ' . $orderType . '
-            LIMIT ' . $start . ',' . $length . '
-        ';
+        return $page;
+    }
 
-        $statement = $this->_em
-            ->getConnection()
-            ->prepare($query);
-        $result = $statement->executeQuery();
+    /**
+     * Requête de la liste restreinte au périmètre du profil connecté (username : lettre + identifiant).
+     *
+     * @param array<string, mixed> $option
+     *
+     * @throws Exception
+     */
+    private function createListSql(array $option): DemandeListSql
+    {
+        $listSql = new DemandeListSql(
+            (int) $option['production_travauxNiveau_BBC1'],
+            (int) $option['production_travauxNiveau_BBC2']
+        );
+        $roles = $option['roles'];
+        $adminId = (int) substr((string) $option['username'], 1);
 
-        return $result->fetchAllAssociative();
+        if (in_array('ROLE_CONSEILLER', $roles, true)) {
+            $structure = $this->_em->getRepository(Structure_::class)->findByConseillerId($adminId);
+            $listSql->restrictToStructure((int) ($structure['id'] ?? 0));
+        } elseif (in_array('ROLE_AUDITEUR', $roles, true)) {
+            $listSql->restrictToAuditeur($adminId);
+        } elseif (in_array('ROLE_RENOVATEUR', $roles, true)) {
+            $listSql->restrictToRenovateur($adminId);
+        } elseif (in_array('ROLE_EPCI', $roles, true)) {
+            $epci = $this->_em->getRepository(EPCI_::class)->findByContactId($adminId);
+            $listSql->restrictToEpci((int) ($epci['id'] ?? 0));
+        } elseif (in_array('ROLE_TECHNIQUE', $roles, true)) {
+            $listSql->restrictToTechnique();
+        }
+
+        return $listSql;
     }
 
     /**
@@ -1265,15 +1034,15 @@ class Demande_Repository extends ServiceEntityRepository
     }
 
     /**
-     * @param $option
-     * @param string $whereFormFilter
-     * @return \Doctrine\DBAL\Driver\Statement|\Doctrine\DBAL\Statement
+     * Lignes de l'export des dossiers, pour le profil destinataire et les recherches enregistrées.
+     *
+     * @param array<string, mixed>  $option  roles, username, production_travauxNiveau_BBC1 / BBC2
+     * @param array<string, string> $filters recherches validées (DemandeListCriteria), liées en paramètres
+     *
      * @throws Exception
      */
-    public function findDataExportStatement(
-        $option,
-        $whereFormFilter = ''
-    ) {
+    public function findDataExportResult(array $option, array $filters): Result
+    {
         $roles = $option['roles'];
         $username = $option['username'];
         $production_travauxNiveau_BBC1 = $option['production_travauxNiveau_BBC1'];
@@ -1332,6 +1101,10 @@ class Demande_Repository extends ServiceEntityRepository
                 ";
             }
         }
+
+        // Recherches liées en paramètres : aucune valeur saisie n'est écrite dans le SQL
+        [$filterConditions, $params] = DemandeListSql::exportFilterConditions($filters);
+        $whereFormFilter = [] === $filterConditions ? '' : ' AND ' . implode(' AND ', $filterConditions);
 
         $query = "
             SELECT  DISTINCT d.id AS demandeId,
@@ -1534,17 +1307,13 @@ class Demande_Repository extends ServiceEntityRepository
                         OR t.numero_operation = ".$production_travauxNiveau_BBC1." AND r.statut_id != " .Remboursement_statut::STATUS_22."
                         OR t.numero_operation = ".$production_travauxNiveau_BBC1." AND r.id IS NULL
             )" .
-            $queryWhere .  $whereFormFilter . "
+            $queryWhere . $whereFormFilter . "
             GROUP BY d.id, r.id, r2.id, t.id
             ORDER BY d.id DESC, r.id, r2.id, t.id DESC
         ";
 
-        $statement = $this->_em
-            ->getConnection()
-            ->prepare($query);
-        $statement->executeQuery();
-
-        return $statement;
+        // Exécutée une seule fois : l'appelant parcourt directement le résultat
+        return $this->_em->getConnection()->executeQuery($query, $params);
     }
 
     /**

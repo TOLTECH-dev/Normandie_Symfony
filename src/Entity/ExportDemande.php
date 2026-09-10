@@ -17,8 +17,12 @@ class ExportDemande extends Log
     #[ORM\Column(name: 'destinataire_user_id', type: 'integer')]
     protected int $destinataireUserId;
 
+    /**
+     * Recherches de la liste au moment de la demande, en JSON. La colonne garde son nom historique :
+     * elle contenait auparavant un fragment SQL, exécuté tel quel par la commande d'export.
+     */
     #[ORM\Column(name: 'where_query', type: 'text', nullable: true)]
-    private ?string $whereQuery = null;
+    private ?string $filters = null;
 
     public static string $filename = 'exportDemande';
 
@@ -43,14 +47,38 @@ class ExportDemande extends Log
         return $this->destinataireUserId;
     }
 
-    public function setWhereQuery(?string $whereQuery): self
+    /**
+     * @param array<string, string> $filters
+     */
+    public function setFilters(array $filters): self
     {
-        $this->whereQuery = $whereQuery;
+        $this->filters = json_encode($filters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
         return $this;
     }
 
-    public function getWhereQuery(): ?string
+    /**
+     * @return array<mixed>
+     *
+     * @throws \UnexpectedValueException contenu illisible, par exemple un export antérieur au format SQL
+     */
+    public function getFilters(): array
     {
-        return $this->whereQuery;
+        if (null === $this->filters || '' === $this->filters) {
+            return [];
+        }
+
+        try {
+            $filters = json_decode($this->filters, true, 2, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            $filters = null;
+        }
+
+        if (!is_array($filters)) {
+            throw new \UnexpectedValueException(
+                'Recherches de l\'export illisibles (ancien format ?) : relancer l\'export depuis la liste des dossiers'
+            );
+        }
+
+        return $filters;
     }
 }

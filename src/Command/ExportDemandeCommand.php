@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use App\Entity\ExportDemande;
+use App\Repository\Demande\DemandeListCriteria;
 use App\Repository\ExportDemandeRepository;
 use App\Service\DemandeServiceBO;
 use App\Entity\User;
@@ -168,10 +169,11 @@ class ExportDemandeCommand extends Command
             'production_travauxNiveau_BBC2' => $this->parameterBag->get('production_travauxNiveau_BBC2')
         ];
 
+        // Recherches relues comme données puis revalidées : jamais exécutées comme du SQL
         $this->demandeService->fputTitleAndContentExport(
             $handle,
             $option,
-            $exportDemande->getWhereQuery()
+            DemandeListCriteria::normalizeFilters($exportDemande->getFilters())
         );
 
         fclose($handle);

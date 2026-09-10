@@ -20,6 +20,7 @@ use App\Entity\Instruction_;
 use App\Entity\Logement;
 use App\Entity\Remboursement_;
 use App\Entity\Remboursement_statut;
+use App\Repository\Demande\DemandeListCriteria;
 use App\Repository\Demande_Repository;
 use App\Repository\Historique_Repository;
 use App\Repository\BeneficiaireRepository;
@@ -166,167 +167,15 @@ class DemandeController extends AbstractController
             $demandeRepository = $this->em->getRepository(Demande_::class);
             $recordsTotal = $this->getCachedRecordsTotal($demandeRepository, $option);
 
-            /* START of POST variables coming from datatable */
-            $draw = (int)$postData['draw'];
-            $orderByColumnIndex = (int)$postData['order'][0]['column'];
-            $orderBy = $postData['columns'][$orderByColumnIndex]['data'];
-            $orderType = $postData['order'][0]['dir'];
-            $start = (int)$postData['start'];
-            $length = (int)$postData['length'];
-            /* END of POST variables */
+            // Recherches, tri et pagination validés : colonnes connues, sens asc/desc, 100 lignes au plus.
+            // Aucune valeur reçue n'est écrite dans le SQL (cf. DemandeListSql).
+            $criteria = DemandeListCriteria::fromDataTables($postData);
+            $draw = (int) ($postData['draw'] ?? 0);
 
-            /* START INIT of column search */
-            $columnWhereTmp = [];
-            for ($i = 0; $i < count($postData['columns']); $i++) {
-                if ('' !== ($postData['columns'][$i]['search']['value'] ?? '')) {
-                    $columnWhereTmp[] = $postData['columns'][$i]['search']['value'];
-                }
-            }
-            /* END INIT of column search */
-
-            /* START of search */
-            $columnWhere = '';
-            if (!empty($columnWhereTmp)) {
-                $columnWhere = [];
-
-                for ($i = 0; $i < count($postData['columns']); $i++) {
-                    if ('' !== ($postData['columns'][$i]['search']['value'] ?? '')) {
-                        $columnSearch = $postData['columns'][$i]['data'];
-                        $searchValue = $postData['columns'][$i]['search']['value'];
-
-                        switch ($columnSearch) {
-                            case 'demandeId':
-                                $columnWhere[] = "d.id LIKE \"%" . $searchValue . "%\"";
-                                break;
-                            case 'demandeType':
-                                $columnDemandeType = 'd.type';
-                                $columnDemandeNiveauSubstring = 'SUBSTRING(dtd.niveau, 1, 1)';
-
-                                if (isset($searchValue)) {
-                                    switch ($searchValue) {
-                                        case Demande_::DEMANDE_AUDIT_ENERGIE_TYPE:
-                                        case Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE:
-                                        case Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE:
-                                        case Demande_::DEMANDE_TRAVAUX_TYPE:
-                                        case Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE:
-                                            $columnDemandeType = $columnDemandeType . " = " . $searchValue;
-                                            $columnDemandeNiveau = " dtd.niveau IS NULL ";
-                                            break;
-                                        case Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_1_CODE:
-                                            $columnDemandeType = $columnDemandeType . " = " . Demande_::DEMANDE_TRAVAUX_TYPE;
-                                            $columnDemandeNiveau = $columnDemandeNiveauSubstring . " = '0'";
-                                            break;
-                                        case Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_2_CODE:
-                                            $columnDemandeType = $columnDemandeType . " = " . Demande_::DEMANDE_TRAVAUX_TYPE;
-                                            $columnDemandeNiveau = $columnDemandeNiveauSubstring . " = '1'";
-                                            break;
-                                        case Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_2_RENOVATEUR_CODE:
-                                            $columnDemandeType = $columnDemandeType . " = " . Demande_::DEMANDE_TRAVAUX_TYPE;
-                                            $columnDemandeNiveau = $columnDemandeNiveauSubstring . " = '2'";
-                                            break;
-                                        case Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_BBC_RENOVATEUR_CODE:
-                                            $columnDemandeType = $columnDemandeType . " = " . Demande_::DEMANDE_TRAVAUX_TYPE;
-                                            $columnDemandeNiveau = $columnDemandeNiveauSubstring . " = '3'";
-                                            break;
-                                        case Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_BBC_BIOSOURCE_CODE:
-                                            $columnDemandeType = $columnDemandeType . " = " . Demande_::DEMANDE_TRAVAUX_TYPE;
-                                            $columnDemandeNiveau = $columnDemandeNiveauSubstring . " = '4'";
-                                            break;
-                                        case Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_SORTIE_PASSOIRE_CODE:
-                                            $columnDemandeType = $columnDemandeType . " = " . Demande_::DEMANDE_TRAVAUX_TYPE;
-                                            $columnDemandeNiveau = $columnDemandeNiveauSubstring . " = '6'";
-                                            break;
-                                        case Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_ETAPE1_BBC_RGE_CODE:
-                                            $columnDemandeType = $columnDemandeType . " = " . Demande_::DEMANDE_TRAVAUX_TYPE;
-                                            $columnDemandeNiveau = $columnDemandeNiveauSubstring . " = '7'";
-                                            break;
-                                        case Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_ETAPE1_BBC_RENOVATEUR_CODE:
-                                            $columnDemandeType = $columnDemandeType . " = " . Demande_::DEMANDE_TRAVAUX_TYPE;
-                                            $columnDemandeNiveau = $columnDemandeNiveauSubstring . " = '8'";
-                                            break;
-                                        case Demande_travaux_devis::DEMANDE_TRAVAUX_NIVEAU_RENOVATION_GLOBALE_BBC_CODE:
-                                            $columnDemandeType = $columnDemandeType . " = " . Demande_::DEMANDE_TRAVAUX_TYPE;
-                                            $columnDemandeNiveau = $columnDemandeNiveauSubstring . " = '9'";
-                                            break;
-                                        default:
-                                            $columnDemandeNiveau = '';
-                                            $columnDemandeType = '';
-                                            break;
-                                    }
-                                }
-                                if ($columnDemandeType !== '' && $columnDemandeNiveau !== '') {
-                                    $columnWhere[] = "(" . $columnDemandeType . " AND " . $columnDemandeNiveau . ")";
-                                }
-                                break;
-                            case 'beneficiaireIdentifiant':
-                                $columnWhere[] =
-                                    "(b.nom LIKE \"%" . $searchValue . "%\"" .
-                                    " OR " .
-                                    "b.prenom LIKE \"%" . $searchValue . "%\"" .
-                                    " OR " .
-                                    "b.nom_SCI LIKE \"%" . $searchValue . "%\")";
-                                break;
-                            case 'logement':
-                                $columnWhere[] =
-                                    "(l.code_postal LIKE \"%" . $searchValue . "%\"" .
-                                    " OR " .
-                                    "l.ville LIKE \"%" . $searchValue . "%\")";
-                                break;
-                            case 'demandeDateCreation':
-                                $columnWhere[] = "DATE_FORMAT(d.date_creation, '%d/%m/%Y') LIKE \"%" . $searchValue . "%\"";
-                                break;
-                            case 'demandeStatutSlug':
-                                $columnWhere[] =
-                                    "IF(rs.slug IS NOT NULL, rs.slug LIKE \"%" . $searchValue . "%\", ds.slug LIKE \"%" . $searchValue . "%\")";
-                                break;
-                            case 'structureConseiller':
-                                $columnWhere[] =
-                                    "(si_dae.nom LIKE \"%" . $searchValue . "%\"" .
-                                    " OR " .
-                                    "sc_dae.nom LIKE \"%" . $searchValue . "%\"" .
-                                    " OR " .
-                                    "si_dan.nom LIKE \"%" . $searchValue . "%\"" .
-                                    " OR " .
-                                    "sc_dan.nom LIKE \"%" . $searchValue . "%\"" .
-                                    " OR " .
-                                    "si_dt.nom LIKE \"%" . $searchValue . "%\"" .
-                                    " OR " .
-                                    "sc_dt.nom LIKE \"%" . $searchValue . "%\")";
-                                break;
-                            case 'partenaire':
-                                $columnWhere[] =
-                                    "(pi_dae.raison_sociale LIKE \"%" . $searchValue . "%\"" .
-                                    " OR " .
-                                    "pi_dan.raison_sociale LIKE \"%" . $searchValue . "%\"" .
-                                    " OR " .
-                                    "pi_dtd.raison_sociale LIKE \"%" . $searchValue . "%\")";
-                                break;
-                            case 'commissionDate':
-                                $columnWhere[] = "DATE_FORMAT(dCP.date_CP, '%d/%m/%Y') LIKE \"%" . $searchValue . "%\"";
-                                break;
-                            case 'remboursementDate':
-                                $columnWhere[] = "DATE_FORMAT(dRMH.date_RMH, '%d/%m/%Y') LIKE \"%" . $searchValue . "%\"";
-                                break;
-                        }
-                    }
-                }
-
-                if (!empty($columnWhere)) {
-                    $columnCopy = implode(" AND ", $columnWhere);
-                    $columnWhere = " AND " . $columnCopy;
-                } else {
-                    $columnWhere = "";
-                }
-
-                // Search filtered result with limit and orderBy clauses
-                $data = $demandeRepository->findAllAjax($option, $orderBy, $orderType, $start, $length, $columnWhere);
-                $recordsFiltered = $demandeRepository->countAll($option, $columnWhere);
-            } else {
-                // Search all result with limit and orderBy clauses
-                $data = $demandeRepository->findAllAjax($option, $orderBy, $orderType, $start, $length);
-                $recordsFiltered = $recordsTotal;
-            }
-            /* END of search */
+            $data = $demandeRepository->findAllAjax($option, $criteria);
+            $recordsFiltered = $criteria->hasFilters()
+                ? $demandeRepository->countAll($option, $criteria->getFilters())
+                : $recordsTotal;
 
             // Comptes de commentaires en batch sur les seules demandes paginees
             // (l'ancien LEFT JOIN historique_ + COUNT(h.id) dans findAllAjax
@@ -1573,9 +1422,8 @@ class DemandeController extends AbstractController
                 'remboursementDate'       => $request->request->get('remboursementDate')
             ];
 
-            $whereFormFilter = $this->demandeServiceBO->getWhereFormFilter($fields);
-
-            $exportDemande->setWhereQuery($whereFormFilter);
+            // Recherches enregistrées comme données ; la commande d'export les lie en paramètres SQL
+            $exportDemande->setFilters(DemandeListCriteria::normalizeFilters($fields));
             $this->em->persist($exportDemande);
             $this->em->flush();
             $exportId = $exportDemande->getId();
