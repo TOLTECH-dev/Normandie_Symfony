@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Repository\UserRepository;
+use App\Security\TwoFactor\MfaPolicy;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -14,7 +15,8 @@ class FranceConnectService
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository         $userRepository,
         private readonly DemandeServiceBO       $demandeServiceBO,
-        private readonly AdminService           $adminService
+        private readonly AdminService           $adminService,
+        private readonly MfaPolicy              $mfaPolicy
     )
     {
     }
@@ -48,6 +50,14 @@ class FranceConnectService
             if ($user) {
                 // Vérification si l'utilisateur est activé
                 if (!$user->isEnabled()) {
+                    return 'isConnectViaFranceConnectForbidden';
+                }
+
+                // Les profils soumis au MFA ne peuvent pas se connecter via FranceConnect :
+                // AdminService::authenticateManually() pose le jeton directement, sans passer
+                // par le firewall "backoffice" qui impose le second facteur, alors que le
+                // contexte de sécurité est partagé avec /admin.
+                if ($this->mfaPolicy->isRequiredFor($user)) {
                     return 'isConnectViaFranceConnectForbidden';
                 }
 

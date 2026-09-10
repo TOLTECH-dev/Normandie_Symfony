@@ -1,43 +1,41 @@
-{% extends "Main/layout_core.html.twig" %}
+{% extends "Main/Security/Resetting/layout.html.twig" %}
 {% import "Macros/captcha.html.twig" as captcha %}
 
-{% block stylesheets %}
+{% block title %}Mot de passe oublié{% endblock %}
+
+{% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_link_tags('resettingRequest') }}
+    <script src="https://www.google.com/recaptcha/api.js?hl=fr" type="text/javascript" async defer></script>
 {% endblock %}
 
-{% block content %}
-    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="container-title">
-            <h2>R&eacute;initialisation du mot de passe</h2>
+{% block card %}
+    <div class="auth-card">
+        <div class="auth-card-header">
+            <h2 class="auth-card-title">Mot de passe oubli&eacute;</h2>
+            <p class="auth-card-subtitle">
+                Indiquez votre {{ string }} : si un compte correspond, vous recevrez un courriel contenant
+                un lien pour choisir un nouveau mot de passe. Pensez &agrave; v&eacute;rifier vos courriers ind&eacute;sirables.
+            </p>
         </div>
 
-        <p>
-            Vous avez oubli&eacute; votre mot de passe ? Pas de panique !
-            Indiquez-nous votre {{ string }} et nous vous renverrons un nouveau mot de passe par email.
-            Pensez &agrave; regarder dans votre dossier Spam si vous ne voyez pas arriver notre email.
-        </p>
+        {{ include('BackOffice/Security/_auth_messages.html.twig') }}
 
-        {{ include('Macros/error.html.twig') }}
-
-        <form action="{{ path("user_resetting_send_email") }}" method="post">
-            <div class="container-form">
-                <form class="fos_user_resetting_request">
-                    <div class="form-group">
-                        <label for="username" class="required">{{ string|capitalize }}</label>
-                        <input type="text" placeholder="{{ string|capitalize }}" id="username" name="username" required="required" />
-                    </div>
-
-                    <div class="form-group">
-                        {{ captcha.recaptcha(recaptcha_client_key) }}
-                    </div>
-
-                    <div class="form-group">
-                        <input type="submit" class="btn btn-warning" id="_submit" name="_submit" value="Réinitialiser le mot de passe" />
-                    </div>
-                </form>
+        <form action="{{ path('user_resetting_send_email') }}" method="post">
+            <div class="auth-field">
+                <label for="username">{{ string|capitalize }}</label>
+                <input type="text" id="username" name="username" class="auth-input"
+                       required="required" autocomplete="username" autofocus />
             </div>
+
+            <div class="auth-captcha">
+                {{ captcha.recaptcha(recaptcha_client_key, 'light') }}
+            </div>
+
+            <button type="submit" class="auth-submit" id="_submit" name="_submit">Envoyer le lien de r&eacute;initialisation</button>
         </form>
+
+        <div class="auth-card-footer">
+            <a href="{{ path(isBackOffice ? 'admin_user_login' : 'user_login') }}">Retour &agrave; la connexion</a>
+        </div>
     </div>
 {% endblock %}
-

@@ -92,6 +92,14 @@ parameters:
     security_registration_ip_max_attempts: '%env(int:SECURITY_REGISTRATION_IP_MAX_ATTEMPTS)%'
     security_registration_ip_interval: '%env(SECURITY_REGISTRATION_IP_INTERVAL)%'
 
+    # Authentification multi-facteur (MFA) préconisée par l'audit ALMOND pour les profils
+    # Administrateur, Instructeur et Client (cf. App\Security\TwoFactor\MfaPolicy).
+    security_mfa_roles: [ ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_INSTRUCTEUR, ROLE_INSTRUCTEUR_UP, ROLE_CLIENT ]
+    security_mfa_code_lifetime_minutes: '%env(int:SECURITY_MFA_CODE_LIFETIME_MINUTES)%'
+    security_mfa_code_max_attempts: '%env(int:SECURITY_MFA_CODE_MAX_ATTEMPTS)%'
+    security_mfa_username_max_attempts: '%env(int:SECURITY_MFA_USERNAME_MAX_ATTEMPTS)%'
+    security_mfa_username_interval: '%env(SECURITY_MFA_USERNAME_INTERVAL)%'
+
     fc_js_url: '%env(FC_JS_URL)%'
 
     mailer_address_from: '%env(MAILER_ADDRESS_FROM)%'
@@ -125,6 +133,33 @@ services:
     App\Controller\:
         resource: '../src/Controller/'
         tags: [ 'controller.service_arguments' ]
+
+    # --- Authentification multi-facteur (MFA) : cf. config/packages/scheb_2fa.yaml ---
+    App\Security\TwoFactor\MfaPolicy:
+        arguments:
+            $mfaRoles: '%security_mfa_roles%'
+
+    App\Security\TwoFactor\EmailCodeProvider:
+        arguments:
+            $formRenderer: '@app.security.two_factor.email_code_form_renderer'
+            $secret: '%kernel.secret%'
+            $codeLifetimeMinutes: '%security_mfa_code_lifetime_minutes%'
+            $maxAttemptsPerCode: '%security_mfa_code_max_attempts%'
+        tags:
+            - { name: scheb_two_factor.provider, alias: email_code }
+
+    app.security.two_factor.email_code_form_renderer:
+        class: Scheb\TwoFactorBundle\Security\TwoFactor\Provider\DefaultTwoFactorFormRenderer
+        arguments:
+            $template: 'BackOffice/Security/2fa.html.twig'
+            $templateVars:
+                codeLifetimeMinutes: '%security_mfa_code_lifetime_minutes%'
+
+    # Abonné au seul firewall "main" : sur "backoffice", ces profils passent par le MFA.
+    App\Security\Subscriber\MainFirewallMfaGuardSubscriber:
+        autoconfigure: false
+        tags:
+            - { name: kernel.event_subscriber, dispatcher: security.event_dispatcher.main }
 
     App\Security\Subscriber\LogoutEventSubscriber:
         arguments:

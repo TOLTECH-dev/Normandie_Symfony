@@ -26,6 +26,9 @@ module.exports = (Encore) => {
         .addEntry('frontOffice', './assets/frontOffice.js')
         .addEntry('app', './assets/app.js')
         .addEntry('coreList', './assets/js/backOffice/core_list/index.js')
+        // Saisie du nouveau mot de passe (templates/Main/Security/Resetting/reset.html.twig) :
+        // page autonome, sans l'entrée "main" qui embarque aussi ce script.
+        .addEntry('resettingResetPassword', './assets/js/main/passwordValidation.js')
         // .addEntry('coreList', './assets/js/backOffice/newsletter/index.js')
 ;
     // Ajout récursif pour chaque dossier inclus

@@ -1,0 +1,254 @@
+/*
+ * Formulaires d'authentification : connexion back-office, saisie du code MFA et demande de
+ * réinitialisation du mot de passe.
+ *
+ * Importée par assets/styles/backOffice/security/auth_layout.css, feuille du gabarit
+ * templates/BackOffice/Security/layout_auth.html.twig (connexion BO, code MFA, mot de passe
+ * oublié).
+ *
+ * Toutes les règles sont préfixées par .auth-* pour ne pas interférer avec Bootstrap 3 ni
+ * avec les autres écrans.
+ *
+ * Couleurs : la carte reste neutre (bordure grise, ombre douce). L'orange de la charte
+ * (#e9661f) sert d'accent au focus des champs. Le bouton et les liens utilisent une teinte
+ * plus foncée (#b84f18, survol #9a4214) pour atteindre le contraste de 4,5:1 exigé par le
+ * RGAA (critère 3.2) : le blanc sur #e9661f n'atteint que 3,3:1, et sur l'ancien bouton
+ * Bootstrap #f0ad4e seulement 1,9:1.
+ */
+.auth-card {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 400px;
+    margin: 48px auto 32px;
+    padding: 32px;
+    background: #fff;
+    border: 1px solid #eaecf0;
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 12px 32px rgba(16, 24, 40, 0.10);
+    color: #344054;
+    font-size: 14px;
+}
+
+/* --- En-tête --- */
+.auth-card-header {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.auth-card-title {
+    margin: 0 0 8px;
+    color: #1d2939;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.auth-card-subtitle {
+    margin: 0;
+    color: #667085;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* --- Champs --- */
+.auth-field {
+    margin-bottom: 16px;
+}
+
+.auth-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.auth-card .auth-input {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    padding: 0 12px;
+    color: #1d2939;
+    font-size: 15px;
+    background: #fff;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-card .auth-input::placeholder {
+    color: #98a2b3;
+}
+
+.auth-card .auth-input:hover {
+    border-color: #98a2b3;
+}
+
+.auth-card .auth-input:focus {
+    outline: none;
+    border-color: #e9661f;
+    box-shadow: 0 0 0 3px rgba(233, 102, 31, 0.20);
+}
+
+/* --- Case à cocher « Se souvenir de moi » --- */
+.auth-remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.auth-remember input[type=checkbox] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: #b84f18;
+}
+
+.auth-remember label {
+    margin: 0;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+/* --- reCAPTCHA (widget de 304 px, contenu dans la largeur utile de la carte) --- */
+.auth-captcha {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* --- Bouton principal --- */
+.auth-card .auth-submit {
+    display: block;
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    background: #b84f18;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-card .auth-submit:hover {
+    background: #9a4214;
+}
+
+.auth-card .auth-submit:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(233, 102, 31, 0.40);
+}
+
+/* Bouton principal sous forme de lien (pages de confirmation) */
+.auth-card a.auth-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.auth-card a.auth-submit:hover,
+.auth-card a.auth-submit:focus {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* --- Pictogramme d'en-tête (pages de confirmation) --- */
+.auth-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px;
+    color: #b84f18;
+    background: #fdf0e8;
+    border-radius: 50%;
+}
+
+.auth-card-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* --- Liste d'informations --- */
+.auth-info-list {
+    margin: 0 0 24px;
+    padding: 0;
+    list-style: none;
+}
+
+.auth-info-list li {
+    position: relative;
+    margin-bottom: 8px;
+    padding-left: 20px;
+    color: #475467;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.auth-info-list li::before {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 4px;
+    width: 6px;
+    height: 6px;
+    background: #77b636;
+    border-radius: 50%;
+}
+
+/* --- Message d'erreur affiché dans la carte --- */
+.auth-alert {
+    margin-bottom: 16px;
+    padding: 10px 12px;
+    color: #b42318;
+    font-size: 13px;
+    background: #fef3f2;
+    border: 1px solid #fecdca;
+    border-radius: 8px;
+}
+
+.auth-alert-success {
+    color: #067647;
+    background: #ecfdf3;
+    border-color: #abefc6;
+}
+
+.auth-alert-info {
+    color: #175cd3;
+    background: #eff8ff;
+    border-color: #b2ddff;
+}
+
+.auth-alert-warning {
+    color: #b54708;
+    background: #fffaeb;
+    border-color: #fedf89;
+}
+
+/* --- Pied de carte (liens secondaires) --- */
+.auth-card-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #eaecf0;
+    font-size: 13px;
+    text-align: center;
+}
+
+.auth-card-footer a {
+    color: #b84f18;
+    font-weight: 600;
+}
+
+.auth-card-footer a:hover,
+.auth-card-footer a:focus {
+    color: #9a4214;
+    text-decoration: underline;
+}

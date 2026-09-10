@@ -1,5 +1,6 @@
-{% macro recaptcha(siteKey) %}
+{# theme : "dark" (défaut historique) ou "light" (formulaires d'authentification sur fond blanc) #}
+{% macro recaptcha(siteKey, theme = 'dark') %}
 <div class="text-xs-center">
-    <div class="g-recaptcha" data-sitekey="{{siteKey}}" data-theme="dark"></div>
+    <div class="g-recaptcha" data-sitekey="{{siteKey}}" data-theme="{{ theme }}"></div>
 </div>
 {% endmacro %}

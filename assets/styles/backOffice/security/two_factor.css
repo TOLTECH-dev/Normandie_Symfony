@@ -1,0 +1,51 @@
+/*
+ * Saisie du code de vérification MFA en six cases, au format 3 - 3.
+ * Les cases sont créées par assets/js/backOffice/security/two_factor_code.js. Complète la
+ * feuille partagée assets/styles/security/auth_form.css, chargée avant celle-ci par
+ * l'entrée "backOffice_security_auth_layout" du gabarit layout_auth.html.twig.
+ */
+.auth-card .auth-code-field label {
+    text-align: center;
+}
+
+.auth-card .auth-code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.auth-card .auth-code input.auth-code-digit {
+    flex: 0 1 44px;
+    min-width: 0;
+    width: 44px;
+    height: 52px;
+    margin: 0;
+    padding: 0;
+    color: #1d2939;
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-card .auth-code input.auth-code-digit:hover {
+    border-color: #98a2b3;
+}
+
+.auth-card .auth-code input.auth-code-digit:focus {
+    outline: none;
+    border-color: #e9661f;
+    box-shadow: 0 0 0 3px rgba(233, 102, 31, 0.20);
+}
+
+.auth-card .auth-code .auth-code-separator {
+    padding: 0 2px;
+    color: #6b7a90;
+    font-size: 22px;
+    font-weight: 600;
+}

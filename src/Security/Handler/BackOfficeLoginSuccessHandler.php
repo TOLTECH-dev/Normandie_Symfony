@@ -4,6 +4,7 @@ namespace App\Security\Handler;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
@@ -48,6 +49,14 @@ class BackOfficeLoginSuccessHandler implements AuthenticationSuccessHandlerInter
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
+        // Profil soumis au MFA : le mot de passe est validé, mais le firewall ne détient
+        // encore qu'un jeton intermédiaire, sans rôle. La connexion n'est effective qu'après
+        // saisie du code reçu par courriel ; ce handler est alors rappelé avec le jeton
+        // définitif (option "two_factor.success_handler" de security.yaml).
+        if ($token instanceof TwoFactorTokenInterface) {
+            return new RedirectResponse($this->router->generate('2fa_login'));
+        }
+
         $roles = $token->getRoleNames();
 
         // Réinitialisation du compteur de tentatives échouées en BDD si l'utilisateur est un User FOS

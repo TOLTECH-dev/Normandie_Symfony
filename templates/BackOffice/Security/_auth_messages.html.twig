@@ -1,0 +1,18 @@
+{#
+    Messages affichés dans la carte d'authentification : messages flash (ex. « Captcha
+    obligatoire », code MFA expiré) et erreur de connexion. Reprend les règles de
+    Macros/error.html.twig (clé "flag" ignorée), avec le style de la carte.
+#}
+{% set alertVariants = {'success': 'auth-alert-success', 'info': 'auth-alert-info', 'warning': 'auth-alert-warning'} %}
+
+{% for type, messages in app.flashes %}
+    {% if 'flag' != type %}
+        {% for message in messages %}
+            <div class="auth-alert {{ alertVariants[type] ?? '' }}" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+
+{% if error is defined and error is not null %}
+    <div class="auth-alert" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}

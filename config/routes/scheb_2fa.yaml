@@ -1,0 +1,9 @@
+# Authentification multi-facteur (MFA) du back-office. Ces chemins doivent rester sous
+# /admin pour être servis par le firewall "backoffice" (cf. config/packages/security.yaml).
+2fa_login:
+    path: /admin/2fa
+    defaults:
+        _controller: "scheb_two_factor.form_controller::form"
+
+2fa_login_check:
+    path: /admin/2fa_check

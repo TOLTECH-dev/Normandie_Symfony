@@ -1,0 +1,31 @@
+{#
+    Gabarit commun aux pages de réinitialisation du mot de passe (demande, confirmation d'envoi).
+
+    Ces pages sont servies sur les deux domaines : l'espace affiché (partenaire ou bénéficiaire),
+    le texte de présentation et les favicons suivent "isBackOffice", fourni par
+    ResettingController.
+#}
+{% extends "BackOffice/Security/layout_auth.html.twig" %}
+
+{% block space_name %}{{ isBackOffice ? 'Espace partenaire' : 'Espace bénéficiaire' }}{% endblock %}
+
+{% block brand_text %}
+    {% if isBackOffice %}
+        {{ parent() }}
+    {% else %}
+        Suivez vos demandes d'aide du dispositif r&eacute;gional d'aide &agrave; la r&eacute;novation
+        &eacute;nerg&eacute;tique de votre logement.
+    {% endif %}
+{% endblock %}
+
+{% block favicons %}
+    {% if isBackOffice %}
+        {{ parent() }}
+    {% else %}
+        <link rel="apple-touch-icon" href="{{ asset('build/images/main/favicon/apple-touch-icon.png') }}" sizes="180x180">
+        <link rel="icon" href="{{ asset('build/images/main/favicon/favicon-32x32.png') }}" type="image/png" sizes="32x32">
+        <link rel="icon" href="{{ asset('build/images/main/favicon/favicon-16x16.png') }}" type="image/png" sizes="16x16">
+        <link rel="mask-icon" href="{{ asset('build/images/main/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+        <link rel="manifest" href="{{ asset('build/images/main/favicon/manifest.json') }}">
+    {% endif %}
+{% endblock %}

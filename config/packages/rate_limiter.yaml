@@ -82,6 +82,17 @@ framework:
             limit: '%security_registration_ip_max_attempts%'
             interval: '%security_registration_ip_interval%'
 
+        # --- Authentification multi-facteur (MFA) ---
+        # Saisies du code reçu par courriel, compteur par identifiant, tous codes confondus.
+        # Contrairement aux compteurs de connexion, il n'est pas remis à zéro par la
+        # validation du mot de passe : un attaquant qui connaît le mot de passe ne peut donc
+        # pas enchaîner connexions et nouveaux codes pour multiplier les essais.
+        mfa_code_username:
+            policy: 'sliding_window'
+            cache_pool: cache.security_rate_limiter
+            limit: '%security_mfa_username_max_attempts%'
+            interval: '%security_mfa_username_interval%'
+
 # Postes de développement : pas d'instance Redis en local, les compteurs retombent sur
 # le disque. Le comportement des limiteurs est identique, seul le stockage change.
 #

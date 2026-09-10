@@ -12,6 +12,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResettingController extends AbstractController
 {
+    /**
+     * Marqueur de session réservant la page de confirmation d'envoi au parcours de demande.
+     */
+    private const SESSION_CHECK_EMAIL = '_resetting_check_email';
+
     public function request(): Response
     {
         if ($this->getUser()) {
@@ -25,14 +30,15 @@ class ResettingController extends AbstractController
         if ($nomDomaine_fo == $nomDomaine_current) {
             $var = 'adresse email';
         } elseif ($nomDomaine_bo == $nomDomaine_current) {
-            $var = 'login';
+            $var = 'identifiant';
         } else {
             $var = 'adresse email';
         }
 
         return $this->render('Main/Security/Resetting/request.html.twig', [
             'recaptcha_client_key' => $this->getParameter('google_recaptcha_site_key'),
-            'string' => $var
+            'string' => $var,
+            'isBackOffice' => $this->isBackOfficeDomain()
         ]);
     }
 
@@ -60,7 +66,11 @@ class ResettingController extends AbstractController
             $user = $userService->findByUsername(trim($username));
             $securityService->handleSendResettingEmail($user, $this->getParameter('resetting_retry_ttl'));
 
-            return $this->redirectToRoute('user_resetting_check_email', ['username' => $username]);
+            // L'identifiant ne doit pas figurer dans l'URL de redirection (historique du
+            // navigateur, journaux du serveur web) : un marqueur de session suffit.
+            $request->getSession()->set(self::SESSION_CHECK_EMAIL, true);
+
+            return $this->redirectToRoute('user_resetting_check_email');
         } else {
             $this->addFlash(
                 'danger',
@@ -121,33 +131,36 @@ class ResettingController extends AbstractController
                 'Le mot de passe a été réinitialisé avec succès.'
             );
 
-            $nomDomaine_current = $_SERVER["SERVER_NAME"];
-            $nomDomaine_bo = $this->getParameter('url_bo');
-
-            $route = $nomDomaine_current === $nomDomaine_bo
-                ? 'admin_user_login'
-                : 'user_login';
-
-            return $this->redirectToRoute($route);
+            return $this->redirectToRoute($this->isBackOfficeDomain() ? 'admin_user_login' : 'user_login');
         }
 
         return $this->render('Main/Security/Resetting/reset.html.twig', [
             'form' => $form->createView(),
-            'token' => $token
+            'token' => $token,
+            'isBackOffice' => $this->isBackOfficeDomain(),
         ]);
     }
 
     public function checkEmail(Request $request): Response
     {
-        $username = $request->query->get('username');
-
-        if (empty($username)) {
-            return $this->redirectToRoute('fos_user_resetting_request');
+        // Page réservée au parcours de demande : un accès direct renvoie au formulaire.
+        if (!$request->getSession()->get(self::SESSION_CHECK_EMAIL, false)) {
+            return $this->redirectToRoute('user_resetting_request');
         }
 
         return $this->render('Main/Security/Resetting/check_email.html.twig', [
             'tokenLifetime' => ceil($this->getParameter('resetting_retry_ttl') / 3600),
+            'isBackOffice' => $this->isBackOfficeDomain(),
         ]);
+    }
+
+    /**
+     * Les pages de réinitialisation sont servies sur les deux domaines : l'espace affiché et
+     * les liens de retour dépendent du domaine courant.
+     */
+    private function isBackOfficeDomain(): bool
+    {
+        return $_SERVER["SERVER_NAME"] == $this->getParameter('url_bo');
     }
 
 }

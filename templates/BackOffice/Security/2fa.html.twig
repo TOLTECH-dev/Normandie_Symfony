@@ -1,0 +1,59 @@
+{% extends "BackOffice/Security/layout_auth.html.twig" %}
+
+{% block title %}Vérification en deux étapes{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_security_two_factor') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('backOffice_security_two_factor_code') }}
+{% endblock %}
+
+{% block card %}
+    <div class="auth-card">
+        <div class="auth-card-header">
+            <h2 class="auth-card-title">V&eacute;rification en deux &eacute;tapes</h2>
+            <p class="auth-card-subtitle">
+                Un code &agrave; 6 chiffres vient de vous &ecirc;tre envoy&eacute; par courriel.
+                Il est valable {{ codeLifetimeMinutes }} minutes et ne peut servir qu'une seule fois.
+            </p>
+        </div>
+
+        {{ include('BackOffice/Security/_auth_messages.html.twig') }}
+
+        {# Code erroné (domaine du bundle) ou autre erreur d'authentification, ex. jeton CSRF (domaine "security") #}
+        {% if authenticationError %}
+            {% set authenticationErrorMessage = authenticationError|trans(authenticationErrorData, 'SchebTwoFactorBundle') %}
+            {% if authenticationErrorMessage == authenticationError %}
+                {% set authenticationErrorMessage = authenticationError|trans(authenticationErrorData, 'security') %}
+            {% endif %}
+            <div class="auth-alert" role="alert">{{ authenticationErrorMessage }}</div>
+        {% endif %}
+
+        <form action="{{ checkPathUrl ? checkPathUrl : path(checkPathRoute) }}" method="post">
+            {% if isCsrfProtectionEnabled %}
+                <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}" />
+            {% endif %}
+
+            {#
+                Champ unique, remplacé par six cases par assets/js/backOffice/security/two_factor_code.js.
+                Il reste utilisable tel quel si le script ne se charge pas.
+            #}
+            <div class="auth-field auth-code-field">
+                <label id="auth-code-label" for="_auth_code">Code de v&eacute;rification</label>
+                <input type="text" id="_auth_code" name="{{ authCodeParameterName }}" class="auth-input"
+                       required="required" data-auth-code-input autocomplete="one-time-code" inputmode="numeric"
+                       maxlength="12" placeholder="Code &agrave; 6 chiffres" autofocus />
+            </div>
+
+            <button type="submit" class="auth-submit" id="_submit" name="_submit">Valider</button>
+        </form>
+
+        <div class="auth-card-footer">
+            <a href="{{ logoutPath }}">Annuler et revenir &agrave; la connexion</a>
+        </div>
+    </div>
+{% endblock %}

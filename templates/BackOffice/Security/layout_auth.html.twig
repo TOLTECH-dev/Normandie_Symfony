@@ -1,0 +1,69 @@
+{#
+    Gabarit des pages d'authentification : panneau d'identité (logos, nom de l'espace) et
+    panneau formulaire.
+
+    Utilisé par la connexion au back-office, la saisie du code MFA et la demande de
+    réinitialisation du mot de passe (servie sur les domaines back-office et front-office).
+
+    Autonome : il n'hérite ni de BackOffice/layout_core.html.twig ni de Main/layout_core.html.twig,
+    dont les headers, la largeur minimale et les feuilles Bootstrap sont inutiles avant connexion.
+    Styles : assets/styles/backOffice/security/auth_layout.css (entrée backOffice_security_auth_layout).
+
+    Blocs surchargeables : title, space_name (« Espace partenaire » par défaut), brand_text,
+    favicons, stylesheets, javascripts, card.
+#}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff">
+
+    {% block favicons %}
+        <link rel="apple-touch-icon" href="{{ asset('build/images/backOffice/favicon/apple-touch-icon.png') }}" sizes="180x180">
+        <link rel="icon" href="{{ asset('build/images/backOffice/favicon/favicon-32x32.png') }}" type="image/png" sizes="32x32">
+        <link rel="icon" href="{{ asset('build/images/backOffice/favicon/favicon-16x16.png') }}" type="image/png" sizes="16x16">
+        <link rel="mask-icon" href="{{ asset('build/images/backOffice/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+        <link rel="manifest" href="{{ asset('build/images/backOffice/favicon/manifest.json') }}">
+    {% endblock %}
+
+    <title>{% block title %}Connexion{% endblock %} – {{ block('space_name') }} – Chèque éco-énergie Normandie</title>
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('backOffice_security_auth_layout') }}
+    {% endblock %}
+
+    {% block javascripts %}
+    {% endblock %}
+</head>
+<body class="auth-page">
+<main class="auth-layout">
+    <section class="auth-brand">
+        <div class="auth-brand-content">
+            <img src="{{ asset('build/images/backOffice/logo/cheque-eco-energie2.png') }}"
+                 alt="Ch&egrave;que &eacute;co-&eacute;nergie Normandie" class="auth-brand-product" width="83" height="80">
+
+            <p class="auth-brand-eyebrow">Ch&egrave;que &eacute;co-&eacute;nergie Normandie</p>
+            <h1 class="auth-brand-title">{% block space_name %}Espace partenaire{% endblock %}</h1>
+            <p class="auth-brand-text">
+                {% block brand_text %}
+                    Acc&eacute;dez aux outils de suivi et d'instruction des dossiers du dispositif r&eacute;gional
+                    d'aide &agrave; la r&eacute;novation &eacute;nerg&eacute;tique des logements.
+                {% endblock %}
+            </p>
+        </div>
+
+        <div class="auth-brand-footer">
+            <span>Un dispositif de la</span>
+            <img src="{{ asset('build/images/backOffice/logo/logo-normandie.png') }}"
+                 alt="R&eacute;gion Normandie" class="auth-brand-region" width="706" height="170">
+        </div>
+    </section>
+
+    <section class="auth-panel">
+        {% block card %}
+        {% endblock %}
+    </section>
+</main>
+</body>
+</html>

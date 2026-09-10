@@ -1,0 +1,13 @@
+# See the configuration reference at https://symfony.com/bundles/SchebTwoFactorBundle/6.x/configuration.html
+#
+# Authentification multi-facteur (MFA) des profils Administrateur, Instructeur et Client,
+# préconisée par le rapport d'audit ALMOND NOR005-22. Le second facteur est un code à usage
+# unique envoyé par courriel : cf. App\Security\TwoFactor\EmailCodeProvider, branché sur le
+# firewall "backoffice" (config/packages/security.yaml).
+scheb_two_factor:
+    # Jetons issus d'une authentification par mot de passe. Le RememberMeToken n'y figure
+    # volontairement pas : le bundle ne pose le cookie « Se souvenir de moi » qu'une fois le
+    # second facteur validé (SuppressRememberMeListener).
+    security_tokens:
+        - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+        - Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken

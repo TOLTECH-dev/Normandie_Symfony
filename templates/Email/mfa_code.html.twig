@@ -1,0 +1,17 @@
+{#
+    Volontairement sans identifiant ni nom : un courriel intercepté ou transféré ne doit fournir
+    aucune piste d'attaque (cf. tests/Security/AuthenticationEmailsTest.php).
+#}
+<p>Bonjour,</p>
+
+<p>Une connexion &agrave; votre espace Ch&egrave;que Eco-Energie vient d'&ecirc;tre demand&eacute;e. Pour la finaliser, saisissez le code de v&eacute;rification suivant :</p>
+<br>
+
+<p style="font-size: 24px; font-weight: bold; letter-spacing: 4px;">{{ code }}</p>
+
+<br>
+<p>Attention ! Ce code n'est valable que {{ codeLifetimeMinutes }} minutes apr&egrave;s l'envoi de ce message et ne peut &ecirc;tre utilis&eacute; qu'une seule fois.</p>
+
+<p>Si vous n'&ecirc;tes pas &agrave; l'origine de cette connexion, votre mot de passe est probablement connu d'un tiers : modifiez-le sans d&eacute;lai et pr&eacute;venez votre administrateur. Ne communiquez jamais ce code.</p>
+
+<p>L'&eacute;quipe Ch&egrave;que Eco-Energie de la R&eacute;gion Normandie.</p>

@@ -1,29 +1,32 @@
-{% extends "Main/layout_core.html.twig" %}
+{% extends "Main/Security/Resetting/layout.html.twig" %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('resettingCheckEmail') }}
-{% endblock %}
+{% block title %}Vérifiez votre messagerie{% endblock %}
 
-{% block content %}
-    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 hidden" id="content-wrapper">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="container-title">
-            <h2>R&eacute;initialisation du mot de passe</h2>
+{% block card %}
+    <div class="auth-card">
+        <div class="auth-card-header">
+            <div class="auth-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                    <path d="m3 7 9 6 9-6"></path>
+                </svg>
+            </div>
+            <h2 class="auth-card-title">V&eacute;rifiez votre messagerie</h2>
+            {# Formulation neutre : la page s'affiche que le compte existe ou non #}
+            <p class="auth-card-subtitle">
+                Si un compte correspond aux informations saisies, un courriel contenant un lien de
+                r&eacute;initialisation du mot de passe vient de vous &ecirc;tre envoy&eacute;.
+            </p>
         </div>
 
-        {#
-        {{ include('whiteLabelMainBundle:Macros:error.html.twig') }}
-        #}
+        {{ include('BackOffice/Security/_auth_messages.html.twig') }}
 
-        <p>
-            Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.<br>
-            Remarque : Vous ne pouvez demander un nouveau mot de passe que toutes les heures. <br>
-            <br>
-            Si vous ne recevez pas un email, vérifiez votre dossier spam ou essayez à nouveau.
-        </p>
+        <ul class="auth-info-list">
+            <li>Le lien reste valable {{ tokenLifetime }} heure{{ tokenLifetime > 1 ? 's' }}.</li>
+            <li>Une nouvelle demande n'est possible qu'apr&egrave;s ce d&eacute;lai.</li>
+            <li>Pensez &agrave; v&eacute;rifier vos courriers ind&eacute;sirables.</li>
+        </ul>
 
-        <div class="col-xs-12 col-sm-12 container-submit">
-            <a href="{{ path('web_homepage') }}" class="btn btn-warning">Retour &agrave; l'accueil</a>
-        </div>
+        <a href="{{ path(isBackOffice ? 'admin_user_login' : 'user_login') }}" class="auth-submit">Retour &agrave; la connexion</a>
     </div>
 {% endblock %}

@@ -49,6 +49,17 @@ security:
                 default_target_path: /694F83AC9EB8CB8387728215CF5C99972A0AF791A633A586DDB0586ECD5DE5B1C9546D5FB8BBEBB097606C1A09FADFC4152BE2BCB62ACA1BB25A4B850FE07E0C
                 success_handler: App\Security\Handler\BackOfficeLoginSuccessHandler
 
+            # Authentification multi-facteur des profils Administrateur, Instructeur et
+            # Client (audit ALMOND) : code envoyé par courriel après validation du mot de
+            # passe. Profils concernés : paramètre "security_mfa_roles" (services.yaml).
+            two_factor:
+                auth_form_path: 2fa_login
+                check_path: 2fa_login_check
+                enable_csrf: true
+                # Rappelé avec le jeton définitif une fois le code validé.
+                success_handler: App\Security\Handler\BackOfficeLoginSuccessHandler
+                failure_handler: App\Security\TwoFactor\TwoFactorFailureHandler
+
             logout:
                 path: admin_user_logout
                 target: "%logout_redirection_bo%"
@@ -69,6 +80,8 @@ security:
             login_throttling:
                 limiter: App\Security\RateLimiter\LoginRateLimiter
 
+            # Pas de second facteur sur ce firewall : les profils soumis au MFA y sont
+            # refusés (App\Security\Subscriber\MainFirewallMfaGuardSubscriber).
             form_login:
                 enable_csrf: true
                 login_path: user_login
@@ -87,6 +100,8 @@ security:
     access_control:
         # back-office
         - { path: ^/admin/bo_login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # Saisie du code MFA : réservée à l'utilisateur dont le mot de passe vient d'être validé.
+        - { path: ^/admin/2fa, roles: IS_AUTHENTICATED_2FA_IN_PROGRESS }
         - { path: ^/admin, roles: [ ROLE_CONSEILLER, ROLE_INSTRUCTEUR, ROLE_INSTRUCTEUR_UP, ROLE_AUDITEUR, ROLE_RENOVATEUR, ROLE_EPCI, ROLE_CLIENT, ROLE_AUTOMATE, ROLE_TECHNIQUE ] }
         - { path: ^/member, roles: ROLE_MEMBER }
         # front-office

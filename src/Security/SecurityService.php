@@ -82,8 +82,9 @@ class SecurityService
     private function sendResettingEmail(User $user): void
     {
         $url = $this->router->generate('user_resetting_reset', ['token' => $user->getConfirmationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
+        // Aucune donnée du compte (identifiant, nom) n'est transmise au gabarit : le courriel
+        // ne doit fournir aucune piste d'attaque s'il est intercepté ou transféré.
         $context = [
-            'user' => $user,
             'confirmationUrl' => $url,
         ];
 

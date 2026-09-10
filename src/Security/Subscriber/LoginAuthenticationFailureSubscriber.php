@@ -7,6 +7,7 @@ use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
+use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
@@ -56,6 +57,13 @@ class LoginAuthenticationFailureSubscriber implements EventSubscriberInterface
         // comptabiliser ferait grimper les compteurs sans que le mot de passe ait été
         // testé, et rendrait les seuils illisibles.
         if ($event->getException() instanceof TooManyLoginAttemptsAuthenticationException) {
+            return;
+        }
+
+        // Échec de saisie du code MFA : aucun identifiant ni mot de passe n'a été soumis.
+        // Ces essais sont bornés par App\Security\TwoFactor\EmailCodeProvider.
+        $passport = $event->getPassport();
+        if (null !== $passport && $passport->hasBadge(TwoFactorCodeCredentials::class)) {
             return;
         }
 
