@@ -8,15 +8,13 @@ use App\Entity\Beneficiaire;
 use App\Entity\Demande_;
 use App\Entity\Demande_travaux_devis;
 use App\Entity\Demande_travaux_devis_upload;
+use App\Http\SecureFileResponseBuilder;
 use App\Service\DocumentAccessChecker;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DocumentController extends AbstractController
 {
@@ -37,7 +35,7 @@ class DocumentController extends AbstractController
      *
      * @return BinaryFileResponse
      */
-    public function viewFO($demandeId, $typeFile, $extension, $typeDemande)
+    public function viewFO($demandeId, $typeFile, $extension, $typeDemande, SecureFileResponseBuilder $fileResponses)
     {
         /* *****************************************************************
                                 S E C U R I T Y
@@ -113,14 +111,15 @@ class DocumentController extends AbstractController
         $suffixFile = $this->findSuffixFileByTypeFile((int)$typeFile);
         $file = $path . $demandeId . $suffixFile . $extension;
 
-        return new BinaryFileResponse($file);
+        return $fileResponses->download($file);
     }
     public function viewBO(
         int $demandeId,
         int $typeFile,
         string $extension,
         int $typeDemande,
-        DocumentAccessChecker $accessChecker
+        DocumentAccessChecker $accessChecker,
+        SecureFileResponseBuilder $fileResponses
     ): BinaryFileResponse {
         // Vérification d'accès complète
         $accessChecker->canAccess($demandeId, $typeDemande, $typeFile);
@@ -146,11 +145,11 @@ class DocumentController extends AbstractController
         $path = $this->getParameter('app_root_dossier_data_symfony') . 'uploads/' . $folder;
         $file = $path . $demandeId . $suffixFile . $extension;
 
-        return new BinaryFileResponse($file);
+        return $fileResponses->download($file);
     }
 
     #[Security("is_granted('ROLE_CONSEILLER') or is_granted('ROLE_AUDITEUR') or is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_TECHNIQUE')")]
-    public function viewHelp(): Response
+    public function viewHelp(SecureFileResponseBuilder $fileResponses): BinaryFileResponse
     {
         $roles = $this->getUser()->getRoles();
 
@@ -166,17 +165,9 @@ class DocumentController extends AbstractController
         }
 
         $path = $this->getParameter('kernel.project_dir') . '/resources/Template/';
-        $file = new File($path . $fileName);
 
-        if(file_exists($file->getPath())) {
-            return new Response(file_get_contents($file->getRealPath()), 200, [
-                'Content-Type'        => $file->getMimeType(),
-                'Content-Length'      => filesize($file->getRealPath()),
-                'Content-Disposition' => 'attachment; filename=' . $file->getBasename(),
-            ]);
-        } else {
-            throw new NotFoundHttpException();
-        }
+        // Guides internes : même réponse que les documents déposés (404 si le guide manque)
+        return $fileResponses->download($path . $fileName);
     }
 
     private function findSuffixFileByTypeFile(int $typeFile): string

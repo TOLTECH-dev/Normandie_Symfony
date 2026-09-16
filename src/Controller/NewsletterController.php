@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Contact;
 use App\Entity\Newsletter;
 use App\Form\NewsletterType;
+use App\Http\SecureFileResponseBuilder;
 use App\Service\NewsletterService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -119,7 +120,7 @@ class NewsletterController extends AbstractController
         ]);
     }
 
-    public function view(int $newsletterId): Response
+    public function view(int $newsletterId, SecureFileResponseBuilder $fileResponses): Response
     {
         $repo = $this->em->getRepository(Newsletter::class);
         $newsletter = $repo->find($newsletterId);
@@ -132,9 +133,10 @@ class NewsletterController extends AbstractController
                 'message' => $message
             ]);
         } else {
+            // Fichier déposé : renvoyé en téléchargement, jamais rendu comme une page (VUL04 / R8)
             $path = $this->getParameter('app_root_dossier_data_symfony') . $newsletter->fileGetWebPath();
-            $content = file_get_contents($path);
-            return new Response($content);
+
+            return $fileResponses->download($path);
         }
     }
 }
