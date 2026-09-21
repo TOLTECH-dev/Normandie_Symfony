@@ -34,11 +34,6 @@
                        required="required" autocomplete="current-password" />
             </div>
 
-            <div class="auth-remember">
-                <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-                <label for="remember_me">Se souvenir de moi</label>
-            </div>
-
             {% if cachedUserIsCaptchaItemValue is defined and cachedUserIsCaptchaItemValue %}
                 <div class="auth-captcha">
                     {{ captcha.recaptcha(recaptcha_client_key, 'light') }}

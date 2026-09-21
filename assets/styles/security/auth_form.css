@@ -92,27 +92,6 @@
     box-shadow: 0 0 0 3px rgba(233, 102, 31, 0.20);
 }
 
-/* --- Case à cocher « Se souvenir de moi » --- */
-.auth-remember {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-}
-
-.auth-remember input[type=checkbox] {
-    width: 16px;
-    height: 16px;
-    margin: 0;
-    accent-color: #b84f18;
-}
-
-.auth-remember label {
-    margin: 0;
-    font-size: 13px;
-    font-weight: normal;
-}
-
 /* --- reCAPTCHA (widget de 304 px, contenu dans la largeur utile de la carte) --- */
 .auth-captcha {
     display: flex;

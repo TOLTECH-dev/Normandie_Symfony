@@ -10,6 +10,17 @@ framework:
         handler_id: 'session.handler.native_file'
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         storage_factory_id: session.storage.factory.native
+        # Vulnérabilité 2 / recommandation 6 de l'audit ALMOND : options de sécurité du cookie de session.
+        # Elles s'appliquent aussi au cookie « se souvenir de moi », qui en hérite.
+        #  - httponly : cookie illisible par JavaScript (vol de session via une XSS) ;
+        #  - samesite lax : cookie non transmis par les requêtes d'un autre site (hors navigation GET),
+        #    ce qui préserve le retour de FranceConnect et les liens reçus par e-mail (« strict » les casserait) ;
+        #  - secure : cookie transmis uniquement en HTTPS. « auto » en local (servi en HTTP), forcé en production.
+        cookie_httponly: true
+        cookie_samesite: lax
+        cookie_secure: auto
+        # Durée de vie : cookie de session du navigateur, supprimé à sa fermeture
+        cookie_lifetime: 0
 
     trusted_proxies: 'REMOTE_ADDR'
     trusted_headers:
@@ -26,6 +37,13 @@ framework:
     cache:
         app: cache.adapter.redis
         default_redis_provider: '%env(REDIS_URL)%'
+
+when@prod:
+    framework:
+        session:
+            # Recette et production sont servies uniquement en HTTPS : « Secure » est imposé plutôt que
+            # déduit de la requête, pour ne pas dépendre de l'en-tête X-Forwarded-Proto du proxy.
+            cookie_secure: true
 
 when@dev:
     framework:

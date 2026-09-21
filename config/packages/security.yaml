@@ -71,13 +71,13 @@ security:
                 success_handler: App\Security\Handler\BackOfficeLoginSuccessHandler
                 failure_handler: App\Security\TwoFactor\TwoFactorFailureHandler
 
+            # Déconnexion : la session est invalidée côté serveur et le cookie de session supprimé
+            # côté navigateur (vulnérabilité 2 / recommandation 6 de l'audit ALMOND).
+            # Pas de « Se souvenir de moi » : ce cookie, vérifié par signature et non conservé côté
+            # serveur, restait valable après la déconnexion et reconnectait sans second facteur.
             logout:
                 path: admin_user_logout
                 target: "%logout_redirection_bo%"
-
-            remember_me:
-                secret: "%kernel.secret%"
-                lifetime: 3600
 
         main:
             pattern: ^/
@@ -100,13 +100,11 @@ security:
                 default_target_path: /8B6717D4A69717640022F88307D828D95CE99BCE944F418E58445D1C65CD5FE00F5CB774D8F26FD7C56DD95942B3E29463F880BE78514FC8DFD78807D3B20DBC
                 success_handler: App\Security\Handler\MainLoginSuccessHandler
 
+            # Même règle que le back-office : pas de « Se souvenir de moi » (cookie valable 48 h,
+            # y compris après la déconnexion).
             logout:
                 path: user_logout
                 target: "%logout_redirection_fo%"
-
-            remember_me:
-                secret: "%kernel.secret%"
-                lifetime: 172800
 
     access_control:
         # back-office
