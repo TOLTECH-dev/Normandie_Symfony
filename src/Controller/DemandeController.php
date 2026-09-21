@@ -109,7 +109,7 @@ class DemandeController extends AbstractController
         });
     }
 
-    #[Security("is_granted('ROLE_CONSEILLER') or is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_AUDITEUR') or is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_EPCI') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') or is_granted('ROLE_TECHNIQUE')")]
+    #[Security("is_granted('ROLE_BO_DOSSIER_CONSULTATION')")]
     public function listAll(): Response
     {
         $option = [
@@ -137,7 +137,7 @@ class DemandeController extends AbstractController
     }
 
 
-    #[Security("is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_INSTRUCTION')")]
     public function list(): Response
     {
         /* /////////////////////////////////////////////////////////////////
@@ -150,7 +150,7 @@ class DemandeController extends AbstractController
             'list_demande' => $list
         ]);
     }
-    #[Security("is_granted('ROLE_CONSEILLER') or is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_AUDITEUR') or is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_EPCI') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') or is_granted('ROLE_TECHNIQUE')")]
+    #[Security("is_granted('ROLE_BO_DOSSIER_CONSULTATION')")]
     public function listAllAjax(Request $request): JsonResponse|bool
     {
         $postData = $request->request->all();
@@ -377,7 +377,7 @@ class DemandeController extends AbstractController
     }
 
 
-     #[Security("is_granted('ROLE_CONSEILLER') or is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_AUDITEUR') or is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_EPCI') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') or is_granted('ROLE_TECHNIQUE')")]
+     #[Security("is_granted('ROLE_BO_DOSSIER_CONSULTATION')")]
      public function view(string $demandeId): Response
      {
         $option = [
@@ -395,15 +395,15 @@ class DemandeController extends AbstractController
         $demande_ = $repo_demande->find($demandeId);
 
         /* /////////////////////////////////////////////////////////////////
+                CHECK DEMANDE ACCESS CONTROLE (404 si inexistant ou hors périmètre)
+        ///////////////////////////////////////////////////////////////// */
+        $this->demandeServiceBO->checkAccesByRole($demande_, $option);
+
+        /* /////////////////////////////////////////////////////////////////
                                 GET BENEFICIAIRE
         ///////////////////////////////////////////////////////////////// */
         $repo_beneficiaire = $this->em->getRepository(Beneficiaire::class);
         $beneficiaire = $repo_beneficiaire->findAllCustomById($demande_->getBeneficiaireId());
-
-        /* /////////////////////////////////////////////////////////////////
-                            CHECK DEMANDE ACCESS CONTROLE
-        ///////////////////////////////////////////////////////////////// */
-        $this->demandeServiceBO->checkAccesByRole($demande_, $option);
 
         $demande = null;
         $devis= null;
@@ -672,7 +672,7 @@ class DemandeController extends AbstractController
         ]);
     }
 
-     #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+     #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function edit(Request $request, $demandeId): Response
     {
         $arrayDemandeStatutKeep = [
@@ -864,12 +864,17 @@ class DemandeController extends AbstractController
                             GET DATA FOR FICHE LIAISON
         ///////////////////////////////////////////////////////////////// */
         $repo_demande = $this->em->getRepository(Demande_::class);
-        $dataFicheLiaison = $repo_demande->findDataFicheLiaison($demandeId);
 
         /**
          * @var Demande_ $demande
          */
         $demande = $repo_demande->find($demandeId);
+
+        /* /////////////////////////////////////////////////////////////////
+                           CHECK DEMANDE ACCESS CONTROLE BY ROLES
+            (d'abord le périmètre : le contrôle de statut ne doit pas révéler un dossier hors périmètre)
+        ///////////////////////////////////////////////////////////////// */
+        $this->demandeServiceBO->checkAccesByRole($demande, $option);
 
         /* /////////////////////////////////////////////////////////////////
                     CHECK DEMANDE ACCESS CONTROLE BY DEMANDE STATUT
@@ -878,10 +883,7 @@ class DemandeController extends AbstractController
             throw new AccessDeniedHttpException();
         }
 
-        /* /////////////////////////////////////////////////////////////////
-                           CHECK DEMANDE ACCESS CONTROLE BY ROLES
-        ///////////////////////////////////////////////////////////////// */
-        $this->demandeServiceBO->checkAccesByRole($demande, $option);
+        $dataFicheLiaison = $repo_demande->findDataFicheLiaison($demandeId);
 
         /* /////////////////////////////////////////////////////////////////
                                 EXPORT PDF
@@ -891,7 +893,7 @@ class DemandeController extends AbstractController
         return new Response(null, 200);
     }
 
-     #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+     #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function deny(Request $request, string $demandeId): Response
     {
         /* /////////////////////////////////////////////////////////////////
@@ -1009,7 +1011,7 @@ class DemandeController extends AbstractController
     }
 
 
-     #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+     #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function assignContacts(Request $request, string $demandeId): Response
     {
         /* /////////////////////////////////////////////////////////////////
@@ -1183,7 +1185,7 @@ class DemandeController extends AbstractController
         return $this->redirectToRoute('demande_list_all', array());
     }
 
-     #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+     #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function updateNiveauAideTravauxDevis(Request $request, string $demandeId, string $devisId): Response
     {
         $formTravauxDevisUpdateNiveauAide = $this->adminFormService->travauxDevisUpdateNiveauAideType();
@@ -1337,7 +1339,7 @@ class DemandeController extends AbstractController
     }
 
 
-     #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_CLIENT')")]
+     #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function reactive(Request $request, string $demandeId): Response
     {
         /* /////////////////////////////////////////////////////////////////
@@ -1348,6 +1350,9 @@ class DemandeController extends AbstractController
          * @var Demande_ $demande
          */
         $demande = $demandeRepository->find($demandeId);
+        if (null === $demande) {
+            throw $this->createNotFoundException();
+        }
 
         /* /////////////////////////////////////////////////////////////////
                     CHECK DEMANDE ACCESS CONTROLE BY DEMANDE STATUT

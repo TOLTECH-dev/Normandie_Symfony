@@ -29,6 +29,7 @@ use App\Repository\Remboursement_travauxRepository;
 use App\Repository\Remboursement_travaux_instructionRepository;
 use App\Repository\Structure_Repository;
 use App\Repository\TitreRepository;
+use App\Security\Perimetre\PerimetreResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -61,13 +62,12 @@ class DocumentAccessChecker
         private Partenaire_Repository $partenaireRepository,
         private TitreRepository $titreRepository,
         private LogementRepository $logementRepository,
+        private PerimetreResolver $perimetreResolver,
     ) {}
 
     private function getAdminId(): int
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-        $username = $user->getUsername();
-        return (int)substr($username, 1);
+        return $this->perimetreResolver->pourUtilisateurConnecte()->identifiant();
     }
 
     private function getRoles(): array
@@ -102,12 +102,18 @@ class DocumentAccessChecker
 
     private function checkDemandeAccess(int $childId, int $typeDemande, int $adminId, array $roles): bool
     {
+        // Initialisées : un seul des deux objets existe selon le type (sinon avertissement PHP)
+        $demandeAuditEnergie = null;
+        $demandeTravaux = null;
+
+        // Objet inexistant : sans ce contrôle, findOneBy(... => null) chercherait « IS NULL » et
+        // renverrait un dossier quelconque.
         if ($typeDemande === 0) { // Audit Energie
             $demandeAuditEnergie = $this->demandeAuditEnergieRepository->find($childId);
-            $demande = $this->demandeRepository->findOneBy(['demande_auditEnergie' => $demandeAuditEnergie]);
+            $demande = $demandeAuditEnergie ? $this->demandeRepository->findOneBy(['demande_auditEnergie' => $demandeAuditEnergie]) : null;
         } else { // Travaux
             $demandeTravaux = $this->demandeTravauxRepository->find($childId);
-            $demande = $this->demandeRepository->findOneBy(['demande_travaux' => $demandeTravaux]);
+            $demande = $demandeTravaux ? $this->demandeRepository->findOneBy(['demande_travaux' => $demandeTravaux]) : null;
         }
 
         if (!$demande) {
@@ -149,11 +155,10 @@ class DocumentAccessChecker
 
         // ROLE_EPCI
         if (in_array('ROLE_EPCI', $roles, true)) {
-            $rowEPCI = $this->EPCIRepository->findByContactId($adminId);
-            if (!$rowEPCI) {
+            $epciId = $this->perimetreResolver->pourUtilisateurConnecte()->epciId();
+            if (null === $epciId) {
                 throw new AccessDeniedException('EPCI non trouvé pour cet utilisateur.');
             }
-            $epciId = $rowEPCI['id'];
 
             if ($epciId && $demande->getLogementId()) {
                 $logement = $this->logementRepository->find($demande->getLogementId());
@@ -284,6 +289,41 @@ class DocumentAccessChecker
         return true;
     }
 
+    /**
+     * Dossier auquel appartient le dépôt d'un audit énergétique (document de type 4), ou null.
+     * Sert aussi au front office pour vérifier que le document est celui du bénéficiaire connecté.
+     */
+    public function findDemandeByDepotAuditEnergie(int $depotId): ?Demande_
+    {
+        return $this->findRemboursementAndDemandeByDepotAuditEnergie($depotId)['demande'];
+    }
+
+    /**
+     * @return array{remboursement: mixed, demande: ?Demande_}
+     */
+    private function findRemboursementAndDemandeByDepotAuditEnergie(int $depotId): array
+    {
+        $remboursement = null;
+        $demande = null;
+
+        $remboursementAuditEnergieDepot = $this->remboursementAuditEnergieDepotRepository->find($depotId);
+        if (!empty($remboursementAuditEnergieDepot)) {
+            $remboursementAuditEnergie = $this->remboursementAuditEnergieRepository->findOneBy([
+                'depot' => $remboursementAuditEnergieDepot,
+            ]);
+            if (!empty($remboursementAuditEnergie)) {
+                $remboursement = $this->remboursementRepository->findOneBy([
+                    'remboursement_auditEnergie' => $remboursementAuditEnergie,
+                ]);
+                if (!empty($remboursement)) {
+                    $demande = $this->demandeRepository->find($remboursement->getDemandeId());
+                }
+            }
+        }
+
+        return ['remboursement' => $remboursement, 'demande' => $demande];
+    }
+
     private function checkRemboursementAccess(int $childId, int $typeDemande, int $adminId, array $roles): bool
     {
         $auditeurId = null;
@@ -293,21 +333,8 @@ class DocumentAccessChecker
 
         switch ($typeDemande) {
             case 4: // Remboursement Audit Energie Depot
-                $remboursementAuditEnergieDepot = $this->remboursementAuditEnergieDepotRepository->find($childId);
-                if (!empty($remboursementAuditEnergieDepot)) {
-                    $remboursementAuditEnergie = $this->remboursementAuditEnergieRepository->findOneBy([
-                        'depot' => $remboursementAuditEnergieDepot,
-                    ]);
-                    if (!empty($remboursementAuditEnergie)) {
-                        $remboursement = $this->remboursementRepository->findOneBy([
-                            'remboursement_auditEnergie' => $remboursementAuditEnergie,
-                        ]);
-                        if (!empty($remboursement)) {
-                            $demande = $this->demandeRepository->find($remboursement->getDemandeId());
-                            $auditeurId = $demande?->getDemandeAuditEnergie()?->getAuditeurId();
-                        }
-                    }
-                }
+                ['remboursement' => $remboursement, 'demande' => $demande] = $this->findRemboursementAndDemandeByDepotAuditEnergie($childId);
+                $auditeurId = $demande?->getDemandeAuditEnergie()?->getAuditeurId();
                 break;
             case 5: // Remboursement Audit Energie Instruction
                 $remboursementAuditEnergieInstruction = $this->remboursementAuditEnergieInstructionRepository->find($childId);
@@ -473,8 +500,7 @@ class DocumentAccessChecker
 
     private function isConseillerAccessDenied(int $adminId, int $beneficiaireId): bool
     {
-        $rowStructure = $this->structureRepository->findByConseillerId($adminId);
-        $structureId = $rowStructure['id'] ?? null;
+        $structureId = $this->perimetreResolver->pourUtilisateurConnecte()->structureId();
 
         $beneficiaire = $this->beneficiaireRepository->find($beneficiaireId);
         if (!empty($beneficiaire) && $beneficiaire->getStructureRattachementId() === $structureId) {

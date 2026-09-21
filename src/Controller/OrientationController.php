@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Doctrine\ORM\EntityManagerInterface;
 
-#[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+#[Security("is_granted('ROLE_BO_GESTION_REGION')")]
 class OrientationController extends AbstractController
 {
     public function list(OrientationRepository $orientationRepository): Response

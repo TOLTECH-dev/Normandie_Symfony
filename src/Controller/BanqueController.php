@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+#[Security("is_granted('ROLE_BO_GESTION_REGION')")]
 class BanqueController extends AbstractController
 {
     /**

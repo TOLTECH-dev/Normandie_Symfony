@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Structure_;
+use App\Security\Perimetre\PerimetreResolver;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\NonUniqueResultException;
@@ -20,7 +21,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class Remboursement_Repository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private readonly PerimetreResolver $perimetreResolver)
     {
         parent::__construct($registry, Remboursement_::class);
     }
@@ -52,13 +53,13 @@ class Remboursement_Repository extends ServiceEntityRepository
         ";
 
         if ($username) {
-            $adminId = (int)substr($username, 1);
+            // Périmètre résolu une seule fois pour le compte (cf. Perimetre et PerimetreResolver)
+            $perimetre = $this->perimetreResolver->pour($roles, $username);
+            $adminId = $perimetre->identifiant();
 
             if (is_int($adminId)) {
                 if (in_array('ROLE_CONSEILLER', $roles)) {
-                    $repo_structure = $this->_em->getRepository(Structure_::class);
-                    $structure_id = $repo_structure->findByConseillerId($adminId);
-                    $user_id_current = $structure_id['id'];
+                    $user_id_current = $perimetre->structureId();
 
                     // La structure qui doit voir ses dossiers doit être la structure lié à la fiche du bénéficiaire
                     $queryWhere = "
@@ -231,15 +232,15 @@ class Remboursement_Repository extends ServiceEntityRepository
         ";
 
         if ($username) {
-            $adminId = substr($username, 1);
+            // Périmètre résolu une seule fois pour le compte (cf. Perimetre). Un nom de compte sans suffixe
+        // numérique ne reçoit aucun périmètre dans la liste des remboursements : comportement historique conservé.
+        $perimetre = $this->perimetreResolver->pour($roles, $username);
+        $adminId = $perimetre->identifiantNumerique();
 
-            if (is_numeric($adminId)) {
-                $adminId = (int)$adminId;
+        if (null !== $adminId) {
 
                 if (in_array('ROLE_CONSEILLER', $roles)) {
-                    $repo_structure = $this->_em->getRepository(Structure_::class);
-                    $structure_id = $repo_structure->findByConseillerId($adminId);
-                    $user_id_current = $structure_id['id'];
+                    $user_id_current = $perimetre->structureId();
 
                     // La structure qui doit voir ses dossiers doit être la structure lié à la fiche du bénéficiaire
                     $queryWhere = "

@@ -57,7 +57,7 @@ class InstructionDevisController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Security("is_granted('ROLE_CONSEILLER') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_ESPACE_CONSEILLER')")]
     public function examine(Request $request, string $devisId, string $logementId) : Response
     {
         /* *****************************************************************

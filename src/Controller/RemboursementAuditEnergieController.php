@@ -43,7 +43,7 @@ class RemboursementAuditEnergieController extends AbstractController
     /**
      * Examine remboursement audit énergie - instruction
      */
-    #[Security("is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_INSTRUCTEUR_UP') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_INSTRUCTION_ETENDUE')")]
     public function examine(Request $request, int $titreId): RedirectResponse|Response
     {
 
@@ -316,7 +316,7 @@ class RemboursementAuditEnergieController extends AbstractController
     /**
      * Re-examine remboursement audit énergie - instruction
      */
-    #[Security("is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_INSTRUCTEUR_UP') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_INSTRUCTION_ETENDUE')")]
     public function reexamine(Request $request, int $remboursementId): RedirectResponse|Response
     {
 
@@ -328,6 +328,9 @@ class RemboursementAuditEnergieController extends AbstractController
          * @var Remboursement_ $remboursement
          */
         $remboursement = $remboursementRepository->find($remboursementId);
+        if (null === $remboursement) {
+            throw $this->createNotFoundException();
+        }
 
         $demandeRepository = $this->demandeRepository;
         /**
@@ -591,6 +594,9 @@ class RemboursementAuditEnergieController extends AbstractController
          * @var Demande_ $demande
          */
         $demande = $repo_demande->find($demandeId);
+        if (null === $demande) {
+            throw $this->createNotFoundException();
+        }
 
         /* ***************************************************************************
                             S E C U R I T Y   D E P O T
@@ -870,6 +876,9 @@ class RemboursementAuditEnergieController extends AbstractController
          * @var Remboursement_ $remboursement
          */
         $remboursement = $remboursementRepository->find($remboursementId);
+        if (null === $remboursement) {
+            throw $this->createNotFoundException();
+        }
 
         $demandeRepository = $this->demandeRepository;
 

@@ -44,6 +44,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use setasign\Fpdi\Fpdi;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -913,13 +914,13 @@ class DemandeServiceFO
     public function checkDemandeInstructionExamineReexamine($demandeId, $demandeType, $instructionId = null)
     {
         if (empty($demandeId) || empty($demandeType)) {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
 
         // SI PARAMETRES OK => ON FAIT LA REQUETE DE CHECK
         $row = $this->demande_Repository->findOneForInstructionExamineReexamine($demandeId, $demandeType, $instructionId);
         if (empty($row)) {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
     }
 
@@ -942,11 +943,11 @@ class DemandeServiceFO
             || empty($devisId)
             || !in_array($type, ['devis', 'fiche_technique'])
         ) {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
         if (('devis' == $type) && (empty($devisId) || empty($logementId))) {
             // DEMANDE TRAVAUX DEVIS
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
 
         // SI LES PARAMETRES SONT OK ON FAIT LA REQUETE
@@ -957,7 +958,7 @@ class DemandeServiceFO
             $ficheTechniqueId
         );
         if (empty($row)) {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
     }
 

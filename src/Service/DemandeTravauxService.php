@@ -15,6 +15,7 @@ use App\Entity\Demande_;
 use App\Entity\Demande_statut;
 use App\Entity\Logement;
 use App\Entity\User;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DemandeTravauxService extends DemandeServiceFO
 {
@@ -511,7 +512,7 @@ class DemandeTravauxService extends DemandeServiceFO
             /* *****************************************************************
                                   U S E R   S E C U R I T Y
             ***************************************************************** */
-            $this->userService->checkUserSecurity($user->getId(), $rowDemande['beneficiaireUserId']);
+            $this->userService->checkUserSecurity($user->getId(), $rowDemande['beneficiaireUserId'] ?? null);
         } else {
             $option = [
                 'roles' => $user->getRoles(),
@@ -577,14 +578,8 @@ class DemandeTravauxService extends DemandeServiceFO
          * @var Demande_ $demande
          */
         $demande = $this->demande_Repository->find($demandeId);
-
-        /* *****************************************************************
-                            S E C U R I T Y    D E M A N D E
-        ***************************************************************** */
-        if (!in_array('ROLE_CLIENT', $user->getRoles())
-            && !in_array('ROLE_ADMIN', $user->getRoles())
-        ) {
-            $this->checkEditDemande($demande);
+        if (null === $demande) {
+            throw new NotFoundHttpException();
         }
 
         /* /////////////////////////////////////////////////////////////////
@@ -601,7 +596,7 @@ class DemandeTravauxService extends DemandeServiceFO
             /* *****************************************************************
                                   U S E R   S E C U R I T Y
             ***************************************************************** */
-            $this->userService->checkUserSecurity($user->getId(), $beneficiaire->getUserId());
+            $this->userService->checkUserSecurity($user->getId(), $beneficiaire?->getUserId());
         } else {
             /* /////////////////////////////////////////////////////////////////
                                 CHECK DEMANDE ACCESS CONTROLE
@@ -611,6 +606,16 @@ class DemandeTravauxService extends DemandeServiceFO
                 'username' => $user->getUsername()
             ];
             $this->demandeServiceBO->checkAccesByRole($this->demande_Repository->find($demandeId), $option);
+        }
+
+        /* *****************************************************************
+                            S E C U R I T Y    D E M A N D E
+        (après le contrôle d'accès : un dossier d'autrui ne doit pas se distinguer d'un dossier inexistant)
+        ***************************************************************** */
+        if (!in_array('ROLE_CLIENT', $user->getRoles())
+            && !in_array('ROLE_ADMIN', $user->getRoles())
+        ) {
+            $this->checkEditDemande($demande);
         }
 
         /* /////////////////////////////////////////////////////////////////

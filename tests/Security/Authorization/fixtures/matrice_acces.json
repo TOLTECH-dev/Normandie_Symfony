@@ -1,0 +1,1074 @@
+{
+    "ANAHCritere_list": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "EPCI_add": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "EPCI_edit": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "EPCI_list": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "EPCI_view": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "admin_add": [
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "admin_delete": [
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "admin_edit": [
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "admin_enabled": [
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "admin_import": [
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "admin_list": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "admin_list_ajax": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "admin_password_change": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "admin_user_login": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "admin_view": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "banque_add": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "banque_edit": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "banque_enabled": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "banque_list": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "banque_view": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "beneficiaire_add": [
+        "ROLE_MEMBER"
+    ],
+    "beneficiaire_delete": [
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "beneficiaire_edit": [
+        "ROLE_MEMBER"
+    ],
+    "beneficiaire_list_all": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "beneficiaire_list_all_ajax": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "beneficiaire_view": [
+        "ROLE_MEMBER"
+    ],
+    "bo_autocomplete_listAddress": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "bo_autocomplete_listCity": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "bo_autocomplete_listConseiller": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "bo_autocomplete_listPartenaire": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "bo_autocomplete_listStructure": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "bo_dashboard": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "carnet_information_logement_confirm_creation": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "carnet_information_logement_view": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "conseiller_beneficiaire_add": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_beneficiaire_edit": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_beneficiaire_list": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_beneficiaire_list_ajax": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_beneficiaire_view": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_auditEnergie_add": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_auditEnergie_edit": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_auditEnergie_view": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_auditNumerique_add": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_auditNumerique_edit": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_auditNumerique_view": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_devis_add": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_devis_edit": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_devis_view": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_list": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_travaux_add": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_travaux_edit": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_demande_travaux_view": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_logement_add": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_logement_edit": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_logement_list": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "conseiller_logement_view": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "contact_addEdit": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "contact_delete": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "contact_list": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "dateCP_assign": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "dateCP_export": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "dateCP_list": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "dateRMH_assign": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "dateRMH_documentRMH_download": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "dateRMH_documentRMH_export": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "dateRMH_list": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "dateRMH_recapitulatifPreRMH_export": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_assign_contacts": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_auditEnergie_add": [
+        "ROLE_MEMBER"
+    ],
+    "demande_auditEnergie_edit": [
+        "ROLE_MEMBER"
+    ],
+    "demande_auditEnergie_examine": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_auditEnergie_reexamine": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_auditEnergie_view": [
+        "ROLE_MEMBER"
+    ],
+    "demande_auditNumerique_add": [
+        "ROLE_MEMBER"
+    ],
+    "demande_auditNumerique_edit": [
+        "ROLE_MEMBER"
+    ],
+    "demande_auditNumerique_view": [
+        "ROLE_MEMBER"
+    ],
+    "demande_create_commentaire": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_delete": [
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_deny": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_devis_add": [
+        "ROLE_MEMBER"
+    ],
+    "demande_devis_edit": [
+        "ROLE_MEMBER"
+    ],
+    "demande_devis_examine": [
+        "ROLE_CONSEILLER",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_devis_ficheTechnique_examine": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_devis_ficheTechnique_reexamine": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_devis_list": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_devis_view": [
+        "ROLE_MEMBER"
+    ],
+    "demande_document_bo": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "demande_document_fo": [
+        "ROLE_MEMBER"
+    ],
+    "demande_edit": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_export": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_fiche_liaison_bo": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_fiche_liaison_fo": [
+        "ROLE_MEMBER"
+    ],
+    "demande_historique": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_list_all": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_list_all_ajax": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_list_bo": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_list_fo": [
+        "ROLE_MEMBER"
+    ],
+    "demande_reactive": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_travaux_add": [
+        "ROLE_MEMBER"
+    ],
+    "demande_travaux_edit": [
+        "ROLE_MEMBER"
+    ],
+    "demande_travaux_examine": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_travaux_reexamine": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_travaux_view": [
+        "ROLE_MEMBER"
+    ],
+    "demande_update_niveau_aide_travaux_devis": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_view": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_view_step": [
+        "ROLE_MEMBER"
+    ],
+    "document_help_view": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_TECHNIQUE"
+    ],
+    "fo_autocomplete_listAddress": [
+        "ROLE_MEMBER"
+    ],
+    "fo_autocomplete_listCity": [
+        "ROLE_MEMBER"
+    ],
+    "fo_autocomplete_listConseiller": [
+        "ROLE_MEMBER"
+    ],
+    "fo_autocomplete_listPartenaire": [
+        "ROLE_MEMBER"
+    ],
+    "fo_autocomplete_listStructure": [
+        "ROLE_MEMBER"
+    ],
+    "fo_dashboard": [
+        "ROLE_MEMBER"
+    ],
+    "fo_security_form": [
+        "ROLE_MEMBER"
+    ],
+    "franceconnect_callback": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "franceconnect_check": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "logement_add": [
+        "ROLE_MEMBER"
+    ],
+    "logement_delete": [
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "logement_edit": [
+        "ROLE_MEMBER"
+    ],
+    "logement_list": [
+        "ROLE_MEMBER"
+    ],
+    "logement_view": [
+        "ROLE_MEMBER"
+    ],
+    "newsletter_add": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "newsletter_view": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "orientation_add": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "orientation_edit": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "orientation_list": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "orientation_view": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "partenaire_add": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "partenaire_edit": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "partenaire_export": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "partenaire_export_rating": [
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "partenaire_list": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "partenaire_view": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "partenaire_view_rating": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "production_list": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_auditEnergie_addDepot": [
+        "ROLE_AUDITEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_auditEnergie_editDepot": [
+        "ROLE_AUDITEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_auditEnergie_examine": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_auditEnergie_reexamine": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_auditNumerique_addDepot": [
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_auditNumerique_editDepot": [
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_auditNumerique_examine": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_auditNumerique_reexamine": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_deny": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_export": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_list": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_list_ajax": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_travaux_examine": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_travaux_examineFicheTechnique": [
+        "ROLE_RENOVATEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_travaux_reexamine": [
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "remboursement_travaux_reexamineFicheTechnique": [
+        "ROLE_RENOVATEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "structure_add": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "structure_edit": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "structure_list": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "structure_view": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "titre_attestationNonReception_export": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "titre_list": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "titre_list_ajax": [
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "user_login": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "user_register_confirmed": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "user_registration": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "user_registration_check_email": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "user_registration_confirm": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "user_resetting_check_email": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "user_resetting_request": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "user_resetting_reset": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "user_resetting_send_email": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
+    "web_homepage": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ]
+}

@@ -1,0 +1,65 @@
+{#
+    Gabarit des pages d'erreur (production, APP_DEBUG=0), commun au front et au back office.
+
+    Volontairement autonome : ni sous-contrôleur, ni base de données, ni script, ni entrée Encore.
+    Une erreur survenant pendant le rendu d'une page d'erreur ferait retomber sur la page brute de Symfony.
+
+    Sécurité : aucun détail technique (message d'exception, trace, identifiant, nom de compte) n'est affiché.
+    Le motif réel est journalisé côté serveur. Aperçu en développement : /_error/403, /_error/404, /_error/500.
+#}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="{{ asset('build/images/main/favicon/favicon-32x32.png') }}" type="image/png" sizes="32x32">
+    <title>{% block titre %}Erreur{% endblock %} - Chèque éco-énergie Normandie</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            background: #f5f5f5;
+            color: #333;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .erreur {
+            width: 100%;
+            max-width: 560px;
+            padding: 40px 32px;
+            background: #fff;
+            border-top: 4px solid #e9661f;
+            border-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+            text-align: center;
+        }
+        .erreur img { max-width: 180px; height: auto; margin-bottom: 24px; }
+        .erreur h1 { margin: 0 0 12px; font-size: 24px; color: #333; }
+        .erreur p { margin: 0 0 24px; color: #555; }
+        .erreur a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #e9661f;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .erreur a:hover, .erreur a:focus { background: #c9551a; }
+    </style>
+</head>
+<body>
+    <main class="erreur">
+        <img src="{{ asset('build/images/main/logo/logo_Normandie.jpg') }}" alt="Région Normandie">
+        <h1>{{ block('titre') }}</h1>
+        <p>{% block message %}{% endblock %}</p>
+        <a href="/">Retour à l'accueil</a>
+    </main>
+</body>
+</html>

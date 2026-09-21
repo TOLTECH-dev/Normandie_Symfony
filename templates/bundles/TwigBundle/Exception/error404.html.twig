@@ -1,0 +1,9 @@
+{#
+    Page inexistante, mais aussi dossier ou document hors du périmètre du compte :
+    les deux cas reçoivent volontairement la même page (la réponse ne révèle pas l'existence d'un dossier).
+#}
+{% extends '@Twig/Exception/layout_erreur.html.twig' %}
+
+{% block titre %}Page introuvable{% endblock %}
+
+{% block message %}La page demandée n'existe pas ou n'est plus disponible.{% endblock %}

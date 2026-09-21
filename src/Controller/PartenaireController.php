@@ -6,11 +6,13 @@ use App\Entity\Partenaire_;
 use App\Entity\User;
 use App\Entity\Rating;
 use App\Form\Partenaire_Type;
+use App\Security\Perimetre\PerimetreResolver;
 use App\Service\AdminCoordonneeService;
 use App\Service\AdminService;
 use App\Service\PartenaireService;
 use Doctrine\ORM\EntityManagerInterface;
 use IBAN\Validation\IBANValidator;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Spipu\Html2Pdf\Exception\Html2PdfException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,7 +30,7 @@ class PartenaireController extends AbstractController
     {
         $this->em = $em;
     }
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function list(string $type): Response
     {
         /* /////////////////////////////////////////////////////////////////
@@ -53,7 +55,7 @@ class PartenaireController extends AbstractController
         ]);
     }
 
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function view(int $partenaireId, string $type): Response
     {
         $repo = $this->em->getRepository(Partenaire_::class);
@@ -82,7 +84,7 @@ class PartenaireController extends AbstractController
     /**
      * @throws \Exception
      */
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function viewRating(int $partenaireId, int $partenaireType): Response
     {
         /* /////////////////////////////////////////////////////////////////
@@ -103,10 +105,10 @@ class PartenaireController extends AbstractController
                 $prefixUser = 'R';
                 $typeRating = $this->getParameter('rating_from_region_to_renovateur');
             } else {
-                throw new \Exception('Le Partenaire type est invalide.');
+                throw $this->createNotFoundException();
             }
         } else {
-            throw new \Exception('Le Partenaire type est invalide.');
+            throw $this->createNotFoundException();
         }
 
         /* /////////////////////////////////////////////////////////////////
@@ -145,7 +147,7 @@ class PartenaireController extends AbstractController
     /**
      * @throws \Exception
      */
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function add(Request $request, string $type, AdminService $adminService, AdminCoordonneeService $adminCoordonneeService): RedirectResponse|Response
     {
         $partenaire = new Partenaire_();
@@ -257,14 +259,14 @@ class PartenaireController extends AbstractController
     /**
      * @throws \Exception
      */
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function edit(Request $request, int $partenaireId, string $type, AdminService $adminService, AdminCoordonneeService $adminCoordonneeService): RedirectResponse|Response
     {
         $repo = $this->em->getRepository(Partenaire_::class);
         $partenaire = $repo->find($partenaireId);
 
         if (!$partenaire) {
-            throw $this->createNotFoundException('Partenaire not found');
+            throw $this->createNotFoundException();
         }
 
         /* /////////////////////////////////////////////////////////////////
@@ -395,8 +397,36 @@ class PartenaireController extends AbstractController
      * @throws Html2PdfException
      */
     #[Security("is_granted('ROLE_AUDITEUR') or is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
-    public function exportRating(PartenaireService $partenaireService,int $partenaireId = 0, int $partenaireType = -1 ): Response
-    {
+    public function exportRating(
+        PartenaireService $partenaireService,
+        PerimetreResolver $perimetreResolver,
+        LoggerInterface $logger,
+        int $partenaireId = 0,
+        int $partenaireType = -1
+    ): Response {
+        /* *****************************************************************
+                S E C U R I T Y   (cloisonnement entre partenaires, VUL06)
+            Un auditeur ou un rénovateur n'exporte que ses propres notations ; les notations
+            d'un autre partenaire répondent comme un partenaire inexistant (404).
+        ***************************************************************** */
+        if (!$this->isGranted('ROLE_BO_GESTION_REGION')) {
+            $perimetre = $perimetreResolver->pourUtilisateurConnecte();
+            $estLuiMeme = $partenaireId === $perimetre->identifiantNumerique()
+                && (
+                    (0 === $partenaireType && $perimetre->aLeRole('ROLE_AUDITEUR'))
+                    || (1 === $partenaireType && $perimetre->aLeRole('ROLE_RENOVATEUR'))
+                );
+            if (!$estLuiMeme) {
+                $logger->warning('Accès refusé aux notations d\'un autre partenaire', [
+                    'partenaireId'   => $partenaireId,
+                    'partenaireType' => $partenaireType,
+                    'username'       => $this->getUser()?->getUserIdentifier(),
+                ]);
+
+                throw $this->createNotFoundException();
+            }
+        }
+
         /* /////////////////////////////////////////////////////////////////
                                     GET PARTENAIRE
         ///////////////////////////////////////////////////////////////// */
@@ -404,11 +434,11 @@ class PartenaireController extends AbstractController
         if (0 !== $partenaireId) {
             $partenaire = $repo->find($partenaireId);
         } else {
-            throw new \Exception("Id Partenaire non valide");
+            throw $this->createNotFoundException();
         }
 
         if (!$partenaire) {
-            throw $this->createNotFoundException('Partenaire not found');
+            throw $this->createNotFoundException();
         }
 
         $partenaireRaisonSociale = $partenaire->getPartenaireIdentification()->getRaisonSociale();
@@ -421,10 +451,10 @@ class PartenaireController extends AbstractController
                 $prefixUser = 'R';
                 $typeRating = $this->getParameter('rating_from_region_to_renovateur');
             } else {
-                throw new \Exception('Le Partenaire type est invalide.');
+                throw $this->createNotFoundException();
             }
         } else {
-            throw new \Exception('Le Partenaire type est invalide.');
+            throw $this->createNotFoundException();
         }
 
         /* /////////////////////////////////////////////////////////////////
@@ -468,7 +498,7 @@ class PartenaireController extends AbstractController
         );
     }
 
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function export(int $type, PartenaireService $partenaireService): StreamedResponse
     {
         return $partenaireService->export($type);

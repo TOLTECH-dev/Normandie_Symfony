@@ -93,7 +93,7 @@ class RemboursementController extends AbstractController
         return false;
     }
 
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function deny(
         Request $request,
         int $remboursementId,
@@ -157,7 +157,7 @@ class RemboursementController extends AbstractController
         return $this->redirectToRoute('demande_list_all');
     }
 
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function export(
         RemboursementService $remboursementService
     ): Response {

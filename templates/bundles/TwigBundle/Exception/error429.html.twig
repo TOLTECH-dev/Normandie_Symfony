@@ -1,0 +1,6 @@
+{# Limitation anti-bruteforce des formulaires publics (inscription, mot de passe oublié). #}
+{% extends '@Twig/Exception/layout_erreur.html.twig' %}
+
+{% block titre %}Trop de tentatives{% endblock %}
+
+{% block message %}Veuillez patienter quelques minutes avant de réessayer.{% endblock %}

@@ -12,7 +12,7 @@ use App\Entity\Contact;
 use App\Form\ContactType;
 use App\Entity\Newsletter;
 
-#[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+#[Security("is_granted('ROLE_BO_GESTION_REGION')")]
 class ContactController extends AbstractController
 {
     private EntityManagerInterface $em;

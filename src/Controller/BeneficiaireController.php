@@ -138,7 +138,7 @@ class BeneficiaireController extends AbstractController
         ]);
     }
 
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function listAll(Request $request, AdminFormService $formService) : Response
     {
         /* /////////////////////////////////////////////////////////////////
@@ -194,7 +194,7 @@ class BeneficiaireController extends AbstractController
     }
 
 
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function listAllAjax(): bool|JsonResponse
     {
         $repo = $this->entityManager->getRepository(Beneficiaire::class);

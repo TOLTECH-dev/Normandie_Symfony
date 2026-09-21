@@ -70,7 +70,7 @@ bo_autocomplete_listPartenaire:
 ###################################
 bo_dashboard:
   path:     /2A5253425D96E69DCCCA7A5651BF602B1FF3BFD0789D55265B12DDAFB8C1FFAA6A3740497997A5341AB8158BE4B28EBB77F8FB973CA3227830B30CDF83B6C249
-  defaults: { _controller: App\Controller\HomepageController::index }
+  defaults: { _controller: App\Controller\HomePageController::index }
   methods: [GET]
 
 ###################################

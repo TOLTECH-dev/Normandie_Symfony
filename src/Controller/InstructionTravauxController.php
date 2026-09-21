@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-#[Security("is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+#[Security("is_granted('ROLE_BO_INSTRUCTION')")]
 class InstructionTravauxController extends AbstractController
 {
     private EntityManagerInterface $em;

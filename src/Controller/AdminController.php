@@ -7,8 +7,8 @@ use App\Entity\Beneficiaire;
 use App\Entity\User;
 use App\Form\Admin_importType;
 use App\Form\UserType;
+use App\Repository\User\UserListCriteria;
 use App\Service\AdminService;
-use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,28 +22,25 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class AdminController extends AbstractController
 {
     private EntityManagerInterface $em;
-    private UserService $userService;
-
     private AdminService $adminService;
 
-    public function __construct(EntityManagerInterface $em, UserService $userService, AdminService $adminService)
+    public function __construct(EntityManagerInterface $em, AdminService $adminService)
     {
         $this->em = $em;
-        $this->userService = $userService;
         $this->adminService = $adminService;
     }
 
     /**
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function list(): ?Response
     {
         /* /////////////////////////////////////////////////////////////////
                         GET COUNT DEMANDE
         ///////////////////////////////////////////////////////////////// */
-        $repo_demande = $this->em->getRepository(User::class);
-        $recordsTotal = $repo_demande->countForList(null, null);
+        $userRepository = $this->em->getRepository(User::class);
+        $recordsTotal = $userRepository->countForList();
 
         /* /////////////////////////////////////////////////////////////////
                         GET SELECT OPTION
@@ -62,64 +59,30 @@ class AdminController extends AbstractController
     /**
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    #[Security("is_granted('ROLE_CONSEILLER') or is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_AUDITEUR') or is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_EPCI') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') or is_granted('ROLE_TECHNIQUE')")]
+    // Vulnérabilité 6 / recommandation 10 de l'audit ALMOND : ce listing expose l'identifiant de
+    // connexion, le nom, le courriel et le rôle de tous les comptes. Il est réservé aux profils qui
+    // administrent les comptes, comme la page qui l'affiche (::list) et la fiche (::view).
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function listAjax(Request $request): JsonResponse
     {
-        $userRepository = $this->em->getRepository(User::class);
-        $dataForListDispositif = $this->userService->getDataForListAjax();
-        $post = $request->request->all();
-        if (!empty($post)) {
-            $recordsTotal = $userRepository->countForList(null, null)['countId'] ?? 0;
-
-            if (!empty($post['search']['value'])) {
-                $data = $userRepository->findForListAjax(
-                    $dataForListDispositif['dataSQL'],
-                    $dataForListDispositif['orderBy'],
-                    $dataForListDispositif['orderType'],
-                    $dataForListDispositif['start'],
-                    $dataForListDispositif['length'],
-                    $dataForListDispositif['columnWhere']
-                );
-                $recordsFiltered = $userRepository->countForList(
-                    $dataForListDispositif['dataSQL'],
-                    $dataForListDispositif['columnWhere']
-                )['countId'] ?? 0;
-
-            } elseif (!empty($dataForListDispositif['columnWhereTmp'])) {
-                $data = $userRepository->findForListAjax(
-                    $dataForListDispositif['dataSQL'],
-                    $dataForListDispositif['orderBy'],
-                    $dataForListDispositif['orderType'],
-                    $dataForListDispositif['start'],
-                    $dataForListDispositif['length'],
-                    $dataForListDispositif['columnWhere']
-                );
-                $recordsFiltered = $userRepository->countForList(
-                    $dataForListDispositif['dataSQL'],
-                    $dataForListDispositif['columnWhere']
-                )['countId'] ?? 0;
-
-            } else {
-                $data = $userRepository->findForListAjax(
-                    null,
-                    $dataForListDispositif['orderBy'],
-                    $dataForListDispositif['orderType'],
-                    $dataForListDispositif['start'],
-                    $dataForListDispositif['length'],
-                    null
-                );
-
-                $recordsFiltered = $recordsTotal;
-            }
-            $response = [
-                "draw"            => intval($dataForListDispositif['draw']),
-                "recordsTotal"    => $recordsTotal,
-                "recordsFiltered" => $recordsFiltered,
-                "data"            => $data
-            ];
-            return new JsonResponse($response);
+        $postData = $request->request->all();
+        if ([] === $postData) {
+            return new JsonResponse([], 400);
         }
-        return new JsonResponse([], 400);
+
+        // Colonnes de recherche et de tri en liste blanche, valeurs liées en paramètres :
+        // aucune donnée reçue n'est écrite dans la requête (cf. UserListCriteria).
+        $criteria = UserListCriteria::fromDataTables($postData);
+        $userRepository = $this->em->getRepository(User::class);
+        $recordsTotal = $userRepository->countForList();
+        $filtre = $criteria->hasSearch() || $criteria->hasFilters();
+
+        return new JsonResponse([
+            "draw"            => (int) ($postData["draw"] ?? 0),
+            "recordsTotal"    => $recordsTotal,
+            "recordsFiltered" => $filtre ? $userRepository->countForList($criteria) : $recordsTotal,
+            "data"            => $userRepository->findForListAjax($criteria),
+        ]);
     }
 
     #[Security("is_granted('ROLE_ADMIN')")]
@@ -155,7 +118,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function view(int $userId): Response
     {
         /* /////////////////////////////////////////////////////////////////

@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+#[Security("is_granted('ROLE_BO_GESTION_REGION')")]
 class NewsletterController extends AbstractController
 {
     private EntityManagerInterface $em;

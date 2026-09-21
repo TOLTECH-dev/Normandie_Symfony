@@ -11,6 +11,7 @@ use App\Entity\Beneficiaire;
 use App\Entity\Demande_;
 use App\Entity\Logement;
 use App\Entity\User;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
@@ -385,7 +386,7 @@ class DemandeAuditEnergieService extends DemandeServiceFO
             /* *****************************************************************
                                   U S E R   S E C U R I T Y
             ***************************************************************** */
-            $this->userService->checkUserSecurity($user->getId(), $rowDemande['beneficiaireUserId']);
+            $this->userService->checkUserSecurity($user->getId(), $rowDemande['beneficiaireUserId'] ?? null);
         } else {
             $option = [
                 'roles' => $user->getRoles(),
@@ -451,14 +452,8 @@ class DemandeAuditEnergieService extends DemandeServiceFO
          * @var Demande_ $demande
          */
         $demande = $this->demande_Repository->find($demandeId);
-
-        /* *****************************************************************
-                            S E C U R I T Y    D E M A N D E
-        ***************************************************************** */
-        if (!in_array('ROLE_CLIENT', $user->getRoles())
-            && !in_array('ROLE_ADMIN', $user->getRoles())
-        ) {
-            $this->checkEditDemande($demande);
+        if (null === $demande) {
+            throw new NotFoundHttpException();
         }
 
         /* /////////////////////////////////////////////////////////////////
@@ -475,7 +470,7 @@ class DemandeAuditEnergieService extends DemandeServiceFO
             /* *****************************************************************
                                   U S E R   S E C U R I T Y
             ***************************************************************** */
-            $this->userService->checkUserSecurity($user->getId(), $beneficiaire->getUserId());
+            $this->userService->checkUserSecurity($user->getId(), $beneficiaire?->getUserId());
         } else {
             /* /////////////////////////////////////////////////////////////////
                     CHECK DEMANDE ACCESS CONTROLE
@@ -485,6 +480,16 @@ class DemandeAuditEnergieService extends DemandeServiceFO
                 'username' => $user->getUsername()
             ];
             $this->demandeServiceBO->checkAccesByRole($demande, $option);
+        }
+
+        /* *****************************************************************
+                            S E C U R I T Y    D E M A N D E
+        (après le contrôle d'accès : un dossier d'autrui ne doit pas se distinguer d'un dossier inexistant)
+        ***************************************************************** */
+        if (!in_array('ROLE_CLIENT', $user->getRoles())
+            && !in_array('ROLE_ADMIN', $user->getRoles())
+        ) {
+            $this->checkEditDemande($demande);
         }
 
         /* /////////////////////////////////////////////////////////////////

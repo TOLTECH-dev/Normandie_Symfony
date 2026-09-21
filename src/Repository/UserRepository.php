@@ -3,10 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Repository\User\UserListCriteria;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -22,6 +24,21 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
+    /**
+     * Expression DQL de chaque colonne de la liste des comptes (cf. UserListCriteria::COLUMNS).
+     * Aucune autre colonne n'est atteignable : ni le mot de passe, ni le jeton de confirmation.
+     */
+    private const LIST_EXPRESSIONS = [
+        'id'        => 'u.id',
+        'username'  => 'u.username',
+        'firstname' => 'u.firstname',
+        'lastname'  => 'u.lastname',
+        'email'     => 'u.email',
+        'enabled'   => 'u.enabled',
+        'roles'     => 'u.roles',
+        'lastLogin' => "DATE_FORMAT(u.lastLogin, '%d/%m/%Y')",
+    ];
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -200,20 +217,39 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      * @return int|mixed|string|null
      * @throws NonUniqueResultException
      */
-    public function countForList($data = [], $where = '')
+    public function countForList(?UserListCriteria $criteria = null): int
     {
         $qb = $this->createQueryBuilder("u");
-        $qb->select("COUNT(u.id) AS countId")
-            ->setMaxResults(1);
+        $qb->select("COUNT(u.id)");
 
-        if(!empty($where)) {
-            $qb->andWhere($where);
-        }
-        if (!empty($data['param'])) {
-            $qb->setParameters($data['param']);
+        if (null !== $criteria) {
+            $this->applyListCriteria($qb, $criteria);
         }
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Recherche globale (toutes les colonnes) ou recherche par colonne : les valeurs saisies sont
+     * liées en paramètres, jamais écrites dans la requête.
+     */
+    private function applyListCriteria(QueryBuilder $qb, UserListCriteria $criteria): void
+    {
+        if ($criteria->hasSearch()) {
+            $conditions = array_map(
+                static fn (string $expression): string => $expression . ' LIKE :recherche',
+                array_values(self::LIST_EXPRESSIONS)
+            );
+            $qb->andWhere('(' . implode(' OR ', $conditions) . ')')
+                ->setParameter('recherche', '%' . $criteria->getSearch() . '%');
+
+            return;
+        }
+
+        foreach ($criteria->getFilters() as $colonne => $valeur) {
+            $qb->andWhere(self::LIST_EXPRESSIONS[$colonne] . ' LIKE :filtre_' . $colonne)
+                ->setParameter('filtre_' . $colonne, '%' . $valeur . '%');
+        }
     }
 
     /**
@@ -225,14 +261,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      * @param null $where
      * @return array|int|string
      */
-    public function findForListAjax(
-        $data,
-        $orderBy,
-        $orderType,
-        $start,
-        $length,
-        $where = null
-    ) {
+    public function findForListAjax(UserListCriteria $criteria): array
+    {
 
         $qb = $this->createQueryBuilder("u");
         $qb->select("u.id AS id")
@@ -246,17 +276,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->addSelect("IF(u.dateInactif IS NOT NULL, DATE_FORMAT(u.dateInactif, '%d/%m/%Y'), '-') AS dateInactif")
             ->addSelect("'' AS action");
 
-        if(!empty($where)) {
-            $qb->andWhere($where);
-        }
-        if (!empty($data['param'])) {
-            $qb->setParameters($data['param']);
-        }
+        $this->applyListCriteria($qb, $criteria);
 
-        $qb->orderBy($orderBy, $orderType)
-            ->setFirstResult($start)
-            ->setMaxResults($length);
-//var_dump($qb->getQuery()->getResult()); die();
+        $qb->orderBy(self::LIST_EXPRESSIONS[$criteria->getSortColumn()], $criteria->getSortDirection())
+            ->setFirstResult($criteria->getStart())
+            ->setMaxResults($criteria->getLength());
+
         return $qb->getQuery()->getResult();
     }
 }

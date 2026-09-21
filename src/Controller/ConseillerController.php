@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\Demande_Repository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-#[Security("is_granted('ROLE_CONSEILLER') or is_granted('ROLE_ADMIN')")]
+#[Security("is_granted('ROLE_BO_ESPACE_CONSEILLER')")]
 class ConseillerController extends AbstractController
 {
 

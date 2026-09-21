@@ -79,15 +79,10 @@ class FrontOfficeDemandeController extends AbstractController
                             GET DATA FOR FICHE LIAISON
         ///////////////////////////////////////////////////////////////// */
         $demande_Repository = $this->entityManager->getRepository(Demande_::class);
-        $dataFicheLiaison = $demande_Repository->findDataFicheLiaison($demandeId);
 
         $demande = $demande_Repository->find($demandeId);
-
-        /* /////////////////////////////////////////////////////////////////
-                     CHECK DEMANDE ACCESS CONTROLE BY DEMANDE STATUT
-        ///////////////////////////////////////////////////////////////// */
-        if ($demande->getStatutId() != Demande_statut::STATUS_14) {
-            throw new AccessDeniedHttpException();
+        if (null === $demande) {
+            throw $this->createNotFoundException();
         }
 
         /* /////////////////////////////////////////////////////////////////
@@ -100,9 +95,19 @@ class FrontOfficeDemandeController extends AbstractController
         $beneficiaire = $beneficiaireRepository->find($demande->getBeneficiaireId());
 
         /* *****************************************************************
-                            S E C U R I T Y    U S E R
+                S E C U R I T Y    U S E R (404 si le dossier n'est pas le sien)
+            d'abord la propriété : le contrôle de statut ne doit pas révéler le dossier d'un autre
         ***************************************************************** */
-        $this->userService->checkUserSecurity($this->getUser()->getId(), $beneficiaire->getUserId());
+        $this->userService->checkUserSecurity($this->getUser()->getId(), $beneficiaire?->getUserId());
+
+        /* /////////////////////////////////////////////////////////////////
+                     CHECK DEMANDE ACCESS CONTROLE BY DEMANDE STATUT
+        ///////////////////////////////////////////////////////////////// */
+        if ($demande->getStatutId() != Demande_statut::STATUS_14) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $dataFicheLiaison = $demande_Repository->findDataFicheLiaison($demandeId);
 
         /* /////////////////////////////////////////////////////////////////
                                 EXPORT PDF

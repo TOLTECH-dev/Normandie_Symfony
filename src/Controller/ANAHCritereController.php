@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\ANAHCritere;
 use App\Form\ANAHCritereType;
 
-#[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+#[Security("is_granted('ROLE_BO_GESTION_REGION')")]
 class ANAHCritereController extends AbstractController
 {
     /**

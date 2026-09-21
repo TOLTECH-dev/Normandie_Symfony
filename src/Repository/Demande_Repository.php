@@ -14,6 +14,7 @@ use App\Entity\Structure_;
 use App\Entity\Titre;
 use App\Repository\Demande\DemandeListCriteria;
 use App\Repository\Demande\DemandeListSql;
+use App\Security\Perimetre\PerimetreResolver;
 use App\Service\TitreService;
 use App\Utils\DefaultServiceUtils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -28,7 +29,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class Demande_Repository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private readonly PerimetreResolver $perimetreResolver)
     {
         parent::__construct($registry, Demande_::class);
     }
@@ -365,22 +366,17 @@ class Demande_Repository extends ServiceEntityRepository
             (int) $option['production_travauxNiveau_BBC1'],
             (int) $option['production_travauxNiveau_BBC2']
         );
-        $roles = $option['roles'];
-        $adminId = (int) substr((string) $option['username'], 1);
+        // Périmètre résolu une seule fois pour le compte (cf. Perimetre et PerimetreResolver)
+        $perimetre = $this->perimetreResolver->pour($option['roles'], $option['username']);
 
-        if (in_array('ROLE_CONSEILLER', $roles, true)) {
-            $structure = $this->_em->getRepository(Structure_::class)->findByConseillerId($adminId);
-            $listSql->restrictToStructure((int) ($structure['id'] ?? 0));
-        } elseif (in_array('ROLE_AUDITEUR', $roles, true)) {
-            $listSql->restrictToAuditeur($adminId);
-        } elseif (in_array('ROLE_RENOVATEUR', $roles, true)) {
-            $listSql->restrictToRenovateur($adminId);
-        } elseif (in_array('ROLE_EPCI', $roles, true)) {
-            $epci = $this->_em->getRepository(EPCI_::class)->findByContactId($adminId);
-            $listSql->restrictToEpci((int) ($epci['id'] ?? 0));
-        } elseif (in_array('ROLE_TECHNIQUE', $roles, true)) {
-            $listSql->restrictToTechnique();
-        }
+        match ($perimetre->profil()) {
+            'ROLE_CONSEILLER' => $listSql->restrictToStructure($perimetre->structureId() ?? 0),
+            'ROLE_AUDITEUR'   => $listSql->restrictToAuditeur($perimetre->identifiant()),
+            'ROLE_RENOVATEUR' => $listSql->restrictToRenovateur($perimetre->identifiant()),
+            'ROLE_EPCI'       => $listSql->restrictToEpci($perimetre->epciId() ?? 0),
+            'ROLE_TECHNIQUE'  => $listSql->restrictToTechnique(),
+            default           => null,
+        };
 
         return $listSql;
     }
@@ -1051,15 +1047,15 @@ class Demande_Repository extends ServiceEntityRepository
         $queryJoin = "";
         $queryWhere = "";
 
-        $adminId = substr($username, 1);
+        // Périmètre résolu une seule fois pour le compte (cf. Perimetre). Un nom de compte sans suffixe
+        // numérique ne reçoit aucun périmètre dans l export : comportement historique conservé.
+        $perimetre = $this->perimetreResolver->pour($roles, $username);
+        $adminId = $perimetre->identifiantNumerique();
 
-        if (is_numeric($adminId)) {
-            $adminId = (int)$adminId;
+        if (null !== $adminId) {
 
             if (in_array('ROLE_CONSEILLER', $roles)) {
-                $repo_structure = $this->_em->getRepository(Structure_::class);
-                $structure_id = $repo_structure->findByConseillerId($adminId);
-                $user_id_current = $structure_id['id'];
+                $user_id_current = $perimetre->structureId();
 
                 // La structure qui doit voir ses dossiers doit être la structure lié à la fiche du bénéficiaire
                 $queryJoin = "";
@@ -1091,9 +1087,7 @@ class Demande_Repository extends ServiceEntityRepository
                                 )
                 ";
             } elseif (in_array('ROLE_EPCI', $roles)) {
-                $repo_EPCI = $this->_em->getRepository(EPCI_::class);
-                $EPCI_id = $repo_EPCI->findByContactId($adminId);
-                $user_id_current = $EPCI_id['id'];
+                $user_id_current = $perimetre->epciId();
 
                 $queryWhere = " AND (
                                     o.EPCI_id = " . (int)$user_id_current . "

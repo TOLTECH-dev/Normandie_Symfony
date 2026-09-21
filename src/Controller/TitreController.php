@@ -28,7 +28,7 @@ class TitreController extends AbstractController
     /**
      * Affiche la liste des titres
      */
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function list(): Response
     {
         $recordsTotal = $this->titreRepository->countForList(null);
@@ -42,7 +42,7 @@ class TitreController extends AbstractController
     /**
      * Récupère les données pour la liste AJAX
      */
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function listAjax(Request $request): JsonResponse
     {
         try {
@@ -172,7 +172,7 @@ class TitreController extends AbstractController
     /**
      * Exporte l'attestation de non réception
      */
-    #[Security("is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
     public function exportAttestationNonReception(int $titreId): RedirectResponse
     {
         $data = $this->titreRepository->findDataAttestationNonReception(

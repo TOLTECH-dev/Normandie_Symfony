@@ -22,7 +22,7 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-#[Security("is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+#[Security("is_granted('ROLE_BO_INSTRUCTION')")]
 class ProductionController extends AbstractController
 {
     /**

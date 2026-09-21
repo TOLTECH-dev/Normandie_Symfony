@@ -1,0 +1,8 @@
+# Environnement de développement : la base locale est une copie de la production et l'envoi passe
+# par le vrai serveur SMTP. Pour qu'aucun test local n'écrive à un bénéficiaire ou à un partenaire
+# réel, tous les messages sont remis à la seule adresse ci-dessous ; les en-têtes (À, Cc) restent
+# ceux du message d'origine, ce qui permet de vérifier à qui il aurait été envoyé.
+framework:
+    mailer:
+        envelope:
+            recipients: ['contact@toltech.fr']

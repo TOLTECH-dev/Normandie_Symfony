@@ -14,7 +14,7 @@ use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 class RemboursementService
@@ -554,13 +554,13 @@ class RemboursementService
             ])
             || (empty($titreId) && empty($remboursementId))
         ) {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
 
         // SI PARAMETRES OK => ON FAIT LA REQUETE DE CHECK
         $row = $this->repo_remboursement->findOneForExamineReexamine($demandeTypeCustom, $titreId, $remboursementId);
         if (empty($row)) {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
     }
 
@@ -586,13 +586,13 @@ class RemboursementService
             ])
             || (empty($demandeId) && empty($remboursementId))
         ) {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
 
         // SI PARAMETRES OK => ON FAIT LA REQUETE DE CHECK
         $row = $this->repo_remboursement->findOneForDepot($demandeTypeCustom, $demandeId, $remboursementId);
         if (empty($row)) {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
     }
 
@@ -614,7 +614,7 @@ class RemboursementService
             Demande_::DEMANDE_TRAVAUX_TYPE != $demandeTypeCustom
             || (empty($titreId) && empty($remboursementId))
         ) {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
 
         // SI PARAMETRES OK => ON FAIT LA REQUETE DE CHECK
@@ -624,7 +624,7 @@ class RemboursementService
             $remboursementId
         );
         if (empty($row) || $row['isTechnicalAccess'] != '1') {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
     }
 

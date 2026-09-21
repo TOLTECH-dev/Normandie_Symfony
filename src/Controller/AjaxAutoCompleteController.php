@@ -8,6 +8,7 @@ use App\Entity\Structure_;
 use App\Service\StructureService;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,8 @@ class AjaxAutoCompleteController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
+    // Alimente les formulaires du back-office et de l espace bénéficiaire : compte connecté exigé
+    #[Security("is_granted('ROLE_APP_UTILISATEUR')")]
     public function updateListStructure(Request $request): JsonResponse
     {
         $listRecommanded = [];
@@ -138,6 +141,8 @@ class AjaxAutoCompleteController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    // Alimente les formulaires du back-office et de l espace bénéficiaire : compte connecté exigé
+    #[Security("is_granted('ROLE_APP_UTILISATEUR')")]
     public function updateListConseiller(Request $request)
     {
         $structureId = (int)$request->get('structureId');
@@ -161,6 +166,8 @@ class AjaxAutoCompleteController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    // Alimente les formulaires du back-office et de l espace bénéficiaire : compte connecté exigé
+    #[Security("is_granted('ROLE_APP_UTILISATEUR')")]
     public function updateListPartenaire(Request $request)
     {
         $type = (int)$request->get('type');
@@ -184,6 +191,8 @@ class AjaxAutoCompleteController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    // Alimente les formulaires du back-office et de l espace bénéficiaire : compte connecté exigé
+    #[Security("is_granted('ROLE_APP_UTILISATEUR')")]
     public function updateListCity(Request $request): JsonResponse
     {
         $codePostal = (int)$request->get('codePostal');
@@ -202,6 +211,8 @@ class AjaxAutoCompleteController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    // Alimente les formulaires du back-office et de l espace bénéficiaire : compte connecté exigé
+    #[Security("is_granted('ROLE_APP_UTILISATEUR')")]
     public function updateListAddress(Request $request)
     {
         $insee = (int)$request->get('insee');
@@ -225,6 +236,8 @@ class AjaxAutoCompleteController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    // Alimente les formulaires du back-office et de l espace bénéficiaire : compte connecté exigé
+    #[Security("is_granted('ROLE_APP_UTILISATEUR')")]
     public function updateSecurityForm(Request $request)
     {
         $request->getSession()->set('timestamp_logement', false);

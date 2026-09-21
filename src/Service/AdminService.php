@@ -17,7 +17,7 @@ use App\Utils\DefaultUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -260,7 +260,7 @@ class AdminService
     public function checkAdmin($userId_session, $userId_param): void
     {
         if ($userId_session != $userId_param) {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
     }
 

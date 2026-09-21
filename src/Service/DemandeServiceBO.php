@@ -21,11 +21,15 @@ use App\Repository\EPCI_Repository;
 use App\Repository\Historique_Repository;
 use App\Repository\OrientationRepository;
 use App\Repository\Structure_Repository;
+use App\Security\Perimetre\PerimetreResolver;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
@@ -101,14 +105,25 @@ class DemandeServiceBO
      */
     private $repo_beneficiaire;
 
+    /**
+     * @var PerimetreResolver
+     */
+    private $perimetreResolver;
+
+    private LoggerInterface $logger;
+
     public function __construct(
         EntityManagerInterface $em,
         TokenStorageInterface $tokenStorage,
         HistoriqueService $historiqueService,
         ANAHService $ANAHService,
-        ParameterBagInterface $parameterBag
+        ParameterBagInterface $parameterBag,
+        PerimetreResolver $perimetreResolver,
+        ?LoggerInterface $logger = null
     ) {
         $this->EM = $em;
+        $this->perimetreResolver = $perimetreResolver;
+        $this->logger = $logger ?? new NullLogger();
         $this->tokenStorage = $tokenStorage;
         $this->historiqueService = $historiqueService;
         $this->ANAHService = $ANAHService;
@@ -632,21 +647,31 @@ class DemandeServiceBO
     }
 
     /**
-     * @param Demande_ $demande_
+     * Contrôle l'accès d'un compte à un dossier selon son périmètre.
+     *
+     * Un dossier hors périmètre reçoit la même réponse qu'un dossier inexistant (404) :
+     * la réponse ne doit pas révéler l'existence d'un dossier (VUL06). Le motif est journalisé.
+     *
+     * @param Demande_|null $demande_ dossier lu en base (null s'il n'existe pas)
      * @param $option
      */
-    public function checkAccesByRole(Demande_ $demande_, $option)
+    public function checkAccesByRole(?Demande_ $demande_, $option)
     {
         $roles = $option['roles'];
         $username = $option['username'];
 
-        $adminId = (int)substr($username, 1);
+        if (null === $demande_) {
+            throw new NotFoundHttpException();
+        }
+
+        // Périmètre résolu une seule fois pour le compte (cf. Perimetre et PerimetreResolver)
+        $perimetre = $this->perimetreResolver->pour($roles, $username);
+        $adminId = $perimetre->identifiant();
         $isAccessRight = false;
         if (is_int($adminId)) {
             if (in_array(User::PARAM_ROLE_CONSEILLER, $roles)) {
 
-                $structure_id = $this->repo_structure->findByConseillerId($adminId);
-                $user_id_current = $structure_id['id'];
+                $user_id_current = $perimetre->structureId();
 
                 $beneficiaire = $this->repo_beneficiaire->find($demande_->getBeneficiaireId());
                 if ($beneficiaire->getStructureRattachementId() == $user_id_current) {
@@ -688,8 +713,7 @@ class DemandeServiceBO
                     }
                 }
             }  elseif (in_array(User::PARAM_ROLE_EPCI, $roles)) {
-                $EPCI_id = $this->repo_EPCI->findByContactId($adminId);
-                $user_id_current = $EPCI_id['id'];
+                $user_id_current = $perimetre->epciId();
 
                 $orientationEPCIId = $this->repo_orientation->searchEPCIIdByLogement($demande_->getLogementId());
                 if ($orientationEPCIId == $user_id_current) {
@@ -715,7 +739,13 @@ class DemandeServiceBO
             && !in_array(User::PARAM_ROLE_ADMIN, $roles)
             && !$isAccessRight
         ) {
-            throw new AccessDeniedHttpException();
+            $this->logger->warning('Accès refusé à un dossier hors périmètre', [
+                'demandeId' => $demande_->getId(),
+                'username'  => $username,
+                'profil'    => $perimetre->profil(),
+            ]);
+
+            throw new NotFoundHttpException();
         }
     }
 

@@ -7,7 +7,7 @@ use App\Repository\UserRepository;
 use App\Security\Password\PasswordChangeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
@@ -242,101 +242,6 @@ class UserService
     }
 
     /**
-     * Process AJAX data for user list
-     */
-
-    public function getDataForListAjax(): array
-    {
-        if (!empty($_POST)) {
-
-            $dataSQL['param'] = [];
-            $columnWhere = "";
-            $arrayColumnWhere = [];
-
-            /* START of $_POST variables coming from datatable */
-            $draw = $_POST["draw"]; //Counter used by DataTables to ensure that the Ajax returns from server-side processing requests are drawn in sequence
-            $orderByColumnIndex = $_POST['order'][0]['column']; //Index of the sorting column (0 index based)
-            $orderBy = $_POST['columns'][$orderByColumnIndex]['data']; //Get name of the sorting column from its index
-            $orderType = $_POST['order'][0]['dir']; //ASC or DESC
-            $start = $_POST["start"]; //Paging first record indicator
-            $length = $_POST['length']; //Number of records that the table can display in the current draw
-            /* END of $_POST variables */
-
-
-            /* START INIT of column search */
-            $columnWhereTmp = [];
-            for ($i = 0; $i < count($_POST['columns']); $i++) {
-                if ('' != ($_POST['columns'][$i]['search']['value'])) {
-                    $columnWhereTmp[] = $_POST['columns'][$i]['search']['value'];
-                }
-            }
-            /* END INIT of column search */
-
-            /* START of search */
-            if (!empty($_POST['search']['value'])) {
-
-                for ($i = 0; $i < count($_POST['columns']); $i++) {
-                    $globalSearch = $_POST['columns'][$i]['data'];
-                    if ('action' != $globalSearch) {
-                        $dataSQL['param'][$globalSearch] = "%" . $_POST['search']['value'] . "%";
-
-                        if ($globalSearch == 'last_login') {
-                            $arrayColumnWhere[] =
-                                "DATE_FORMAT(u.last_login, '%d/%m/%Y') LIKE :" . $globalSearch;
-                        } else {
-                            $arrayColumnWhere[] =
-                                "u." . $globalSearch . " LIKE :" . $globalSearch;
-                        }
-                    }
-                }
-
-                $columnWhere = implode(" OR ", $arrayColumnWhere);
-
-            } elseif (!empty($columnWhereTmp)) {
-
-                for ($i = 0; $i < count($_POST['columns']); $i++) {
-
-                    if ('' != ($_POST['columns'][$i]['search']['value'])) {
-
-                        $columnSearch = $_POST['columns'][$i]['data'];
-                        $dataSQL['param'][$columnSearch] = "%" . $_POST['columns'][$i]['search']['value'] . "%";
-
-                        if ($columnSearch == 'lastLogin') {
-                            $arrayColumnWhere[] =
-                                "DATE_FORMAT(u.lastLogin, '%d/%m/%Y') LIKE :" . $columnSearch;
-                        } else {
-                            $arrayColumnWhere[] =
-                                "u." . $columnSearch . " LIKE :" . $columnSearch;
-                        }
-                    }
-                }
-
-                if (!empty($arrayColumnWhere)) {
-                    $columnWhere = implode(" AND ", $arrayColumnWhere);
-                } else {
-                    $columnWhere = "";
-                }
-
-            }
-            /* END of search */
-
-            return [
-                'draw' => $draw,
-                'orderBy' => $orderBy,
-                'orderType' => $orderType,
-                'start' => $start,
-                'length' => $length,
-                "dataSQL" => $dataSQL,
-                'columnWhereTmp' => $columnWhereTmp,
-                'columnWhere' => $columnWhere
-            ];
-        }
-
-        return [];
-    }
-
-
-    /**
      * @param $userIdConnected
      * @param $userIdParam
      * @return void
@@ -347,7 +252,7 @@ class UserService
         $userIdSession = $session->get('login')?->getId();
 
         if (($userIdConnected != $userIdSession) || ($userIdConnected != $userIdParam) || ($userIdSession != $userIdParam)) {
-            throw new AccessDeniedHttpException("Unauthorized access. Please contact the administrator.");
+            throw new NotFoundHttpException();
         }
     }
 

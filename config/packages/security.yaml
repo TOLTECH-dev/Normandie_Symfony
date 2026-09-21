@@ -4,20 +4,31 @@ security:
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
+    # Regroupements fonctionnels (vulnérabilité 6 / recommandation 10 de l audit ALMOND).
+    # Un écran ne cite plus la liste des profils autorisés, mais le regroupement correspondant.
+    # Les droits effectifs sont identiques à ceux d avant l introduction de ces regroupements :
+    # faire évoluer un droit consiste désormais à ajouter ou retirer un regroupement ci-dessous.
+    #
+    #   ROLE_APP_UTILISATEUR          tout compte connecté, back-office comme espace bénéficiaire
+    #   ROLE_BO_GESTION_REGION        gestion des référentiels et du suivi par la Région
+    #   ROLE_BO_ESPACE_CONSEILLER     écrans de saisie des conseillers
+    #   ROLE_BO_INSTRUCTION           instruction des demandes
+    #   ROLE_BO_INSTRUCTION_ETENDUE   instruction, remboursements compris
+    #   ROLE_BO_DOSSIER_CONSULTATION  consultation des dossiers (liste, fiche, historique)
     role_hierarchy:
         ROLE_USER:           ROLE_USER
-        ROLE_MEMBER:         ROLE_MEMBER
-        ROLE_CONSEILLER:     ROLE_CONSEILLER
-        ROLE_INSTRUCTEUR:    ROLE_INSTRUCTEUR
-        ROLE_INSTRUCTEUR_UP: ROLE_INSTRUCTEUR_UP
-        ROLE_AUDITEUR:       ROLE_AUDITEUR
-        ROLE_RENOVATEUR:     ROLE_RENOVATEUR
-        ROLE_EPCI:           ROLE_EPCI
-        ROLE_CLIENT:         ROLE_CLIENT
-        ROLE_ADMIN:          [ROLE_CLIENT, ROLE_INSTRUCTEUR, ROLE_INSTRUCTEUR_UP, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_MEMBER:         [ROLE_MEMBER, ROLE_APP_UTILISATEUR]
+        ROLE_CONSEILLER:     [ROLE_CONSEILLER, ROLE_APP_UTILISATEUR, ROLE_BO_DOSSIER_CONSULTATION, ROLE_BO_ESPACE_CONSEILLER]
+        ROLE_INSTRUCTEUR:    [ROLE_INSTRUCTEUR, ROLE_APP_UTILISATEUR, ROLE_BO_DOSSIER_CONSULTATION, ROLE_BO_INSTRUCTION, ROLE_BO_INSTRUCTION_ETENDUE]
+        ROLE_INSTRUCTEUR_UP: [ROLE_INSTRUCTEUR_UP, ROLE_APP_UTILISATEUR, ROLE_BO_INSTRUCTION_ETENDUE]
+        ROLE_AUDITEUR:       [ROLE_AUDITEUR, ROLE_APP_UTILISATEUR, ROLE_BO_DOSSIER_CONSULTATION]
+        ROLE_RENOVATEUR:     [ROLE_RENOVATEUR, ROLE_APP_UTILISATEUR, ROLE_BO_DOSSIER_CONSULTATION]
+        ROLE_EPCI:           [ROLE_EPCI, ROLE_APP_UTILISATEUR, ROLE_BO_DOSSIER_CONSULTATION]
+        ROLE_CLIENT:         [ROLE_CLIENT, ROLE_APP_UTILISATEUR, ROLE_BO_DOSSIER_CONSULTATION, ROLE_BO_GESTION_REGION, ROLE_BO_INSTRUCTION, ROLE_BO_INSTRUCTION_ETENDUE]
+        ROLE_ADMIN:          [ROLE_CLIENT, ROLE_INSTRUCTEUR, ROLE_INSTRUCTEUR_UP, ROLE_ALLOWED_TO_SWITCH, ROLE_BO_ESPACE_CONSEILLER]
         ROLE_SUPER_ADMIN:    [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
-        ROLE_AUTOMATE:       ROLE_AUTOMATE
-        ROLE_TECHNIQUE:      ROLE_TECHNIQUE
+        ROLE_AUTOMATE:       [ROLE_AUTOMATE, ROLE_APP_UTILISATEUR]
+        ROLE_TECHNIQUE:      [ROLE_TECHNIQUE, ROLE_APP_UTILISATEUR, ROLE_BO_DOSSIER_CONSULTATION]
 
     providers:
         app_user_provider:

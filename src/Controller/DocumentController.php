@@ -8,13 +8,16 @@ use App\Entity\Beneficiaire;
 use App\Entity\Demande_;
 use App\Entity\Demande_travaux_devis;
 use App\Entity\Demande_travaux_devis_upload;
+use App\Entity\User;
 use App\Http\SecureFileResponseBuilder;
 use App\Service\DocumentAccessChecker;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DocumentController extends AbstractController
 {
@@ -28,6 +31,12 @@ class DocumentController extends AbstractController
     }
 
     /**
+     * Document d'un dossier, côté bénéficiaire.
+     *
+     * Seuls les documents du bénéficiaire connecté sont servis. Un document d'autrui, inexistant
+     * ou d'un type non proposé au front office reçoit la même réponse (404) : la réponse ne révèle
+     * pas l'existence du document (VUL06).
+     *
      * @param $demandeId
      * @param $typeFile
      * @param $extension
@@ -35,12 +44,17 @@ class DocumentController extends AbstractController
      *
      * @return BinaryFileResponse
      */
-    public function viewFO($demandeId, $typeFile, $extension, $typeDemande, SecureFileResponseBuilder $fileResponses)
+    public function viewFO($demandeId, $typeFile, $extension, $typeDemande, SecureFileResponseBuilder $fileResponses, DocumentAccessChecker $accessChecker)
     {
         /* *****************************************************************
                                 S E C U R I T Y
         ***************************************************************** */
-        $userIdConnected = $this->getUser()->getId();
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            // Visiteur non connecté : renvoyé vers la page de connexion
+            throw $this->createAccessDeniedException();
+        }
+        $userIdConnected = $user->getId();
 
         switch ($typeDemande) {
             case 0: $folder = 'demande_auditEnergie/';
@@ -48,63 +62,39 @@ class DocumentController extends AbstractController
                 $demande = $repo_demande->findOneBy(array(
                     'demande_auditEnergie' => $demandeId
                 ));
-                $beneficiaireId = $demande->getBeneficiaireId();
-                $repo_beneficiaire = $this->entityManager->getRepository(Beneficiaire::class);
-                $beneficiaire = $repo_beneficiaire->findOneBy(array(
-                    'id' => $beneficiaireId
-                ));
-                $this->userService->checkUserSecurity($userIdConnected, $beneficiaire->getUserId());
+                $this->checkBeneficiaireConnecte($userIdConnected, $demande?->getBeneficiaireId());
                 break;
             case 1: $folder = 'demande_travaux/';
                 $repo_demande = $this->entityManager->getRepository(Demande_::class);
                 $demande = $repo_demande->findOneBy(array(
                     'demande_travaux' => $demandeId
                 ));
-                $beneficiaireId = $demande->getBeneficiaireId();
-                $repo_beneficiaire = $this->entityManager->getRepository(Beneficiaire::class);
-                $beneficiaire = $repo_beneficiaire->findOneBy(array(
-                    'id' => $beneficiaireId
-                ));
-                $this->userService->checkUserSecurity($userIdConnected, $beneficiaire->getUserId());
+                $this->checkBeneficiaireConnecte($userIdConnected, $demande?->getBeneficiaireId());
                 break;
             case 2: $folder = 'demande_travaux_devis/';
                 if (5 == $typeFile) {
                     $repo_devis_upload = $this->entityManager->getRepository(Demande_travaux_devis_upload::class);
                     $devis = $repo_devis_upload->findDemande($demandeId);
 
-                    $demandeId_param = $devis['demandeTravauxDevisId'];
+                    $demandeId_param = $devis['demandeTravauxDevisId'] ?? null;
                 } else {
                     $demandeId_param = $demandeId;
                 }
                 $repo_demande = $this->entityManager->getRepository(Demande_travaux_devis::class);
-                $demande = $repo_demande->findOneBy(array(
+                $demande = null === $demandeId_param ? null : $repo_demande->findOneBy(array(
                     'id' => $demandeId_param
                 ));
-                $beneficiaireId = $demande->getBeneficiaireId();
-                $repo_beneficiaire = $this->entityManager->getRepository(Beneficiaire::class);
-                $beneficiaire = $repo_beneficiaire->findOneBy(array(
-                    'id' => $beneficiaireId
-                ));
-                $this->userService->checkUserSecurity($userIdConnected, $beneficiaire->getUserId());
-                break;
-            case 3: $folder = 'fiche_technique/';
+                $this->checkBeneficiaireConnecte($userIdConnected, $demande?->getBeneficiaireId());
                 break;
             case 4: $folder = 'remboursement/auditEnergie_depot/';
+                // Rapport d'audit déposé pour le remboursement, affiché dans le dossier du bénéficiaire
+                $demande = $accessChecker->findDemandeByDepotAuditEnergie((int) $demandeId);
+                $this->checkBeneficiaireConnecte($userIdConnected, $demande?->getBeneficiaireId());
                 break;
-            case 5: $folder = 'remboursement/auditEnergie_instruction/';
-                break;
-            case 6: $folder = 'partenaire/auditeur/';
-                break;
-            case 7: $folder = 'remboursement/auditNumerique_depot/';
-                break;
-            case 8: $folder = 'remboursement/auditNumerique_instruction/';
-                break;
-            case 9: $folder = 'remboursement/travaux_instruction/';
-                break;
-            case 10: $folder = 'remboursement/travaux_instruction/conformite/';
-                break;
-            default: $folder = '';
-                break;
+            default:
+                // Fiches techniques, pièces d'instruction, RIB, factures, documents des partenaires :
+                // jamais proposés au bénéficiaire (servis uniquement par le back office, avec contrôle du périmètre)
+                throw $this->createNotFoundException();
         }
 
         $path = $this->getParameter('app_root_dossier_data_symfony') . "uploads/" . $folder;
@@ -113,16 +103,46 @@ class DocumentController extends AbstractController
 
         return $fileResponses->download($file);
     }
+
+    /**
+     * Le document doit appartenir au bénéficiaire connecté ; sinon 404 (cf. UserService::checkUserSecurity).
+     */
+    private function checkBeneficiaireConnecte($userIdConnected, $beneficiaireId): void
+    {
+        $beneficiaire = null === $beneficiaireId
+            ? null
+            : $this->entityManager->getRepository(Beneficiaire::class)->find($beneficiaireId);
+
+        $this->userService->checkUserSecurity($userIdConnected, $beneficiaire?->getUserId());
+    }
+
+    /**
+     * Document d'un dossier, côté back office : contrôle du périmètre du compte.
+     * Un refus reçoit la même réponse (404) qu'un document inexistant ; le motif est journalisé.
+     */
     public function viewBO(
         int $demandeId,
         int $typeFile,
         string $extension,
         int $typeDemande,
         DocumentAccessChecker $accessChecker,
-        SecureFileResponseBuilder $fileResponses
+        SecureFileResponseBuilder $fileResponses,
+        LoggerInterface $logger
     ): BinaryFileResponse {
         // Vérification d'accès complète
-        $accessChecker->canAccess($demandeId, $typeDemande, $typeFile);
+        try {
+            $accessChecker->canAccess($demandeId, $typeDemande, $typeFile);
+        } catch (AccessDeniedException $refus) {
+            $logger->warning('Accès refusé à un document', [
+                'motif'       => $refus->getMessage(),
+                'username'    => $this->getUser()?->getUserIdentifier(),
+                'typeDemande' => $typeDemande,
+                'id'          => $demandeId,
+                'typeFile'    => $typeFile,
+            ]);
+
+            throw $this->createNotFoundException();
+        }
 
         // Mapping dossiers
         $mapTypeDemandeToFolder = [

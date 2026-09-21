@@ -47,7 +47,7 @@ class RemboursementAuditNumeriqueController extends AbstractController
      * @param $titreId
      * @return Response
      */
-    #[Security("is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_INSTRUCTEUR_UP') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_INSTRUCTION_ETENDUE')")]
     public function examine(Request $request, int $titreId): RedirectResponse|Response
     {
         /* /////////////////////////////////////////////////////////////////
@@ -299,13 +299,16 @@ class RemboursementAuditNumeriqueController extends AbstractController
     /**
      * Re-examine remboursement audit numérique - instruction
      */
-    #[Security("is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_INSTRUCTEUR_UP') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_INSTRUCTION_ETENDUE')")]
     public function reexamine(Request $request, int $remboursementId): RedirectResponse|Response
     {
         /* /////////////////////////////////////////////////////////////////
                                     GET REMBOURSEMENT
         ///////////////////////////////////////////////////////////////// */
         $remboursement = $this->remboursementRepository->find($remboursementId);
+        if (null === $remboursement) {
+            throw $this->createNotFoundException();
+        }
 
         /* /////////////////////////////////////////////////////////////////
                                     GET DEMANDE
@@ -544,6 +547,9 @@ class RemboursementAuditNumeriqueController extends AbstractController
          * @var Demande_ $demande
          */
         $demande = $repo_demande->find($demandeId);
+        if (null === $demande) {
+            throw $this->createNotFoundException();
+        }
 
         /* ***************************************************************************
                             S E C U R I T Y   D E P O T
@@ -810,6 +816,9 @@ class RemboursementAuditNumeriqueController extends AbstractController
                                     GET REMBOURSEMENT
         ///////////////////////////////////////////////////////////////// */
         $remboursement = $this->remboursementRepository->find($remboursementId);
+        if (null === $remboursement) {
+            throw $this->createNotFoundException();
+        }
 
         $demandeRepository = $this->em->getRepository(Demande_::class);
 

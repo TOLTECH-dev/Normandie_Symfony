@@ -46,7 +46,7 @@ class RemboursementTravauxController extends AbstractController
     /**
      * Examine remboursement travaux - instruction
      */
-    #[Security("is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_INSTRUCTEUR_UP') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_INSTRUCTION_ETENDUE')")]
     public function examine(Request $request, int $titreId): RedirectResponse|Response
     {
         /* ***************************************************************************
@@ -311,7 +311,7 @@ class RemboursementTravauxController extends AbstractController
     /**
      * Re-examine remboursement travaux - instruction
      */
-    #[Security("is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_INSTRUCTEUR_UP') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_BO_INSTRUCTION_ETENDUE')")]
     public function reexamine(Request $request, int $remboursementId): RedirectResponse|Response
     {
         /* ***************************************************************************
@@ -323,6 +323,9 @@ class RemboursementTravauxController extends AbstractController
                                     GET REMBOURSEMENT
         ///////////////////////////////////////////////////////////////// */
         $remboursement = $this->remboursementRepository->find($remboursementId);
+        if (null === $remboursement) {
+            throw $this->createNotFoundException();
+        }
         $instruction = $remboursement->getRemboursementTravaux()->getInstruction();
         $destinataireData = $remboursement->getRemboursementTravaux()->getInstruction()->getDestinataire();
 
@@ -889,6 +892,9 @@ class RemboursementTravauxController extends AbstractController
                                 GET REMBOURSEMENT
         ///////////////////////////////////////////////////////////////// */
         $remboursement = $this->remboursementRepository->find($remboursementId);
+        if (null === $remboursement) {
+            throw $this->createNotFoundException();
+        }
 
         /* /////////////////////////////////////////////////////////////////
                                 GET DEMANDE TRAVAUX
