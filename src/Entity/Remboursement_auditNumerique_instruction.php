@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\Remboursement_auditNumerique_instructionRepository;
+use App\Validator\FichierSansVirus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -27,6 +28,7 @@ class Remboursement_auditNumerique_instruction extends Remboursement_instruction
         mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'],
         mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png'
     )]
+    #[FichierSansVirus]
     private ?UploadedFile $rectoCheque = null;
 
     #[ORM\Column(name: 'verso_cheque_url', type: 'string', length: 255, nullable: true)]
@@ -40,6 +42,7 @@ class Remboursement_auditNumerique_instruction extends Remboursement_instruction
         mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'],
         mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png'
     )]
+    #[FichierSansVirus]
     private ?UploadedFile $versoCheque = null;
 
     #[ORM\Column(name: 'facture_url', type: 'string', length: 255, nullable: true)]
@@ -53,6 +56,7 @@ class Remboursement_auditNumerique_instruction extends Remboursement_instruction
         mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'],
         mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png'
     )]
+    #[FichierSansVirus]
     private ?UploadedFile $facture = null;
 
     #[ORM\Column(name: 'rib_url', type: 'string', length: 255, nullable: true)]
@@ -66,6 +70,7 @@ class Remboursement_auditNumerique_instruction extends Remboursement_instruction
         mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'],
         mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png'
     )]
+    #[FichierSansVirus]
     private ?UploadedFile $rib = null;
 
     private ?string $tempFilename = null;

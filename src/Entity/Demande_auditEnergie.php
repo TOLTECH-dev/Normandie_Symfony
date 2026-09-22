@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\Demande_auditEnergieRepository;
+use App\Validator\FichierSansVirus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -45,6 +46,7 @@ class Demande_auditEnergie
     private ?string $justificatifPropriete_alt = null;
 
     #[Assert\File(maxSize: '5120k', mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'], mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png')]
+    #[FichierSansVirus]
     private ?UploadedFile $justificatifPropriete = null;
 
     #[ORM\Column(name: "piece_complement_url", type: "string", length: 255, nullable: true)]
@@ -54,6 +56,7 @@ class Demande_auditEnergie
     private ?string $pieceComplement_alt = null;
 
     #[Assert\File(maxSize: '5120k', mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'], mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png')]
+    #[FichierSansVirus]
     private ?UploadedFile $pieceComplement = null;
 
     #[ORM\Column(name: "avis_imposition_url", type: "string", length: 255, nullable: true)]
@@ -63,6 +66,7 @@ class Demande_auditEnergie
     private ?string $avisImposition_alt = null;
 
     #[Assert\File(maxSize: '5120k', mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'], mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png')]
+    #[FichierSansVirus]
     private ?UploadedFile $avisImposition = null;
 
     #[ORM\Column(name: "avis_imposition_conjoint_url", type: "string", length: 255, nullable: true)]
@@ -72,6 +76,7 @@ class Demande_auditEnergie
     private ?string $avisImpositionConjoint_alt = null;
 
     #[Assert\File(maxSize: '5120k', mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'], mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png')]
+    #[FichierSansVirus]
     private ?UploadedFile $avisImpositionConjoint = null;
 
     private ?string $tempFilename = null;

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\Demande_travaux_devis_uploadRepository;
 use App\Service\RollbackDocumentService;
+use App\Validator\FichierSansVirus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -41,6 +42,7 @@ class Demande_travaux_devis_upload
     private ?string $devisDocument_alt = null;
 
     #[Assert\File(maxSize: '5120k', mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'], mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png')]
+    #[FichierSansVirus]
     private ?UploadedFile $devisDocument = null;
 
     private ?string $tempFilename = null;

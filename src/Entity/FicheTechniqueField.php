@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\FicheTechniqueFieldRepository;
+use App\Validator\FichierSansVirus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -147,6 +148,7 @@ class FicheTechniqueField
         mimeTypes: ["application/xml", "text/xml"],
         mimeTypesMessage: "Format du fichier invalide. Les formats suivants sont acceptés: .xml"
     )]
+    #[FichierSansVirus]
     private ?UploadedFile $ficheTechniqueDocument = null;
 
     #[ORM\Column(name: "infiltrometrie_document_url", type: "string", length: 255, nullable: true)]
@@ -160,6 +162,7 @@ class FicheTechniqueField
         mimeTypes: ["application/pdf"],
         mimeTypesMessage: "Format du fichier invalide. Les formats suivants sont acceptés: .pdf"
     )]
+    #[FichierSansVirus]
     private ?UploadedFile $infiltrometrieDocument = null;
 
     #[ORM\Column(name: "ventilation_document_url", type: "string", length: 255, nullable: true)]
@@ -173,6 +176,7 @@ class FicheTechniqueField
         mimeTypes: ["application/pdf"],
         mimeTypesMessage: "Format du fichier invalide. Les formats suivants sont acceptés: .pdf"
     )]
+    #[FichierSansVirus]
     private ?UploadedFile $ventilationDocument = null;
 
     #[ORM\Column(name: "audit_apres_travaux_document_url", type: "string", length: 255, nullable: true)]
@@ -186,6 +190,7 @@ class FicheTechniqueField
         mimeTypes: ["application/pdf"],
         mimeTypesMessage: "Format du fichier invalide. Les formats suivants sont acceptés: .pdf"
     )]
+    #[FichierSansVirus]
     private ?UploadedFile $auditApresTravauxDocument = null;
 
     #[ORM\Column(name: "document_updated_at", type: "datetime", nullable: true)]

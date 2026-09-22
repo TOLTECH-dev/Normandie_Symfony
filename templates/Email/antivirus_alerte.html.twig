@@ -1,0 +1,22 @@
+{#
+    Alerte aux administrateurs : un fichier infecté a été refusé au dépôt.
+
+    Volontairement sans identifiant, sans nom et sans numéro de dossier : un courriel intercepté ou
+    transféré ne doit renseigner personne (même règle que les courriels d'authentification, cf.
+    tests/Security/AuthenticationEmailsTest.php). Le détail figure dans les journaux du serveur.
+#}
+<p>Bonjour,</p>
+
+<p>Un fichier d&eacute;pos&eacute; sur le t&eacute;l&eacute;service Ch&egrave;que Éco-Énergie a &eacute;t&eacute; reconnu comme infect&eacute; par l'antivirus, et son d&eacute;p&ocirc;t a &eacute;t&eacute; refus&eacute;. Le fichier n'a pas &eacute;t&eacute; conserv&eacute;.</p>
+
+<ul>
+    <li>Signature d&eacute;tect&eacute;e : <strong>{{ menace }}</strong></li>
+    <li>Type de pi&egrave;ce : {{ champ }}</li>
+    <li>Date : {{ date|date('d/m/Y à H:i') }}</li>
+</ul>
+
+<p>Le compte concern&eacute; et le dossier figurent dans les journaux du serveur, &agrave; la m&ecirc;me date et sous la mention &laquo;&nbsp;Fichier infect&eacute; refus&eacute;&nbsp;&raquo;.</p>
+
+<p>Aucune action n'est requise si ce d&eacute;p&ocirc;t correspond &agrave; une erreur isol&eacute;e. Des refus r&eacute;p&eacute;t&eacute;s, en revanche, m&eacute;ritent une v&eacute;rification&nbsp;: le poste de l'utilisateur est peut-&ecirc;tre compromis.</p>
+
+<p>L'&eacute;quipe Ch&egrave;que Éco-Énergie de la R&eacute;gion Normandie.</p>

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\Remboursement_travaux_instructionRepository;
 use App\Service\RollbackDocumentService;
+use App\Validator\FichierSansVirus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,6 +27,7 @@ class Remboursement_travaux_instruction extends Remboursement_instruction
     private ?string $rectoCheque_alt = null;
 
     #[Assert\File(maxSize: '5120k', mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'], mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png')]
+    #[FichierSansVirus]
     private ?UploadedFile $rectoCheque = null;
 
     #[ORM\Column(name: 'verso_cheque_url', type: 'string', length: 255, nullable: true)]
@@ -35,6 +37,7 @@ class Remboursement_travaux_instruction extends Remboursement_instruction
     private ?string $versoCheque_alt = null;
 
     #[Assert\File(maxSize: '5120k', mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'], mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png')]
+    #[FichierSansVirus]
     private ?UploadedFile $versoCheque = null;
 
     #[ORM\Column(name: 'fiche_travaux_url', type: 'string', length: 255, nullable: true)]
@@ -44,6 +47,7 @@ class Remboursement_travaux_instruction extends Remboursement_instruction
     private ?string $ficheTravaux_alt = null;
 
     #[Assert\File(maxSize: '5120k', mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'], mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png')]
+    #[FichierSansVirus]
     private ?UploadedFile $ficheTravaux = null;
 
     #[ORM\Column(name: 'is_fiche_travaux_conforme', type: 'string', length: 20, nullable: true)]
@@ -66,6 +70,7 @@ class Remboursement_travaux_instruction extends Remboursement_instruction
     private ?string $rib_alt = null;
 
     #[Assert\File(maxSize: '5120k', mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'], mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png')]
+    #[FichierSansVirus]
     private ?UploadedFile $rib = null;
 
     private ?string $tempFilename = null;

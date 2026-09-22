@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\NewsletterRepository;
+use App\Validator\FichierSansVirus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -71,11 +72,15 @@ class Newsletter
     #[ORM\Column(name: 'file_alt', type: 'string', length: 255, nullable: true)]
     private ?string $fileAlt = null;
 
+    // Ce fichier devient le corps HTML de l'envoi en nombre (cf. NewsletterController::add).
+    // « text/plain » a été retiré (recommandation 9 : liste blanche limitée au besoin métier) :
+    // un message en texte simple se saisit dans le champ prévu à cet effet, sans dépôt de fichier.
     #[Assert\File(
         maxSize: '5120k',
-        mimeTypes: ["text/plain", "text/html"],
-        mimeTypesMessage: "Format du fichier invalide. Les formats suivants sont acceptés: .txt, .html, .htm"
+        mimeTypes: ["text/html"],
+        mimeTypesMessage: "Format du fichier invalide. Seul le format .html est accepté."
     )]
+    #[FichierSansVirus]
     private ?UploadedFile $file = null;
 
     private ?string $tempFilename = null;

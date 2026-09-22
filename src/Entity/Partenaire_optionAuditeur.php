@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\Partenaire_optionAuditeurRepository;
+use App\Validator\FichierSansVirus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -42,6 +43,7 @@ class Partenaire_optionAuditeur
         mimeTypes: ["application/pdf", "image/jpg", "image/jpeg", "image/png"],
         mimeTypesMessage: "Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png"
     )]
+    #[FichierSansVirus]
     private ?UploadedFile $rib = null;
 
     private ?string $tempFilename = null;

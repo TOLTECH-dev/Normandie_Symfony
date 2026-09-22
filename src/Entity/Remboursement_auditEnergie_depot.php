@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\Remboursement_auditEnergie_depotRepository;
+use App\Validator\FichierSansVirus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -30,6 +31,7 @@ class Remboursement_auditEnergie_depot
         mimeTypes: ["application/pdf", "image/jpg", "image/jpeg", "image/png"],
         mimeTypesMessage: "Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png"
     )]
+    #[FichierSansVirus]
     private ?UploadedFile $audit = null;
 
     private ?string $tempFilename = null;

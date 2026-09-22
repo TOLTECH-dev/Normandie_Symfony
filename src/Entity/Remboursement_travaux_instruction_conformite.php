@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\Remboursement_travaux_instruction_conformiteRepository;
 use App\Service\RollbackDocumentService;
+use App\Validator\FichierSansVirus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -27,6 +28,7 @@ class Remboursement_travaux_instruction_conformite
     private ?string $document_alt = null;
 
     #[Assert\File(maxSize: '5120k', mimeTypes: ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'], mimeTypesMessage: 'Format du fichier invalide. Les formats suivants sont acceptés: .pdf, .jpg, .jpeg, .png')]
+    #[FichierSansVirus]
     private ?UploadedFile $document = null;
 
     private ?string $tempFilename = null;

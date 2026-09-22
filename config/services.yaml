@@ -115,6 +115,18 @@ parameters:
         administrateurs: [ ROLE_SUPER_ADMIN, ROLE_ADMIN ]
         region:          [ ROLE_CLIENT ]
         docaposte:       [ ROLE_INSTRUCTEUR, ROLE_INSTRUCTEUR_UP ]
+
+    # Analyse antivirale des fichiers déposés (vulnérabilité 5 / recommandation 9 de l'audit ALMOND,
+    # cf. App\Security\Antivirus\ClamavScanner). L'analyse a lieu au dépôt, avant enregistrement.
+    security_antivirus_enabled: '%env(bool:SECURITY_ANTIVIRUS_ENABLED)%'
+    security_antivirus_dsn: '%env(SECURITY_ANTIVIRUS_DSN)%'
+    security_antivirus_timeout: '%env(int:SECURITY_ANTIVIRUS_TIMEOUT)%'
+    security_antivirus_max_stream_size: '%env(int:SECURITY_ANTIVIRUS_MAX_STREAM_SIZE)%'
+    # Analyse impossible (service arrêté ou injoignable) : refuser le dépôt plutôt que d'accepter
+    # un fichier non analysé, ce qui désactiverait la mesure sans que personne ne s'en aperçoive.
+    security_antivirus_refuse_when_unavailable: '%env(bool:SECURITY_ANTIVIRUS_REFUSE_WHEN_UNAVAILABLE)%'
+    security_antivirus_alert_enabled: '%env(bool:SECURITY_ANTIVIRUS_ALERT_ENABLED)%'
+    security_antivirus_alert_roles: [ ROLE_SUPER_ADMIN, ROLE_ADMIN ]
     security_ip_filter_networks:
         administrateurs: '%env(csv:SECURITY_IP_FILTER_ADMINISTRATEURS)%'
         region:          '%env(csv:SECURITY_IP_FILTER_REGION)%'
@@ -159,6 +171,31 @@ services:
         arguments:
             $reseauxParGroupe: '%security_ip_filter_networks%'
             $rolesParGroupe: '%security_ip_filter_roles%'
+
+    # --- Analyse antivirale des fichiers déposés (vulnérabilité 5 / recommandation 9) ---
+    # Le service résident ClamAV n'existe pas sur les postes de développement : l'analyse y est
+    # neutralisée, et chaque dépôt non analysé laisse une trace dans les journaux.
+    App\Security\Antivirus\ScannerFactory:
+        arguments:
+            $analyseActive: '%security_antivirus_enabled%'
+            $dsn: '%security_antivirus_dsn%'
+            $delaiMax: '%security_antivirus_timeout%'
+            $tailleMaxFlux: '%security_antivirus_max_stream_size%'
+
+    App\Security\Antivirus\AntivirusScanner:
+        factory: [ '@App\Security\Antivirus\ScannerFactory', 'creer' ]
+
+    App\Security\Antivirus\AlerteAntivirusMailer:
+        arguments:
+            $rolesAlertes: '%security_antivirus_alert_roles%'
+            $alerteActive: '%security_antivirus_alert_enabled%'
+
+    App\Security\Antivirus\AlerteAntivirus: '@App\Security\Antivirus\AlerteAntivirusMailer'
+
+    App\Validator\FichierSansVirusValidator:
+        arguments:
+            $refuserSiIndisponible: '%security_antivirus_refuse_when_unavailable%'
+        tags: [ 'validator.constraint_validator' ]
 
     # --- Authentification multi-facteur (MFA) : cf. config/packages/scheb_2fa.yaml ---
     App\Security\TwoFactor\MfaPolicy:

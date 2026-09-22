@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\Admin_importRepository;
+use App\Validator\FichierSansVirus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -37,7 +38,12 @@ class Admin_import
     #[ORM\Column(name: 'file_alt', type: 'string', length: 255, nullable: true)]
     private ?string $file_alt = null;
 
+    // « text/plain » est indispensable : un fichier CSV est reconnu ainsi par la détection de type
+    // (vérifié sur plusieurs échantillons le 22/09/2026), le retirer bloquerait tous les imports.
+    // Le fichier est lu par fgetcsv (AdminService) et n'est jamais servi en téléchargement ; il est
+    // désormais analysé par l'antivirus au dépôt (recommandation 9).
     #[Assert\File(maxSize: '20480k', mimeTypes: ["text/csv", "application/csv", "text/plain"])]
+    #[FichierSansVirus]
     private ?UploadedFile $file = null;
 
     private ?string $tempFilename = null;
