@@ -108,6 +108,18 @@ parameters:
     security_password_expiration_warning_days: '%env(int:SECURITY_PASSWORD_EXPIRATION_WARNING_DAYS)%'
     security_password_history_size: '%env(int:SECURITY_PASSWORD_HISTORY_SIZE)%'
 
+    # Filtrage par réseau des interfaces d'administration (Reco-18, cf. App\Security\Ip\IpFilterPolicy).
+    # Un groupe = un organisme. Les réseaux sont donnés par environnement (.env.<env>.local), au
+    # format IP ou CIDR séparés par des virgules ; liste vide = groupe non filtré.
+    security_ip_filter_roles:
+        administrateurs: [ ROLE_SUPER_ADMIN, ROLE_ADMIN ]
+        region:          [ ROLE_CLIENT ]
+        docaposte:       [ ROLE_INSTRUCTEUR, ROLE_INSTRUCTEUR_UP ]
+    security_ip_filter_networks:
+        administrateurs: '%env(csv:SECURITY_IP_FILTER_ADMINISTRATEURS)%'
+        region:          '%env(csv:SECURITY_IP_FILTER_REGION)%'
+        docaposte:       '%env(csv:SECURITY_IP_FILTER_DOCAPOSTE)%'
+
     fc_js_url: '%env(FC_JS_URL)%'
 
     mailer_address_from: '%env(MAILER_ADDRESS_FROM)%'
@@ -141,6 +153,12 @@ services:
     App\Controller\:
         resource: '../src/Controller/'
         tags: [ 'controller.service_arguments' ]
+
+    # --- Filtrage par réseau des interfaces d'administration (Reco-18) ---
+    App\Security\Ip\IpFilterPolicy:
+        arguments:
+            $reseauxParGroupe: '%security_ip_filter_networks%'
+            $rolesParGroupe: '%security_ip_filter_roles%'
 
     # --- Authentification multi-facteur (MFA) : cf. config/packages/scheb_2fa.yaml ---
     App\Security\TwoFactor\MfaPolicy:

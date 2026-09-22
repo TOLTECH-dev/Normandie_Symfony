@@ -22,7 +22,12 @@ framework:
         # Durée de vie : cookie de session du navigateur, supprimé à sa fermeture
         cookie_lifetime: 0
 
-    trusted_proxies: 'REMOTE_ADDR'
+    # Adresses des proxys placés devant l'application (cf. TRUSTED_PROXIES dans .env) : elles
+    # déterminent l'adresse cliente retenue derrière un répartiteur de charge. Tant qu'elles valent
+    # « REMOTE_ADDR », l'en-tête X-Forwarded-For envoyé par un client joignant directement le
+    # serveur est cru sur parole, ce qui contournerait le filtrage réseau (Reco-18) et les
+    # compteurs anti-bruteforce (VUL03).
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
     trusted_headers:
         - x-forwarded-for
         - x-forwarded-host
