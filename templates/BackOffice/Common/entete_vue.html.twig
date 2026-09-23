@@ -1,0 +1,49 @@
+{#
+    Fil d'Ariane et bouton « Retour », affichés en haut de chaque vue du back-office.
+
+    L'entrée de menu correspondant à la page est déduite de la route courante
+    (App\Twig\MenuBackOfficeExtension) : elle donne la section, le libellé et l'icône. Le titre de
+    la page, lui, reste défini par la vue elle-même (#container-title), qui sait nommer un dossier
+    ou un bénéficiaire précis.
+
+    Bouton « Retour » : ramène à la liste de la rubrique sur un écran de détail. Sur la liste
+    elle-même, il n'y a rien à quitter, le bouton n'apparaît pas. Une vue peut imposer sa propre
+    destination avec le bloc « retour_url » du gabarit, et ajouter un maillon au fil d'Ariane avec
+    le bloc « fil_ariane_complement ».
+
+    Variables attendues : urlRetour et filArianeComplement (chaînes, éventuellement vides).
+#}
+{% set entree = menu_bo_entree_courante() %}
+
+{% if entree is not null %}
+    {% set retour = urlRetour|default('')|trim %}
+    {% if retour is empty and not entree.est_la_page %}
+        {% set retour = path(entree.route, entree.params) %}
+    {% endif %}
+
+    <div class="entete-vue">
+        <nav class="fil-ariane" aria-label="Fil d'Ariane">
+            <ol>
+                <li><a href="{{ path('demande_list_all') }}">Accueil</a></li>
+                <li><span class="fil-ariane-section">{{ entree.section }}</span></li>
+                <li>
+                    {% if entree.est_la_page %}
+                        <span aria-current="page">{{ entree.libelle }}</span>
+                    {% else %}
+                        <a href="{{ path(entree.route, entree.params) }}">{{ entree.libelle }}</a>
+                    {% endif %}
+                </li>
+                {% if filArianeComplement|default('')|trim is not empty %}
+                    <li><span aria-current="page">{{ filArianeComplement|trim|raw }}</span></li>
+                {% endif %}
+            </ol>
+        </nav>
+
+        {% if retour is not empty %}
+            <a href="{{ retour }}" class="bouton-retour">
+                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+                Retour
+            </a>
+        {% endif %}
+    </div>
+{% endif %}

@@ -1,79 +1,81 @@
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
+{#
+    En-tête de l'espace partenaire.
 
-        <header>
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 header-container">
-                <div class="hidden-xs col-sm-3 col-md-3 col-lg-3">
-                    <div id="bloc_logo">
-                        <a href="{{ path('demande_list_all') }}">
-                            <img
-                                    src="{{ asset('build/images/backOffice/logo/logo_Normandie.jpg') }}"
-                                    alt="logo"
-                                    class="header-logo"
-                            >
-                        </a>
-                    </div>
-                </div>
+    Rendue par BackOfficeCommonController::layoutHeader (sous-requête), d'où la présence du menu
+    conseiller, qui dépend de la route courante.
 
-                <div class="hidden-xs col-sm-6 col-md-6 col-lg-6 bloc_admin_menu text-center">
-                    <div class="main_title">
-                        <img
-                                src="{{ asset('build/images/backOffice/logo/logo_espace_partenaire.png') }}"
-                                alt="logo"
-                                class="header-logo-espace"
-                        >
-                    </div>
+    Identité visuelle reprise des pages d'authentification : logo Chèque éco-énergie, logo de la
+    Région, palette et typographie d'auth_layout.css (orange #b84f18, contraste 5:1 sur blanc).
+#}
+{% set estConnecte = app.user is not null %}
+{# 245 comptes n'ont pas de prénom renseigné : on retombe alors sur l'identifiant #}
+{% set prenom = estConnecte and app.user.firstname is not empty ? app.user.firstname : (estConnecte ? app.user.username : '') %}
 
-                    {% if app.user.roles is defined %}
-                        {% if ('ROLE_CONSEILLER' in app.user.roles or 'ROLE_ADMIN' in app.user.roles)
-                            and is_granted("IS_AUTHENTICATED_REMEMBERED")
-                        %}
-                            {% block admin_menu %}
-                                {{ include('BackOffice/Common/menu_conseiller.html.twig', {'dataMenuConseiller': dataMenuConseiller}) }}
-                            {% endblock %}
-                        {% endif %}
-                    {% endif %}
-                </div>
+<header class="entete" role="banner">
+    <div class="entete-gauche">
+        {% if estConnecte %}
+            <button type="button"
+                    class="entete-bouton-menu"
+                    id="menu-bascule"
+                    aria-controls="menu-principal"
+                    aria-expanded="false">
+                <span class="entete-bouton-barres" aria-hidden="true"></span>
+                <span class="sr-only">Ouvrir le menu principal</span>
+            </button>
+        {% endif %}
 
-                {% if app.user.roles is defined %}
-                    {% if ('ROLE_CONSEILLER' in app.user.roles
-                    or 'ROLE_INSTRUCTEUR' in app.user.roles
-                    or 'ROLE_INSTRUCTEUR_UP' in app.user.roles
-                    or 'ROLE_AUDITEUR' in app.user.roles
-                    or 'ROLE_RENOVATEUR' in app.user.roles
-                    or 'ROLE_EPCI' in app.user.roles
-                    or 'ROLE_CLIENT' in app.user.roles
-                    or 'ROLE_ADMIN' in app.user.roles
-                    or 'ROLE_TECHNIQUE' in app.user.roles
-                    or 'ROLE_SUPER_ADMIN' in app.user.roles
-                    ) and is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 header-login">
-                        Bonjour <span class="bold"> {{ app.user.username }} &nbsp;</span>
-                        &nbsp;
-                        <a href="{{ path('admin_password_change') }}"
-                           class="btn btn-default btn-xs"
-                           role="button"
-                           data-toggle="tooltip" data-placement="bottom"
-                           data-container="body"
-                           title="Changer mon mot de passe"
-                           aria-label="Changer mon mot de passe"
-                        >
-                            <i class="glyphicon glyphicon-lock"></i>
-                        </a>
-                        <a href="{{ path('admin_user_logout') }}"
-                           class="btn btn-warning btn-xs"
-                           role="button"
-                           data-toggle="tooltip" data-placement="bottom"
-                           data-container="body"
-                           title="Se d&eacute;connecter"
-                        >
-                            <i class="glyphicon glyphicon-log-out"></i>
-                        </a>
-                    </div>
-                    {% endif %}
-                {% endif %}
-            </div>
-        </header>
-
+        <a href="{{ path('demande_list_all') }}" class="entete-logo">
+            <img src="{{ asset('build/images/backOffice/logo/cheque-eco-energie2.png') }}"
+                 alt="" class="entete-logo-produit" width="83" height="80">
+            <img src="{{ asset('build/images/backOffice/logo/logo-normandie.png') }}"
+                 alt="Chèque éco-énergie Normandie, retour à la liste des dossiers"
+                 class="entete-logo-region" width="706" height="170">
+        </a>
     </div>
-</nav>
+
+    <div class="entete-centre">
+        <span class="entete-titre">Espace partenaire</span>
+
+        {% if estConnecte and dataMenuConseiller is defined and dataMenuConseiller is not empty %}
+            {{ include('BackOffice/Common/menu_conseiller.html.twig', {'dataMenuConseiller': dataMenuConseiller}) }}
+        {% endif %}
+    </div>
+
+    {% if estConnecte %}
+        <div class="entete-compte">
+            <button type="button"
+                    class="compte-bouton"
+                    id="compte-bascule"
+                    aria-controls="compte-menu"
+                    aria-expanded="false"
+                    aria-haspopup="true">
+                <span class="compte-pastille" aria-hidden="true">{{ prenom|first|upper }}</span>
+                <span class="compte-nom">
+                    <span class="compte-bonjour">Bonjour</span>
+                    <span class="compte-prenom">{{ prenom }}</span>
+                </span>
+                <span class="glyphicon glyphicon-chevron-down compte-chevron" aria-hidden="true"></span>
+                <span class="sr-only">Ouvrir le menu de mon compte</span>
+            </button>
+
+            <div class="compte-menu" id="compte-menu" hidden>
+                <p class="compte-menu-entete">
+                    {# Prénom et nom ; à défaut, l'identifiant reste le seul repère disponible #}
+                    <span class="compte-menu-identite">
+                        {{ (app.user.firstname ~ ' ' ~ app.user.lastname)|trim|default(app.user.username) }}
+                    </span>
+                </p>
+
+                <a href="{{ path('admin_password_change') }}" class="compte-menu-lien">
+                    <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                    Changer mon mot de passe
+                </a>
+
+                <a href="{{ path('admin_user_logout') }}" class="compte-menu-lien compte-menu-lien-sortie">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                    Se déconnecter
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</header>

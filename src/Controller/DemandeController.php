@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\ANAHCritere;
 use App\Entity\Beneficiaire;
 use App\Entity\DateRMH;
 use App\Entity\Demande_;
@@ -130,9 +131,20 @@ class DemandeController extends AbstractController
         ///////////////////////////////////////////////////////////////// */
         $form_export = $this->formFactory->createNamed('form_export');
 
+        // Statuts proposés au filtre : ceux d'une demande et ceux d'un remboursement, la liste
+        // affichant celui du remboursement dès qu'il existe.
+        $statutsDemande = $this->em->getRepository(Demande_statut::class)
+            ->createQueryBuilder('s')->select('s.slug')->orderBy('s.slug', 'ASC')
+            ->getQuery()->getSingleColumnResult();
+        $statutsRemboursement = $this->em->getRepository(Remboursement_statut::class)
+            ->createQueryBuilder('s')->select('s.slug')->orderBy('s.slug', 'ASC')
+            ->getQuery()->getSingleColumnResult();
+
         return $this->render('BackOffice/Demande/listAll.html.twig', [
-            'recordsTotal' => $recordsTotal,
-            'form_export'  => $form_export->createView()
+            'recordsTotal'         => $recordsTotal,
+            'statutsDemande'       => array_values(array_unique($statutsDemande)),
+            'statutsRemboursement' => array_values(array_unique($statutsRemboursement)),
+            'form_export'          => $form_export->createView()
         ]);
     }
 
@@ -173,8 +185,8 @@ class DemandeController extends AbstractController
             $draw = (int) ($postData['draw'] ?? 0);
 
             $data = $demandeRepository->findAllAjax($option, $criteria);
-            $recordsFiltered = $criteria->hasFilters()
-                ? $demandeRepository->countAll($option, $criteria->getFilters())
+            $recordsFiltered = $criteria->hasFilters() || $criteria->hasGlobalSearch()
+                ? $demandeRepository->countAll($option, $criteria->getFilters(), $criteria->getGlobalSearch())
                 : $recordsTotal;
 
             // Comptes de commentaires en batch sur les seules demandes paginees
@@ -201,6 +213,18 @@ class DemandeController extends AbstractController
             return false;
         }
     }
+    /**
+     * Gabarit du formulaire de commentaire : celui du panneau de consultation, sans la liste des
+     * commentaires (elle figure dans l'historique) et avec ses destinataires en cartes, ou celui
+     * d'origine, que les autres écrans continuent d'utiliser sans changement.
+     */
+    private static function gabaritCommentaire(Request $request): string
+    {
+        return $request->query->getBoolean('panneau')
+            ? 'BackOffice/Demande/inc/panneau/_formulaire_commentaire.html.twig'
+            : 'BackOffice/Demande/inc/formCommentaire/_formView.html.twig';
+    }
+
     #[Security("is_granted('ROLE_CONSEILLER') or is_granted('ROLE_INSTRUCTEUR') or is_granted('ROLE_INSTRUCTEUR_UP') or is_granted('ROLE_AUDITEUR') or is_granted('ROLE_RENOVATEUR') or is_granted('ROLE_EPCI') or is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') or is_granted('ROLE_TECHNIQUE')")]
     public function createCommentaire(
         Request $request,
@@ -318,7 +342,7 @@ class DemandeController extends AbstractController
             }
 
             // Form is invalid, return form view with errors
-            return new JsonResponse(['form' => $this->renderView('BackOffice/Demande/inc/formCommentaire/_formView.html.twig', [
+            return new JsonResponse(['form' => $this->renderView(self::gabaritCommentaire($request), [
                 'form' => $form->createView(),
                 'listCommentaire' => [],
                 'arrayRecipient' => []
@@ -335,7 +359,7 @@ class DemandeController extends AbstractController
             $arrayRecipient[$row['historiqueId']] = unserialize($row['commentaireRecipient']);
         }
 
-        $viewForm = $this->renderView('BackOffice/Demande/inc/formCommentaire/_formView.html.twig', [
+        $viewForm = $this->renderView(self::gabaritCommentaire($request), [
             'form' => $form->createView(),
             'listCommentaire' => $listCommentaire,
             'arrayRecipient' => $arrayRecipient
@@ -377,8 +401,36 @@ class DemandeController extends AbstractController
     }
 
 
+     /**
+      * Consultation d'un dossier : la vue complète, avec ses actions et ses fenêtres.
+      */
      #[Security("is_granted('ROLE_BO_DOSSIER_CONSULTATION')")]
      public function view(string $demandeId): Response
+     {
+        return $this->render('BackOffice/Demande/view.html.twig', $this->donneesDeConsultation($demandeId));
+     }
+
+     /**
+      * Consultation d'un dossier sans quitter la liste : même contenu, renvoyé en fragment HTML
+      * pour le panneau ouvert en Ajax. L'historique et les commentaires s'y chargent à part, quand
+      * leur onglet est ouvert.
+      */
+     #[Security("is_granted('ROLE_BO_DOSSIER_CONSULTATION')")]
+     public function viewPanneau(string $demandeId): Response
+     {
+        return $this->render(
+            'BackOffice/Demande/inc/panneau/_panneau.html.twig',
+            $this->donneesDeConsultation($demandeId)
+        );
+     }
+
+     /**
+      * Données de consultation d'un dossier, préparées une seule fois pour les deux affichages.
+      * Le périmètre est vérifié ici : un dossier inexistant ou hors périmètre donne un 404.
+      *
+      * @return array<string, mixed>
+      */
+     private function donneesDeConsultation(string $demandeId): array
      {
         $option = [
             'roles'     => $this->getUser()->getRoles(),
@@ -639,7 +691,12 @@ class DemandeController extends AbstractController
             $beneficiaireTypeKey = explode(' | ', $beneficiaire['beneficiaireType'])[0];
         }
 
-        return $this->render('BackOffice/Demande/view.html.twig', [
+        /* /////////////////////////////////////////////////////////////////
+                    IDENTITÉ DU FOYER ET TYPE DE MÉNAGE (ENTÊTE)
+        ///////////////////////////////////////////////////////////////// */
+        return [
+            'identiteFoyer'                         => self::identiteDuFoyer($beneficiaire),
+            'typeMenage'                            => $this->typeMenage($demande_),
             'demande'                               => $demande,
             'devis'                                 => $devis,
             'informationANAH'                       => $informationANAH,
@@ -669,7 +726,83 @@ class DemandeController extends AbstractController
             'demandeTravauxDevisInstance'           => new Demande_travaux_devis(),
             'demandeTypeLabel'                      => isset($demandeTypeLabel) ? $demandeTypeLabel : null,
             'demandeConseillerId'                   => $demande['conseillerId']
-        ]);
+        ];
+    }
+
+    /**
+     * Type de ménage d'un dossier au regard des critères ANAH en vigueur : « Très modeste »,
+     * « Modeste », « Intermédiaire » ou « Supérieur ».
+     *
+     * Il est recalculé à l'affichage, à partir de la composition du foyer et du revenu fiscal de
+     * référence du dossier, plutôt que repris de la valeur enregistrée au dépôt : celle-ci a été
+     * établie avec les plafonds d'alors, et ne suit pas leur paramétrage.
+     *
+     * @return array{code: int, libelle: string}|null null quand le foyer n'est pas renseigné
+     */
+    private function typeMenage(Demande_ $demande_): ?array
+    {
+        [$nbPersFoyer, $revenuFiscal] = $this->demandeServiceFO->foyerDeReference($demande_);
+
+        /*
+         * Sans composition du foyer ni revenu, aucune pastille : un revenu absent, vide ou nul vaut
+         * zéro une fois converti, et classerait à tort le ménage en « très modeste ». Les dossiers
+         * antérieurs à la saisie du revenu portent justement un zéro.
+         */
+        $revenu = str_replace([' ', "\u{a0}", ','], ['', '', '.'], (string) $revenuFiscal);
+        if (empty($nbPersFoyer) || !is_numeric($revenu) || (float) $revenu <= 0) {
+            return null;
+        }
+
+        $code = $this->ANAHService->findTypeMenageCode($nbPersFoyer, $revenuFiscal);
+
+        return isset(ANAHCritere::$TYPE_MENAGE[$code])
+            ? ['code' => $code, 'libelle' => ANAHCritere::$TYPE_MENAGE[$code]]
+            : null;
+    }
+
+    /**
+     * Identité du foyer pour l'entête de consultation : « NOM Prénom », suivi du conjoint quand il
+     * est renseigné. À nom identique, le nom n'est pas répété : « NOM Prénom et Prénom ».
+     *
+     * @param array<string, mixed>|false $beneficiaire
+     */
+    private static function identiteDuFoyer($beneficiaire): string
+    {
+        if (!is_array($beneficiaire)) {
+            return '';
+        }
+
+        // Noms et prénoms en majuscules : c'est ainsi qu'ils se lisent le mieux en entête
+        $nom = mb_strtoupper(trim((string) ($beneficiaire['beneficiaireNom'] ?? '')));
+        $prenom = mb_strtoupper(trim((string) ($beneficiaire['beneficiairePrenom'] ?? '')));
+        $identite = trim($nom . ' ' . $prenom);
+
+        // Société civile immobilière : sa raison sociale précède l'identité du signataire
+        $estSCI = '1 | sci' === ($beneficiaire['beneficiaireType'] ?? null);
+        $nomSCI = trim((string) ($beneficiaire['beneficiaireNomSCI'] ?? ''));
+        if ($estSCI && '' !== $nomSCI) {
+            $identite = '' === $identite ? $nomSCI : $nomSCI . ' (' . $identite . ')';
+        }
+
+        $nomConjoint = mb_strtoupper(trim((string) ($beneficiaire['beneficiaireNomConjoint'] ?? '')));
+        $prenomConjoint = mb_strtoupper(trim((string) ($beneficiaire['beneficiairePrenomConjoint'] ?? '')));
+
+        if ('' === $prenomConjoint && '' === $nomConjoint) {
+            return $identite;
+        }
+
+        $memeNom = '' === $nomConjoint
+            || 0 === strcasecmp(self::sansAccent($nomConjoint), self::sansAccent($nom));
+
+        return $identite . ' et ' . trim($memeNom ? $prenomConjoint : $nomConjoint . ' ' . $prenomConjoint);
+    }
+
+    /** Comparaison de deux noms sans tenir compte des accents ni de la casse */
+    private static function sansAccent(string $valeur): string
+    {
+        $translitere = iconv('UTF-8', 'ASCII//TRANSLIT', $valeur);
+
+        return false === $translitere ? $valeur : $translitere;
     }
 
      #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
@@ -1415,16 +1548,14 @@ class DemandeController extends AbstractController
             $exportDemande->setDestinataireUserId($this->getUser()->getId());
 
             $fields = [
-                'demandeId'               => $request->request->get('demandeId'),
+                // Colonnes regroupées de la liste : un champ couvre tout son groupe
+                'dossier'                 => $request->request->get('dossier'),
+                'beneficiaire'            => $request->request->get('beneficiaire'),
+                'echeances'               => $request->request->get('echeances'),
                 'demandeType'             => $request->request->get('demandeType'),
-                'beneficiaireIdentifiant' => $request->request->get('beneficiaireIdentifiant'),
-                'logement'                => $request->request->get('logement'),
-                'demandeDateCreation'     => $request->request->get('demandeDateCreation'),
                 'demandeStatutSlug'       => $request->request->get('demandeStatutSlug'),
                 'structureConseiller'     => $request->request->get('structureConseiller'),
                 'partenaire'              => $request->request->get('partenaire'),
-                'commissionDate'          => $request->request->get('commissionDate'),
-                'remboursementDate'       => $request->request->get('remboursementDate')
             ];
 
             // Recherches enregistrées comme données ; la commande d'export les lie en paramètres SQL

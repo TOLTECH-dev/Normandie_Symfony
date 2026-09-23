@@ -22,7 +22,6 @@
                 {% endif %}
             {% endif %}
             <h2>Historique {{ demandeTypeLabel }} n°{{ demande.id }} </h2>
-            {% include 'BackOffice/Historique/inc/back.html.twig' with {redirectRoute: redirectRoute} %}
         </div>
     </div>
 
@@ -113,3 +112,6 @@
     {{ encore_entry_script_tags('backOffice_historique_index') }}
     {{ encore_entry_script_tags('coreList') }}
 {% endblock %}
+
+{# Bouton « Retour » de l'en-tête de vue : destination reprise du partiel d'origine #}
+{% block retour_url %}{{ path(redirectRoute) }}{% endblock %}

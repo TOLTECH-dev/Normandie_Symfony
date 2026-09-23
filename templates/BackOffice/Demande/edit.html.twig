@@ -35,7 +35,6 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div id="container-title">
                 <h2>Modifier une Demande de {{ demandeTypeLibelle }}</h2>
-                {{ include('BackOffice/Demande/inc/back.html.twig') }}
             </div>
         </div>
 
@@ -119,3 +118,6 @@
         {{ encore_entry_script_tags('frontOffice_demande_checkFile') }}
     {% endif %}
 {% endblock %}
+
+{# Bouton « Retour » de l'en-tête de vue : destination reprise du partiel d'origine #}
+{% block retour_url %}{{ path('demande_list_all') }}{% endblock %}

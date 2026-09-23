@@ -1,0 +1,46 @@
+{#
+    Menu principal de l'espace partenaire.
+
+    Barre latérale permanente sur grand écran (réductible en icônes), tiroir sur mobile.
+    Les entrées, leurs droits et leurs icônes viennent de App\Twig\MenuBackOfficeExtension, qui sert
+    aussi au fil d'Ariane et au titre des vues : une seule description, pas de divergence possible.
+
+    Accessibilité (RGAA) : landmark de navigation nommé, liste de liens, sections titrées, page
+    courante signalée par aria-current, libellés conservés en mode réduit via l'attribut title.
+#}
+{% set entreeCourante = menu_bo_entree_courante() %}
+
+<nav id="menu-principal" class="menu" aria-label="Menu principal">
+    <ul class="menu-liste">
+        {% for section in menu_bo_sections() %}
+            <li class="menu-section" role="presentation">
+                <span class="menu-section-titre" aria-hidden="true">{{ section.titre }}</span>
+            </li>
+
+            {% for entree in section.entrees %}
+                {% set estActive = entreeCourante is not null
+                    and entreeCourante.route == entree.route
+                    and entreeCourante.libelle == entree.libelle %}
+                <li class="menu-item">
+                    <a href="{{ path(entree.route, entree.params|default({})) }}"
+                       class="menu-lien{{ estActive ? ' est-actif' : '' }}"
+                       title="{{ entree.libelle }}"
+                       {% if entree.nouvel_onglet|default(false) %}target="_blank" rel="noopener"{% endif %}
+                       {{ estActive ? 'aria-current="page"' : '' }}>
+                        <span class="menu-icone glyphicon {{ entree.icone }}" aria-hidden="true"></span>
+                        <span class="menu-libelle">
+                            {{ entree.libelle }}
+                            {# RGAA 13.3 : l'ouverture dans un nouvel onglet doit être annoncée #}
+                            {% if entree.nouvel_onglet|default(false) %}<span class="sr-only">(nouvel onglet)</span>{% endif %}
+                        </span>
+                    </a>
+                </li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+
+    <button type="button" class="menu-reduire" id="menu-reduire" aria-controls="menu-principal">
+        <span class="menu-icone glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="menu-libelle">Réduire le menu</span>
+    </button>
+</nav>

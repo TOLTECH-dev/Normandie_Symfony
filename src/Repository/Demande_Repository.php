@@ -290,13 +290,16 @@ class Demande_Repository extends ServiceEntityRepository
      * Nombre de lignes de la consultation des dossiers pour le profil connecté, avec ou sans recherches.
      *
      * @param array<string, mixed>  $option  roles, username, production_travauxNiveau_BBC1 / BBC2
-     * @param array<string, string> $filters recherches validées (DemandeListCriteria)
+     * @param array<string, string> $filters           recherches validées (DemandeListCriteria)
+     * @param string                $rechercheGenerale recherche générale du tableau
      *
      * @throws Exception
      */
-    public function countAll(array $option, array $filters = []): int
+    public function countAll(array $option, array $filters = [], string $rechercheGenerale = ''): int
     {
-        $listSql = $this->createListSql($option)->filterBy($filters);
+        $listSql = $this->createListSql($option)
+            ->filterBy($filters)
+            ->searchEverywhere($rechercheGenerale);
 
         return (int) $this->_em->getConnection()->fetchOne($listSql->countQuery(), $listSql->getParams());
     }
@@ -314,7 +317,9 @@ class Demande_Repository extends ServiceEntityRepository
     public function findAllAjax(array $option, DemandeListCriteria $criteria): array
     {
         $connection = $this->_em->getConnection();
-        $listSql = $this->createListSql($option)->filterBy($criteria->getFilters());
+        $listSql = $this->createListSql($option)
+            ->filterBy($criteria->getFilters())
+            ->searchEverywhere($criteria->getGlobalSearch());
 
         $pairs = $connection->fetchAllAssociative(
             $listSql->pageQuery(
@@ -1033,7 +1038,8 @@ class Demande_Repository extends ServiceEntityRepository
      * Lignes de l'export des dossiers, pour le profil destinataire et les recherches enregistrées.
      *
      * @param array<string, mixed>  $option  roles, username, production_travauxNiveau_BBC1 / BBC2
-     * @param array<string, string> $filters recherches validées (DemandeListCriteria), liées en paramètres
+     * @param array<string, string> $filters           recherches validées (DemandeListCriteria)
+     * @param string                $rechercheGenerale recherche générale du tableau, liées en paramètres
      *
      * @throws Exception
      */

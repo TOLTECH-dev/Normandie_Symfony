@@ -103,6 +103,23 @@ demande_view:
   requirements:
     demandeId: \d+
 
+# Consultation d'un dossier sans quitter la liste : fragments chargés en Ajax par le panneau
+demande_panneau:
+  path:     /3C0B7A15E9D4{demandeId}8F26DDB1C5A3749E0B2F86D41CA97E53B0D8F1A26C4E97B305DA2F8E61C7B49D03FA85E2C1B76D94F0A3E85C7D216B40F9
+  defaults: { _controller: App\Controller\DemandeController::viewPanneau }
+  requirements:
+    demandeId: \d+
+  options:
+    expose: true
+
+demande_panneau_historique:
+  path:     /6E19D4B82C7F{demandeId}A05C3E9F17DB6482CA0F35E97B1D48A6C20FE873B95D14CA6F082E39D7B451CA8E06D2F39B87C15AD4
+  defaults: { _controller: App\Controller\HistoriqueController::panneau }
+  requirements:
+    demandeId: \d+
+  options:
+    expose: true
+
 demande_edit:
   path:     /677BDD5A0047DAE490D135FB1DED482DA984321C22B34532EE99DE91156D428A9B73866959494798E1B4023D18E111219AE3B93780C744E29110C4A4A4B{demandeId}80DD3
   defaults: { _controller: App\Controller\DemandeController::edit }

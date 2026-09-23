@@ -34,7 +34,6 @@
                     {% endif %}
                 {% endif %}
 
-                {{ include('BackOffice/Admin/inc/back.html.twig') }}
             </div>
         </div>
 
@@ -47,3 +46,6 @@
 
     </div>
 {% endblock %}
+
+{# Bouton « Retour » de l'en-tête de vue : destination reprise du partiel d'origine #}
+{% block retour_url %}{{ path('admin_list') }}{% endblock %}

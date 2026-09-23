@@ -33,18 +33,6 @@
                            target="_blank">
                             <i class="glyphicon glyphicon-file"></i>
                         </a>
-                    {% else %}
-                        <a href="#"
-                           class="btn btn-link btn-xs"
-                           role="button"
-                           id="button_position1"
-                           data-toggle="tooltip"
-                           data-placement="bottom"
-                           data-container="body"
-                           title="Indisponible"
-                        >
-                            <i class="glyphicon glyphicon-ban-circle"></i>
-                        </a>
                     {% endif %}
 
                     {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
@@ -75,18 +63,6 @@
                                    title="Attention: Une date de commission a d&eacute;j&eacute; &eacute;t&eacute; affect&eacute;e."
                                 >
                                     <i class="glyphicon glyphicon-pencil"></i>
-                                </a>
-                            {% else %}
-                                <a href="#"
-                                   class="btn btn-link btn-xs"
-                                   id="button_position2"
-                                   role="button"
-                                   data-toggle="tooltip"
-                                   data-placement="bottom"
-                                   data-container="body"
-                                   title="Indisponible"
-                                >
-                                    <i class="glyphicon glyphicon-ban-circle"></i>
                                 </a>
                             {% endif %}
 
@@ -121,19 +97,6 @@
                                                     <i class="glyphicon glyphicon-remove-sign"></i>
                                                 </a>
                                             </span>
-                                        {% else %}
-                                        {# Cas Remboursement au statut "en cours de remboursement par la Région" ou "Remboursé" #}
-                                            <a href="#"
-                                               class="btn btn-link btn-xs"
-                                               id="button_position3"
-                                               role="button"
-                                               data-toggle="tooltip"
-                                               data-placement="bottom"
-                                               data-container="body"
-                                               title="Indisponible"
-                                            >
-                                                <i class="glyphicon glyphicon-ban-circle"></i>
-                                            </a>
                                         {% endif %}
                                     {% else %}
                                     {# Cas Remboursement au statut "refusé" #}
@@ -167,34 +130,9 @@
                                                 <i class="glyphicon glyphicon-remove-sign"></i>
                                             </a>
                                         </span>
-                                    {% else %}
-                                    {# Cas Demande au statut "Chèque envoyé au Beneficiaire" #}
-                                        <a href="#"
-                                           class="btn btn-link btn-xs"
-                                           id="button_position3"
-                                           role="button"
-                                           data-toggle="tooltip"
-                                           data-placement="bottom"
-                                           data-container="body"
-                                           title="Indisponible"
-                                        >
-                                            <i class="glyphicon glyphicon-ban-circle"></i>
-                                        </a>
                                     {% endif %}
 
                                 {% endif %}
-                            {% else %}
-                                <a href="#"
-                                   class="btn btn-link btn-xs"
-                                   id="button_position3"
-                                   role="button"
-                                   data-toggle="tooltip"
-                                   data-placement="bottom"
-                                   data-container="body"
-                                   title="Indisponible"
-                                >
-                                    <i class="glyphicon glyphicon-ban-circle"></i>
-                                </a>
                             {% endif %}
                         {% else %}
                         {# Cas Demande au statut "chèque en cours de production" ou "refusée" #}
@@ -242,53 +180,7 @@
                                     <i class="glyphicon glyphicon-trash"></i>
                                 </a>
                             </span>
-                        {% else %}
-                            <a href="#"
-                               class="btn btn-link btn-xs"
-                               id="button_position4"
-                               role="button"
-                               data-toggle="tooltip"
-                               data-placement="bottom"
-                               data-container="body"
-                               title="Indisponible"
-                            >
-                                <i class="glyphicon glyphicon-ban-circle"></i>
-                            </a>
                         {% endif %}
-                    {% else %}
-                        <a href="#"
-                           class="btn btn-link btn-xs"
-                           id="button_position4"
-                           role="button"
-                           data-toggle="tooltip"
-                           data-placement="bottom"
-                           data-container="body"
-                           title="Indisponible"
-                        >
-                            <i class="glyphicon glyphicon-ban-circle"></i>
-                        </a>
-                        <a href="#"
-                           class="btn btn-link btn-xs"
-                           id="button_position3"
-                           role="button"
-                           data-toggle="tooltip"
-                           data-placement="bottom"
-                           data-container="body"
-                           title="Indisponible"
-                        >
-                            <i class="glyphicon glyphicon-ban-circle"></i>
-                        </a>
-                        <a href="#"
-                           class="btn btn-link btn-xs"
-                           id="button_position2"
-                           role="button"
-                           data-toggle="tooltip"
-                           data-placement="bottom"
-                           data-container="body"
-                           title="Indisponible"
-                        >
-                            <i class="glyphicon glyphicon-ban-circle"></i>
-                        </a>
                     {% endif %}
 
                 {% endif %}
@@ -316,31 +208,7 @@
                                 <i class="glyphicon glyphicon-retweet"></i>
                             </a>
                         </span>
-                    {% else %}
-                        <a href="#"
-                           class="btn btn-link btn-xs"
-                           id="button_position5"
-                           role="button"
-                           data-toggle="tooltip"
-                           data-placement="bottom"
-                           data-container="body"
-                           title="Indisponible"
-                        >
-                            <i class="glyphicon glyphicon-ban-circle"></i>
-                        </a>
                     {% endif %}
-                {% else %}
-                    <a href="#"
-                       class="btn btn-link btn-xs"
-                       id="button_position5"
-                       role="button"
-                       data-toggle="tooltip"
-                       data-placement="bottom"
-                       data-container="body"
-                       title="Indisponible"
-                    >
-                        <i class="glyphicon glyphicon-ban-circle"></i>
-                    </a>
                 {% endif %}
 
                 {% if (is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN'))
@@ -359,18 +227,6 @@
                             <i class="glyphicon glyphicon-random"></i>
                         </a>
                     </span>
-                {% else %}
-                    <a href="#"
-                       class="btn btn-link btn-xs"
-                       id="button_position6"
-                       role="button"
-                       data-toggle="tooltip"
-                       data-placement="bottom"
-                       data-container="body"
-                       title="Indisponible"
-                    >
-                        <i class="glyphicon glyphicon-ban-circle"></i>
-                    </a>
                 {% endif %}
 
                 {% if (is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN'))
@@ -389,330 +245,21 @@
                             <i class="glyphicon glyphicon-folder-open"></i>
                         </a>
                     </span>
-                {% else %}
-                    <a href="#"
-                       class="btn btn-link btn-xs"
-                       id="button_position7"
-                       role="button"
-                       data-toggle="tooltip"
-                       data-placement="bottom"
-                       data-container="body"
-                       title="Indisponible"
-                    >
-                        <i class="glyphicon glyphicon-ban-circle"></i>
-                    </a>
                 {% endif %}
 
-                {{ include('BackOffice/Demande/inc/back.html.twig') }}
             </div>
         </div>
 
         {% set path_location = 'demande_document_bo' %}
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <ul class="nav nav-tabs marginTop20" role="tablist">
-                {% if is_granted('ROLE_AUDITEUR')
-                    or is_granted('ROLE_RENOVATEUR')
-                    or is_granted('ROLE_CONSEILLER')
-                    or is_granted('ROLE_INSTRUCTEUR')
-                    or is_granted('ROLE_CLIENT')
-                    or is_granted('ROLE_ADMIN')
-                %}
-                    <li class="active"><a href="#tab_beneficiaire" aria-controls="beneficiaire" role="tab" data-toggle="tab">B&eacute;n&eacute;ficiaire</a></li>
-                    <li><a href="#tab_logement" aria-controls="logement" role="tab" data-toggle="tab">Logement</a></li>
-                {% endif %}
-
-                {% if is_granted('ROLE_CONSEILLER')
-                    or is_granted('ROLE_INSTRUCTEUR')
-                    or is_granted('ROLE_CLIENT')
-                    or is_granted('ROLE_ADMIN')
-                %}
-                    <li><a href="#tab_demande" aria-controls="demande" role="tab" data-toggle="tab">Demande</a></li>
-                {% endif %}
-
-                {% set classDevis = '' %}
-                {% set classDevisPanel = '' %}
-                {% set classFicheTechnique = '' %}
-                {% set classFicheTechniquePanel = '' %}
-                {% if is_granted('ROLE_EPCI') or is_granted('ROLE_TECHNIQUE') %}
-                    {% if demande.devisId is defined and demande.devisId %}
-                        {% set classDevis = 'active' %}
-                        {% set classDevisPanel = 'in active' %}
-                    {% else %}
-                        {% if demande.ficheTechniqueId is defined and demande.ficheTechniqueId %}
-                            {% set classFicheTechnique = 'active' %}
-                            {% set classFicheTechniquePanel = 'in active' %}
-                        {% endif %}
-                    {% endif %}
-                {% endif %}
-                {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and demande.devisId %}
-                    <li class="{{ classDevis }}"><a href="#tab_devis" aria-controls="devis" role="tab" data-toggle="tab">Devis</a></li>
-                {% endif %}
-
-                {% if is_granted('ROLE_AUDITEUR')
-                    or is_granted('ROLE_RENOVATEUR')
-                    or is_granted('ROLE_CONSEILLER')
-                    or is_granted('ROLE_INSTRUCTEUR')
-                    or is_granted('ROLE_EPCI')
-                    or is_granted('ROLE_CLIENT')
-                    or is_granted('ROLE_ADMIN')
-                    or is_granted('ROLE_TECHNIQUE')
-                %}
-                    {% if constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType and demande.ficheTechniqueId %}
-                        <li class="{{ classFicheTechnique }}"><a href="#tab_ficheTechnique" aria-controls="devis" role="tab" data-toggle="tab">Fiche Technique</a></li>
-                    {% endif %}
-                {% endif %}
-
-                {% if is_granted('ROLE_INSTRUCTEUR')
-                    or is_granted('ROLE_CLIENT')
-                    or is_granted('ROLE_ADMIN')
-                    or is_granted('ROLE_CONSEILLER')
-                %}
-                    {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and (1 == isBBC2) %}
-                        <li><a href="#tab_remboursement" aria-controls="remboursement" role="tab" data-toggle="tab">Remboursement (1/2)</a></li>
-                        <li><a href="#tab_remboursement2" aria-controls="remboursement2" role="tab" data-toggle="tab">Remboursement (2/2)</a></li>
-                    {% else %}
-                        <li><a href="#tab_remboursement" aria-controls="remboursement" role="tab" data-toggle="tab">Remboursement</a></li>
-                    {% endif %}
-                {% endif %}
+                {{ include('BackOffice/Demande/inc/panneau/_onglets_liste.html.twig') }}
             </ul>
 
 
 
             <div class="tab-content">
-                {% if is_granted('ROLE_AUDITEUR')
-                    or is_granted('ROLE_RENOVATEUR')
-                    or is_granted('ROLE_CONSEILLER')
-                    or is_granted('ROLE_INSTRUCTEUR')
-                    or is_granted('ROLE_CLIENT')
-                    or is_granted('ROLE_ADMIN')
-                %}
-                    <div role="tabpanel" class="tab-pane fade in active" id="tab_beneficiaire">
-                        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/identification.html.twig') }}
-                        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/adresse.html.twig') }}
-                        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/situation.html.twig') }}
-                        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/dispositif.html.twig') }}
-                        {{ include('FrontOffice/Beneficiaire/inc/view_beneficiaire/structure.html.twig') }}
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="tab_logement">
-                        {{ include('FrontOffice/Logement/inc/view_logement/identification.html.twig') }}
-                        {{ include('FrontOffice/Logement/inc/view_logement/adresse.html.twig') }}
-                        {{ include('FrontOffice/Logement/inc/view_logement/situation.html.twig') }}
-                        {{ include('FrontOffice/Logement/inc/view_logement/caracteristique.html.twig') }}
-                    </div>
-                {% endif %}
-
-                {% if is_granted('ROLE_CONSEILLER')
-                    or is_granted('ROLE_INSTRUCTEUR')
-                    or is_granted('ROLE_CLIENT')
-                    or is_granted('ROLE_ADMIN')
-                %}
-                    <div role="tabpanel" class="tab-pane fade" id="tab_demande">
-                        {% if (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE') == demande.demandeType)
-                            or (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE') == demande.demandeType)
-                        %}
-                            {{ include('FrontOffice/Demande/AuditEnergie/inc/view_auditEnergie/document.html.twig') }}
-                            {{ include('FrontOffice/Demande/AuditEnergie/inc/view_auditEnergie/revenu.html.twig') }}
-                            {{ include('FrontOffice/Demande/AuditEnergie/inc/view_auditEnergie/structure.html.twig') }}
-                            {{ include('FrontOffice/Demande/AuditEnergie/inc/view_auditEnergie/auditeur.html.twig') }}
-                            {{ include('FrontOffice/Demande/AuditEnergie/inc/view_auditEnergie/signature.html.twig') }}
-                        {% elseif (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE') == demande.demandeType
-                                or constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE') == demande.demandeType)
-                        %}
-                            {{ include('FrontOffice/Demande/AuditNumerique/inc/view_auditNumerique/condition.html.twig') }}
-                            {{ include('FrontOffice/Demande/AuditNumerique/inc/view_auditNumerique/structure.html.twig') }}
-                            {{ include('FrontOffice/Demande/AuditNumerique/inc/view_auditNumerique/auditeur.html.twig') }}
-                            {{ include('FrontOffice/Demande/AuditNumerique/inc/view_auditNumerique/signature.html.twig') }}
-                        {% elseif (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) %}
-                            {{ include('FrontOffice/Demande/Travaux/inc/view_travaux/audit.html.twig') }}
-                            {{ include('FrontOffice/Demande/Travaux/inc/view_travaux/revenu.html.twig') }}
-                            {{ include('FrontOffice/Demande/Travaux/inc/view_travaux/structure.html.twig') }}
-                            {{ include('FrontOffice/Demande/Travaux/inc/view_travaux/signature.html.twig') }}
-                        {% endif %}
-                    </div>
-                {% endif %}
-
-                {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and demande.devisId %}
-                    <div role="tabpanel" class="tab-pane fade {{ classDevisPanel }}" id="tab_devis">
-                        {% if devis %}
-
-                            {% set disabled_button_popupValidation = '1' %}
-                            {% if
-                                (demande.demandeAudit is defined and demande.demandeAudit)
-                                or '2' != informationANAH
-                            %}
-                                {% set disabled_button_popupValidation = '0' %}
-                            {% endif %}
-
-                            {{ include('FrontOffice/Demande/Devis/inc/view_devis/audit.html.twig') }}
-                            {{ include('FrontOffice/Demande/Devis/inc/view_devis/document.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/form_devis/revenuFiscal.html.twig') }}
-                            {{ include('FrontOffice/Demande/Devis/inc/view_devis/type.html.twig') }}
-                            {{ include('FrontOffice/Demande/Devis/inc/view_devis/plan.html.twig') }}
-                            {{ include('FrontOffice/Demande/Devis/inc/view_devis/acte_engagement.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_devis/instruction.html.twig') }}
-                        {% else %}
-                            <p class="text-center bold marginTop20">Aucun Devis r&eacute;alis&eacute;.</p>
-                        {% endif %}
-                    </div>
-                {% endif %}
-
-                {% if is_granted('ROLE_AUDITEUR')
-                    or is_granted('ROLE_RENOVATEUR')
-                    or is_granted('ROLE_CONSEILLER')
-                    or is_granted('ROLE_INSTRUCTEUR')
-                    or is_granted('ROLE_EPCI')
-                    or is_granted('ROLE_CLIENT')
-                    or is_granted('ROLE_ADMIN')
-                    or is_granted('ROLE_TECHNIQUE')
-                %}
-                    {% if constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType and demande.ficheTechniqueId %}
-                    <div role="tabpanel" class="tab-pane fade marginBottom20 {{ classFicheTechniquePanel }}" id="tab_ficheTechnique">
-                        {% if ficheTechnique %}
-                            {% set pathologieVentilationArray = {
-                            '1 | humidite remontee capillaire': 'Humidité Remontée Capillaire',
-                            '2 | humidite pluie': 'Humidité Pluie',
-                            '3 | humidite non diagnostiquee': 'Humidité non diagnostiquée',
-                            '4 | humidite ventilation': 'Humidité Ventilation',
-                            '5 | champignon': 'Champignon',
-                            '6 | merule': 'Merule',
-                            '7 | termites': 'Termites',
-                            '8 | fissuration structure': 'Fissuration Structure',
-                            '9 | fuite couverture': 'Fuite Couverture',
-                            '10 | absence gouttiere': 'Absence Gouttière',
-                            '11 | fioul': 'Fioul',
-                            '12 | gaz naturel': 'Gaz Naturel',
-                            '13 | gaz propane': 'Gaz Propane',
-                            '14 | electricite': 'Electricité',
-                            '15 | pompe chaleur': 'Pompe à Chaleur',
-                            '16 | solaire thermique': 'Solaire Thermique',
-                            '17 | solaire photvoltaique': 'Solaire Photovoltaïque',
-                            '18 | charbon': 'Charbon',
-                            '19 | bois': 'Bois',
-                            '20 | naturelle': 'Naturelle',
-                            '21 | double flux': 'Double flux',
-                            '22 | simple flux': 'Simple flux',
-                            '23 | simple flux autoreglable': 'Simple flux autoréglable',
-                            '24 | simple flux B': 'Simple flux Hygro-réglable B',
-                            '25 | simple flux A': 'Simple flux Hygro A',
-                            '26 | vmr': 'VMR',
-                            '27 | vmi': 'VMI',
-                            '28 | no ventilation': 'Pas de Ventilation',
-                            '29 | autre': 'Autre',
-                            '': '-'
-                            } %}
-
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/document.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/type.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/surface.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/toiture.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/murs.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/menuiseries.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/plancherBas.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/chauffage.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/ECS.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/climatisation.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/CEP.html.twig') }}
-                            {{ include('BackOffice/Demande/Devis/inc/view_ficheTechnique/validation.html.twig') }}
-                        {% else %}
-                            <p class="text-center bold marginTop20">Aucune Fiche Technique r&eacute;alis&eacute;e.</p>
-                        {% endif %}
-                    </div>
-                    {% endif %}
-                {% endif %}
-
-                {% if is_granted('ROLE_INSTRUCTEUR')
-                    or is_granted('ROLE_CLIENT')
-                    or is_granted('ROLE_ADMIN')
-                    or is_granted('ROLE_CONSEILLER')
-                %}
-                    {% set isConformeArray = {
-                        '0': 'OUI',
-                        '1': 'NON',
-                        '': '-'
-                    } %}
-                    <div role="tabpanel" class="tab-pane fade" id="tab_remboursement">
-                        {% if demande.remboursementId and remboursement %}
-                            {% if (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_TYPE') == demande.demandeType
-                                or constant('App\\Entity\\Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE') == demande.demandeType)
-                            %}
-                                {% set remboursementInstruction = (remboursement and remboursement.remboursementAuditEnergie and remboursement.remboursementAuditEnergie.instruction) ? remboursement.remboursementAuditEnergie.instruction : null %}
-                                {% set remboursementDepot = (remboursement and remboursement.remboursementAuditEnergie and remboursement.remboursementAuditEnergie.depot) ? remboursement.remboursementAuditEnergie.depot : null %}
-                                {% set typeDemandeDocument = 5 %}
-                                {% set typeDepotDocument = 4 %}
-                            {% elseif (constant('App\\Entity\\Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE') == demande.demandeType
-                                or constant('App\\Entity\\Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE') == demande.demandeType)
-                            %}
-                                {% set remboursementInstruction = (remboursement and remboursement.remboursementAuditNumerique and remboursement.remboursementAuditNumerique.instruction) ? remboursement.remboursementAuditNumerique.instruction : null %}
-                                {% set remboursementDepot = (remboursement and remboursement.remboursementAuditNumerique and remboursement.remboursementAuditNumerique.depot) ? remboursement.remboursementAuditNumerique.depot : null %}
-                                {% set typeDemandeDocument = 8 %}
-                                {% set typeDepotDocument = 7 %}
-                            {% elseif (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) %}
-                                {% set remboursementInstruction = (remboursement and remboursement.remboursementTravaux and remboursement.remboursementTravaux.instruction) ? remboursement.remboursementTravaux.instruction : null %}
-                                {% set remboursementDepot = '' %}
-                                {% set typeDemandeDocument = 9 %}
-                                {% set typeDepotDocument = '' %}
-                            {% endif %}
-
-                            {% if is_granted('ROLE_INSTRUCTEUR')
-                                or is_granted('ROLE_CLIENT')
-                                or is_granted('ROLE_ADMIN')
-                            %}
-                                {{ include('BackOffice/Demande/inc/view_remboursement/statut.html.twig') }}
-                                {{ include('BackOffice/Demande/inc/view_remboursement/remise.html.twig') }}
-                                {{ include('BackOffice/Demande/inc/view_remboursement/cheque.html.twig') }}
-                            {% endif %}
-
-                            {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and (1 == isBBC1) %}
-                                {{ include('BackOffice/Demande/inc/view_remboursement/ficheTravaux.html.twig') }}
-                            {% else %}
-                                {{ include('BackOffice/Demande/inc/view_remboursement/facture.html.twig') }}
-                            {% endif %}
-
-                            {% if is_granted('ROLE_INSTRUCTEUR')
-                                or is_granted('ROLE_CLIENT')
-                                or is_granted('ROLE_ADMIN')
-                            %}
-                                {{ include('BackOffice/Demande/inc/view_remboursement/RIB.html.twig') }}
-                                {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') != demande.demandeType) %}
-                                    {{ include('BackOffice/Demande/inc/view_remboursement/depot.html.twig') }}
-                                {% endif %}
-                            {% endif %}
-
-                        {% else %}
-                            <p class="text-center bold marginTop20">Aucun Remboursement r&eacute;alis&eacute;.</p>
-                        {% endif %}
-                    </div>
-
-                    {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and (1 == isBBC2) %}
-                        <div role="tabpanel" class="tab-pane fade" id="tab_remboursement2">
-                            {% if demande.remboursementId2 and remboursement2 %}
-                                {% set remboursementInstruction = remboursement2.remboursementTravaux.instruction %}
-                                {% set typeDemandeDocument = 9 %}
-
-                                {% if is_granted('ROLE_INSTRUCTEUR')
-                                    or is_granted('ROLE_CLIENT')
-                                    or is_granted('ROLE_ADMIN')
-                                %}
-                                    {% include 'BackOffice/Demande/inc/view_remboursement/statut.html.twig' with {'remboursement': remboursement2, 'remboursementStatutSlug': remboursement2StatutSlug, 'remboursementDateRMH': remboursement2DateRMH} %}
-                                    {% include 'BackOffice/Demande/inc/view_remboursement/remise.html.twig' with {'remboursement': remboursement2} %}
-                                    {% include 'BackOffice/Demande/inc/view_remboursement/cheque.html.twig' with {'remboursement': remboursement2} %}
-                                {% endif %}
-
-                                {% include 'BackOffice/Demande/inc/view_remboursement/facture.html.twig' with {'remboursement': remboursement2} %}
-
-                                {% if is_granted('ROLE_INSTRUCTEUR')
-                                    or is_granted('ROLE_CLIENT')
-                                    or is_granted('ROLE_ADMIN')
-                                %}
-                                    {% include 'BackOffice/Demande/inc/view_remboursement/RIB.html.twig' with {'remboursement': remboursement2} %}
-                                {% endif %}
-
-                            {% else %}
-                                <p class="text-center bold marginTop20">Aucun Remboursement r&eacute;alis&eacute;.</p>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                {% endif %}
+                {{ include('BackOffice/Demande/inc/panneau/_onglets_contenu.html.twig') }}
             </div>
         </div>
 
@@ -1006,3 +553,6 @@
     <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 {% endblock %}
+
+{# Bouton « Retour » de l'en-tête de vue : destination reprise du partiel d'origine #}
+{% block retour_url %}{{ path('demande_list_all') }}{% endblock %}

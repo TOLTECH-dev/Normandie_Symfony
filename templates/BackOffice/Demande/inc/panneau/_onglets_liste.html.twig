@@ -1,0 +1,71 @@
+{#
+    Onglets de consultation d'un dossier, partagés par deux affichages :
+      - la vue complète (BackOffice/Demande/view.html.twig),
+      - le panneau chargé en Ajax depuis la liste des dossiers.
+    Le contenu vient du contexte de la page appelante (demande, beneficiaire, logement,
+    remboursement…), préparé une seule fois par DemandeController::donneesDeConsultation().
+#}
+                {% if is_granted('ROLE_AUDITEUR')
+                    or is_granted('ROLE_RENOVATEUR')
+                    or is_granted('ROLE_CONSEILLER')
+                    or is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                %}
+                    <li class="active"><a href="#tab_beneficiaire" aria-controls="beneficiaire" role="tab" data-toggle="tab">B&eacute;n&eacute;ficiaire</a></li>
+                    <li><a href="#tab_logement" aria-controls="logement" role="tab" data-toggle="tab">Logement</a></li>
+                {% endif %}
+
+                {% if is_granted('ROLE_CONSEILLER')
+                    or is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                %}
+                    <li><a href="#tab_demande" aria-controls="demande" role="tab" data-toggle="tab">Demande</a></li>
+                {% endif %}
+
+                {% set classDevis = '' %}
+                {% set classDevisPanel = '' %}
+                {% set classFicheTechnique = '' %}
+                {% set classFicheTechniquePanel = '' %}
+                {% if is_granted('ROLE_EPCI') or is_granted('ROLE_TECHNIQUE') %}
+                    {% if demande.devisId is defined and demande.devisId %}
+                        {% set classDevis = 'active' %}
+                        {% set classDevisPanel = 'in active' %}
+                    {% else %}
+                        {% if demande.ficheTechniqueId is defined and demande.ficheTechniqueId %}
+                            {% set classFicheTechnique = 'active' %}
+                            {% set classFicheTechniquePanel = 'in active' %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and demande.devisId %}
+                    <li class="{{ classDevis }}"><a href="#tab_devis" aria-controls="devis" role="tab" data-toggle="tab">Devis</a></li>
+                {% endif %}
+
+                {% if is_granted('ROLE_AUDITEUR')
+                    or is_granted('ROLE_RENOVATEUR')
+                    or is_granted('ROLE_CONSEILLER')
+                    or is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_EPCI')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                    or is_granted('ROLE_TECHNIQUE')
+                %}
+                    {% if constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType and demande.ficheTechniqueId %}
+                        <li class="{{ classFicheTechnique }}"><a href="#tab_ficheTechnique" aria-controls="devis" role="tab" data-toggle="tab">Fiche Technique</a></li>
+                    {% endif %}
+                {% endif %}
+
+                {% if is_granted('ROLE_INSTRUCTEUR')
+                    or is_granted('ROLE_CLIENT')
+                    or is_granted('ROLE_ADMIN')
+                    or is_granted('ROLE_CONSEILLER')
+                %}
+                    {% if (constant('App\\Entity\\Demande_::DEMANDE_TRAVAUX_TYPE') == demande.demandeType) and (1 == isBBC2) %}
+                        <li><a href="#tab_remboursement" aria-controls="remboursement" role="tab" data-toggle="tab">Remboursement (1/2)</a></li>
+                        <li><a href="#tab_remboursement2" aria-controls="remboursement2" role="tab" data-toggle="tab">Remboursement (2/2)</a></li>
+                    {% else %}
+                        <li><a href="#tab_remboursement" aria-controls="remboursement" role="tab" data-toggle="tab">Remboursement</a></li>
+                    {% endif %}
+                {% endif %}

@@ -12,7 +12,6 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom40">
                 <div id="container-title">
                     <h2>Renseigner la Fiche Technique: Dossier n&deg;{% if demandeId is defined %}{{ demandeId }}{% else %}{{ remboursement.demandeId }}{% endif %}</h2>
-                    {% include 'BackOffice/Remboursement/Travaux/inc/back.html.twig' with {'path_location_list': 'remboursement_list'} %}
                 </div>
             </div>
 
@@ -62,3 +61,6 @@
     {{ encore_entry_script_tags('backOffice_common_ficheTechniqueCheckData') }}
     {{ encore_entry_script_tags('backOffice_remboursement_travaux_formExamineFicheTechnique_index') }}
 {% endblock %}
+
+{# Bouton « Retour » de l'en-tête de vue : destination reprise du partiel d'origine #}
+{% block retour_url %}{{ path('remboursement_list') }}{% endblock %}

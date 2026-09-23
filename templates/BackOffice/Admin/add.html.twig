@@ -5,7 +5,6 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div id="container-title">
                 <h2>Ajouter un Utilisateur</h2>
-                {{ include('BackOffice/Admin/inc/back.html.twig') }}
             </div>
         </div>
 
@@ -30,3 +29,6 @@
 
     </div>
 {% endblock %}
+
+{# Bouton « Retour » de l'en-tête de vue : destination reprise du partiel d'origine #}
+{% block retour_url %}{{ path('admin_list') }}{% endblock %}

@@ -7,7 +7,11 @@ body {
     font-size: 13px !important;
     min-width: 800px;
 }
-body { padding-top: 50px; }
+/*
+    L'ancien gabarit réservait 50 px sous une barre fixe. L'en-tête actuelle est prise en compte par
+    la marge haute de .zone-principale (cf. common/menu.css) : ce décalage laissait une bande vide.
+*/
+body { padding-top: 0; }
 
 .underline { text-decoration: underline; }
 .bold { font-weight: bold; }
@@ -68,9 +72,12 @@ input:-ms-input-placeholder { text-align: left; }
 .required:after { content: " *";color: #D20A28; }
 
 
-#container-title, .container-title { border-bottom: 1px solid #77b636; }
-#container-title h2, .container-title h2 { font-size: 19px;margin-bottom: 0;padding-right: 50px; }
-#container-title a { position: absolute;right: 0;margin-top: -25px; }
+/* Les règles #button_positionN posaient une marge droite croissante (28 px, 56 px, 84 px…) pour
+   étaler les boutons sous un titre positionné en absolu. La barre d'outils est désormais une
+   rangée souple alignée à droite : ces marges les dispersaient.
+
+   Titre de vue : mise en forme déplacée dans common/entete_vue.css, avec le fil d'Ariane,
+   l'icône de la rubrique et le bouton « Retour ». */
 #bloc-submit, .bloc-submit {
     padding: 20px 0;
     text-align: center;
@@ -78,13 +85,6 @@ input:-ms-input-placeholder { text-align: left; }
 .document-tip { float: left;margin-left: -15px; }
 .popover { max-width: none;width: 400px; }
 .button_back { margin-right: 0; }
-#button_position1 { margin-right: 28px; }
-#button_position2 { margin-right: 56px; }
-#button_position3 { margin-right: 84px; }
-#button_position4 { margin-right: 112px; }
-#button_position5 { margin-right: 140px; }
-#button_position6 { margin-right: 168px; }
-#button_position7 { margin-right: 196px; }
 
 .g-recaptcha { display: inline-block; }
 

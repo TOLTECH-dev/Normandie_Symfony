@@ -1,0 +1,107 @@
+{#
+    Panneau de consultation d'un dossier, chargé en Ajax depuis la liste des dossiers.
+
+    Il reprend, sans les dupliquer, les onglets de la vue complète (_onglets_liste / _onglets_contenu),
+    et y ajoute l'historique et les commentaires, chargés à l'ouverture de leur onglet.
+    La vue complète, la page d'historique et la fenêtre de commentaire restent accessibles ailleurs :
+    ce panneau ne les remplace pas, il évite d'avoir à quitter la liste.
+
+    Mise en forme : assets/styles/backOffice/demande/panneau.css
+    Comportement  : assets/js/backOffice/demande/listDemande/panneau.js
+#}
+<div class="panneau-dossier" data-demande="{{ demande.demandeId }}">
+
+    <div class="panneau-entete">
+        <div class="panneau-identite">
+            <p class="panneau-titre">
+                Dossier n&deg; {{ demande.demandeId }}
+
+                {#
+                    Type de ménage au regard des critères ANAH en vigueur, calculé à partir de la
+                    composition du foyer et de son revenu fiscal de référence (DemandeController).
+                    Sans ces données, aucune pastille : mieux vaut ne rien dire que se tromper.
+                #}
+                {% if typeMenage %}
+                    <span class="pastille-menage pastille-menage-{{ typeMenage.code }}"
+                          title="Type de m&eacute;nage d&rsquo;apr&egrave;s les crit&egrave;res ANAH param&eacute;tr&eacute;s"
+                    >{{ typeMenage.libelle }}</span>
+                {% endif %}
+            </p>
+            <p class="panneau-sous-titre">
+                {% if demandeTypeLabel %}{{ demandeTypeLabel }}{% endif %}
+                {% if identiteFoyer %}&ndash; {{ identiteFoyer }}{% endif %}
+            </p>
+        </div>
+
+        <div class="panneau-actions">
+            {# Les commentaires se lisent dans l'historique ; celui-ci en ajoute un #}
+            <button type="button"
+                    class="panneau-lien panneau-commenter"
+                    data-url="{{ path('demande_create_commentaire', {'demandeId': demande.demandeId}) }}"
+                    data-demande="{{ demande.demandeId }}"
+            >
+                <i class="glyphicon glyphicon-comment"></i> Nouveau commentaire
+            </button>
+            <button type="button" class="panneau-fermer" aria-label="Fermer le panneau et revenir &agrave; la liste">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    {# Les partiels d'onglets construisent les liens vers les documents à partir de cette route #}
+    {% set path_location = 'demande_document_bo' %}
+
+    <ul class="nav nav-tabs panneau-onglets" role="tablist">
+        {{ include('BackOffice/Demande/inc/panneau/_onglets_liste.html.twig') }}
+
+        <li>
+            <a href="#tab_panneau_historique" aria-controls="historique" role="tab" data-toggle="tab">Historique</a>
+        </li>
+    </ul>
+
+    <div class="tab-content panneau-contenu">
+        {{ include('BackOffice/Demande/inc/panneau/_onglets_contenu.html.twig', {'actionsDemande': true}) }}
+
+        {# Chargé à l'ouverture de l'onglet : inutile de le préparer pour un dossier qu'on survole #}
+        <div role="tabpanel"
+             class="tab-pane fade panneau-differe"
+             id="tab_panneau_historique"
+             data-url="{{ path('demande_panneau_historique', {'demandeId': demande.demandeId}) }}"
+        >
+            <p class="panneau-attente">Chargement de l&rsquo;historique&hellip;</p>
+        </div>
+    </div>
+
+    {#
+        Fenêtre de commentaire propre au panneau : son entête reprend celui du dossier, pour qu'on
+        sache sur quel dossier on écrit. La fenêtre d'origine (inc/modalCommentaire.html.twig) reste
+        celle des autres écrans, inchangée.
+    #}
+    <div class="modal fade fenetre-commentaire" id="panneau_commentaire" tabindex="-1" role="dialog"
+         aria-labelledby="panneau_commentaire_titre" data-backdrop="false">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="fenetre-commentaire-entete">
+                    <div>
+                        <p class="fenetre-commentaire-titre" id="panneau_commentaire_titre">
+                            Nouveau commentaire &ndash; Dossier n&deg; {{ demande.demandeId }}
+                            {% if typeMenage %}
+                                <span class="pastille-menage pastille-menage-{{ typeMenage.code }}">{{ typeMenage.libelle }}</span>
+                            {% endif %}
+                        </p>
+                        <p class="fenetre-commentaire-sous-titre">
+                            {% if demandeTypeLabel %}{{ demandeTypeLabel }}{% endif %}
+                            {% if identiteFoyer %}&ndash; {{ identiteFoyer }}{% endif %}
+                        </p>
+                    </div>
+                    {#
+                        Pas de croix ici : elle portait la classe du bouton de fermeture du panneau
+                        et refermait donc le dossier entier. La fenêtre se referme par « Annuler »
+                        ou par la touche Échap, qui laissent le dossier ouvert.
+                    #}
+                </div>
+                <div class="modal-body fenetre-commentaire-corps"></div>
+            </div>
+        </div>
+    </div>
+</div>

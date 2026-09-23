@@ -11,6 +11,8 @@ use Doctrine\ORM\Query\Expr\Join;
 use App\Entity\DateRMH;
 use App\Entity\Remboursement_;
 use App\Entity\Remboursement_statut;
+use App\Repository\Remboursement\RemboursementListCriteria;
+use App\Repository\Remboursement\RemboursementListSql;
 use App\Entity\Titre;
 use App\Entity\Beneficiaire;
 use App\Entity\Demande_;
@@ -32,7 +34,7 @@ class Remboursement_Repository extends ServiceEntityRepository
      * @return int
      * @throws Exception
      */
-    public function countForList($options, $where = '')
+    public function countForList($options, ?RemboursementListCriteria $criteria = null)
     {
         $queryJoin = "";
         $queryWhere = "";
@@ -43,6 +45,15 @@ class Remboursement_Repository extends ServiceEntityRepository
         $productionTravauxNiveauBBC1 = $options['production_travauxNiveau_BBC1'];
         $productionTravauxNiveauBBC2 = $options['production_travauxNiveau_BBC2'];
         $dateUsNouvelInstructeur = $options['app_date_us_nouvel_instructeur'];
+
+        // Recherches validées : conditions et valeurs liées, aucune saisie dans le SQL
+        [$where, $params] = null === $criteria
+            ? ['', []]
+            : RemboursementListSql::conditions(
+                $criteria,
+                (int) $productionTravauxNiveauBBC1,
+                (int) $productionTravauxNiveauBBC2
+            );
 
         $conditionWhereBBC2 = "
             t.numero_operation != " .$productionTravauxNiveauBBC2. " 
@@ -185,12 +196,10 @@ class Remboursement_Repository extends ServiceEntityRepository
             GROUP BY d.id, r.id, t.id
         ";
 
-        $statement = $this->_em
+        return $this->_em
             ->getConnection()
-            ->prepare($query);
-        $result = $statement->executeQuery();
-
-        return $result->rowCount();
+            ->executeQuery($query, $params)
+            ->rowCount();
     }
 
     /**
@@ -203,14 +212,7 @@ class Remboursement_Repository extends ServiceEntityRepository
      * @return array
      * @throws Exception
      */
-    public function findForListAjax(
-        $options,
-        $orderBy = null,
-        $orderType = null,
-        $start = null,
-        $length = null,
-        $where = ''
-    ) {
+    public function findForListAjax($options, ?RemboursementListCriteria $criteria = null) {
 
         $queryJoin = "";
         $queryWhere = "";
@@ -221,6 +223,15 @@ class Remboursement_Repository extends ServiceEntityRepository
         $productionTravauxNiveauBBC1 = $options['production_travauxNiveau_BBC1'];
         $productionTravauxNiveauBBC2 = $options['production_travauxNiveau_BBC2'];
         $dateUsNouvelInstructeur = $options['app_date_us_nouvel_instructeur'];
+
+        // Recherches validées : conditions et valeurs liées, aucune saisie dans le SQL
+        [$where, $params] = null === $criteria
+            ? ['', []]
+            : RemboursementListSql::conditions(
+                $criteria,
+                (int) $productionTravauxNiveauBBC1,
+                (int) $productionTravauxNiveauBBC2
+            );
 
 
         $conditionWhereBBC2 = "
@@ -577,22 +588,14 @@ class Remboursement_Repository extends ServiceEntityRepository
             GROUP BY d.id, r.id, t.id
         ";
 
-        if (!empty($orderBy) && !empty($orderType) ) {
-            $query .= "
-                ORDER BY " . $orderBy . " " . $orderType;
+        if (null !== $criteria) {
+            $query .= RemboursementListSql::orderBy($criteria) . RemboursementListSql::limit($criteria);
         }
 
-        if (isset($start) && isset($length)) {
-            $query .= "
-                LIMIT " . $start . "," . $length;
-        }
-
-        $statement = $this->_em
+        return $this->_em
             ->getConnection()
-            ->prepare($query);
-        $result = $statement->executeQuery();
-
-        return $result->fetchAllAssociative();
+            ->executeQuery($query, $params)
+            ->fetchAllAssociative();
     }
 
     /**

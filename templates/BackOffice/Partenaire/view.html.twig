@@ -27,7 +27,6 @@
             >
                 <i class="glyphicon glyphicon-edit"></i>
             </a>
-            {{ include('BackOffice/Partenaire/inc/back.html.twig') }}
         </div>
     </div>
 
@@ -46,3 +45,6 @@
 
 </div>
 {% endblock %}
+
+{# Bouton « Retour » de l'en-tête de vue : destination reprise du partiel d'origine #}
+{% block retour_url %}{{ path('partenaire_list', {'type': type}) }}{% endblock %}

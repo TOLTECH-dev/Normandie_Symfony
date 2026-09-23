@@ -3,6 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('backOffice_demande_list_all') }}
+    {{ encore_entry_link_tags('backOffice_demande_panneau') }}
     {{ encore_entry_link_tags('backOffice_historique_modal_commentaire') }}
 {% endblock %}
 
@@ -17,51 +18,172 @@
         or is_granted('ROLE_TECHNIQUE')
     %}
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 hidden" id="content-wrapper">
-            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-2 marginBottom40">
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom40">
                 <div id="container-title">
                     <h2>Consultation des dossiers</h2>
+                    {% if recordsTotal and (is_granted('ROLE_CONSEILLER')
+                        or is_granted('ROLE_INSTRUCTEUR')
+                        or is_granted('ROLE_AUDITEUR')
+                        or is_granted('ROLE_RENOVATEUR')
+                        or is_granted('ROLE_EPCI')
+                        or is_granted('ROLE_CLIENT')
+                        or is_granted('ROLE_ADMIN'))
+                    %}
+                        {#
+                            Le bouton reste rattaché au formulaire d'export, resté autour du tableau :
+                            le panneau de consultation, qui contient lui-même un formulaire, ne peut
+                            pas être imbriqué dans celui-ci.
+                        #}
+                        <button id="exporter_demandes"
+                                form="formDemandeListAll"
+                                class="bouton-creer"
+                                role="button"
+                                title="Exporter les dossiers correspondant aux crit&egrave;res de recherche"
+                        >
+                            <i class="glyphicon glyphicon-download-alt"></i>
+                            <span class="bold">Exporter</span>
+                        </button>
+                    {% endif %}
                 </div>
             </div>
+
+            {#
+                À gauche le tableau, à droite le dossier consulté : tant qu'aucun dossier n'est
+                ouvert, le tableau occupe toute la largeur. L'ouverture d'un dossier réduit le
+                tableau à sa première colonne (assets/js/backOffice/demande/listDemande/panneau.js).
+            #}
+            <div class="zone-liste" id="zone_liste_dossiers">
+            <div class="zone-liste-tableau">
 
             {{ form_start(form_export, {'action': '', 'attr': {'id': 'formDemandeListAll'}}) }}
             {{ form_errors(form_export) }}
 
-            <table cellspacing="0" id="table_list_demande" class="table table-striped table-bordered big_table">
+            {#
+                Colonnes regroupées : un en-tête couvre plusieurs informations, affichées les unes
+                sous les autres dans la cellule. Le champ de recherche correspondant interroge tout
+                le groupe (cf. DemandeListSql::LIKE_FILTERS) ; son attribut data-colonne désigne la
+                colonne par son nom logique et son attribut name sert de critère à l'export.
+                La thématique et le statut sont affichés dans la colonne « Dossier » mais restent
+                déclarés comme colonnes masquées, pour garder leur champ de recherche propre.
+            #}
+            {#
+                Filtres à choix multiple, placés au-dessus du tableau (le script les déplace dans la
+                barre d'outils de DataTables). Chaque menu coche ce qu'il veut ; la sélection est
+                reportée dans un champ caché, séparée par des barres verticales, qui sert à la fois
+                à la recherche de la colonne masquée correspondante et aux critères de l'export.
+            #}
+            <div class="filtres-listes-attente">
+            <div id="filtres-listes" class="filtres-listes" hidden>
+                <div class="filtre-liste">
+                    <button type="button"
+                            class="filtre-liste-bouton"
+                            id="bouton_thematiques"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                    >
+                        <span class="filtre-liste-texte">Toutes les th&eacute;matiques</span>
+                        <span class="caret"></span>
+                    </button>
+                    {# Les thématiques sont renseignées par le script, qui en détient déjà les libellés #}
+                    <div class="filtre-liste-menu" id="menu_thematiques" role="group" aria-labelledby="bouton_thematiques" hidden></div>
+                    <input type="hidden" name="demandeType" id="filtre_demandeType" data-colonne="demandeType" value="" />
+                </div>
+
+                <div class="filtre-liste">
+                    <button type="button"
+                            class="filtre-liste-bouton"
+                            id="bouton_statuts"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                    >
+                        <span class="filtre-liste-texte">Tous les statuts</span>
+                        <span class="caret"></span>
+                    </button>
+                    <div class="filtre-liste-menu" id="menu_statuts" role="group" aria-labelledby="bouton_statuts" hidden>
+                        <p class="filtre-liste-titre">Demandes</p>
+                        {% for statut in statutsDemande %}
+                            <label class="filtre-liste-choix">
+                                <input type="checkbox" value="{{ statut }}" /> <span>{{ statut }}</span>
+                            </label>
+                        {% endfor %}
+                        <p class="filtre-liste-titre">Remboursements</p>
+                        {% for statut in statutsRemboursement %}
+                            <label class="filtre-liste-choix">
+                                <input type="checkbox" value="{{ statut }}" /> <span>{{ statut }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="demandeStatutSlug" id="filtre_demandeStatutSlug" data-colonne="demandeStatutSlug" value="" />
+                </div>
+            </div>
+            </div>
+
+            <table cellspacing="0" id="table_list_demande" class="table table-striped table-bordered big_table tableau-groupe tableau-dossiers">
                 <thead>
                 <tr>
-                    <th class="with_search breakWord col0">N&deg;</th>
-                    <th class="with_select breakWord col1">Th&eacute;matique</th>
-                    <th class="with_search breakWord col2">B&eacute;n&eacute;ficiaire</th>
-                    <th class="with_search breakWord col3">Ville</th>
-                    <th class="with_search breakWord col4">Date de demande</th>
-                    <th class="with_search breakWord col5">Statut</th>
-                    <th class="with_search breakWord col6">Structure &amp; Conseiller</th>
-                    <th class="breakWord col7">Audit</th>
-                    <th class="with_search breakWord col8">Nom professionnel</th>
-                    <th class="with_search breakWord col9">Date de commission</th>
-                    <th class="with_search breakWord col10">Date de remboursement</th>
-                    <th class="breakWord col11">Action</th>
+                    <th class="colonne-dossier">Dossier</th>
+                    <th class="colonne-beneficiaire">B&eacute;n&eacute;ficiaire</th>
+                    <th class="colonne-accompagnement">Accompagnement</th>
+                    <th class="colonne-professionnel">Professionnel</th>
+                    <th class="colonne-echeances">&Eacute;ch&eacute;ances</th>
+                    <th class="colonne-action">Action</th>
+                    <th class="colonne-thematique">Th&eacute;matique</th>
+                    <th class="colonne-statut">Statut</th>
                 </tr>
                 </thead>
 
                 {% if recordsTotal and (recordsTotal is not null or recordsTotal != 0) %}
                     <tfoot>
                     <tr id="filterrow">
-                        <th class="with_search" id="demandeId">N&deg;</th>
-                        <th class="with_select" id="demandeType">Th&eacute;matique</th>
-                        <th class="with_search" id="beneficiaireIdentifiant">B&eacute;n&eacute;ficiaire</th>
-                        <th class="with_search" id="logement">Ville</th>
-                        <th class="with_search" id="demandeDateCreation">Date de demande</th>
-                        <th class="with_search" id="demandeStatutSlug">Statut</th>
-                        <th class="with_search" id="structureConseiller">Structure &amp; Conseiller</th>
-                        <th>&nbsp;</th>
-                        <th class="with_search" id="partenaire">Nom professionnel</th>
-                        <th class="with_search" id="commissionDate">Date de commission</th>
-                        <th class="with_search" id="remboursementDate">Date de remboursement</th>
+                        <th>
+                            <input type="text"
+                                   name="dossier"
+                                   data-colonne="dossier"
+                                   class="filtre-tableau"
+                                   placeholder="N&deg; ou date"
+                                   aria-label="Rechercher par num&eacute;ro de dossier ou date de demande"
+                            />
+                        </th>
+                        <th>
+                            <input type="text"
+                                   name="beneficiaire"
+                                   data-colonne="beneficiaire"
+                                   class="filtre-tableau"
+                                   placeholder="Nom, ville, code postal"
+                                   aria-label="Rechercher par b&eacute;n&eacute;ficiaire, ville ou code postal"
+                            />
+                        </th>
+                        <th>
+                            <input type="text"
+                                   name="structureConseiller"
+                                   data-colonne="structureConseiller"
+                                   class="filtre-tableau"
+                                   placeholder="Structure ou conseiller"
+                                   aria-label="Rechercher par structure ou conseiller"
+                            />
+                        </th>
+                        <th>
+                            <input type="text"
+                                   name="partenaire"
+                                   data-colonne="partenaire"
+                                   class="filtre-tableau"
+                                   placeholder="Professionnel"
+                                   aria-label="Rechercher par professionnel"
+                            />
+                        </th>
+                        <th>
+                            <input type="text"
+                                   name="echeances"
+                                   data-colonne="echeances"
+                                   class="filtre-tableau"
+                                   placeholder="jj/mm/aaaa"
+                                   aria-label="Rechercher par date de commission ou de remboursement"
+                            />
+                        </th>
                         <th class="textCenter">
                             <button type="button"
-                                    role="button"
-                                    class="btn btn-danger btn-xs"
+                                    class="bouton-vider-filtres"
                                     data-toggle="tooltip"
                                     data-placement="bottom"
                                     data-container="body"
@@ -69,27 +191,12 @@
                                     id="clear_search_input"
                             >
                                 <i class="glyphicon glyphicon-erase"></i>
+                                <span class="sr-only">Vider les champs de recherche</span>
                             </button>
-                            {% if is_granted('ROLE_CONSEILLER')
-                                or is_granted('ROLE_INSTRUCTEUR')
-                                or is_granted('ROLE_AUDITEUR')
-                                or is_granted('ROLE_RENOVATEUR')
-                                or is_granted('ROLE_EPCI')
-                                or is_granted('ROLE_CLIENT')
-                                or is_granted('ROLE_ADMIN')
-                            %}
-                                <button role="button"
-                                        class="btn btn-success btn-xs"
-                                        data-toggle="tooltip"
-                                        data-placement="bottom"
-                                        data-container="body"
-                                        title="Exporter les Demandes"
-                                        id="exporter_demandes"
-                                >
-                                    <i class="glyphicon glyphicon-download-alt"></i>
-                                </button>
-                            {% endif %}
                         </th>
+                        {# Colonnes masquées (thématique, statut) : leurs champs sont dans la première cellule #}
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </tfoot>
                 {% endif %}
@@ -111,6 +218,20 @@
             {{ form_rest(form_export) }}
             {{ form_end(form_export) }}
 
+            </div>{# zone-liste-tableau #}
+
+            <aside class="zone-liste-panneau"
+                   id="panneau_dossier"
+                   aria-label="Dossier consult&eacute;"
+                   aria-live="polite"
+                   hidden
+            ></aside>
+            </div>{# zone-liste #}
+
+            {#
+                Fenêtre de commentaire d'origine, ouverte par le bouton d'une ligne. Le panneau de
+                consultation a la sienne, avec l'entête du dossier : les deux coexistent.
+            #}
             {{ include('BackOffice/Demande/inc/modalCommentaire.html.twig') }}
 
         </div>
@@ -124,4 +245,7 @@
     {{ encore_entry_script_tags('backOffice_demande_listDemande_popover') }}
     <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    {# Après le routeur : le panneau et les formulaires d'action construisent leurs adresses avec lui #}
+    {{ encore_entry_script_tags('backOffice_demande_view_index') }}
+    {{ encore_entry_script_tags('backOffice_demande_listDemande_panneau') }}
 {% endblock %}

@@ -1,0 +1,1193 @@
+/*
+    Consultation d'un dossier à côté de la liste.
+
+    Au repos, le tableau occupe toute la largeur et le panneau n'existe pas. Dès qu'un dossier est
+    ouvert, la classe « avec-panneau » réduit le tableau à sa première colonne — celle qui porte le
+    numéro, la date, la thématique et le statut — et le dossier s'affiche à droite.
+
+    Palette et typographie de l'espace partenaire (variables définies dans common/header.css).
+    Contrastes vérifiés (RGAA 3.2) :
+      titre du panneau      #1d2939 sur #ffffff ... 14,7:1
+      repères de la frise   #475467 sur #ffffff .... 7,9:1
+      lien « vue complète » #b84f18 sur #ffffff .... 5,0:1
+*/
+
+/* --- Répartition liste / panneau --- */
+.zone-liste {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    /* Le titre de la vue est encore dans une colonne flottante (Bootstrap 3) : sans cette purge,
+       la zone se rangerait à côté de lui, réduite à la largeur restante. */
+    clear: both;
+}
+
+.zone-liste-tableau {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.zone-liste-panneau {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.zone-liste-panneau[hidden] {
+    display: none;
+}
+
+/*
+    Le tableau se réduit à une colonne de repérage ; le dossier prend le reste de la place.
+
+    Les deux ont la même hauteur, celle qui reste sous le titre jusqu'au bas de la fenêtre : elle est
+    mesurée par le script (--hauteur-zone) plutôt que devinée, car ce qui les surmonte — fil
+    d'Ariane, titre — n'a pas la même hauteur partout. Chacun défile sur lui-même, la page ne
+    s'allonge pas, et les deux restent en vue.
+*/
+.zone-liste.avec-panneau .zone-liste-tableau,
+.zone-liste.avec-panneau .zone-liste-panneau {
+    position: sticky;
+    top: 16px;
+    align-self: flex-start;
+    height: var(--hauteur-zone, calc(100vh - 180px));
+}
+
+.zone-liste.avec-panneau .zone-liste-tableau {
+    flex: 0 0 300px;
+    max-width: 300px;
+}
+
+/*
+    Le formulaire d'export s'intercale entre la colonne et le cadre du tableau : laissé en hauteur
+    automatique, il coupait la chaîne et le cadre ne pouvait pas défiler. Il relaie donc la hauteur,
+    et le cadre occupe ce qui reste sous les éléments qui le précèdent.
+*/
+.zone-liste.avec-panneau .zone-liste-tableau > form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.zone-liste.avec-panneau .zone-liste-tableau .dataTables_wrapper {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    /* Les autres colonnes étant masquées, plus rien ne déborde sur le côté */
+    overflow-x: hidden;
+    padding: 0;
+}
+
+/* Le numéro reste l'entrée de lecture de la colonne : il est mis en avant */
+.zone-liste.avec-panneau .cellule-numero {
+    font-weight: 600;
+}
+
+/*
+    Barre d'outils (nombre de lignes, recherche générale, filtres) et pied (compteur, pagination) :
+    sans objet dans une colonne de 300 px. Ils reviennent dès que le dossier est refermé, avec leurs
+    valeurs, DataTables gardant son état. Seuls restent l'en-tête de colonne et sa recherche.
+*/
+.zone-liste.avec-panneau .dataTables_wrapper .row:has(.dataTables_length),
+.zone-liste.avec-panneau .dataTables_wrapper .row:has(.dataTables_info) {
+    display: none;
+}
+
+/* L'en-tête et le champ de recherche restent en vue pendant le défilement de la colonne */
+.zone-liste.avec-panneau .tableau-dossiers thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.zone-liste.avec-panneau .tableau-dossiers tfoot th {
+    position: sticky;
+    top: 36px;
+    z-index: 2;
+    background: #fff;
+}
+
+/* Un dossier ouvert : toute la ligne permet d'en changer (panneau.js). Sur le tableau complet,
+   la ligne n'est pas cliquable — l'ouverture passe par le bouton de la colonne Action. */
+.zone-liste.avec-panneau .tableau-dossiers tbody tr {
+    cursor: pointer;
+}
+
+/*
+    Dans la colonne, rien ne vient au-devant du clic : le numéro n'est plus un lien vers la vue
+    complète (elle reste à un clic depuis l'en-tête du panneau) et le statut n'ouvre plus sa bulle.
+    Le clic atteint donc la ligne, où qu'il tombe. La bulle est remise en service à la fermeture
+    du dossier (panneau.js).
+*/
+.zone-liste.avec-panneau .cellule-numero a {
+    pointer-events: none;
+    color: var(--ceen-texte);
+    text-decoration: none;
+}
+
+.zone-liste.avec-panneau .ligne-dossier .etiquette-statut {
+    pointer-events: none;
+    cursor: pointer;
+}
+
+.zone-liste.avec-panneau .zone-liste-panneau {
+    flex: 1 1 0;
+}
+
+/* --- Tableau réduit --- */
+.zone-liste.avec-panneau .tableau-dossiers thead th:not(:first-child),
+.zone-liste.avec-panneau .tableau-dossiers tbody td:not(:first-child),
+.zone-liste.avec-panneau .tableau-dossiers tfoot th:not(:first-child) {
+    display: none;
+}
+
+/* La bande de tête de ligne traversait le tableau : dans la colonne, elle reprend le flux */
+.zone-liste.avec-panneau .tableau-dossiers tbody tr:has(.ligne-dossier) > td {
+    padding-top: 10px;
+}
+
+.zone-liste.avec-panneau .ligne-dossier {
+    position: static;
+    display: block;
+    white-space: normal;
+    margin-bottom: 4px;
+}
+
+.zone-liste.avec-panneau .ligne-dossier .etiquette-statut {
+    display: block;
+    overflow: visible;
+    white-space: normal;
+}
+
+.zone-liste.avec-panneau .ligne-dossier-separateur {
+    display: none;
+}
+
+/* Le dossier ouvert reste repérable dans la colonne */
+.zone-principale .tableau-dossiers tbody tr.est-consulte,
+.zone-principale .tableau-dossiers tbody tr.est-consulte:hover {
+    background: #fdf1e8;
+    box-shadow: inset 3px 0 0 var(--ceen-orange);
+}
+
+/* --- Panneau --- */
+.panneau-dossier {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .05);
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.panneau-entete {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ceen-bordure);
+}
+
+.panneau-identite {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.panneau-titre {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 0;
+    color: #1d2939;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.panneau-sous-titre {
+    margin: 2px 0 0;
+    color: var(--ceen-texte-doux);
+    font-size: 13px;
+}
+
+/*
+    Pastille de type de ménage. Les teintes vont du plus au moins aidé, sans reprendre le vert et le
+    rouge des statuts : il ne s'agit pas d'un état du dossier, mais d'une situation de revenus.
+    Contrastes vérifiés (RGAA 3.2), texte sur fond :
+      très modeste   #7a3e00 sur #fff4e5 ... 8,0:1
+      modeste        #8a5a00 sur #fff8e1 ... 5,7:1
+      intermédiaire  #1f5a8f sur #e8f2fb ... 6,3:1
+      supérieur      #475467 sur #f2f4f7 ... 7,4:1
+*/
+.pastille-menage {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 8px;
+    background: #f2f4f7;
+    color: #475467;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    vertical-align: 1px;
+}
+
+.pastille-menage-1 {
+    background: #fff4e5;
+    color: #7a3e00;
+}
+
+.pastille-menage-2 {
+    background: #fff8e1;
+    color: #8a5a00;
+}
+
+.pastille-menage-3 {
+    background: #e8f2fb;
+    color: #1f5a8f;
+}
+
+.panneau-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+.panneau-lien {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 8px;
+    color: var(--ceen-orange-fonce);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* Le bouton « Nouveau commentaire » reprend l'aspect du lien d'entête */
+.panneau-commenter {
+    background: #fff;
+    cursor: pointer;
+}
+
+.panneau-lien:hover,
+.panneau-lien:focus {
+    border-color: var(--ceen-orange);
+    background: #fdf1e8;
+    color: var(--ceen-orange-fonce);
+    text-decoration: none;
+}
+
+.panneau-fermer {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ceen-texte-doux);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.panneau-fermer:hover,
+.panneau-fermer:focus {
+    border-color: #fda29b;
+    background: #fef3f2;
+    color: #b42318;
+}
+
+.panneau-lien:focus-visible,
+.panneau-fermer:focus-visible {
+    outline: 2px solid var(--ceen-orange);
+    outline-offset: 2px;
+}
+
+/* Les onglets sont ceux de la vue complète : on se contente de les aérer */
+.panneau-onglets {
+    margin-top: 12px;
+}
+
+/*
+    Seul le contenu défile : l'en-tête du dossier et ses onglets restent en place.
+    L'air entre les onglets et le contenu est pris à l'intérieur de la zone qui défile, et non en
+    marge de celle-ci : une marge du cadre laisserait passer les lignes au-dessus d'un élément
+    collé en haut (l'entête de la fiche technique), qui apparaîtraient alors en liseré.
+*/
+.panneau-contenu {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.panneau-contenu > .tab-pane {
+    padding-top: 12px;
+}
+
+.panneau-entete,
+.panneau-onglets {
+    flex: 0 0 auto;
+}
+
+.panneau-attente,
+.panneau-erreur {
+    margin: 0;
+    padding: 24px 0;
+    color: var(--ceen-texte-doux);
+    font-size: 14px;
+    text-align: center;
+}
+
+.panneau-erreur {
+    color: #b42318;
+}
+
+/* --- Actions sur la demande, en tête de son onglet --- */
+.panneau-actions-demande {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--ceen-bordure);
+}
+
+.panneau-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ceen-texte);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.panneau-action:hover,
+.panneau-action:focus {
+    border-color: var(--ceen-orange);
+    background: #fdf1e8;
+    color: var(--ceen-orange-fonce);
+    text-decoration: none;
+}
+
+/* Refus et suppression sont irréversibles : ils se distinguent des autres actions */
+.panneau-action.est-refus:hover,
+.panneau-action.est-refus:focus,
+.panneau-action.est-suppression:hover,
+.panneau-action.est-suppression:focus {
+    border-color: #fda29b;
+    background: #fef3f2;
+    color: #b42318;
+}
+
+.panneau-action:focus-visible {
+    outline: 2px solid var(--ceen-orange);
+    outline-offset: 2px;
+}
+
+/*
+    Les icônes reprennent la couleur qu'avait le fond du bouton dans la vue complète — vert pour un
+    téléchargement, orange pour une modification, rouge pour un refus ou une suppression — afin que
+    le repère visuel des utilisateurs soit conservé. Les teintes sont assombries par rapport aux
+    fonds d'origine : sur fond blanc, celles de Bootstrap (#5cb85c, #f0ad4e) descendent à 2:1, sous
+    le minimum de 3:1 exigé pour un élément graphique porteur de sens (RGAA 3.3).
+    Contrastes vérifiés : #2e7d32 4,4:1 · #b84f18 5,0:1 · #b42318 5,9:1.
+*/
+.panneau-action .glyphicon {
+    color: var(--ceen-texte-doux);
+}
+
+.panneau-action.icone-vert .glyphicon {
+    color: #2e7d32;
+}
+
+.panneau-action.icone-orange .glyphicon {
+    color: var(--ceen-orange-fonce);
+}
+
+.panneau-action.icone-rouge .glyphicon {
+    color: #b42318;
+}
+
+.panneau-action-avertissement {
+    color: #b54708;
+    font-size: 12px;
+}
+
+/*
+    --- Fenêtre « Nouveau commentaire » du panneau ---
+    Elle reprend l'entête du dossier, laisse toute la place au contenu du commentaire, et présente
+    les destinataires en cartes à cocher. La fenêtre d'origine, utilisée par les autres écrans, est
+    inchangée : celle-ci ne partage aucune de ses règles.
+*/
+.fenetre-commentaire .modal-content {
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 0 20px 48px rgba(16, 24, 40, .24);
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.fenetre-commentaire-entete {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--ceen-bordure);
+}
+
+.fenetre-commentaire-titre {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 0;
+    color: #1d2939;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.fenetre-commentaire-sous-titre {
+    margin: 2px 0 0;
+    color: var(--ceen-texte-doux);
+    font-size: 13px;
+}
+
+.fenetre-commentaire-corps {
+    padding: 20px;
+}
+
+.commentaire-champ {
+    margin-bottom: 20px;
+}
+
+.commentaire-etiquette {
+    display: block;
+    margin: 0 0 6px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.commentaire-aide {
+    margin: 4px 0 0;
+    color: var(--ceen-texte-doux);
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* Le contenu est la raison d'être de la fenêtre : il occupe toute sa largeur, sur dix lignes */
+.commentaire-contenu {
+    width: 100%;
+    min-height: 200px;
+    padding: 12px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    color: var(--ceen-texte);
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.commentaire-contenu:focus {
+    outline: none;
+    border-color: var(--ceen-orange);
+    box-shadow: 0 0 0 3px rgba(184, 79, 24, .16);
+}
+
+/* --- Destinataires en cartes --- */
+.cartes-destinataires {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 10px;
+}
+
+.carte-destinataire {
+    position: relative;
+    display: block;
+    margin: 0;
+    padding: 12px 34px 12px 14px;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 10px;
+    background: #fff;
+    font-weight: normal;
+    cursor: pointer;
+    transition: border-color .15s ease, background-color .15s ease;
+}
+
+.carte-destinataire:hover {
+    border-color: var(--ceen-orange);
+    background: #fffaf6;
+}
+
+/*
+    La case à cocher n'est pas montrée, mais reste là : elle porte la sélection et reçoit le focus
+    au clavier. Elle est donc masquée sans être retirée de la page (ni display:none, ni
+    visibility:hidden, qui la rendraient inaccessible au clavier et aux lecteurs d'écran).
+*/
+.carte-destinataire input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* Carte retenue : le fond, le cadre et une coche à droite le disent */
+.carte-destinataire:has(input:checked) {
+    border-color: var(--ceen-orange);
+    background: #fdf1e8;
+}
+
+.carte-destinataire:has(input:checked)::after {
+    content: '\e013'; /* Glyphicon « ok » */
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    font-family: 'Glyphicons Halflings';
+    font-size: 12px;
+    color: var(--ceen-orange-fonce);
+}
+
+.carte-destinataire:has(input:focus-visible) {
+    outline: 2px solid var(--ceen-orange);
+    outline-offset: 2px;
+}
+
+.carte-destinataire-role {
+    display: block;
+    color: #1d2939;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* --- Boutons de la fenêtre --- */
+.commentaire-boutons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--ceen-bordure);
+}
+
+.commentaire-annuler,
+.commentaire-enregistrer {
+    height: 38px;
+    padding: 0 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.commentaire-annuler {
+    border: 1px solid var(--ceen-bordure);
+    background: #fff;
+    color: var(--ceen-texte);
+}
+
+.commentaire-enregistrer {
+    border: 1px solid var(--ceen-orange);
+    background: var(--ceen-orange);
+    color: #fff;
+}
+
+.commentaire-enregistrer:hover,
+.commentaire-enregistrer:focus {
+    background: var(--ceen-orange-fonce);
+    border-color: var(--ceen-orange-fonce);
+}
+
+.commentaire-enregistrer.disabled {
+    opacity: .6;
+    cursor: default;
+}
+
+.commentaire-annuler:focus-visible,
+.commentaire-enregistrer:focus-visible {
+    outline: 2px solid var(--ceen-orange);
+    outline-offset: 2px;
+}
+
+/*
+    --- Fiche du bénéficiaire ---
+    L'identité tient sur une ligne, l'accompagnateur est en tête à droite, et le reste se lit en
+    blocs côte à côte plutôt qu'en longue suite de « libellé : valeur ».
+*/
+/* Un léger retrait à gauche décolle la fiche du bord du panneau */
+.fiche {
+    padding-left: 10px;
+}
+
+.fiche-entete {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ceen-bordure);
+}
+
+.fiche-identite {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.fiche-nom {
+    margin: 0;
+    color: #1d2939;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.fiche-sous-titre {
+    margin: 2px 0 0;
+    color: var(--ceen-texte-doux);
+    font-size: 13px;
+}
+
+.fiche-mention {
+    margin-left: 6px;
+    padding: 1px 8px;
+    border-radius: 6px;
+    background: #eef2f6;
+    color: #344054;
+    font-size: 11px;
+    font-weight: 600;
+    vertical-align: 2px;
+}
+
+.fiche-mention-douce {
+    display: inline-block;
+    min-width: 80px;
+    color: var(--ceen-texte-doux);
+    font-size: 12px;
+}
+
+.fiche-separateur {
+    color: #d0d5dd;
+}
+
+/* Accompagnateur MAR : en tête à droite, aligné sur l'identité */
+.fiche-accompagnateur {
+    flex: 0 0 auto;
+    max-width: 45%;
+    padding-left: 16px;
+    border-left: 1px solid var(--ceen-bordure);
+    text-align: right;
+}
+
+.fiche-accompagnateur-titre {
+    margin: 0;
+    color: var(--ceen-texte-doux);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.fiche-accompagnateur-nom {
+    margin: 2px 0 0;
+    color: #1d2939;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.fiche-accompagnateur-conseiller {
+    margin: 0;
+    color: var(--ceen-texte-doux);
+    font-size: 13px;
+}
+
+/* Blocs : deux colonnes dès qu'il y a la place, une seule sur un panneau étroit */
+.fiche-colonnes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    padding-top: 16px;
+}
+
+.fiche-bloc-titre {
+    margin: 0 0 6px;
+    color: var(--ceen-texte-doux);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.fiche-adresse {
+    margin: 0;
+    color: var(--ceen-texte);
+    font-size: 14px;
+    font-style: normal;
+    line-height: 1.5;
+}
+
+.fiche-ligne {
+    margin: 0 0 4px;
+    color: var(--ceen-texte);
+    font-size: 14px;
+}
+
+.fiche-ligne a {
+    color: var(--ceen-orange-fonce);
+    overflow-wrap: anywhere;
+}
+
+/* Le bloc des sources tient sur toute la largeur : leurs libellés sont longs */
+.fiche-bloc-large {
+    grid-column: 1 / -1;
+}
+
+.fiche-sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.fiche-sources li {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 8px;
+    background: #f9fafb;
+}
+
+.fiche-source-quoi {
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.fiche-source-qui {
+    color: var(--ceen-texte-doux);
+    font-size: 12px;
+}
+
+.est-absent {
+    color: #98a2b3;
+    font-style: italic;
+}
+
+/*
+    --- Fiche technique ---
+    Ses partiels attendent la mise en forme de la vue complète (backOffice_demande_view :
+    .flex-wrapper, .flex0 à .flex4), que la liste ne charge pas : les libellés s'étalaient alors sur
+    toute la largeur et les valeurs tombaient en dessous. Plutôt que d'importer cette feuille, qui
+    redéfinit aussi les onglets, le panneau porte ici sa propre présentation : un tableau à colonnes
+    — situation initiale, scénario BBC, devis, fin de chantier — dont l'entête reste en vue.
+    Le balisage n'est pas modifié, la vue complète est donc inchangée.
+*/
+/* Les blocs portent une classe de colonne Bootstrap, donc un flottement et des marges internes
+   qui n'ont pas de sens ici — et qui empêcheraient l'entête de rester en vue. */
+.panneau-dossier #tab_ficheTechnique .bloc {
+    float: none;
+    width: 100%;
+    padding: 0;
+}
+
+.panneau-dossier #tab_ficheTechnique .flex-wrapper {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+    margin: 0;
+    padding: 3px 0;
+    border-bottom: 1px solid #f2f4f7;
+}
+
+.panneau-dossier #tab_ficheTechnique .flex0 {
+    flex: 0 0 34%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.panneau-dossier #tab_ficheTechnique .flex1,
+.panneau-dossier #tab_ficheTechnique .flex2,
+.panneau-dossier #tab_ficheTechnique .flex3,
+.panneau-dossier #tab_ficheTechnique .flex4 {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Libellé de la ligne : la classe de colonne Bootstrap qu'il porte l'étalait sur toute la largeur */
+.panneau-dossier #tab_ficheTechnique .flex0 label {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    color: #475467;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: right;
+}
+
+/* Valeurs : des cellules lisibles, et non des champs de formulaire comme le voulait la classe */
+.panneau-dossier #tab_ficheTechnique .form-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    min-height: 28px;
+    padding: 4px 8px;
+    border: 1px solid #eaecf0;
+    border-radius: 6px;
+    background: #f9fafb;
+    box-shadow: none;
+    color: var(--ceen-texte);
+    font-size: 12px;
+    line-height: 1.3;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+/*
+    Entête des colonnes : il reste en vue pendant qu'on parcourt la fiche. Il se cale au ras du haut
+    de la zone qui défile ; ce qui le précède (le bloc « Document ») passe dessous sans déborder,
+    la zone n'ayant plus de marge intérieure haute.
+*/
+.panneau-dossier #tab_ficheTechnique #bloc-type {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    margin: 0;
+    padding: 8px 0 6px;
+    background: #fff;
+    border-bottom: 1px solid var(--ceen-bordure);
+}
+
+.panneau-dossier #tab_ficheTechnique #bloc-type section {
+    height: auto;
+}
+
+.panneau-dossier #tab_ficheTechnique #bloc-type .flex-wrapper {
+    border-bottom: 0;
+}
+
+.panneau-dossier #tab_ficheTechnique .underline {
+    text-decoration: none;
+    color: #475467;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    line-height: 1.2;
+}
+
+/* Les tailles de police figées des partiels ne tiennent pas dans une colonne étroite */
+.panneau-dossier #tab_ficheTechnique .fontSize9 {
+    font-size: 12px;
+}
+
+.panneau-dossier #tab_ficheTechnique fieldset {
+    margin-bottom: 16px;
+}
+
+.panneau-dossier #tab_ficheTechnique legend {
+    margin-bottom: 8px;
+}
+
+/*
+    --- Historique en frise ---
+    La barre est au milieu : à gauche les étapes du dossier, à droite les commentaires. Les deux
+    natures se distinguent ainsi sans avoir à lire chaque ligne.
+*/
+.frise-compteurs {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ceen-bordure);
+}
+
+.frise-compteur {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ceen-texte-doux);
+    font-size: 13px;
+}
+
+.frise-compteur strong {
+    color: #1d2939;
+    font-size: 15px;
+}
+
+.frise {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* La barre elle-même, au centre */
+.frise::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 50%;
+    width: 2px;
+    margin-left: -1px;
+    background: var(--ceen-bordure);
+}
+
+.frise-etape {
+    position: relative;
+    box-sizing: border-box;
+    width: 50%;
+    padding: 0 28px 18px 0;
+}
+
+/* Les commentaires passent à droite de la barre */
+.frise-etape.est-commentaire {
+    margin-left: 50%;
+    padding: 0 0 18px 28px;
+}
+
+.frise-etape:last-child {
+    padding-bottom: 0;
+}
+
+/* Pastille posée sur la barre, alignée sur la date de l'étape */
+.frise-repere {
+    position: absolute;
+    top: 5px;
+    right: -7px;
+    width: 14px;
+    height: 14px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: #d0d5dd;
+}
+
+.frise-etape.est-commentaire .frise-repere {
+    right: auto;
+    left: -7px;
+}
+
+.frise-etape.est-courante .frise-repere {
+    background: var(--ceen-orange);
+}
+
+/* Le contenu est encadré : les deux colonnes se lisent alors comme deux fils distincts */
+.frise-contenu {
+    padding: 10px 12px;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.frise-etape.est-commentaire .frise-contenu {
+    background: #fffaf6;
+    border-color: #f3d9c6;
+}
+
+/* Écran étroit : la barre repasse à gauche et tout s'aligne dessous */
+@media (max-width: 767px) {
+    .frise::before {
+        left: 7px;
+        margin-left: 0;
+    }
+
+    .frise-etape,
+    .frise-etape.est-commentaire {
+        width: 100%;
+        margin-left: 0;
+        padding: 0 0 18px 28px;
+    }
+
+    .frise-repere,
+    .frise-etape.est-commentaire .frise-repere {
+        right: auto;
+        left: 0;
+    }
+}
+
+.frise-date {
+    margin: 0;
+    color: var(--ceen-texte-doux);
+    font-size: 12px;
+}
+
+.frise-action {
+    margin: 0;
+    color: #1d2939;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.frise-statut {
+    margin: 2px 0 0;
+    color: #475467;
+    font-size: 13px;
+}
+
+.frise-auteur {
+    margin: 2px 0 0;
+    color: var(--ceen-texte-doux);
+    font-size: 12px;
+}
+
+.frise-detail-bouton {
+    margin-top: 6px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ceen-orange-fonce);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.frise-detail-bouton:focus-visible {
+    outline: 2px solid var(--ceen-orange);
+    outline-offset: 2px;
+}
+
+.frise-detail[hidden] {
+    display: none;
+}
+
+.frise-detail {
+    margin-top: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 8px;
+    background: #f9fafb;
+    font-size: 13px;
+}
+
+.frise-vide {
+    color: var(--ceen-texte-doux);
+    font-size: 14px;
+}
+
+/* --- Détail d'une étape : par envoi, ses destinataires puis son contenu --- */
+.detail-envoi + .detail-envoi {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--ceen-bordure);
+}
+
+.detail-sujet {
+    margin: 0 0 6px;
+    color: #1d2939;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.detail-nombre {
+    color: var(--ceen-texte-doux);
+    font-weight: normal;
+}
+
+.detail-libelle {
+    margin: 0 0 4px;
+    color: var(--ceen-texte-doux);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.detail-destinataires {
+    margin: 0 0 10px;
+    padding: 0;
+    list-style: none;
+}
+
+.detail-destinataires li {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 2px 0;
+}
+
+/* Profil du destinataire : retrouvé d'après les destinataires possibles du dossier */
+.detail-profil {
+    padding: 1px 8px;
+    border-radius: 6px;
+    background: #eef2f6;
+    color: #344054;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.detail-adresse {
+    color: var(--ceen-texte-doux);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.detail-contenu {
+    padding-top: 8px;
+    border-top: 1px solid var(--ceen-bordure);
+    color: var(--ceen-texte);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+.detail-vide {
+    margin: 0;
+    color: var(--ceen-texte-doux);
+    font-size: 13px;
+}
+
+/* --- Écrans étroits : le panneau passe sous la liste --- */
+@media (max-width: 1199px) {
+    .zone-liste {
+        flex-direction: column;
+    }
+
+    /* Empilés, ils ne partagent plus de hauteur : chacun prend la sienne, la page défile */
+    .zone-liste.avec-panneau .zone-liste-tableau,
+    .zone-liste.avec-panneau .zone-liste-panneau {
+        position: static;
+        height: auto;
+    }
+
+    .zone-liste.avec-panneau .zone-liste-tableau {
+        flex: 1 1 auto;
+        max-width: 100%;
+    }
+
+    .zone-liste.avec-panneau .zone-liste-tableau > form {
+        display: block;
+        height: auto;
+    }
+
+    .zone-liste.avec-panneau .zone-liste-tableau .dataTables_wrapper {
+        max-height: 60vh;
+    }
+
+    .panneau-dossier {
+        max-height: none;
+    }
+}

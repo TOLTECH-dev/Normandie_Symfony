@@ -3,7 +3,6 @@
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('frontOffice_core_form') }}
-    {{ encore_entry_link_tags('frontOffice_common_menu') }}
     {{ encore_entry_link_tags('frontOffice_demande_auditNumerique_view') }}
 {% endblock %}
 
@@ -23,18 +22,6 @@
                    title="Modifier la Demande"
                 >
                     <i class="glyphicon glyphicon-edit"></i>
-                </a>
-            {% else %}
-                <a href="#"
-                   id="button_position1"
-                   class="btn btn-link btn-xs"
-                   role="button"
-                   data-toggle="tooltip"
-                   data-placement="bottom"
-                   data-container="body"
-                   title="Indisponible"
-                >
-                    <i class="glyphicon glyphicon-ban-circle"></i>
                 </a>
             {% endif %}
 

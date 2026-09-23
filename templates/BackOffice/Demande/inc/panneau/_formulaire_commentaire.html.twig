@@ -1,0 +1,54 @@
+{#
+    Formulaire de commentaire du panneau de consultation.
+
+    Il ne reprend pas la liste des commentaires déjà enregistrés : ils se lisent dans l'historique
+    du dossier, à côté des autres étapes. Les destinataires, que le formulaire d'origine présente en
+    cases à cocher, sont ici des cartes que l'on sélectionne — plusieurs à la fois. Le formulaire
+    d'origine (inc/formCommentaire/_formView.html.twig) reste en service sur les autres écrans.
+
+    Mise en forme : assets/styles/backOffice/demande/panneau.css
+    Envoi         : assets/js/backOffice/demande/listDemande/panneau.js
+#}
+{{ form_start(form, {'attr': {'id': 'formulaire_commentaire_panneau', 'novalidate': 'novalidate'}}) }}
+{{ form_errors(form) }}
+
+<div class="commentaire-champ">
+    <label class="commentaire-etiquette" for="{{ form.content.vars.id }}">Contenu du commentaire</label>
+    {{ form_errors(form.content) }}
+    {{ form_widget(form.content, {'attr': {'class': 'commentaire-contenu', 'rows': 10}}) }}
+    <p class="commentaire-aide">245 caract&egrave;res au plus.</p>
+</div>
+
+<div class="commentaire-champ">
+    <p class="commentaire-etiquette" id="etiquette_destinataires">
+        Envoyer une copie par courriel &agrave;
+        <span class="commentaire-aide">facultatif, plusieurs choix possibles</span>
+    </p>
+    {{ form_errors(form.recipient) }}
+
+    {% if form.recipient|length > 0 %}
+        <div class="cartes-destinataires" role="group" aria-labelledby="etiquette_destinataires">
+            {% for choix in form.recipient %}
+                {#
+                    La case à cocher reste dans le balisage — c'est elle qui porte la sélection et
+                    qui reçoit le focus au clavier — mais elle n'est pas montrée : c'est la carte
+                    elle-même qui indique, par son fond et sa coche, qu'elle est retenue.
+                #}
+                <label class="carte-destinataire">
+                    {{ form_widget(choix) }}
+                    <span class="carte-destinataire-role">{{ choix.vars.label }}</span>
+                </label>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="commentaire-aide">Aucun destinataire disponible pour ce dossier&nbsp;: le commentaire sera seulement enregistr&eacute;.</p>
+    {% endif %}
+</div>
+
+<div class="commentaire-boutons">
+    <button type="button" class="commentaire-annuler" data-dismiss="modal">Annuler</button>
+    {{ form_widget(form.enregistrer, {'label': 'Enregistrer le commentaire', 'attr': {'class': 'commentaire-enregistrer'}}) }}
+</div>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}

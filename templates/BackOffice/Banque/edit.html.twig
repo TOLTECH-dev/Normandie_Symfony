@@ -10,7 +10,6 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div id="container-title">
                 <h2>Modifier une Banque</h2>
-                {{ include('BackOffice/Banque/inc/back.html.twig') }}
             </div>
         </div>
 
@@ -37,3 +36,6 @@
     {{ parent() }}
     {{ encore_entry_script_tags('backOffice_banque_index') }}
 {% endblock %}
+
+{# Bouton « Retour » de l'en-tête de vue : destination reprise du partiel d'origine #}
+{% block retour_url %}{{ path('banque_list') }}{% endblock %}

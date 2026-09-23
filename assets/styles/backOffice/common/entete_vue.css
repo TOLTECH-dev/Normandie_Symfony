@@ -1,0 +1,220 @@
+/*
+    En-tête des vues du back-office : fil d'Ariane, bouton « Retour » et titre de la page.
+
+    Le fil d'Ariane et le bouton viennent du gabarit (Common/entete_vue.html.twig). Le titre reste
+    produit par chaque vue (#container-title), simplement remis en forme ici : l'icône de la
+    rubrique est injectée par la variable --icone-vue, posée sur <main> par le gabarit.
+
+    Contrastes vérifiés (RGAA 3.2) :
+      fil d'Ariane      #667085 sur #f5f6f8 .... 4,6:1
+      liens du fil      #b84f18 sur #f5f6f8 .... 4,8:1
+      titre             #1d2939 sur #ffffff ... 15,8:1
+*/
+
+.entete-vue {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 14px 24px 12px;
+}
+
+/* --- Fil d'Ariane --- */
+.fil-ariane ol {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+    color: var(--ceen-texte-doux);
+}
+
+.fil-ariane li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Séparateur décoratif : absent du texte lu par les lecteurs d'écran */
+.fil-ariane li + li::before {
+    content: '›';
+    color: #98a2b3;
+}
+
+.fil-ariane a {
+    color: var(--ceen-orange);
+    text-decoration: none;
+}
+
+.fil-ariane a:hover,
+.fil-ariane a:focus {
+    text-decoration: underline;
+}
+
+.fil-ariane [aria-current="page"] {
+    color: var(--ceen-texte);
+    font-weight: 600;
+}
+
+/* --- Bouton « Retour » --- */
+.bouton-retour {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    padding: 0 14px;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ceen-texte);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.bouton-retour:hover,
+.bouton-retour:focus {
+    background: var(--ceen-fond-survol);
+    border-color: #d0d5dd;
+    color: var(--ceen-texte);
+    text-decoration: none;
+}
+
+.bouton-retour:focus-visible,
+.fil-ariane a:focus-visible {
+    outline: 2px solid var(--ceen-orange);
+    outline-offset: 2px;
+}
+
+.bouton-retour .glyphicon {
+    font-size: 11px;
+    color: var(--ceen-texte-doux);
+}
+
+/* --- Titre de la vue, produit par chaque page --- */
+#container-title,
+.container-title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ceen-bordure);
+}
+
+/*
+    Le titre est enveloppé dans une colonne portant « marginBottom40 », héritée de l'ancienne mise
+    en page : 40 px de vide entre le titre et le tableau. On les ramène à rien, la marge du titre
+    lui-même suffit.
+*/
+.zone-principale .marginBottom40:has(#container-title),
+.zone-principale .marginBottom40:has(.container-title) {
+    margin-bottom: 0 !important;
+}
+
+/* Le titre occupe l'espace libre : les boutons d'action se groupent donc à droite, sans qu'aucun
+   d'eux ne porte de marge automatique (qui les écarterait les uns des autres). */
+#container-title h2,
+.container-title h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 auto 0 0;
+    padding-right: 0;
+    color: #1d2939;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+/* Icône de la rubrique : même symbole que dans le menu, sans doublon dans le balisage */
+#container-title h2::before,
+.container-title h2::before {
+    content: var(--icone-vue, '');
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    font-family: 'Glyphicons Halflings';
+    font-size: 17px;
+    font-weight: normal;
+    line-height: 40px;
+    text-align: center;
+    color: var(--ceen-orange);
+    background: #fdf1e8;
+    border-radius: 10px;
+}
+
+/* --- Bouton « Créer … », sur la ligne du titre --- */
+.bouton-creer {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 16px;
+    border: 1px solid var(--ceen-orange);
+    border-radius: 8px;
+    background: var(--ceen-orange);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease;
+}
+
+.bouton-creer:hover,
+.bouton-creer:focus {
+    background: var(--ceen-orange-fonce);
+    border-color: var(--ceen-orange-fonce);
+    color: #fff;
+    text-decoration: none;
+}
+
+.bouton-creer:focus-visible {
+    outline: 2px solid var(--ceen-orange);
+    outline-offset: 2px;
+}
+
+.bouton-creer .glyphicon {
+    font-size: 12px;
+}
+
+/* Le libellé était mis en gras par une classe utilitaire : le bouton l'est déjà */
+.bouton-creer .bold {
+    font-weight: 600;
+}
+
+/* Boutons d'action de la vue : groupés à droite du titre, sans positionnement absolu */
+#container-title,
+.container-title {
+    gap: 8px;
+}
+
+#container-title a,
+#container-title button,
+.container-title a,
+.container-title button {
+    position: static;
+    margin-top: 0;
+    flex: 0 0 auto;
+}
+
+@media (max-width: 767px) {
+    .entete-vue {
+        padding: 12px 16px;
+    }
+
+    #container-title h2,
+    .container-title h2 {
+        font-size: 18px;
+    }
+}

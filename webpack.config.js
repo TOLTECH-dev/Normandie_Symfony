@@ -23,7 +23,12 @@ Encore
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())
-    .enableVersioning(Encore.isProduction())
+    // Noms de fichiers versionnés en développement comme en production : sans cela, les fichiers
+    // gardent le même nom d'une compilation à l'autre et les navigateurs servent une ancienne
+    // feuille de style ou un ancien script depuis leur cache, y compris après changement de
+    // branche. Les chemins sont résolus par public/build/manifest.json (cf. webpack_encore.yaml),
+    // donc asset() et encore_entry_*_tags suivent automatiquement.
+    .enableVersioning()
     .configureBabelPresetEnv((config) => {
         config.useBuiltIns = 'usage';
         config.corejs = '3.38';

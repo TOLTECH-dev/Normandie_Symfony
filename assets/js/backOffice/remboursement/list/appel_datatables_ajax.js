@@ -1,3 +1,5 @@
+import { etiquetteStatut, cellule, dateCourte, filtreListe, brancherRecherches } from '../../common/cellules_tableau';
+
 $(document).ready(function()
 {
     var arrayDemandeType =  new Array();
@@ -41,11 +43,13 @@ $(document).ready(function()
         },
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
         "pageLength": 25,
-        "order": [[ 1, "desc" ]],
+        "order": [[ 0, "desc" ]],
         "orderCellsTop": true,
         "scrollX": false,
         "stateSave": true,
         "stateDuration": -1,
+        // La recherche générale part au serveur : on attend la fin de la frappe
+        "searchDelay": 400,
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -53,120 +57,77 @@ $(document).ready(function()
             dataType: 'JSON',
             type: 'POST'
         },
+        /*
+         * Colonnes regroupées : chaque cellule porte une information principale et, en dessous, ses
+         * compléments. Le nom logique (« name ») est celui que le serveur reconnaît : une colonne
+         * regroupée y cherche dans tous ses champs (cf. RemboursementListSql).
+         * La thématique et le statut sont affichés dans la première colonne, mais restent déclarés
+         * comme colonnes masquées, pour garder leur filtre propre.
+         */
         "columns": [
-            {"data": "demandeId", "class": "breakWord text-center"},
-            {"data": "numeroCheque", "class": "breakWord text-center"},
-            {"data": "beneficiaire", "class": "breakWord"},
-            {"data": "logement", "class": "breakWord"},
-            {"data": "statut", "class": "breakWord"},
-            {"data": "structureConseiller", "class": "breakWord"},
-            {"data": "partenaire", "class": "breakWord"},
-            {"data": "demandeType", "class": "breakWord"},
-            {"data": "RMHDate", "class": "breakWord text-center"},
-            {"data": "action", "class": "breakWord text-center", "searchable": false, "sortable": false}
+            {"data": "demandeId", "name": "dossier", "class": "colonne-dossier"},
+            {"data": "beneficiaire", "name": "beneficiaire", "class": "colonne-beneficiaire"},
+            {"data": "structureConseiller", "name": "structureConseiller", "class": "colonne-accompagnement"},
+            {"data": "partenaire", "name": "partenaire", "class": "colonne-professionnel"},
+            {"data": "RMHDate", "name": "RMHDate", "class": "colonne-rmh"},
+            {"data": "action", "name": "action", "class": "colonne-action", "searchable": false, "sortable": false},
+            {"data": "demandeType", "name": "demandeType", "visible": false},
+            {"data": "statut", "name": "statut", "visible": false}
         ],
         "columnDefs": [
             {
-                "targets": 4,
-                "render": function(data, type, row) {
-                    var html = '';
-
-                    if (row['remboursementId'] !== null && row['remboursementId'] !== '') {
-                        html += ''
-                            + row['remboursementStatutSlug'];
-
-                        if (row['remboursementStatutDescriptionFormatted']) {
-                            html += '<span class="statut-tip">'
-                                + '<a role="button"'
-                                + 'tabIndex="0"'
-                                + 'data-container="body"'
-                                + 'data-toggle="popover"'
-                                + 'data-trigger="focus"'
-                                + 'data-placement="top"'
-                                + 'data-content="' + replaceAll(row['remboursementStatutDescriptionFormatted'], '"', '&quot;') + '"'
-                                + '>'
-                                + '<i class="glyphicon glyphicon-question-sign"></i>'
-                                + '</a>'
-                                + '</span>';
-                        }
-
-                    } else {
-                        // On affiche le demande statut slug (sans le detail)
-                        html += ''
-                            + row['demandeStatutSlug'];
-                    }
-
-                    return html;
-                }
-            },
-            {
-                "targets": 7,
+                /*
+                 * Dossier : le numéro, le numéro de chèque et le statut forment une bande en tête de
+                 * ligne, qui traverse le tableau ; la colonne elle-même porte la thématique.
+                 */
+                "targets": 0,
                 "render": function (data, type, row) {
-                    var html = '';
+                    var numero = '<span class="cellule-numero">n° ' + row['demandeId'] + '</span>';
+                    var cheque = row['numeroCheque'] ? ' - Chèque n° ' + row['numeroCheque'] : '';
 
-                    if(arrayDemandeType[row['demandeTypeDetaille']]) {
-                        html = ''
-                            + arrayDemandeType[row['demandeTypeDetaille']];
-                    }
-                    return html;
+                    var statutLibelle = row['remboursementId'] ? row['remboursementStatutSlug'] : row['demandeStatutSlug'];
+                    var motif = row['remboursementId'] ? row['remboursementStatutDescriptionFormatted'] : null;
+                    var statut = etiquetteStatut(statutLibelle, motif);
+
+                    var thematique = arrayDemandeType[row['demandeTypeDetaille']] || '';
+
+                    return '<div class="ligne-dossier">'
+                        + numero + cheque
+                        + (statut ? '<span class="ligne-dossier-separateur">-</span>' + statut : '')
+                        + '</div>'
+                        + cellule('', [thematique]);
                 }
             },
             {
-                "targets": 8,
-                "render": function(data, type, row) {
-                    var html = '';
-
-                    if (row['RMHDate']) {
-                        var date = new Date(row['RMHDate']);
-                        var jour = ('0'+date.getDate()).slice(-2);
-                        var mois = ('0'+(date.getMonth()+1)).slice(-2);
-                        var annee = date.getFullYear();
-                    }
-
-                    if (
-                        (1 === arrayRole['ROLE_CLIENT'] || 1 === arrayRole['ROLE_ADMIN'])
-                        && ['14', '21'].includes(String(row['remboursementStatutId'])) === true
-                        && ['22', '23', '24', '25', '26', '27'].includes(String(row['remboursementStatutId'])) === false
-                    ) {
-
-                        if (row['RMHDate'] && '21' == row['remboursementStatutId']) {
-                            html += ''
-                                + '<span class="hidden">' + annee + mois + jour + '</span>';
-                            html += ''
-                                + '<a href="761EB5BA7CC01262522890A0FF1437DF7E879CFBA3450C42B5323CABE9255D3A9D797A16430B828616BFF12ECDDC' + '1' + 'C6F1A5AD7'
-                                    + row['logementId'] + '6258CA016' + row['beneficiaireId'] + '544F29CF7' + row['remboursementId'] + 'DC3585310">'
-                                + jour
-                                + '/'
-                                + mois
-                                + '/'
-                                + annee
-                                + '</a>';
-
-                        } else if ('14' == row['remboursementStatutId']) {
-                            html += ''
-                                + '<a href="761EB5BA7CC01262522890A0FF1437DF7E879CFBA3450C42B5323CABE9255D3A9D797A16430B828616BFF12ECDDC' + '0' + 'C6F1A5AD7'
-                                    + row['logementId'] + '6258CA016' + row['beneficiaireId'] + '544F29CF7' + row['remboursementId'] + 'DC3585310">'
-                                    + 'Affecter une date'
-                                + '</a>';
-                        }
-
-                    } else {
-                        if (row['RMHDate']) {
-                            html += ''
-                                + '<span class="hidden">' + annee + mois + jour + '</span>'
-                                + jour
-                                + '/'
-                                + mois
-                                + '/'
-                                + annee
-                        }
-                    }
-
-                    return html;
+                // Bénéficiaire : identité, puis code postal et ville
+                "targets": 1,
+                "render": function (data, type, row) {
+                    return cellule(row['beneficiaire'], [row['logement']]);
                 }
             },
             {
-                "targets": 9,
+                // Accompagnement : structure, puis conseiller
+                "targets": 2,
+                "render": function (data, type, row) {
+                    var valeur = row['structureConseiller'] || '';
+                    var separateur = valeur.indexOf(' - ');
+
+                    if (separateur === -1) {
+                        return cellule(valeur, []);
+                    }
+
+                    return cellule(valeur.slice(0, separateur), [valeur.slice(separateur + 3)]);
+                }
+            },
+            {
+                // Date de remise à l'huissier
+                "targets": 4,
+                "render": function (data, type, row) {
+                    return cellule(dateCourte(row['RMHDate']), []);
+                }
+            },
+{
+                "targets": 5,
                 "render": function (data, type, row) {
                     var html = '';
 
@@ -212,7 +173,7 @@ $(document).ready(function()
 
                                 if (row['instructionId'] && pathNameExamine && pathNameReexamine) {
                                     var pathExamine = Routing.generate(pathNameReexamine, {remboursementId: row['remboursementId']});
-                                    var classLinkExamine = 'btn-default';
+                                    var classLinkExamine = 'icone-gris';
                                     var titleLinkExamine = 'Ré-instruire un remboursement';
                                     var buttonExamine = 'edit';
                                 } else {
@@ -220,12 +181,12 @@ $(document).ready(function()
                                         console.error('Aucune route examine définie pour ce type de remboursement', row);
                                         // Optionnel : afficher un bouton désactivé ou un message utilisateur
                                         var pathExamine = '#';
-                                        var classLinkExamine = 'btn-disabled';
+                                        var classLinkExamine = 'est-indisponible';
                                         var titleLinkExamine = 'Aucune route examine disponible';
                                         var buttonExamine = 'ban';
                                     } else {
                                         var pathExamine = Routing.generate(pathNameExamine, {titreId: row['titreId']});
-                                        var classLinkExamine = 'btn-primary';
+                                        var classLinkExamine = 'icone-bleu';
                                         var titleLinkExamine = 'Instruire un remboursement';
                                         var buttonExamine = 'play';
                                     }
@@ -233,7 +194,7 @@ $(document).ready(function()
 
                                 html += ''
                                     + '<a href="' + pathExamine + '"'
-                                        + 'class="btn ' + classLinkExamine + ' btn-xs"'
+                                        + 'class="action-ligne ' + classLinkExamine + '"'
                                         + 'role="button"'
                                         + 'data-toggle="tooltip"'
                                         + 'data-placement="bottom"'
@@ -258,24 +219,24 @@ $(document).ready(function()
                                 if (arrayTypeAndNiveauForTravaux.includes(row['demandeTypeDetaille']) === false) {
                                     if (row['depotId']) {
                                         var pathDepot = Routing.generate(pathNameEditDepot, {remboursementId: row['remboursementId']});
-                                        var classLinkDepot = 'btn-success';
+                                        var classLinkDepot = 'icone-vert';
                                         var titleLinkDepot = 'Modifier les pièces justificatives';
                                     } else {
                                         if (!pathNameAddDepot) {
                                             console.error('Aucune route depot définie pour ce type de remboursement', row);
                                             var pathDepot = '#';
-                                            var classLinkDepot = 'btn-disabled';
+                                            var classLinkDepot = 'est-indisponible';
                                             var titleLinkDepot = 'Aucune route dépôt disponible';
                                         } else {
                                             var pathDepot = Routing.generate(pathNameAddDepot, {demandeId: row['demandeId']});
-                                            var classLinkDepot = 'btn-primary';
+                                            var classLinkDepot = 'icone-bleu';
                                             var titleLinkDepot = 'Importer les pièces justificatives';
                                         }
                                     }
 
                                     html += ''
-                                        + '&nbsp;<a href="' + pathDepot + '"'
-                                            + 'class="btn ' + classLinkDepot + ' btn-xs"'
+                                        + '<a href="' + pathDepot + '"'
+                                            + 'class="action-ligne ' + classLinkDepot + '"'
                                             + 'role="button"'
                                             + 'data-toggle="tooltip"'
                                             + 'data-placement="bottom"'
@@ -303,21 +264,21 @@ $(document).ready(function()
 
                                     if ('0' == row['statutFicheTechnique'] && row['ficheTechniqueId']) {
                                         var pathFicheTechnique = Routing.generate(pathNameReexamineFicheTechnique, {remboursementId: row['remboursementId']});
-                                        var classLinkFicheTechnique = 'btn-warning';
+                                        var classLinkFicheTechnique = 'icone-orange';
                                         var titleLinkFicheTechnique = 'Reprendre la fiche technique';
                                     } else if ('1' == row['statutFicheTechnique'] && row['ficheTechniqueId']) {
                                         var pathFicheTechnique = Routing.generate(pathNameReexamineFicheTechnique, {remboursementId: row['remboursementId']});
-                                        var classLinkFicheTechnique = 'btn-success';
+                                        var classLinkFicheTechnique = 'icone-vert';
                                         var titleLinkFicheTechnique = 'Modifier la fiche technique';
                                     } else {
                                         var pathFicheTechnique = Routing.generate(pathNameExamineFicheTechnique, {titreId: row['titreId']});
-                                        var classLinkFicheTechnique = 'btn-primary';
+                                        var classLinkFicheTechnique = 'icone-bleu';
                                         var titleLinkFicheTechnique = 'Renseigner la fiche technique';
                                     }
 
                                     html += ''
-                                        + '&nbsp;<a href="' + pathFicheTechnique + '"'
-                                            + 'class="btn ' + classLinkFicheTechnique + ' btn-xs"'
+                                        + '<a href="' + pathFicheTechnique + '"'
+                                            + 'class="action-ligne ' + classLinkFicheTechnique + '"'
                                             + 'role="button"'
                                             + 'data-toggle="tooltip"'
                                             + 'data-placement="bottom"'
@@ -340,13 +301,13 @@ $(document).ready(function()
                                 || 1 === arrayRole['ROLE_ADMIN']
                             ) {
                                 var buttonColor = '';
-                                if (row['countCommentaire']>0) buttonColor = "btn-danger";
-                                else buttonColor = "btn-primary";
+                                if (row['countCommentaire']>0) buttonColor = "icone-rouge";
+                                else buttonColor = "icone-bleu";
 
                                 var htmlCommentaire = '';
                                 htmlCommentaire +=
-                                    '&nbsp;<button id="button_addCommentaire_' + row['demandeId'] + '"\n' +
-                                        'class="tooltip-commentaire btn ' + buttonColor + ' btn-xs button_addCommentaire"\n' +
+                                    '<button id="button_addCommentaire_' + row['demandeId'] + '"\n' +
+                                        'class="tooltip-commentaire action-ligne button_addCommentaire ' + buttonColor + '"\n' +
                                         'type="button"\n' +
                                         'title="Commenter la Demande"\n' +
                                         'data-toggle="tooltip"\n' +
@@ -370,91 +331,74 @@ $(document).ready(function()
                         }
                     }
 
-                    return html;
+                    // Les actions sont empilées, la première au niveau de la ligne du n° de dossier
+                    // (mise en forme : assets/styles/backOffice/common/tableau.css)
+                    return html ? '<div class="actions-ligne">' + html + '</div>' : '';
                 }
             },
         ],
-        "fnDrawCallback": function() {
-            $('[data-toggle="popover"]').popover(
-                {html: true}
-            );
+        "fnDrawCallback": function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            // Motif du statut : bulle au survol de l'étiquette elle-même
+            $('.etiquette-statut.a-un-motif').popover();
         },
-        "initComplete": function() {
+        "initComplete": function () {
             var api = this.api();
 
-            // Apply SEARCH filter
-            api.columns('.with_search').every(function() {
-                var that = this;
-                var title = $(that.footer()).text();
-                var id = $(that.footer()).prop('id');
-                $(that.footer()).html('<input type="text" name="' + id + '" placeholder="' + title + '" />');
+            $('#table_list_remboursement_filter input')
+                .attr('placeholder', 'Rechercher dans toutes les colonnes')
+                .attr('aria-label', 'Rechercher dans toutes les colonnes');
 
-                var search_thread = null;
-                $('input', this.footer()).on('keyup change', function() {
-                    var this_val = $(this).val();
-
-                    if (that.search() !== this_val) {
-                        clearTimeout(search_thread);
-                        search_thread = setTimeout(function () {
-                            that
-                                .search($.fn.dataTable.util.escapeRegex(this_val))
-                                .draw();
-                        }, 1000);
-                    }
-                });
+            /*
+             * Filtres à choix multiple. Le fichier de langue étant chargé par son adresse, le cadre
+             * du tableau n'existe qu'une fois l'initialisation terminée : c'est donc ici, et par
+             * l'interface de DataTables, qu'on va le chercher pour y ranger les filtres.
+             */
+            var filtres = $('#filtres-listes').prop('hidden', false);
+            var menuThematiques = $('#menu_thematiques');
+            $.each(arrayDemandeType, function (code, libelle) {
+                if (libelle) {
+                    menuThematiques.append(
+                        $('<label class="filtre-liste-choix"></label>')
+                            .append($('<input type="checkbox" />').attr('value', code))
+                            .append(' ')
+                            .append($('<span></span>').text(libelle))
+                    );
+                }
             });
 
-            // Apply SELECT filter
-            api.columns('.with_select').every(function () {
-                var column = this;
-                var id = $(this.footer()).prop('id');
+            var cadre = $(api.table().container());
+            var choixNombreDeLignes = cadre.find('.dataTables_length');
 
-                var select = $('<select name="' + id + '"><option value=""></option></select>')
-                    .appendTo($(column.footer()).empty())
-                    .on('change', function () {
-                        var val = $.fn.dataTable.util.escapeRegex(
-                            $(this).val()
-                        );
-                        column
-                            .search( val ? val : '', true, false)
-                            .draw();
-                    });
-
-                $.each(arrayDemandeType, function( k, v ) {
-                    if (v) {
-                        select.append("<option value=\"" + k + "\">" + v + "</option>");
-                    }
-                });
-            });
-
-            // Restore state
-            var state = table.state.loaded();
-            if (state) {
-                table.columns().eq(0).each(function (colIdx) {
-                    var colSearch = state.columns[colIdx].search;
-                    var indexChild = parseInt(colIdx+1);
-
-                    $('tr#filterrow th:nth-child( ' + indexChild + ') input').val(colSearch.search);
-                    $('tr#filterrow th:nth-child( ' + indexChild + ') select').val(colSearch.search);
-                });
+            if (choixNombreDeLignes.length) {
+                filtres.appendTo(choixNombreDeLignes.parent());
+            } else if (cadre.length) {
+                cadre.prepend(filtres);
             }
+
+            filtreListe(api, $('#bouton_thematiques'), menuThematiques, $('#filtre_demandeType'), 'thématique', 'Toutes les thématiques');
+            filtreListe(api, $('#bouton_statuts'), $('#menu_statuts'), $('#filtre_statut'), 'statut', 'Tous les statuts');
+
+            brancherRecherches(api);
         }
     });
 
-    // Clear all filter
+    // Vider toutes les recherches, colonne par colonne et recherche générale comprise
     $('#clear_search_input').on('click', function () {
-
-        $('tr#filterrow th input').val('');
-        $('tr#filterrow th select').val('');
+        $('#filterrow [data-colonne]').val('');
+        $('#filtres-listes [data-colonne]').each(function () {
+            var reinitialiser = $(this).data('reinitialiser');
+            if (reinitialiser) {
+                reinitialiser();
+            }
+        });
 
         table
+            .search('')
             .columns()
-            .search( '' )
-            .columns( '.with_search .with_select' )
-            .search( '' )
+            .search('')
             .draw();
     });
-
     /**
      *
      * @param string

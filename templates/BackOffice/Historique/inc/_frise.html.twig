@@ -1,0 +1,70 @@
+{#
+    Historique d'un dossier présenté en frise, pour le panneau ouvert depuis la liste.
+
+    La barre est au milieu : à gauche les étapes du dossier, à droite les commentaires. Cette
+    séparation se lit d'un coup d'œil, là où un tableau mélangeait les deux. Le détail (courriel
+    envoyé, contenu d'un commentaire) se déplie sur place, une fenêtre par-dessus le panneau
+    n'aurait pas de sens. La vue complète (BackOffice/Historique/list.html.twig) reste inchangée.
+#}
+{% set etapesCommentaires = list|filter(item => 'commentaire' == item.action|lower) %}
+{% set etapesCourriels = list|filter(item => 'commentaire' != item.action|lower and item.historiqueEmail|length > 0) %}
+{% set nombreCourriels = etapesCourriels|reduce((total, item) => total + item.historiqueEmail|length, 0) %}
+{% set nombreCommentaires = etapesCommentaires|length %}
+
+<div class="frise-compteurs">
+    <span class="frise-compteur">
+        <i class="glyphicon glyphicon-envelope"></i>
+        <strong>{{ nombreCourriels }}</strong>
+        courriel{{ nombreCourriels > 1 ? 's' : '' }} envoy&eacute;{{ nombreCourriels > 1 ? 's' : '' }}
+    </span>
+    <span class="frise-compteur">
+        <i class="glyphicon glyphicon-comment"></i>
+        <strong>{{ nombreCommentaires }}</strong>
+        commentaire{{ nombreCommentaires > 1 ? 's' : '' }}
+    </span>
+</div>
+
+<ol class="frise">
+    {% for item in list %}
+        {% set isCommentaire = ('commentaire' == item.action|lower) %}
+        {% set aUnDetail = (item.historiqueEmail|length > 0 or isCommentaire) %}
+
+        <li class="frise-etape{% if isCommentaire %} est-commentaire{% endif %}{% if loop.first %} est-courante{% endif %}">
+            <div class="frise-repere" aria-hidden="true"></div>
+
+            <div class="frise-contenu">
+                <p class="frise-date">{{ item.dateCreation|date('d/m/Y à H:i') }}</p>
+                <p class="frise-action">{{ item.action }}</p>
+
+                {% if item.statutSlug %}
+                    <p class="frise-statut">{{ item.statutSlug }}</p>
+                {% endif %}
+
+                <p class="frise-auteur">
+                    {% if item.auteurCreation|lower in list_user|keys %}
+                        {{ list_user[item.auteurCreation|lower] }}
+                    {% else %}
+                        {{ item.auteurCreation }}
+                    {% endif %}
+                    &ndash; {{ item.auteurRole|split(' | ')|first }}
+                </p>
+
+                {% if aUnDetail %}
+                    <button type="button"
+                            class="frise-detail-bouton"
+                            aria-expanded="false"
+                            aria-controls="frise_detail_{{ item.id }}"
+                    >
+                        {% if isCommentaire %}Voir le commentaire{% else %}Voir le courriel envoy&eacute;{% endif %}
+                    </button>
+
+                    <div class="frise-detail" id="frise_detail_{{ item.id }}" hidden>
+                        {{ include('BackOffice/Historique/inc/_detail_etape.html.twig', {'item': item, 'isCommentaire': isCommentaire}) }}
+                    </div>
+                {% endif %}
+            </div>
+        </li>
+    {% else %}
+        <li class="frise-vide">Aucune &eacute;tape enregistr&eacute;e pour ce dossier.</li>
+    {% endfor %}
+</ol>

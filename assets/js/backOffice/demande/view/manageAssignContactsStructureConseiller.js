@@ -1,4 +1,13 @@
-$(document).ready(function() {
+/*
+ * Choix des contacts : charge les structures proposées, puis les conseillers de la structure
+ * retenue.
+ *
+ * La mise en place est nommée et exposée, car le panneau de consultation de la liste des dossiers
+ * charge ce formulaire en Ajax, après le chargement de la page : il la relance à l'ouverture de sa
+ * fenêtre (assets/js/backOffice/demande/listDemande/panneau.js). Sur la vue complète, rien ne
+ * change : elle s'exécute au chargement, comme avant.
+ */
+function initialiserAssignationContacts() {
 
     var prefixPatnameBundle = $("#data-js-bundle").data("prefix-pathname-bundle");
     var demandeConseillerId = $("#data-js-demande").data("demande-conseiller-id");
@@ -8,8 +17,8 @@ $(document).ready(function() {
         // Loading page
         searchStructure();
 
-        // Event on field structure_id
-        $("#form_assign_contacts_structure_id").on('change', function () {
+        // Event on field structure_id — nom d'évènement propre, pour ne pas cumuler les branchements
+        $("#form_assign_contacts_structure_id").off('change.assignContacts').on('change.assignContacts', function () {
             searchConseiller();
         });
     }
@@ -120,4 +129,8 @@ $(document).ready(function() {
             }
         }
     }
-});
+}
+
+window.initialiserAssignationContacts = initialiserAssignationContacts;
+
+$(document).ready(initialiserAssignationContacts);

@@ -9,11 +9,10 @@
  * Toutes les règles sont préfixées par .auth-* pour ne pas interférer avec Bootstrap 3 ni
  * avec les autres écrans.
  *
- * Couleurs : la carte reste neutre (bordure grise, ombre douce). L'orange de la charte
- * (#e9661f) sert d'accent au focus des champs. Le bouton et les liens utilisent une teinte
- * plus foncée (#b84f18, survol #9a4214) pour atteindre le contraste de 4,5:1 exigé par le
- * RGAA (critère 3.2) : le blanc sur #e9661f n'atteint que 3,3:1, et sur l'ancien bouton
- * Bootstrap #f0ad4e seulement 1,9:1.
+ * Couleurs : la carte reste neutre (bordure grise, ombre douce). Tous les éléments colorés
+ * — boutons, liens, bordures de focus — emploient l'orange foncé #b84f18 (survol #9a4214),
+ * qui atteint 5:1 sur blanc, là où l'orange initial #e9661f plafonne à 3,3:1 et l'ancien
+ * bouton Bootstrap #f0ad4e à 1,9:1, tous deux sous le seuil de 4,5:1 du RGAA (critère 3.2).
  */
 .auth-card {
     box-sizing: border-box;
@@ -88,8 +87,8 @@
 
 .auth-card .auth-input:focus {
     outline: none;
-    border-color: #e9661f;
-    box-shadow: 0 0 0 3px rgba(233, 102, 31, 0.20);
+    border-color: #b84f18;
+    box-shadow: 0 0 0 3px rgba(184, 79, 24, 0.20);
 }
 
 /* --- reCAPTCHA (widget de 304 px, contenu dans la largeur utile de la carte) --- */
@@ -121,7 +120,7 @@
 
 .auth-card .auth-submit:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(233, 102, 31, 0.40);
+    box-shadow: 0 0 0 3px rgba(184, 79, 24, 0.40);
 }
 
 /* Bouton principal sous forme de lien (pages de confirmation) */

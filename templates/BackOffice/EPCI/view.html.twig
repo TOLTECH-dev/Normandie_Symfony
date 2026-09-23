@@ -21,7 +21,6 @@
                 >
                     <i class="glyphicon glyphicon-edit"></i>
                 </a>
-                {{ include('BackOffice/EPCI/inc/back.html.twig') }}
             </div>
         </div>
 
@@ -41,3 +40,6 @@
     {{ parent() }}
     {{ encore_entry_script_tags('backOffice_EPCI_index') }}
 {% endblock %}
+
+{# Bouton « Retour » de l'en-tête de vue : destination reprise du partiel d'origine #}
+{% block retour_url %}{{ path('EPCI_list') }}{% endblock %}

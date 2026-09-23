@@ -5,7 +5,8 @@
  * Page autonome, chargée sans Bootstrap ni les feuilles du back-office : elle embarque la carte
  * de formulaire partagée et un socle minimal.
  *
- * Couleurs du dispositif : orange #e9661f (nom de l'espace), vert #77b636 (filet).
+ * Couleurs du dispositif : orange #b84f18 (nom de l'espace, 5:1 sur blanc, conforme RGAA 3.2),
+ * vert #77b636 (filet décoratif).
  * Le nom de l'espace, en 36 px gras (28 px sur mobile), relève des « grands textes » du RGAA : le
  * contraste de 3,3:1 de cet orange sur fond clair y est conforme (seuil 3:1).
  */
@@ -115,7 +116,7 @@ body.auth-page {
 
 .auth-brand-title {
     margin: 0;
-    color: #e9661f;
+    color: #b84f18;
     font-size: 36px;
     font-weight: 700;
     line-height: 1.1;

@@ -1,30 +1,17 @@
-.col0 { width: 25px; }
-.col1 { width: 80px; }
-.col2 { width: 70px; }
-.col3 { width: 70px; }
-.col4 { width: 40px; }
-.col5 { }
-.col6 { width: 100px; }
-.col7 { width: 30px; }
-.col8 { width: 70px; }
-.col9 { width: 40px; }
-.col10 { width: 40px; }
-.col11 { width: 55px;}
+/*
+    Consultation des dossiers.
 
-tr[id="filterrow"] th input, tr[id="filterrow"] th select {
-    width: 100%;
-    font-size: 11px;
-    height: 30px;
-}
+    La mise en forme des listes du back-office est commune (common/tableau.css) : ne restent ici que
+    les particularités de cette page. Les largeurs de colonnes col0 … col11 ont disparu avec le
+    regroupement des colonnes ; elles sont désormais exprimées par nom de colonne dans tableau.css.
+*/
 
-div#table_list_demande_filter {
-    display: none !important;
-}
-
+/* La ligne de recherche est écrite dans le pied du tableau : elle s'affiche sous les en-têtes */
 tfoot {
     display: table-header-group;
 }
 
+/* Le motif d'un statut peut être long : la bulle s'élargit au besoin */
 body .popover {
     width: auto;
     max-width: 500px;

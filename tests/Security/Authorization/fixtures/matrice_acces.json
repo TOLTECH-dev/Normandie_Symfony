@@ -585,6 +585,28 @@
     "demande_list_fo": [
         "ROLE_MEMBER"
     ],
+    "demande_panneau": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
+    "demande_panneau_historique": [
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    ],
     "demande_reactive": [
         "ROLE_CLIENT",
         "ROLE_ADMIN",

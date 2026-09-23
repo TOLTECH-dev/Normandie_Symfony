@@ -32,10 +32,87 @@ class DemandeListSqlTest extends TestCase
 
     public static function provideTextFilters(): iterable
     {
-        foreach (['demandeId', 'beneficiaireIdentifiant', 'logement', 'demandeDateCreation', 'demandeStatutSlug',
+        // Le statut n'y figure pas : il se choisit dans une liste, donc s'écrit en égalité stricte
+        foreach (['dossier', 'beneficiaire', 'echeances',
+                     'demandeId', 'beneficiaireIdentifiant', 'logement', 'demandeDateCreation',
                      'structureConseiller', 'partenaire', 'commissionDate', 'remboursementDate'] as $field) {
             yield $field => [$field];
         }
+    }
+
+    /**
+     * Une colonne regroupée interroge tous les champs de son groupe, avec un seul paramètre lié.
+     *
+     * @dataProvider provideGroupedFilters
+     *
+     * @param list<string> $expressions
+     */
+    public function testColonneRegroupeeInterrogeTousSesChamps(string $field, array $expressions): void
+    {
+        $sql = $this->listSql()->filterBy([$field => 'mar'])->countQuery();
+
+        $tests = array_map(static fn (string $e): string => $e . ' LIKE :filtre_' . $field, $expressions);
+        self::assertStringContainsString('(' . implode(' OR ', $tests) . ')', $sql);
+
+        // Le groupe entier ne consomme qu'un paramètre, répété dans chaque test
+        self::assertSame(['filtre_' . $field => '%mar%'], $this->listSql()->filterBy([$field => 'mar'])->getParams());
+    }
+
+    public static function provideGroupedFilters(): iterable
+    {
+        yield 'dossier' => ['dossier', ['d.id', "DATE_FORMAT(d.date_creation, '%d/%m/%Y')"]];
+        yield 'bénéficiaire' => ['beneficiaire', ['b.nom', 'b.prenom', 'b.nom_SCI', 'l.code_postal', 'l.ville']];
+        yield 'échéances' => ['echeances', ["DATE_FORMAT(dCP.date_CP, '%d/%m/%Y')", "DATE_FORMAT(dRMH.date_RMH, '%d/%m/%Y')"]];
+    }
+
+    public function testRechercheGeneraleLieeEnParametre(): void
+    {
+        $listSql = $this->listSql()->searchEverywhere(self::PAYLOAD);
+
+        foreach ([$listSql->countQuery(), $listSql->pageQuery('demandeId', 'desc', 0, 25)] as $sql) {
+            self::assertStringNotContainsString('OR "1"="1', $sql);
+            self::assertStringNotContainsString('mar', $sql);
+            self::assertStringContainsString(':recherche_generale', $sql);
+        }
+        // La recherche générale passe par DemandeListCriteria::normalizeSearch : espaces de bord ôtés
+        self::assertSame(['recherche_generale' => '%' . trim(self::PAYLOAD) . '%'], $listSql->getParams());
+    }
+
+    public function testRechercheGeneraleBalayeToutesLesColonnesAffichees(): void
+    {
+        $sql = $this->listSql()->searchEverywhere('mar')->countQuery();
+
+        foreach (['d.id', "DATE_FORMAT(d.date_creation, '%d/%m/%Y')", 'b.nom', 'b.prenom', 'b.nom_SCI',
+                     'l.code_postal', 'l.ville', "DATE_FORMAT(dCP.date_CP, '%d/%m/%Y')",
+                     "DATE_FORMAT(dRMH.date_RMH, '%d/%m/%Y')", 'si_dae.nom', 'sc_dt.nom', 'pi_dtd.raison_sociale',
+                     'IF(rs.slug IS NOT NULL, rs.slug, ds.slug)'] as $expression) {
+            self::assertStringContainsString($expression . ' LIKE :recherche_generale', $sql);
+        }
+
+        // Les tables lues par ces champs sont bien jointes
+        foreach (['LEFT JOIN date_CP dCP', 'LEFT JOIN date_RMH dRMH', 'LEFT JOIN structure_identification si_dae',
+                     'LEFT JOIN partenaire_identification pi_dtd', 'LEFT JOIN remboursement_statut rs'] as $join) {
+            self::assertStringContainsString($join, $sql);
+        }
+    }
+
+    public function testRechercheGeneraleVideSansEffet(): void
+    {
+        $listSql = $this->listSql()->searchEverywhere('   ');
+
+        self::assertSame($this->listSql()->countQuery(), $listSql->countQuery());
+        self::assertSame([], $listSql->getParams());
+    }
+
+    /** Recherche générale et recherches par colonne se cumulent, chacune avec son paramètre */
+    public function testRechercheGeneraleEtFiltresSeCumulent(): void
+    {
+        $listSql = $this->listSql()->filterBy(['beneficiaire' => 'martin'])->searchEverywhere('76000');
+
+        self::assertSame([
+            'filtre_beneficiaire' => '%martin%',
+            'recherche_generale'  => '%76000%',
+        ], $listSql->getParams());
     }
 
     public function testColonnesInconnuesIgnorees(): void
@@ -75,14 +152,60 @@ class DemandeListSqlTest extends TestCase
 
     public function testStatutAfficheDansLaListeEtDemandeOuRemboursementDansLExport(): void
     {
-        $listSql = $this->listSql()->filterBy(['demandeStatutSlug' => 'valid']);
-        [$conditions] = DemandeListSql::exportFilterConditions(['demandeStatutSlug' => 'valid']);
+        $listSql = $this->listSql()->filterBy(['demandeStatutSlug' => 'Demande refusée']);
+        [$conditions, $params] = DemandeListSql::exportFilterConditions(['demandeStatutSlug' => 'Demande refusée']);
 
         self::assertStringContainsString(
-            'IF(rs.slug IS NOT NULL, rs.slug LIKE :filtre_demandeStatutSlug, ds.slug LIKE :filtre_demandeStatutSlug)',
+            'IF(rs.slug IS NOT NULL, rs.slug IN (:filtre_demandeStatutSlug_0), ds.slug IN (:filtre_demandeStatutSlug_0))',
             $listSql->countQuery()
         );
-        self::assertSame(['(ds.slug LIKE :filtre_demandeStatutSlug OR rs.slug LIKE :filtre_demandeStatutSlug)'], $conditions);
+        self::assertSame(['filtre_demandeStatutSlug_0' => 'Demande refusée'], $listSql->getParams());
+        self::assertSame(
+            ['(ds.slug IN (:filtre_demandeStatutSlug_0) OR rs.slug IN (:filtre_demandeStatutSlug_0))'],
+            $conditions
+        );
+        self::assertSame(['filtre_demandeStatutSlug_0' => 'Demande refusée'], $params);
+    }
+
+    /** Plusieurs statuts choisis : une valeur liée par statut, jamais de texte dans le SQL */
+    public function testPlusieursStatutsChoisis(): void
+    {
+        $valeur = 'Demande refusée|Demande incomplète|' . self::PAYLOAD;
+        $listSql = $this->listSql()->filterBy(['demandeStatutSlug' => $valeur]);
+        $sql = $listSql->countQuery();
+
+        self::assertStringContainsString(
+            'IN (:filtre_demandeStatutSlug_0, :filtre_demandeStatutSlug_1, :filtre_demandeStatutSlug_2)',
+            $sql
+        );
+        self::assertStringNotContainsString('Demande refusée', $sql);
+        self::assertStringNotContainsString('OR "1"="1', $sql);
+        self::assertSame([
+            'filtre_demandeStatutSlug_0' => 'Demande refusée',
+            'filtre_demandeStatutSlug_1' => 'Demande incomplète',
+            'filtre_demandeStatutSlug_2' => trim(self::PAYLOAD),
+        ], $listSql->getParams());
+    }
+
+    /** Plusieurs thématiques choisies : chaque code passe par la liste blanche, les autres tombent */
+    public function testPlusieursThematiquesChoisies(): void
+    {
+        $sql = $this->listSql()->filterBy(['demandeType' => '1|31|99|1 OR 1=1'])->countQuery();
+
+        self::assertStringContainsString(
+            "((d.type = 1 AND dtd.niveau IS NULL) OR (d.type = 3 AND SUBSTRING(dtd.niveau, 1, 1) = '1'))",
+            $sql
+        );
+        self::assertStringNotContainsString('1 OR 1=1', $sql);
+        self::assertSame([], $this->listSql()->filterBy(['demandeType' => '1|31'])->getParams());
+    }
+
+    /** Aucun code reconnu : la recherche n'ajoute aucune condition */
+    public function testThematiquesToutesInconnues(): void
+    {
+        $listSql = $this->listSql()->filterBy(['demandeType' => '99|abc']);
+
+        self::assertSame($this->listSql()->countQuery(), $listSql->countQuery());
     }
 
     public function testSansRechercheSeulesLesJointuresNecessairesSontEcrites(): void

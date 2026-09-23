@@ -1,57 +1,335 @@
-.navbar {
-    background: #EFEFEF !important;
-    min-height: 30px !important;
+/*
+    En-tête de l'espace partenaire.
+
+    Palette et typographie reprises des pages d'authentification (auth_layout.css) :
+    fond blanc, texte #344054, bordures #eaecf0, accent orange #b84f18.
+
+    Contrastes vérifiés (RGAA 3.2, seuil 4,5:1 pour le texte courant) :
+      #344054 sur #ffffff .............. 10,4:1
+      #b84f18 sur #ffffff ............... 5,0:1
+      #ffffff sur #b84f18 ...............  5,0:1
+*/
+
+:root {
+    --ceen-orange: #b84f18;
+    --ceen-orange-clair: #e9661f;
+    --ceen-orange-fonce: #9a4214;
+    --ceen-texte: #344054;
+    --ceen-texte-doux: #667085;
+    --ceen-bordure: #eaecf0;
+    --ceen-fond: #f5f6f8;
+    --ceen-fond-survol: #f9fafb;
+    --ceen-hauteur-entete: 60px;
+    --ceen-largeur-menu: 260px;
+    --ceen-largeur-menu-reduit: 68px;
 }
 
-.navbar-default {
-    border: 0 !important;
+body {
+    background: var(--ceen-fond);
+    color: var(--ceen-texte);
 }
 
-header, .header-container {
-    height: 50px;
-    width: 100%;
-}
-
-.navbar::after {
-    content: '';
+/* --- Lien d'évitement : visible dès qu'il reçoit le focus --- */
+.lien-evitement {
     position: absolute;
-    top: 50%;
+    left: 16px;
+    top: -60px;
+    z-index: 60;
+    padding: 10px 18px;
+    background: #fff;
+    color: var(--ceen-orange);
+    font-weight: 600;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 12px rgba(16, 24, 40, .12);
+    transition: top .2s ease;
+}
+
+.lien-evitement:focus {
+    top: 0;
+    outline: 2px solid var(--ceen-orange);
+    outline-offset: 2px;
+}
+
+/* --- Barre d'en-tête --- */
+.entete {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: var(--ceen-hauteur-entete);
+    padding: 0 16px;
+    background: #fff;
+    border-bottom: 1px solid var(--ceen-bordure);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.entete-gauche {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+}
+
+.entete-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.entete-logo-produit {
+    display: block;
+    height: 34px;
+    width: auto;
+}
+
+.entete-logo-region {
+    display: block;
+    height: 26px;
+    width: auto;
+}
+.entete-centre {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-width: 0;
+}
+
+/*
+    Titre centré sur la largeur de la page, et non entre les logos et le menu du compte : il est
+    sorti du flux pour rester au centre quelle que soit la largeur de ses voisins.
+*/
+.entete-titre {
+    position: absolute;
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    border-bottom: 3px solid #e9661f;
+    transform: translateX(-50%);
+    max-width: 40%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ceen-orange);
+    white-space: nowrap;
 }
 
-#bloc_logo {
+/* --- Menu du compte : un seul bouton, qui déplie ses actions --- */
+.entete-compte {
+    position: relative;
+    flex: 0 0 auto;
+    font-size: 14px;
+}
+
+.compte-bouton {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ceen-texte);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease;
+}
+
+.compte-bouton:hover {
+    background: var(--ceen-fond-survol);
+    border-color: #d0d5dd;
+}
+
+.compte-pastille {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #fdf1e8;
+    color: var(--ceen-orange);
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.compte-nom {
+    white-space: nowrap;
+}
+
+.compte-bonjour {
+    color: var(--ceen-texte-doux);
+}
+
+.compte-prenom {
+    font-weight: 600;
+}
+
+.compte-chevron {
+    font-size: 10px;
+    color: var(--ceen-texte-doux);
+    transition: transform .15s ease;
+}
+
+.compte-bouton[aria-expanded="true"] .compte-chevron {
+    transform: rotate(180deg);
+}
+
+.compte-menu {
     position: absolute;
-    background: #FFF;
-    width: 230px;
-    z-index: 2;
-}
-.header-logo {
-    margin: 10px 15px;
-    width: 200px;
-}
-
-.header-login {
-    padding: 12px 10px 10px 10px;
-    text-align: right;
-    z-index: 2;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 50;
+    min-width: 240px;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(16, 24, 40, .14);
 }
 
-header a.no-underline {
-    color: #000;
+.compte-menu-entete {
+    margin: 0;
+    padding: 8px 12px 10px;
+    border-bottom: 1px solid var(--ceen-bordure);
 }
 
-div.main_title{
-    width: 100%;
-    margin: 5px auto 0;
-    height: 0;
-    max-height: 0;
-    text-align: center;
-    cursor: default;
+.compte-menu-identite {
+    display: block;
+    color: var(--ceen-texte);
+    font-weight: 600;
+    font-size: 13px;
+    word-break: break-word;
 }
-.header-logo-espace {
-    width: 300px;
+
+.compte-menu-lien {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    color: var(--ceen-texte);
+    text-decoration: none;
+}
+
+.compte-menu-lien:hover,
+.compte-menu-lien:focus {
+    background: var(--ceen-fond-survol);
+    color: var(--ceen-texte);
+    text-decoration: none;
+}
+
+.compte-menu-lien .glyphicon {
+    color: var(--ceen-texte-doux);
+    font-size: 13px;
+}
+
+.compte-menu-lien-sortie {
+    color: var(--ceen-orange);
+    font-weight: 600;
+}
+
+.compte-menu-lien-sortie .glyphicon {
+    color: var(--ceen-orange);
+}
+
+.compte-bouton:focus-visible,
+.compte-menu-lien:focus-visible,
+.entete-logo:focus-visible,
+.entete-bouton-menu:focus-visible {
+    outline: 2px solid var(--ceen-orange);
+    outline-offset: 2px;
+}
+
+/* --- Bouton d'ouverture du menu (petit écran) --- */
+.entete-bouton-menu {
+    display: none;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--ceen-bordure);
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.entete-bouton-barres,
+.entete-bouton-barres::before,
+.entete-bouton-barres::after {
+    display: block;
+    width: 18px;
+    height: 2px;
+    margin: 0 auto;
+    background: var(--ceen-texte);
+    transition: transform .2s ease, opacity .2s ease;
+}
+
+.entete-bouton-barres::before,
+.entete-bouton-barres::after {
+    content: '';
+}
+
+.entete-bouton-barres::before { transform: translateY(-6px); }
+.entete-bouton-barres::after { transform: translateY(4px); }
+
+.entete-bouton-menu[aria-expanded="true"] .entete-bouton-barres { background: transparent; }
+.entete-bouton-menu[aria-expanded="true"] .entete-bouton-barres::before { transform: translateY(1px) rotate(45deg); }
+.entete-bouton-menu[aria-expanded="true"] .entete-bouton-barres::after { transform: translateY(-1px) rotate(-45deg); }
+
+/* --- Menu conseiller, conservé au centre de l'en-tête --- */
+#fo_menu {
+    display: flex;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+}
+
+#fo_menu li a {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: var(--ceen-texte);
+    font-size: 14px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+#fo_menu li a:hover,
+#fo_menu li a:focus {
+    background: var(--ceen-fond-survol);
+    text-decoration: none;
+}
+
+#fo_menu li.active a {
+    background: #fdf1e8;
+    color: var(--ceen-orange);
+    font-weight: 600;
+}
+
+@media (max-width: 991px) {
+    .entete-bouton-menu { display: block; }
+    .entete-titre { display: none; }
+    .entete-logo-region { display: none; }
+    .compte-nom { display: none; }
+    .compte-bouton { padding: 0 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lien-evitement,
+    .compte-bouton,
+    .compte-chevron,
+    .entete-bouton-barres,
+    .entete-bouton-barres::before,
+    .entete-bouton-barres::after {
+        transition: none;
+    }
 }

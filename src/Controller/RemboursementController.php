@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Demande_statut;
+use App\Entity\Remboursement_statut;
+use App\Repository\Remboursement\RemboursementListCriteria;
 use App\Repository\Remboursement_Repository;
 use App\Service\AdminFormService;
 use App\Service\RemboursementService;
@@ -22,6 +25,7 @@ class RemboursementController extends AbstractController
     public function list(
         Remboursement_Repository $remboursementRepository,
         RemboursementService $remboursementService,
+        EntityManagerInterface $em,
         Request $request
     ): Response {
         $user = $this->getUser();
@@ -29,15 +33,22 @@ class RemboursementController extends AbstractController
             throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException('Utilisateur non valide');
         }
         $data = $remboursementRepository->findForListAjax(
-            $remboursementService->getDataOptionRepository($user),
-            null,
-            null,
-            null,
-            null,
-            ''
+            $remboursementService->getDataOptionRepository($user)
         );
+
+        // Statuts proposés au filtre : la liste affiche celui du remboursement dès qu'il existe,
+        // et celui de la demande sinon — les deux familles doivent donc être proposées.
+        $statutsRemboursement = $em->getRepository(Remboursement_statut::class)
+            ->createQueryBuilder('s')->select('s.slug')->orderBy('s.slug', 'ASC')
+            ->getQuery()->getSingleColumnResult();
+        $statutsDemande = $em->getRepository(Demande_statut::class)
+            ->createQueryBuilder('s')->select('s.slug')->orderBy('s.slug', 'ASC')
+            ->getQuery()->getSingleColumnResult();
+
         return $this->render('BackOffice/Remboursement/list.html.twig', [
-            'isDataEmpty' => empty($data)
+            'isDataEmpty' => empty($data),
+            'statutsRemboursement' => array_values(array_unique($statutsRemboursement)),
+            'statutsDemande' => array_values(array_unique($statutsDemande)),
         ]);
     }
 
@@ -52,38 +63,20 @@ class RemboursementController extends AbstractController
             throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException('Utilisateur non valide');
         }
         $options = $remboursementService->getDataOptionRepository($user);
-        $dataForListAjax = $remboursementService->getDataForListAjax(
-            $options['production_travauxNiveau_BBC1'],
-            $options['production_travauxNiveau_BBC2']
-        );
+
         if ($request->isMethod('POST')) {
-            $recordsTotal = $remboursementRepository->countForList($options, '');
-            if (!empty($dataForListAjax["columnWhereTmp"])) {
-                $data = $remboursementRepository->findForListAjax(
-                    $options,
-                    $dataForListAjax["orderBy"],
-                    $dataForListAjax["orderType"],
-                    $dataForListAjax["start"],
-                    $dataForListAjax["length"],
-                    $dataForListAjax["where"]
-                );
-                $recordsFiltered = $remboursementRepository->countForList(
-                    $options,
-                    $dataForListAjax["where"]
-                );
-            } else {
-                $data = $remboursementRepository->findForListAjax(
-                    $options,
-                    $dataForListAjax["orderBy"],
-                    $dataForListAjax["orderType"],
-                    $dataForListAjax["start"],
-                    $dataForListAjax["length"],
-                    $dataForListAjax["where"]
-                );
-                $recordsFiltered = $recordsTotal;
-            }
+            // Recherches, tri et pagination validés : colonnes connues, sens asc/desc, 100 lignes
+            // au plus. Aucune valeur reçue n'est écrite dans le SQL (cf. RemboursementListSql).
+            $criteria = RemboursementListCriteria::fromDataTables($request->request->all());
+
+            $recordsTotal = $remboursementRepository->countForList($options);
+            $data = $remboursementRepository->findForListAjax($options, $criteria);
+            $recordsFiltered = $criteria->hasFilters() || $criteria->hasGlobalSearch()
+                ? $remboursementRepository->countForList($options, $criteria)
+                : $recordsTotal;
+
             $response = [
-                "draw" => intval($dataForListAjax["draw"]),
+                "draw" => (int) $request->request->get('draw', 0),
                 "recordsTotal" => $recordsTotal,
                 "recordsFiltered" => $recordsFiltered,
                 "data" => $data

@@ -1,25 +1,17 @@
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom40">
     <div id="container-title">
          <h2>Liste des Contacts</h2>
-    </div>
-</div>
 
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginBottom10">
-    <p class="text-center"> 
         <button id="button_addContact"
-                class="btn btn-primary btn-xs"
+                class="bouton-creer"
                 type="button"
                 title="Cr&eacute;er un Contact"
-                data-toggle="tooltip"
-                data-placement="bottom"
-                data-container="body"
-                data-original-title="Cr&eacute;er un Contact"
                 data-contactUrl="{{ path('contact_addEdit') }}"
-        >   
-        <span class="glyphicon glyphicon-plus"></span>
-        Ajouter un Contact
+        >
+            <span class="glyphicon glyphicon-plus"></span>
+            Ajouter un Contact
         </button>
-    </p>
+    </div>
 </div>
 
 <table cellspacing="0" id="table_list_contact" class="table table-striped table-bordered big_table">

@@ -73,9 +73,33 @@ final class DemandeListSql
         'dt', 'si_dt', 'sc_dt', 'dtd', 'pi_dtd', 'r', 'rs', 'dRMH',
     ];
 
+    /**
+     * Champs balayés par la recherche générale : les groupes affichés, plus la structure, le
+     * professionnel et le statut (ajouté à part, son expression dépendant du remboursement).
+     */
+    private const GLOBAL_SEARCH_FIELDS = [
+        'dossier',
+        'beneficiaire',
+        'echeances',
+        'structureConseiller',
+        'partenaire',
+    ];
+
     /** Recherches « contient » : champ => [expressions testées (OU), alias nécessaires] */
     private const LIKE_FILTERS = [
+        // Colonnes regroupées de la liste : un champ de recherche interroge tout son groupe
+        'dossier'                 => [['d.id', "DATE_FORMAT(d.date_creation, '%d/%m/%Y')"], []],
+        'beneficiaire'            => [
+            ['b.nom', 'b.prenom', 'b.nom_SCI', 'l.code_postal', 'l.ville'],
+            ['b', 'l'],
+        ],
+        'echeances'               => [
+            ["DATE_FORMAT(dCP.date_CP, '%d/%m/%Y')", "DATE_FORMAT(dRMH.date_RMH, '%d/%m/%Y')"],
+            ['dCP', 'dRMH'],
+        ],
+
         'demandeId'               => [['d.id'], []],
+        // (suite : champs atomiques, conservés pour les exports enregistrés avant le regroupement)
         'beneficiaireIdentifiant' => [['b.nom', 'b.prenom', 'b.nom_SCI'], ['b']],
         'logement'                => [['l.code_postal', 'l.ville'], ['l']],
         'demandeDateCreation'     => [["DATE_FORMAT(d.date_creation, '%d/%m/%Y')"], []],
@@ -199,6 +223,44 @@ final class DemandeListSql
             $this->params += $params;
             $this->addAliases($aliases);
         }
+
+        return $this;
+    }
+
+    /**
+     * Recherche générale : la valeur est cherchée dans toutes les informations affichées, statut
+     * compris. Comme les recherches par colonne, elle est liée en paramètre, jamais concaténée.
+     */
+    public function searchEverywhere(string $recherche): self
+    {
+        $recherche = DemandeListCriteria::normalizeSearch($recherche);
+        if ('' === $recherche) {
+            return $this;
+        }
+
+        $expressions = [];
+        $aliases = [];
+        foreach (self::GLOBAL_SEARCH_FIELDS as $field) {
+            [$champs, $aliasDuChamp] = self::LIKE_FILTERS[$field];
+            foreach ($champs as $champ) {
+                $expressions[] = $champ;
+            }
+            $aliases = array_merge($aliases, $aliasDuChamp);
+        }
+
+        // Statut affiché : celui du remboursement s'il existe, sinon celui de la demande
+        $expressions[] = 'IF(rs.slug IS NOT NULL, rs.slug, ds.slug)';
+        $aliases[] = 'ds';
+        $aliases[] = 'rs';
+
+        $tests = array_map(
+            static fn (string $expression): string => $expression . ' LIKE :recherche_generale',
+            $expressions
+        );
+
+        $this->conditions[] = '(' . implode(' OR ', $tests) . ')';
+        $this->params['recherche_generale'] = '%' . $recherche . '%';
+        $this->addAliases(array_values(array_unique($aliases)));
 
         return $this;
     }
@@ -384,12 +446,35 @@ final class DemandeListSql
                 $tests = array_map(static fn (string $expression): string => $expression . ' LIKE :' . $param, $expressions);
                 $parts[] = ['(' . implode(' OR ', $tests) . ')', $like, $aliases];
             } elseif ('demandeStatutSlug' === $field) {
+                // Choix multiple, pris dans la liste des statuts : égalité stricte, valeurs liées
+                $params = [];
+                $placeholders = [];
+                foreach (DemandeListCriteria::splitValues($value) as $rang => $statut) {
+                    $nom = $param . '_' . $rang;
+                    $placeholders[] = ':' . $nom;
+                    $params[$nom] = $statut;
+                }
+                if ([] === $placeholders) {
+                    continue;
+                }
+
+                $liste = implode(', ', $placeholders);
                 $condition = $statutDemandeOuRemboursement
-                    ? sprintf('(ds.slug LIKE :%1$s OR rs.slug LIKE :%1$s)', $param)
-                    : sprintf('IF(rs.slug IS NOT NULL, rs.slug LIKE :%1$s, ds.slug LIKE :%1$s)', $param);
-                $parts[] = [$condition, $like, ['ds', 'rs']];
-            } elseif ('demandeType' === $field && null !== ($condition = self::demandeTypeCondition($value))) {
-                $parts[] = [$condition, [], ['dtd']];
+                    ? sprintf('(ds.slug IN (%1$s) OR rs.slug IN (%1$s))', $liste)
+                    : sprintf('IF(rs.slug IS NOT NULL, rs.slug IN (%1$s), ds.slug IN (%1$s))', $liste);
+                $parts[] = [$condition, $params, ['ds', 'rs']];
+            } elseif ('demandeType' === $field) {
+                // Choix multiple : chaque code est repris d'une liste blanche, jamais de la saisie
+                $conditions = [];
+                foreach (DemandeListCriteria::splitValues($value) as $code) {
+                    $condition = self::demandeTypeCondition($code);
+                    if (null !== $condition) {
+                        $conditions[] = $condition;
+                    }
+                }
+                if ([] !== $conditions) {
+                    $parts[] = ['(' . implode(' OR ', $conditions) . ')', [], ['dtd']];
+                }
             }
         }
 
@@ -426,6 +511,11 @@ final class DemandeListSql
     private static function sortExpression(string $column): array
     {
         return match ($column) {
+            // Colonnes regroupées : le tri porte sur leur information principale
+            'dossier'                 => ['d.id', []],
+            'beneficiaire'            => [self::beneficiaireExpression(), ['b']],
+            'echeances'               => ["DATE_FORMAT(dCP.date_CP, '%Y/%m/%d')", ['dCP']],
+
             'demandeType'             => [self::demandeTypeExpression(), ['dtd']],
             'beneficiaireIdentifiant' => [self::beneficiaireExpression(), ['b']],
             'logement'                => ["CONCAT(l.code_postal, ' ', l.ville)", ['l']],

@@ -1,0 +1,47 @@
+{#
+    Détail d'une étape de la frise : par envoi, ses destinataires puis son contenu.
+
+    Un même message parti vers plusieurs adresses est enregistré une fois par adresse. Le
+    regroupement (HistoriqueController::regrouperEnvois) réunit les envois de même sujet et de même
+    contenu : les destinataires sont alors annoncés ensemble, avec leur profil quand il est connu,
+    et le message n'est écrit qu'une fois. Deux messages différents — l'auditeur et le rénovateur
+    ne reçoivent pas le même — restent présentés séparément.
+
+    Le gabarit d'origine (inc/modal_email.html.twig) reste celui de la page d'historique.
+#}
+{% set envois = envoisParEtape[item.id]|default([]) %}
+
+{% if envois|length > 0 %}
+    {% for envoi in envois %}
+        <div class="detail-envoi">
+            {% if not isCommentaire and envoi.sujet %}
+                <p class="detail-sujet">{{ envoi.sujet }}</p>
+            {% endif %}
+
+            {% if envoi.destinataires|length > 0 %}
+                <p class="detail-libelle">
+                    {{ isCommentaire ? 'Envoy&eacute; &agrave;' : 'Exp&eacute;di&eacute; &agrave;' }}
+                    {% if envoi.destinataires|length > 1 %}
+                        <span class="detail-nombre">{{ envoi.destinataires|length }} destinataires</span>
+                    {% endif %}
+                </p>
+                <ul class="detail-destinataires">
+                    {% for adresse in envoi.destinataires %}
+                        <li>
+                            {% if profilsParEmail[adresse] is defined %}
+                                <span class="detail-profil">{{ profilsParEmail[adresse] }}</span>
+                            {% endif %}
+                            <span class="detail-adresse">{{ adresse }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <div class="detail-contenu">
+                {% if isCommentaire %}{{ envoi.contenu|nl2br }}{% else %}{{ envoi.contenu|raw }}{% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p class="detail-vide">{{ isCommentaire ? 'Aucun commentaire' : 'Aucun courriel envoy&eacute;' }}</p>
+{% endif %}

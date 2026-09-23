@@ -1216,6 +1216,30 @@ class DemandeServiceFO
      */
     public function setDemandeTypeMenage(Demande_ $demande, Beneficiaire $beneficiaire = null, array $ANAHCritere = []): void
     {
+        [$nbPersFoyer, $revenuFiscalReferenceFoyer] = $this->foyerDeReference($demande, $beneficiaire);
+
+        $typeMenageCode = $this->ANAHService->findTypeMenageCode(
+            $nbPersFoyer,
+            $revenuFiscalReferenceFoyer,
+            $ANAHCritere
+        );
+        if (!empty($typeMenageCode)) {
+            $demande->setTypeMenage($typeMenageCode);
+        }
+    }
+
+    /**
+     * Composition du foyer retenue pour un dossier : nombre de personnes et revenu fiscal de
+     * référence, tels qu'ils servent à situer le ménage au regard des critères ANAH. La demande
+     * prime sur la fiche du bénéficiaire quand elle les porte.
+     *
+     * @return array{0: int|null, 1: string|int|null}
+     */
+    public function foyerDeReference(Demande_ $demande, Beneficiaire $beneficiaire = null): array
+    {
+        $nbPersFoyer = null;
+        $revenuFiscalReferenceFoyer = null;
+
         if (empty($beneficiaire)) {
             $beneficiaire = $this->beneficiaireRepository->find($demande->getBeneficiaireId());
         }
@@ -1253,14 +1277,7 @@ class DemandeServiceFO
                 break;
         }
 
-        $typeMenageCode = $this->ANAHService->findTypeMenageCode(
-            $nbPersFoyer,
-            $revenuFiscalReferenceFoyer,
-            $ANAHCritere
-        );
-        if (!empty($typeMenageCode)) {
-            $demande->setTypeMenage($typeMenageCode);
-        }
+        return [$nbPersFoyer, $revenuFiscalReferenceFoyer];
     }
 
 

@@ -1,0 +1,169 @@
+{#
+    Fiche du bénéficiaire, présentée pour le panneau de consultation.
+
+    Elle remplace, dans ce seul panneau, la suite de blocs « libellé : valeur » héritée du front
+    office : l'identité tient sur une ligne, l'adresse est écrite dans l'ordre français, et
+    l'accompagnateur figure en tête à droite. Les partiels d'origine
+    (FrontOffice/Beneficiaire/inc/view_beneficiaire/*) restent ceux de la vue complète et du front.
+
+    Mise en forme : assets/styles/backOffice/demande/panneau.css
+#}
+{% set estSCI = '1 | sci' == beneficiaire.beneficiaireType %}
+
+{% set civilites = {'1 | monsieur': 'M.', '0 | madame': 'Mme'} %}
+{% set civilite = civilites[beneficiaire.beneficiaireCivilite]|default('') %}
+
+{% set situations = {
+    '0 | celibataire': 'Célibataire',
+    '1 | marie': 'Marié(e)',
+    '2 | union_libre': 'Union libre',
+    '3 | veuf_divorce': 'Veuf(ve) / Divorcé(e)',
+    '4 | pacse': 'Pacsé(e)'
+} %}
+{% set situation = situations[beneficiaire.beneficiaireSituationFamille]|default('') %}
+
+{% set complementsRue = {'0 | bis': 'bis', '1 | ter': 'ter'} %}
+{% set complementRue = complementsRue[beneficiaire.beneficiaireComplementNumeroRue]|default('') %}
+
+{% set conjoint = (beneficiaire.beneficiaireNomConjoint|default('') ~ ' ' ~ beneficiaire.beneficiairePrenomConjoint|default(''))|trim %}
+
+<div class="fiche">
+
+    <div class="fiche-entete">
+        <div class="fiche-identite">
+            <p class="fiche-nom">
+                {% if estSCI %}
+                    {{ beneficiaire.beneficiaireNomSCI }}
+                    <span class="fiche-mention">SCI</span>
+                {% else %}
+                    {{ civilite }} {{ beneficiaire.beneficiaireNom|upper }} {{ beneficiaire.beneficiairePrenom }}
+                {% endif %}
+            </p>
+
+            <p class="fiche-sous-titre">
+                {% if estSCI %}
+                    G&eacute;rant&nbsp;: {{ civilite }} {{ beneficiaire.beneficiaireNom|upper }} {{ beneficiaire.beneficiairePrenom }}
+                {% else %}
+                    {% if situation %}{{ situation }}{% endif %}
+                    {% if conjoint %}
+                        <span class="fiche-separateur">&middot;</span>
+                        Conjoint&nbsp;: {{ beneficiaire.beneficiaireNomConjoint|upper }} {{ beneficiaire.beneficiairePrenomConjoint }}
+                    {% endif %}
+                {% endif %}
+            </p>
+        </div>
+
+        {# Mon Accompagnateur Rénov' conventionné avec la Région : structure de rattachement #}
+        <div class="fiche-accompagnateur">
+            <p class="fiche-accompagnateur-titre">Accompagnateur MAR</p>
+            {% if beneficiaire.structureRattachementId %}
+                <p class="fiche-accompagnateur-nom">{{ beneficiaire.structureIdentificationRattachementNom|capitalize }}</p>
+                {% if beneficiaire.structureConseillerRattachementId %}
+                    <p class="fiche-accompagnateur-conseiller">
+                        {{ beneficiaire.structureConseillerRattachementPrenom }} {{ beneficiaire.structureConseillerRattachementNom|upper }}
+                    </p>
+                {% endif %}
+            {% else %}
+                <p class="fiche-accompagnateur-nom est-absent">Aucun</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="fiche-colonnes">
+        <section class="fiche-bloc">
+            <h3 class="fiche-bloc-titre">Adresse</h3>
+            <address class="fiche-adresse">
+                {{ beneficiaire.beneficiaireNumeroRue }}{% if complementRue %} {{ complementRue }}{% endif %}
+                {{ beneficiaire.beneficiaireNomRue }}<br />
+                {% if beneficiaire.beneficiaireComplement1 %}{{ beneficiaire.beneficiaireComplement1 }}<br />{% endif %}
+                {% if beneficiaire.beneficiaireComplement2 %}{{ beneficiaire.beneficiaireComplement2 }}<br />{% endif %}
+                {{ beneficiaire.beneficiaireCodePostal }} {{ beneficiaire.beneficiaireVille|upper }}
+            </address>
+        </section>
+
+        <section class="fiche-bloc">
+            <h3 class="fiche-bloc-titre">Contact</h3>
+            <p class="fiche-ligne">
+                {% if beneficiaire.beneficiaireEmail %}
+                    <a href="mailto:{{ beneficiaire.beneficiaireEmail }}">{{ beneficiaire.beneficiaireEmail }}</a>
+                {% else %}
+                    <span class="est-absent">Aucun courriel</span>
+                {% endif %}
+            </p>
+            <p class="fiche-ligne">
+                {{ beneficiaire.beneficiaireTel1 ?: '' }}
+                {% if beneficiaire.beneficiaireTel2 %}
+                    <span class="fiche-separateur">&middot;</span> {{ beneficiaire.beneficiaireTel2 }}
+                {% endif %}
+                {% if not beneficiaire.beneficiaireTel1 and not beneficiaire.beneficiaireTel2 %}
+                    <span class="est-absent">Aucun t&eacute;l&eacute;phone</span>
+                {% endif %}
+            </p>
+        </section>
+
+        <section class="fiche-bloc">
+            <h3 class="fiche-bloc-titre">Foyer</h3>
+            <p class="fiche-ligne">
+                {{ beneficiaire.beneficiaireNbPersonneFoyer ?: '-' }}
+                personne{{ beneficiaire.beneficiaireNbPersonneFoyer > 1 ? 's' : '' }}
+            </p>
+            <p class="fiche-ligne">
+                {% if beneficiaire.beneficiaireRevenuFiscal %}
+                    {{ beneficiaire.beneficiaireRevenuFiscal|number_format(0, ',', ' ') }}&nbsp;&euro;
+                    <span class="fiche-mention-douce">revenu fiscal de r&eacute;f&eacute;rence</span>
+                {% else %}
+                    <span class="est-absent">Revenu non renseign&eacute;</span>
+                {% endif %}
+            </p>
+            {% if typeMenage is defined and typeMenage %}
+                <p class="fiche-ligne">
+                    <span class="pastille-menage pastille-menage-{{ typeMenage.code }}">{{ typeMenage.libelle }}</span>
+                </p>
+            {% endif %}
+        </section>
+
+        {#
+            « J'ai eu connaissance du dispositif par » : plusieurs sources peuvent être cochées, et
+            certaines désignent un tiers (structure, auditeur, rénovateur, financeur) — on le nomme.
+            Seules les sources retenues sont énoncées, plutôt qu'une colonne de OUI/NON ; si aucune
+            ne l'est, c'est dit.
+            Attention : la structure citée ici est celle par laquelle le bénéficiaire a connu le
+            dispositif, distincte de sa structure de rattachement, affichée en tête à droite.
+        #}
+        <section class="fiche-bloc fiche-bloc-large">
+            <h3 class="fiche-bloc-titre">Connaissance du dispositif</h3>
+            {% set sources = [] %}
+            {% if beneficiaire.beneficiaireKnownByMedia %}
+                {% set sources = sources|merge([{'quoi': 'Média, évènement ou presse', 'qui': null}]) %}
+            {% endif %}
+            {% if beneficiaire.structureId %}
+                {% set sources = sources|merge([{'quoi': 'Mon Accompagnateur Rénov’', 'qui': beneficiaire.structureIdentificationNom|capitalize}]) %}
+            {% endif %}
+            {% if beneficiaire.partenaireIdentificationAuditeurId %}
+                {% set sources = sources|merge([{'quoi': 'Auditeur', 'qui': beneficiaire.partenaireIdentificationAuditeur|capitalize}]) %}
+            {% endif %}
+            {% if beneficiaire.partenaireIdentificationRenovateurId %}
+                {% set sources = sources|merge([{'quoi': 'Rénovateur', 'qui': beneficiaire.partenaireIdentificationRenovateur|capitalize}]) %}
+            {% endif %}
+            {% if beneficiaire.banqueId %}
+                {% set sources = sources|merge([{'quoi': 'Financeur', 'qui': beneficiaire.banqueNom|capitalize}]) %}
+            {% endif %}
+            {% if beneficiaire.beneficiaireKnownByOther %}
+                {% set sources = sources|merge([{'quoi': 'Autre', 'qui': null}]) %}
+            {% endif %}
+
+            {% if sources|length > 0 %}
+                <ul class="fiche-sources">
+                    {% for source in sources %}
+                        <li>
+                            <span class="fiche-source-quoi">{{ source.quoi }}</span>
+                            {% if source.qui %}<span class="fiche-source-qui">{{ source.qui }}</span>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="fiche-ligne"><span class="est-absent">Non renseign&eacute;e</span></p>
+            {% endif %}
+        </section>
+    </div>
+</div>
