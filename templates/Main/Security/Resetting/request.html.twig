@@ -19,6 +19,7 @@
         </div>
 
         {{ include('BackOffice/Security/_auth_messages.html.twig') }}
+        {{ include('Main/Security/_bandeau_mots_de_passe.html.twig') }}
 
         <form action="{{ path('user_resetting_send_email') }}" method="post">
             <div class="auth-field">

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Beneficiaire;
+use App\Repository\Beneficiaire\BeneficiaireListCriteria;
 use App\Service\AdminFormService;
 use App\Utils\DefaultServiceUtils;
 use Doctrine\DBAL\Exception;
@@ -194,64 +195,35 @@ class BeneficiaireController extends AbstractController
     }
 
 
+    /**
+     * Données du tableau des bénéficiaires.
+     *
+     * La recherche, le tri et la pagination passent par des critères validés : le terme saisi était
+     * auparavant concaténé dans la requête SQL, de même que la colonne de tri et les bornes de
+     * pagination (cf. BeneficiaireListCriteria).
+     */
     #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
-    public function listAllAjax(): bool|JsonResponse
+    public function listAllAjax(Request $request): bool|JsonResponse
     {
-        $repo = $this->entityManager->getRepository(Beneficiaire::class);
-
-        /* /////////////////////////////////////////////////////////////////
-                                GET AJAX DATA
-        ///////////////////////////////////////////////////////////////// */
-        $dataForListAjax = $this->beneficiaireService->getDataForListAjax();
-
-        if (!empty($_POST) ) {
-            $recordsTotal = $repo->countAll($dataForListAjax['andWhere']);
-
-            /* START of search */
-            if (!empty($_POST['search']['value'])) {
-                /* /////////////////////////////////////////////////////////////////
-                                        GLOBAL SEARCH
-                ///////////////////////////////////////////////////////////////// */
-
-                // Search filtered result with limit and orderBy clauses
-                $data = $repo->findAllAjax(
-                    $dataForListAjax['orderBy'],
-                    $dataForListAjax['orderType'],
-                    $dataForListAjax['start'],
-                    $dataForListAjax['length'],
-                    $dataForListAjax['andWhere']
-                );
-                $recordsFiltered = $repo->countAll($dataForListAjax['andWhere']);
-
-            } else {
-                /* /////////////////////////////////////////////////////////////////
-                                        DEFAULT SEARCH
-                ///////////////////////////////////////////////////////////////// */
-
-                // Search all result with limit and orderBy clauses
-                $data = $repo->findAllAjax(
-                    $dataForListAjax['orderBy'],
-                    $dataForListAjax['orderType'],
-                    $dataForListAjax['start'],
-                    $dataForListAjax['length'],
-                    $dataForListAjax['andWhere']
-                );
-                $recordsFiltered = $recordsTotal;
-
-            }
-            /* END of search */
-
-            $response = [
-                "draw"            => intval($dataForListAjax['draw']),
-                "recordsTotal"    => $recordsTotal,
-                "recordsFiltered" => $recordsFiltered,
-                "data"            => $data
-            ];
-
-            return new JsonResponse($response);
-        } else {
+        $post = $request->request->all();
+        if ([] === $post) {
             return false;
         }
+
+        $repo = $this->entityManager->getRepository(Beneficiaire::class);
+        $criteria = BeneficiaireListCriteria::pourListe($post);
+
+        // Les deux compteurs reçoivent le nombre de lignes retenues par la recherche, comme avant
+        // la correction. Le comptage n'est fait qu'une fois : l'ancienne version l'exécutait deux
+        // fois à l'identique dès qu'une recherche était saisie.
+        $nombreLignes = $repo->countAll($criteria);
+
+        return new JsonResponse([
+            'draw' => (int) filter_var($post['draw'] ?? 0, FILTER_VALIDATE_INT),
+            'recordsTotal' => $nombreLignes,
+            'recordsFiltered' => $nombreLignes,
+            'data' => $repo->findAllAjax($criteria),
+        ]);
     }
 
     #[Security("is_granted('ROLE_ADMIN')")]

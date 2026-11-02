@@ -87,7 +87,11 @@ final class EmailCodeProvider implements TwoFactorProviderInterface
             [
                 'code'                => $code,
                 'codeLifetimeMinutes' => $this->codeLifetimeMinutes,
-            ]
+            ],
+            null,
+            // Voie réservée : sur un environnement où le courrier ordinaire est coupé, le code
+            // de connexion doit malgré tout partir, faute de quoi plus personne ne s'authentifie.
+            MailerService::TRANSPORT_MFA
         );
 
         if ($isSent) {

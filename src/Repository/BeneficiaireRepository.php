@@ -6,6 +6,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Beneficiaire;
+use App\Repository\Beneficiaire\BeneficiaireListCriteria;
+use App\Repository\Beneficiaire\BeneficiaireListSql;
 
 
 class BeneficiaireRepository extends ServiceEntityRepository
@@ -86,38 +88,39 @@ class BeneficiaireRepository extends ServiceEntityRepository
      * @return int
      * @throws Exception
      */
-    public function countAll($andWhere='')
+    public function countAll(?BeneficiaireListCriteria $criteria = null)
     {
+        [$conditions, $parametres] = null === $criteria
+            ? ['', []]
+            : BeneficiaireListSql::conditions($criteria);
+
         $query = "
             SELECT  b.id
             FROM beneficiaire b
                 LEFT JOIN structure_ sr ON sr.id = b.structure_rattachement_id
                 LEFT JOIN structure_identification sir ON sir.id = sr.structure_identification_id
                 LEFT JOIN structure_conseiller scr ON scr.id = b.conseiller_rattachement_id
-                LEFT JOIN logement l ON l.beneficiaire_id = b.id 
-            WHERE 1 " . $andWhere . "
+                LEFT JOIN logement l ON l.beneficiaire_id = b.id
+            WHERE 1 " . $conditions . "
             GROUP BY b.id
         ";
 
         $statement = $this->_em
             ->getConnection()
             ->prepare($query);
-        $result = $statement->executeQuery();
+        $result = $statement->executeQuery($parametres);
 
         return $result->rowCount();
     }
 
     /**
-     * @param $orderBy
-     * @param $orderType
-     * @param $start
-     * @param $length
-     * @param string $andWhere
      * @return array
      * @throws Exception
      */
-    public function findAllAjax($orderBy, $orderType, $start, $length, $andWhere='')
+    public function findAllAjax(BeneficiaireListCriteria $criteria)
     {
+        [$conditions, $parametres] = BeneficiaireListSql::conditions($criteria);
+
         $query = "
             SELECT  b.id AS beneficiaireId,
                     b.nom_SCI AS beneficiaireNomSCI,
@@ -145,17 +148,16 @@ class BeneficiaireRepository extends ServiceEntityRepository
                 LEFT JOIN structure_ sr ON sr.id = b.structure_rattachement_id
                 LEFT JOIN structure_identification sir ON sir.id = sr.structure_identification_id
                 LEFT JOIN structure_conseiller scr ON scr.id = b.conseiller_rattachement_id
-                LEFT JOIN logement l ON l.beneficiaire_id = b.id 
-                WHERE 1 " . $andWhere ."
+                LEFT JOIN logement l ON l.beneficiaire_id = b.id
+                WHERE 1 " . $conditions . "
             GROUP BY b.id
-            ORDER BY " . $orderBy . " " . $orderType . "
-            LIMIT " . $start . "," . $length . "
+            " . BeneficiaireListSql::orderBy($criteria) . BeneficiaireListSql::limit($criteria) . "
         ";
 
         $statement = $this->_em
             ->getConnection()
             ->prepare($query);
-        $result = $statement->executeQuery();
+        $result = $statement->executeQuery($parametres);
 
         return $result->fetchAllAssociative();
     }
@@ -238,32 +240,33 @@ class BeneficiaireRepository extends ServiceEntityRepository
      * @return int
      * @throws Exception
      */
-    public function countAllForAssistanceBeneficiaire($andWhere='')
+    public function countAllForAssistanceBeneficiaire(?BeneficiaireListCriteria $criteria = null)
     {
+        [$conditions, $parametres] = null === $criteria
+            ? ['', []]
+            : BeneficiaireListSql::conditions($criteria);
+
         $query = "
             SELECT  b.id
             FROM beneficiaire b
-            WHERE 1 " . $andWhere . "
+            WHERE 1 " . $conditions . "
         ";
         $statement = $this->_em
             ->getConnection()
             ->prepare($query);
-        $result = $statement->executeQuery();
+        $result = $statement->executeQuery($parametres);
 
         return $result->rowCount();
     }
 
     /**
-     * @param $orderBy
-     * @param $orderType
-     * @param $start
-     * @param $length
-     * @param string $andWhere
      * @return array
      * @throws Exception
      */
-    public function findAllAjaxForAssistanceBeneficiaire($orderBy, $orderType, $start, $length, $andWhere='')
+    public function findAllAjaxForAssistanceBeneficiaire(BeneficiaireListCriteria $criteria)
     {
+        [$conditions, $parametres] = BeneficiaireListSql::conditions($criteria);
+
         $query = "
             SELECT  b.id AS beneficiaireId,
                     CASE WHEN ('1 | sci' != b.type)
@@ -274,16 +277,15 @@ class BeneficiaireRepository extends ServiceEntityRepository
                     b.auteur_creation AS beneficiaireAuteurCreation,
                     '' AS action
             FROM beneficiaire b
-                WHERE 1 " . $andWhere ."
+                WHERE 1 " . $conditions . "
             GROUP BY b.id
-            ORDER BY " . $orderBy . " " . $orderType . "
-            LIMIT " . $start . "," . $length . "
+            " . BeneficiaireListSql::orderBy($criteria) . BeneficiaireListSql::limit($criteria) . "
         ";
 
         $statement = $this->_em
             ->getConnection()
             ->prepare($query);
-        $result = $statement->executeQuery();
+        $result = $statement->executeQuery($parametres);
 
         return $result->fetchAllAssociative();
     }

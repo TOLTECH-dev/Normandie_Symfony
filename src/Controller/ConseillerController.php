@@ -21,6 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\User;
+use App\Repository\Beneficiaire\BeneficiaireListCriteria;
 use App\Repository\BeneficiaireRepository;
 use App\Repository\Structure_Repository;
 use App\Service\BeneficiaireService;
@@ -73,61 +74,35 @@ class ConseillerController extends AbstractController
     public function beneficiaireListAjax(
         Request $request,
         BeneficiaireRepository $beneficiaireRepository,
-        Structure_Repository $structure_Repository,
-        BeneficiaireService $beneficiaireService
+        Structure_Repository $structure_Repository
     ): JsonResponse {
-        $andWhereByRole = '';
+        $structureRattachement = null;
         $userRole = $this->getUser()->getRoles();
         if (User::PARAM_ROLE_CONSEILLER === $userRole[0]) {
             $conseillerId = (int)substr($this->getUser()->getUsername(), 1);
             $structureId = $structure_Repository->findByConseillerId($conseillerId);
-            $andWhereByRole = " AND b.structure_rattachement_id = '" . $structureId['id'] . "' ";
+            $structureRattachement = isset($structureId['id']) ? (int) $structureId['id'] : null;
         }
 
         /* /////////////////////////////////////////////////////////////////
                                 GET AJAX DATA
         ///////////////////////////////////////////////////////////////// */
-        $dataForListAjax = $beneficiaireService->getDataForListAjaxAssistanceBeneficiaire($request);
-        $andWhere = $andWhereByRole . $dataForListAjax['andWhere'];
-
         $postData = $request->request->all();
         if (!empty($postData)) {
-            $recordsTotal = $beneficiaireRepository->countAllForAssistanceBeneficiaire($andWhere);
+            // Recherche, tri, pagination et périmètre passent par des critères validés : la saisie
+            // était auparavant concaténée dans la requête SQL (cf. BeneficiaireListCriteria).
+            $criteria = BeneficiaireListCriteria::pourAssistance($postData)
+                ->pourStructure($structureRattachement);
 
-            /* START of search */
-            if (!empty($postData['search']['value'] ?? null)) {
-                /* /////////////////////////////////////////////////////////////////
-                                        GLOBAL SEARCH
-                ///////////////////////////////////////////////////////////////// */
-
-                // Search filtered result with limit and orderBy clauses
-                $data = $beneficiaireRepository->findAllAjaxForAssistanceBeneficiaire(
-                    $dataForListAjax['orderBy'],
-                    $dataForListAjax['orderType'],
-                    $dataForListAjax['start'],
-                    $dataForListAjax['length'],
-                    $andWhere
-                );
-                $recordsFiltered = $beneficiaireRepository->countAllForAssistanceBeneficiaire($andWhere);
-            } else {
-                /* /////////////////////////////////////////////////////////////////
-                                        DEFAULT SEARCH
-                ///////////////////////////////////////////////////////////////// */
-
-                // Search all result with limit and orderBy clauses
-                $data = $beneficiaireRepository->findAllAjaxForAssistanceBeneficiaire(
-                    $dataForListAjax['orderBy'],
-                    $dataForListAjax['orderType'],
-                    $dataForListAjax['start'],
-                    $dataForListAjax['length'],
-                    $andWhere
-                );
-                $recordsFiltered = $recordsTotal;
-            }
-            /* END of search */
+            // Les deux compteurs reçoivent le même nombre, comme avant la correction, et le
+            // comptage n'est fait qu'une fois au lieu de deux.
+            $nombreLignes = $beneficiaireRepository->countAllForAssistanceBeneficiaire($criteria);
+            $recordsTotal = $nombreLignes;
+            $recordsFiltered = $nombreLignes;
+            $data = $beneficiaireRepository->findAllAjaxForAssistanceBeneficiaire($criteria);
 
             $response = [
-                "draw"            => intval($dataForListAjax['draw']),
+                "draw"            => (int) filter_var($postData['draw'] ?? 0, FILTER_VALIDATE_INT),
                 "recordsTotal"    => $recordsTotal,
                 "recordsFiltered" => $recordsFiltered,
                 "data"            => $data

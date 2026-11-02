@@ -134,138 +134,17 @@ class BeneficiaireService
         return $nomRue;
     }
 
-    /**
-     * @return array
+    /*
+     * Les deux méthodes qui préparaient les listes de bénéficiaires ont été retirées.
+     *
+     * Elles lisaient la requête (superglobale $_POST pour l'une) et assemblaient un fragment SQL en
+     * y concaténant le terme recherché, la colonne de tri, le sens et les bornes de pagination.
+     * Deux écrans exposant des données personnelles étaient ainsi ouverts à l'injection SQL.
+     *
+     * Ces responsabilités sont désormais tenues par App\Repository\Beneficiaire\BeneficiaireListCriteria
+     * (validation de ce qui vient du navigateur) et BeneficiaireListSql (fragments SQL et paramètres
+     * liés), que les dépôts et les contrôleurs utilisent directement.
      */
-    public function getDataForListAjax()
-    {
-        $arrayColumnAndWhere = [];
-        $andWhere = '';
-
-        /* START of $_POST variables coming from datatable */
-        $draw = $_POST["draw"]; //Counter used by DataTables to ensure that the Ajax returns from server-side processing requests are drawn in sequence
-        $orderByColumnIndex = $_POST['order'][0]['column']; //Index of the sorting column (0 index based)
-        $orderBy = $_POST['columns'][$orderByColumnIndex]['data']; //Get name of the sorting column from its index
-        $orderType = $_POST['order'][0]['dir']; //ASC or DESC
-        $start = $_POST["start"]; //Paging first record indicator
-        $length = $_POST['length']; //Number of records that the table can display in the current draw
-        /* END of $_POST variables */
-
-        $globalSearch = trim(strtolower($_POST['search']['value']));
-
-        if (!empty($globalSearch)) {
-            /* /////////////////////////////////////////////////////////////////
-                                    GLOBAL SEARCH
-            ///////////////////////////////////////////////////////////////// */
-
-            // CONSTUCTION DU FILTRE WHERE
-            $globalSearchArray = explode(' ', $globalSearch);
-            foreach ($globalSearchArray as $globalSearchWord) {
-                $globalSearchWord = trim($globalSearchWord);
-                for ($i = 0; $i < count($_POST['columns']); $i++) {
-
-                    switch ($_POST['columns'][$i]['data']) {
-                        case 'beneficiaireNomPrenom':
-                            $arrayColumnAndWhere[] = " LCASE(b.nom) LIKE '%" . $globalSearchWord . "%' OR LCASE(b.prenom) LIKE '%" . $globalSearchWord . "%'";
-                            $arrayColumnAndWhere[] = " LCASE(b.nom_SCI) LIKE '%" . $globalSearchWord . "%'";
-                            break;
-                        case 'beneficiaireType':
-                            $arrayColumnAndWhere[] = " LCASE(SUBSTRING(b.type, 4)) LIKE '%" . $globalSearchWord . "%'";
-                            break;
-                        case 'beneficiaireCodePostalVille':
-                            $arrayColumnAndWhere[] = " b.code_postal LIKE '%" . $globalSearchWord . "%' OR LCASE(b.ville) LIKE '%" . $globalSearchWord . "%'";
-                            break;
-                        case 'beneficiaireEmail':
-                            $arrayColumnAndWhere[] = " LCASE(b.email) LIKE '%" . $globalSearchWord . "%'";
-                            break;
-                        case 'beneficiaireStructureConseiller':
-                            $arrayColumnAndWhere[] = " LCASE(scr.nom) LIKE '%" . $globalSearchWord . "%' OR LCASE(scr.prenom) LIKE '%" . $globalSearchWord . "%'";
-                            $arrayColumnAndWhere[] = " LCASE(sir.nom) LIKE '%" . $globalSearchWord . "%'";
-                            break;
-//                        case 'nombreLogement':
-                        // pas de recherche faite sur le nombre de logement
-//                            break;
-                    }
-                }
-            }
-
-            if (!empty($arrayColumnAndWhere)) {
-                $andWhere = ' AND (' . implode(' OR ', $arrayColumnAndWhere) . ')';
-            }
-        }
-
-        return [
-            'draw' => $draw,
-            'orderBy' => $orderBy,
-            'orderType' => $orderType,
-            'start' => $start,
-            'length' => $length,
-            'andWhere' => $andWhere
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getDataForListAjaxAssistanceBeneficiaire(Request $request)
-    {
-        $arrayColumnAndWhere = [];
-        $andWhere = '';
-
-        /* START of $_POST variables coming from datatable */
-        $postData = $request->request->all();
-        $draw = $postData["draw"] ?? 0; //Counter used by DataTables to ensure that the Ajax returns from server-side processing requests are drawn in sequence
-        $orderByColumnIndex = $postData['order'][0]['column'] ?? 0; //Index of the sorting column (0 index based)
-        $orderByDataColumn = $postData['columns'][$orderByColumnIndex]['data'] ?? ''; //Get name of the sorting column from its index
-        $orderBy = $columnMapping[$orderByDataColumn] ?? 'b.id'; // Map to real column
-        $orderType = $postData['order'][0]['dir'] ?? 'ASC'; //ASC or DESC
-        $start = $postData["start"] ?? 0; //Paging first record indicator
-        $length = $postData['length'] ?? 25; //Number of records that the table can display in the current draw
-        /* END of $_POST variables */
-
-        $globalSearch = trim(strtolower($postData['search']['value'] ?? ''));
-
-        if (!empty($globalSearch)) {
-            /* /////////////////////////////////////////////////////////////////
-                                    GLOBAL SEARCH
-            ///////////////////////////////////////////////////////////////// */
-
-            // CONSTUCTION DU FILTRE WHERE
-            $globalSearchArray = explode(' ', $globalSearch);
-            foreach ($globalSearchArray as $globalSearchWord) {
-                $globalSearchWord = trim($globalSearchWord);
-                for ($i = 0; $i < count($postData['columns']); $i++) {
-
-                    switch ($postData['columns'][$i]['data']) {
-                        case 'beneficiaireNomPrenom':
-                            $arrayColumnAndWhere[] = " LCASE(b.nom) LIKE '%" . $globalSearchWord . "%' OR LCASE(b.prenom) LIKE '%" . $globalSearchWord . "%'";
-                            $arrayColumnAndWhere[] = " LCASE(b.nom_SCI) LIKE '%" . $globalSearchWord . "%'";
-                            break;
-                        case 'beneficiaireEmail':
-                            $arrayColumnAndWhere[] = " LCASE(b.email) LIKE '%" . $globalSearchWord . "%'";
-                            break;
-                        case 'beneficiaireAuteurCreation':
-                            $arrayColumnAndWhere[] = " b.auteur_creation LIKE '%" . $globalSearchWord . "%'";
-                            break;
-                    }
-                }
-            }
-
-            if (!empty($arrayColumnAndWhere)) {
-                $andWhere = ' AND (' . implode(' OR ', $arrayColumnAndWhere) . ')';
-            }
-        }
-
-        return [
-            'draw' => $draw,
-            'orderBy' => $orderBy,
-            'orderType' => $orderType,
-            'start' => $start,
-            'length' => $length,
-            'andWhere' => $andWhere
-        ];
-    }
-
     /**
      * @param Request $request
      * @param $isFrontOffice

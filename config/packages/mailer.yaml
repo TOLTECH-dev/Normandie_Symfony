@@ -1,3 +1,20 @@
 framework:
     mailer:
-        dsn: '%env(MAILER_DSN)%'
+        # Deux voies d'acheminement, pour pouvoir n'ouvrir que le courriel de double
+        # authentification sur un environnement où le reste du courrier doit rester muet.
+        #
+        #   main : voie ordinaire. C'est la voie par défaut — celle de la première entrée — donc
+        #          tout message qui ne demande rien de particulier l'emprunte.
+        #   mfa  : voie réservée au code de connexion, choisie par l'en-tête « X-Transport: mfa »
+        #          que pose MailerService lorsqu'on le lui demande.
+        #
+        # En recette, « main » vaut « null://null » : les courriels y sont acceptés puis jetés, sans
+        # erreur ni mise en file. Ailleurs, les deux voies pointent sur le même serveur et la
+        # distinction n'a aucun effet.
+        #
+        # Chaque environnement doit renseigner MAILER_MFA_DSN explicitement. L'écrire « ${MAILER_DSN} »
+        # dans .env ne suffirait pas : Dotenv résout les références au moment où il lit le fichier,
+        # donc avec la valeur de .env, et non avec celle que .env.<env>.local pose ensuite.
+        transports:
+            main: '%env(MAILER_DSN)%'
+            mfa: '%env(MAILER_MFA_DSN)%'

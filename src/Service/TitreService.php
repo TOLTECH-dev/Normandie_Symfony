@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Demande_;
 use App\Entity\Demande_statut;
+use App\Repository\Titre\TitreListSort;
 use App\Entity\Demande_travaux_devis;
 use App\Entity\Titre;
 use App\Repository\TitreRepository;
@@ -181,16 +182,17 @@ class TitreService
         if (!empty($postData)) {
             /* START of POST variables coming from datatable */
             $draw = $postData["draw"] ?? 0; //Counter used by DataTables to ensure that the Ajax returns from server-side processing requests are drawn in sequence
-            $orderBy = null;
-            $orderType = null;
-            if (!empty($postData['order'][0]['column'])) {
-                $orderByColumnIndex = $postData['order'][0]['column']; //Index of the sorting column (0 index based)
-                $orderBy = $postData['columns'][$orderByColumnIndex]['data']; //Get name of the sorting column from its index
-                $orderType = $postData['order'][0]['dir']; //ASC or DESC
-            }
 
-            $start  = $postData["start"] ?? 0; //Paging first record indicator
-            $length = $postData['length'] ?? 0; //Number of records that the table can display in the current draw
+            // La colonne et le sens de tri venaient du navigateur et étaient recopiés dans le DQL :
+            // ils passent désormais par une liste fermée (cf. TitreListSort).
+            $tri = TitreListSort::depuisDataTables($postData);
+            $orderBy = $tri->expression();
+            $orderType = $tri->sens();
+
+            // Bornes de pagination : des entiers, que le dépôt passe à setFirstResult/setMaxResults.
+            $start  = max(0, (int) filter_var($postData["start"] ?? 0, FILTER_VALIDATE_INT));
+            $length = (int) filter_var($postData['length'] ?? 0, FILTER_VALIDATE_INT);
+            $length = $length < 1 ? 25 : min($length, 100);
             /* END of POST variables */
 
 

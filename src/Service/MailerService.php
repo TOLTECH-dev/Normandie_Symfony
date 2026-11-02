@@ -12,6 +12,17 @@ use Twig\Environment;
 
 class MailerService
 {
+    /**
+     * Voie d'acheminement réservée au code de double authentification.
+     *
+     * Elle existe pour les environnements où le courrier ordinaire doit rester muet — la recette,
+     * dont la base est une copie de la production — sans priver pour autant la double
+     * authentification du seul moyen qu'elle a de fonctionner.
+     *
+     * Le nom correspond à une entrée de « framework.mailer.transports ». En production les deux
+     * voies pointent sur le même serveur : poser cet en-tête n'y change rien.
+     */
+    public const TRANSPORT_MFA = 'mfa';
 
     public function __construct(
         private readonly MailerInterface $mailer,
@@ -59,10 +70,18 @@ class MailerService
      * @param string $template Twig template path (e.g. 'emails/welcome.html.twig')
      * @param array $context
      * @param string|null $from
+     * @param string|null $transport voie d'acheminement, cf. self::TRANSPORT_MFA ; par défaut, la
+     *                               voie ordinaire
      * @return bool
      */
-    public function sendTemplateEmail(string $to, string $subject, string $template, array $context = [], ?string $from = null): bool
-    {
+    public function sendTemplateEmail(
+        string $to,
+        string $subject,
+        string $template,
+        array $context = [],
+        ?string $from = null,
+        ?string $transport = null
+    ): bool {
         $from = $from ?? $this->defaultFrom;
 
         $email = (new TemplatedEmail())
@@ -71,6 +90,12 @@ class MailerService
             ->subject($subject)
             ->htmlTemplate($template)
             ->context($context);
+
+        if (null !== $transport) {
+            // En-tête lu par Symfony au moment de l'envoi — y compris dans le worker, lorsque le
+            // message a transité par une file — pour choisir la voie.
+            $email->getHeaders()->addTextHeader('X-Transport', $transport);
+        }
 
         try {
             $this->mailer->send($email);

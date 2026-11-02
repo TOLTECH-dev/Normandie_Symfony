@@ -1,8 +1,29 @@
 security:
     enable_authenticator_manager: true
 
+    # Reco-16 du plan de traitement des risques : protection des mots de passe par Argon2id,
+    # validée par la Région. Argon2id consomme de la mémoire en plus du temps de calcul, ce qui
+    # rend le cassage par cartes graphiques nettement plus coûteux que bcrypt.
+    #
+    # « migrate_from: auto » conserve la vérification des empreintes bcrypt existantes : un compte
+    # qui se connecte est authentifié par son ancienne empreinte, puis celle-ci est immédiatement
+    # réécrite en Argon2id par UserRepository::upgradePassword, sans que l'utilisateur s'en aperçoive.
+    #
+    # Les empreintes héritées de l'ancienne application (SHA-512 + sel, 88 caractères) ne sont
+    # DÉLIBÉRÉMENT pas vérifiables : PHP ne reconnaît pas ce format, et rétablir un vérificateur
+    # reviendrait à réintroduire l'algorithme que la Reco-16 demande d'abandonner. Ces empreintes
+    # sont neutralisées au déploiement (sql/reco16_invalidation_empreintes_anciennes.sql) ; les
+    # comptes concernés reprennent la main par « mot de passe oublié ».
+    #
+    # Les paramètres sont portés par l'environnement : ils se calibrent sur la machine qui exécute
+    # le calcul, sans livraison de code (cf. SECURITY_ARGON2ID_* dans .env).
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+            algorithm: argon2id
+            memory_cost: '%env(int:SECURITY_ARGON2ID_MEMORY_COST)%'
+            time_cost: '%env(int:SECURITY_ARGON2ID_TIME_COST)%'
+            migrate_from:
+                - auto
 
     # Regroupements fonctionnels (vulnérabilité 6 / recommandation 10 de l audit ALMOND).
     # Un écran ne cite plus la liste des profils autorisés, mais le regroupement correspondant.
@@ -132,12 +153,16 @@ security:
 when@test:
     security:
         password_hashers:
-            # By default, password hashers are resource intensive and take time. This is
-            # important to generate secure password hashes. In tests however, secure hashes
-            # are not important, waste resources and increase test times. The following
-            # reduces the work factor to the lowest possible values.
+            # Même algorithme qu'en production — les tests doivent éprouver ce qui sera livré —
+            # mais au coût le plus faible possible : calibrer sur les tests gâcherait du temps
+            # de calcul sans rien démontrer de plus.
+            #
+            # Les minima sont ceux de Sodium, que Symfony retient pour « argon2id » dès que
+            # l'extension est chargée : 3 passes et 10 240 Kio. Les descendre fait échouer la
+            # construction du hacheur, et non le calcul (« $opsLimit must be 3 or greater »).
             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
-                algorithm: auto
-                cost: 4 # Lowest possible value for bcrypt
-                time_cost: 3 # Lowest possible value for argon
-                memory_cost: 10 # Lowest possible value for argon
+                algorithm: argon2id
+                time_cost: 3        # minimum admis par Sodium
+                memory_cost: 10240  # minimum admis par Sodium, en Kio
+                migrate_from:
+                    - auto

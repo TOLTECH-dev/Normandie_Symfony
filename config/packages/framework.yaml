@@ -23,10 +23,17 @@ framework:
         cookie_lifetime: 0
 
     # Adresses des proxys placés devant l'application (cf. TRUSTED_PROXIES dans .env) : elles
-    # déterminent l'adresse cliente retenue derrière un répartiteur de charge. Tant qu'elles valent
-    # « REMOTE_ADDR », l'en-tête X-Forwarded-For envoyé par un client joignant directement le
-    # serveur est cru sur parole, ce qui contournerait le filtrage réseau (Reco-18) et les
-    # compteurs anti-bruteforce (VUL03).
+    # déterminent l'adresse cliente retenue derrière un répartiteur de charge, dont dépendent le
+    # filtrage réseau (Reco-18) et les compteurs anti-bruteforce (VUL03).
+    #
+    # La liste est vide, et doit le rester : en production, Apache rétablit lui-même l'adresse du
+    # visiteur via mod_remoteip (réponse DRI du 11/10/2026), si bien que REMOTE_ADDR porte déjà
+    # l'adresse réelle et qu'aucun en-tête X-Forwarded-* n'a besoin d'être cru. Une liste non vide
+    # — « REMOTE_ADDR » en particulier — rendrait au contraire ces en-têtes dignes de foi pour un
+    # client qui joindrait le serveur sans intermédiaire.
+    #
+    # Les en-têtes ci-dessous ne sont donc jamais pris en compte en l'état ; ils restent déclarés
+    # pour que la configuration reste juste si un proxy identifiable est un jour placé devant.
     trusted_proxies: '%env(TRUSTED_PROXIES)%'
     trusted_headers:
         - x-forwarded-for

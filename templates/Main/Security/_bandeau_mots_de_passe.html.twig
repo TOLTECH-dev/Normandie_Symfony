@@ -1,0 +1,23 @@
+{#
+    Reco-16 — bandeau d'accompagnement de la bascule vers Argon2id.
+
+    Affiché sur les deux pages de connexion, back-office et espace bénéficiaire, tant que
+    SECURITY_PASSWORD_NOTICE_ENABLED vaut true.
+
+    Il s'adresse indistinctement à tous les visiteurs : adresser un message ciblé aux seuls comptes
+    concernés supposerait de confirmer qu'une adresse correspond à un compte existant, ce que
+    l'audit demande d'éviter. Il ne nomme donc personne et ne révèle rien.
+
+    Deux classes sont posées pour que chaque page l'habille à sa façon : « auth-alert
+    auth-alert-info » pour le gabarit d'authentification refondu, « alert alert-info » pour les
+    pages encore au gabarit d'origine.
+#}
+{% if bandeau_mots_de_passe|default(false) %}
+    <div class="auth-alert auth-alert-info alert alert-info" role="status">
+        <strong>Vous ne parvenez plus à vous connecter ?</strong>
+        La protection des mots de passe de la plateforme Chèque Éco-Énergie a été renforcée. Les
+        mots de passe créés avant cette évolution ne sont plus utilisables et doivent être
+        renouvelés&nbsp;: utilisez le lien <em>Mot de passe oublié</em> ci-dessous pour en choisir
+        un nouveau. Cette démarche n'est à faire qu'une fois.
+    </div>
+{% endif %}

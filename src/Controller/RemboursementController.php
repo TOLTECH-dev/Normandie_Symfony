@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\Remboursement\RemboursementListCriteria;
 use App\Repository\Remboursement_Repository;
 use App\Service\AdminFormService;
 use App\Service\RemboursementService;
@@ -29,12 +30,7 @@ class RemboursementController extends AbstractController
             throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException('Utilisateur non valide');
         }
         $data = $remboursementRepository->findForListAjax(
-            $remboursementService->getDataOptionRepository($user),
-            null,
-            null,
-            null,
-            null,
-            ''
+            $remboursementService->getDataOptionRepository($user)
         );
         return $this->render('BackOffice/Remboursement/list.html.twig', [
             'isDataEmpty' => empty($data)
@@ -52,38 +48,20 @@ class RemboursementController extends AbstractController
             throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException('Utilisateur non valide');
         }
         $options = $remboursementService->getDataOptionRepository($user);
-        $dataForListAjax = $remboursementService->getDataForListAjax(
-            $options['production_travauxNiveau_BBC1'],
-            $options['production_travauxNiveau_BBC2']
-        );
+
         if ($request->isMethod('POST')) {
-            $recordsTotal = $remboursementRepository->countForList($options, '');
-            if (!empty($dataForListAjax["columnWhereTmp"])) {
-                $data = $remboursementRepository->findForListAjax(
-                    $options,
-                    $dataForListAjax["orderBy"],
-                    $dataForListAjax["orderType"],
-                    $dataForListAjax["start"],
-                    $dataForListAjax["length"],
-                    $dataForListAjax["where"]
-                );
-                $recordsFiltered = $remboursementRepository->countForList(
-                    $options,
-                    $dataForListAjax["where"]
-                );
-            } else {
-                $data = $remboursementRepository->findForListAjax(
-                    $options,
-                    $dataForListAjax["orderBy"],
-                    $dataForListAjax["orderType"],
-                    $dataForListAjax["start"],
-                    $dataForListAjax["length"],
-                    $dataForListAjax["where"]
-                );
-                $recordsFiltered = $recordsTotal;
-            }
+            // Recherches, tri et pagination validés : colonnes connues, sens asc/desc, 100 lignes
+            // au plus. Aucune valeur reçue n'est écrite dans le SQL (cf. RemboursementListSql).
+            $criteria = RemboursementListCriteria::fromDataTables($request->request->all());
+
+            $recordsTotal = $remboursementRepository->countForList($options);
+            $data = $remboursementRepository->findForListAjax($options, $criteria);
+            $recordsFiltered = $criteria->hasFilters() || $criteria->hasGlobalSearch()
+                ? $remboursementRepository->countForList($options, $criteria)
+                : $recordsTotal;
+
             $response = [
-                "draw" => intval($dataForListAjax["draw"]),
+                "draw" => (int) $request->request->get('draw', 0),
                 "recordsTotal" => $recordsTotal,
                 "recordsFiltered" => $recordsFiltered,
                 "data" => $data

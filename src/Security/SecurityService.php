@@ -61,9 +61,17 @@ class SecurityService
         );
     }
 
+    /**
+     * Reco-16 : les comptes rattachés à FranceConnect ne sont plus exclus de la réinitialisation.
+     *
+     * Ils l'étaient parce qu'ils étaient censés se connecter par FranceConnect. Le bouton ayant
+     * été retiré de la page de connexion, et les empreintes héritées étant neutralisées, ce refus
+     * les privait de tout moyen d'accès : ils disposent tous d'un mot de passe, et le parcours
+     * « mot de passe oublié » est désormais leur voie de retour, comme pour les autres comptes.
+     */
     public function handleSendResettingEmail(?User $user, string $ttl): void
     {
-        if (null === $user || (!$user->getConfirmationToken() && !$user->isEnabled()) || $user->isFranceConnect()) {
+        if (null === $user || (!$user->getConfirmationToken() && !$user->isEnabled())) {
             return;
         }
 
