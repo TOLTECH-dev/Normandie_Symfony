@@ -239,7 +239,7 @@ class DemandeTravauxService extends DemandeServiceFO
         Logement     $logement,
         Demande_     $demande,
         array        $userRoles = [],
-        Demande_     $auditE = null
+        ?Demande_     $auditE = null
     ): array
     {
 
@@ -701,7 +701,7 @@ class DemandeTravauxService extends DemandeServiceFO
         Logement     $logement,
         Demande_     $demande,
         array        $userRoles = [],
-        Demande_     $auditE = null,
+        ?Demande_     $auditE = null,
         ?int         $nbPersFoyerOld = null,
         ?string         $revenuFoyerOld = null,
         array        $arrayDemandeStatutKeep = []

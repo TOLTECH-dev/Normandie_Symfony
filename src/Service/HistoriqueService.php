@@ -363,7 +363,7 @@ class HistoriqueService
         $demandeType,
         $destinataire = null,
         $beneficiaireType = null,
-        Historique_ $historique = null,
+        ?Historique_ $historique = null,
         $documentJPAlt = null,
         $documentKBISAlt = null,
         $documentAIAlt = null,
@@ -1209,7 +1209,7 @@ class HistoriqueService
         $versoChequeAlt = null,
         $ficheTravauxAlt = null,
         $isBBC1 = null,
-        string $dateEmissionTitre = null,
+        ?string $dateEmissionTitre = null,
         $remboursementId = null
     ) {
         $demandeTypeLabel = Demande_::$demandeType[$demandeType];

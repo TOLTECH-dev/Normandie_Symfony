@@ -47,7 +47,7 @@ class ProcessRetourProductionCommand extends Command
         TitreService           $titreService,
         ParameterBagInterface  $parameterBag,
         HistoriqueService $historiqueService,
-        string                 $name = null
+        ?string                 $name = null
     ) {
         parent::__construct($name);
         $this->entityManager = $entityManager;

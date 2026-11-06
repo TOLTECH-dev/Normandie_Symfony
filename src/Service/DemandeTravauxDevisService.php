@@ -279,8 +279,8 @@ class DemandeTravauxDevisService extends DemandeServiceFO
         string                $demandeId,
         ?Demande_             $demandeTravaux,
         Demande_travaux_devis $devis,
-        Instruction_          $instruction = null,
-        Remboursement_        $remboursement = null,
+        ?Instruction_          $instruction = null,
+        ?Remboursement_        $remboursement = null,
         array                 $userRoles = []
     ): array
     {
@@ -711,7 +711,7 @@ class DemandeTravauxDevisService extends DemandeServiceFO
         Logement              $logement,
         ?Demande_              $demandeTravaux,
         Demande_travaux_devis $devis,
-        Instruction_          $instruction = null,
+        ?Instruction_          $instruction = null,
         array                 $userRoles = []
     ): array
     {

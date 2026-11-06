@@ -30,7 +30,7 @@ class UpgradeDemandeCommand extends Command
         HistoriqueService $historiqueService,
         Demande_Repository $demandeRepository,
         Demande_statutRepository $demandeStatutRepository,
-        string $name = null
+        ?string $name = null
     ) {
         parent::__construct($name);
         $this->demandeServiceFO = $demandeServiceFO;

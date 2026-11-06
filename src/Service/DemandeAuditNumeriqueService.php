@@ -77,7 +77,7 @@ class DemandeAuditNumeriqueService extends DemandeServiceFO
                 $beneficiaireId,
                 $logementId,
                 $type,
-        UserInterface $user = null
+        ?UserInterface $user = null
     ) {
         $demandeTypeLabel = Demande_::$demandeType[$type];
         $returnData = [

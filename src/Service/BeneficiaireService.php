@@ -156,7 +156,7 @@ class BeneficiaireService
     public function getDataForAddAction(
         Request $request,
         $isFrontOffice,
-        User    $user = null,
+        ?User    $user = null,
         $userIdParam = null
     ) {
 
@@ -394,7 +394,7 @@ class BeneficiaireService
     public function getDataForEditAction(
         $isFrontOffice,
         $beneficiaireId,
-        User $user = null
+        ?User $user = null
     ) {
 
         $returnData = [

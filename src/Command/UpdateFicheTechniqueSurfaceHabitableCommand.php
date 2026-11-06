@@ -32,7 +32,7 @@ class UpdateFicheTechniqueSurfaceHabitableCommand extends Command
         Demande_Repository            $demandeRepository,
         FicheTechniqueFieldRepository $ficheTechniqueFieldRepository,
         LoggerInterface               $loggerUpdateFicheTechnique,
-        string                        $name = null
+        ?string                        $name = null
     )
     {
         $this->em = $em;

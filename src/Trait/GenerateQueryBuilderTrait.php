@@ -12,7 +12,7 @@ Trait GenerateQueryBuilderTrait
      * @param array|null $arrayWhere
      * @return QueryBuilder
      */
-    public function generateWhereQueryBuilder(QueryBuilder &$qb, array $arrayWhere = null)
+    public function generateWhereQueryBuilder(QueryBuilder &$qb, ?array $arrayWhere = null)
     {
         if($arrayWhere) {
             $countElement = 0;

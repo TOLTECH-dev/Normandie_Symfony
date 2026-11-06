@@ -1046,7 +1046,10 @@ class DemandeServiceFO
      * @return bool
      */
     public function checkSAREDemandeAuditEtTravaux(
-        Demande_ $demandeAuditE = null,
+        // Pas de valeur par défaut : le paramètre précède des paramètres requis, et les deux
+        // appelants le fournissent toujours — explicitement à null. Lui laisser « = null » le
+        // rendrait facultatif avant des paramètres obligatoires, ce que PHP déprécie.
+        ?Demande_ $demandeAuditE,
         $participationSARE,
         $nbPersFoyer,
         $revenuReference
@@ -1151,7 +1154,7 @@ class DemandeServiceFO
     public function cleanInstructionRestoreStatutAndHistorise(
         array $demandeIdList,
         Beneficiaire $beneficiaire,
-        Logement $logement = null
+        ?Logement $logement = null
     ) {
         foreach ($demandeIdList as $demandeId) {
 
@@ -1214,7 +1217,7 @@ class DemandeServiceFO
      * @param array $ANAHCritere
      * @return void
      */
-    public function setDemandeTypeMenage(Demande_ $demande, Beneficiaire $beneficiaire = null, array $ANAHCritere = []): void
+    public function setDemandeTypeMenage(Demande_ $demande, ?Beneficiaire $beneficiaire = null, array $ANAHCritere = []): void
     {
         if (empty($beneficiaire)) {
             $beneficiaire = $this->beneficiaireRepository->find($demande->getBeneficiaireId());
@@ -1718,7 +1721,7 @@ class DemandeServiceFO
     private function updateStatutAndHistoriseAfterCleanInstruction(
         Demande_ $demande,
         Beneficiaire $beneficiaire,
-        Logement $logement = null
+        ?Logement $logement = null
     ) {
         $statut = null;
         $envoiEmailDansHistoriqueSave = false;
