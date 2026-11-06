@@ -142,7 +142,10 @@ class Demande_travaux_devis_uploadType extends AbstractType
             'data_class' => Demande_travaux_devis_upload::class,
             'var' => null,
             'constraints' => [
-                new Callback(['callback' => function (Demande_travaux_devis_upload $data = null, ExecutionContext $context) {
+                // Type nullable explicite et sans valeur par défaut : la contrainte Callback fournit
+                // toujours les deux arguments, et un paramètre facultatif placé avant un paramètre
+                // requis est déprécié depuis PHP 8.4.
+                new Callback(['callback' => function (?Demande_travaux_devis_upload $data, ExecutionContext $context) {
                     if (!empty($data) && $this->devisCustomColumnsAttrRequired) {
                         if (empty($data->getBiosource())) {
                             $context
