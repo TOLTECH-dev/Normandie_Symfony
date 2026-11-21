@@ -1,0 +1,69 @@
+# ============================================================================================
+#  Chèque éco-énergie Normandie — mise en maintenance
+# ============================================================================================
+#
+#  Ce fichier REMPLACE public/.htaccess le temps d'une intervention. Toute requête est alors
+#  servie par public/maintenance2.php, qui renvoie lui-même le code 503 et l'en-tête Retry-After.
+#
+#  ACTIVER
+#      cd <racine>/public
+#      cp .htaccess .htaccess-normal          # une seule fois, à conserver
+#      cp .htaccess-maintenance .htaccess
+#
+#  DÉSACTIVER
+#      cp .htaccess-normal .htaccess
+#
+#  Apache relit le .htaccess à chaque requête : l'effet est immédiat dans les deux sens, sans
+#  rechargement d'Apache ni de php-fpm. C'est l'intérêt de cette méthode par rapport au
+#  renommage de index.php, qui exige de vider OPcache — lequel, en validate_timestamps=0,
+#  continue sinon de servir l'ancien code compilé, y compris au retour à la normale.
+#
+#  LIMITE À CONNAÎTRE
+#      maintenance2.php est exécuté par PHP. Si l'intervention porte sur PHP lui-même (montée de
+#      version, php-fpm arrêté), cette page ne s'affichera pas davantage que le site. Il faudra
+#      alors une page statique servie par Apache seul.
+#
+#  Ce fichier suppose que AllowOverride autorise FileInfo et Indexes sur le répertoire. C'est le
+#  cas puisque le .htaccess de Symfony y fonctionne déjà.
+# ============================================================================================
+
+DirectoryIndex maintenance2.php
+
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # ----------------------------------------------------------------------------------------
+    #  Dérogation pour l'équipe technique, afin de contrôler l'application pendant l'intervention
+    #  pendant qu'elle reste fermée au public.
+    #
+    #  Décommenter et renseigner l'adresse publique du poste. Attention : une sortie attribuée
+    #  dynamiquement change sans prévenir — vérifier l'adresse réellement vue juste avant, et
+    #  non celle notée la semaine précédente.
+    #
+    #  Tant que ces deux lignes restent commentées, la maintenance s'applique à tout le monde.
+    # ----------------------------------------------------------------------------------------
+    # RewriteCond %{REMOTE_ADDR} !^203\.0\.113\.7$
+    # RewriteRule ^ - [E=MAINTENANCE:1]
+
+    # La page elle-même doit rester joignable, sans quoi la réécriture boucle.
+    RewriteCond %{REQUEST_URI} ^/maintenance2\.php$
+    RewriteRule ^ - [L]
+
+    # Tout le reste part sur la page de maintenance, par une réécriture INTERNE : l'adresse
+    # demandée est conservée dans la barre du navigateur, et le visiteur retrouve sa page au
+    # retour du service en rechargeant simplement.
+    #
+    # Pas de drapeau R=503 ici : maintenance2.php pose lui-même le statut et le Retry-After.
+    # Un R=503 produirait en plus une redirection, ce qui n'est pas le comportement attendu.
+    RewriteRule ^ /maintenance2.php [L]
+</IfModule>
+
+# Aucune mise en cache de la réponse, pour que le retour du service soit immédiat côté visiteur.
+<IfModule mod_headers.c>
+    Header always set Cache-Control "no-store, no-cache, must-revalidate"
+    Header always set X-Robots-Tag "noindex"
+</IfModule>

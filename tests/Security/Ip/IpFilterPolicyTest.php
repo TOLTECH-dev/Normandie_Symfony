@@ -88,6 +88,48 @@ class IpFilterPolicyTest extends TestCase
         }
     }
 
+    /**
+     * Ce que le conteneur injecte réellement lorsque la variable d'environnement est vide.
+     *
+     * Le processeur « csv: » s'appuie sur str_getcsv(), qui rend [null] pour une chaîne vide.
+     * Le cas n'était pas couvert : les tests ci-dessus construisent la politique avec de vrais
+     * tableaux vides, que le conteneur ne produit jamais. En recette, le 06/11/2026, un
+     * SECURITY_IP_FILTER_ADMINISTRATEURS vide levait « IpUtils::checkIp4(): Argument #2 ($ip)
+     * must be of type string, null given ».
+     *
+     * @dataProvider provideListesVides
+     *
+     * @param list<string|null> $liste
+     */
+    public function testUneListeVidePeuImporteSaFormeDesactiveLeFiltrage(array $liste): void
+    {
+        $politique = new IpFilterPolicy(['administrateurs' => $liste], self::ROLES);
+        $administrateur = $this->compte('ROLE_ADMIN');
+
+        self::assertFalse($politique->estFiltre($administrateur));
+        self::assertTrue($politique->autorise($administrateur, '81.250.1.1'));
+    }
+
+    public static function provideListesVides(): iterable
+    {
+        yield 'tableau vide' => [[]];
+        yield 'variable vide via le processeur csv:' => [str_getcsv('')];
+        yield 'chaîne vide' => [['']];
+        yield 'espaces seuls' => [['   ']];
+        yield 'virgule esseulée' => [str_getcsv(',')];
+    }
+
+    public function testLesEntreesVidesNEmpechentPasLesReseauxValablesDeFiltrer(): void
+    {
+        // Une liste mal saisie — « 203.0.113.7, » — ne doit ni lever d'erreur ni ouvrir l'accès.
+        $politique = new IpFilterPolicy(['administrateurs' => str_getcsv('203.0.113.7,')], self::ROLES);
+        $administrateur = $this->compte('ROLE_ADMIN');
+
+        self::assertTrue($politique->estFiltre($administrateur));
+        self::assertTrue($politique->autorise($administrateur, '203.0.113.7'));
+        self::assertFalse($politique->autorise($administrateur, '81.250.1.1'));
+    }
+
     private function politique(): IpFilterPolicy
     {
         return new IpFilterPolicy(self::RESEAUX, self::ROLES);

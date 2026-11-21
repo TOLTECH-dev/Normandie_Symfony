@@ -23,14 +23,54 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 final class IpFilterPolicy
 {
+    /** @var array<string, list<string>> */
+    private readonly array $reseauxParGroupe;
+
     /**
-     * @param array<string, list<string>> $reseauxParGroupe groupe => réseaux autorisés
-     * @param array<string, list<string>> $rolesParGroupe   groupe => rôles concernés
+     * @param array<string, list<string|null>> $reseauxParGroupe groupe => réseaux autorisés
+     * @param array<string, list<string>>      $rolesParGroupe   groupe => rôles concernés
      */
     public function __construct(
-        private readonly array $reseauxParGroupe,
+        array $reseauxParGroupe,
         private readonly array $rolesParGroupe
     ) {
+        $this->reseauxParGroupe = self::normaliser($reseauxParGroupe);
+    }
+
+    /**
+     * Écarte les entrées vides avant tout usage.
+     *
+     * Ce n'est pas une précaution de confort : le processeur « csv: » de Symfony s'appuie sur
+     * str_getcsv(), qui rend `[null]` — et non `[]` — pour une chaîne vide. La liste vide, qui est
+     * pourtant le réglage documenté pour désactiver le filtrage d'un groupe, arrivait donc ici
+     * comme un réseau valant `null` : le groupe passait pour filtré, et IpUtils::checkIp() levait
+     * une TypeError à la première connexion d'un compte concerné. Constaté en recette le
+     * 06/11/2026 ; les tests ne l'avaient pas vu, construisant la politique avec de vrais tableaux
+     * vides plutôt qu'avec ce que produit le conteneur.
+     *
+     * @param array<string, list<string|null>> $reseauxParGroupe
+     *
+     * @return array<string, list<string>>
+     */
+    private static function normaliser(array $reseauxParGroupe): array
+    {
+        $normalises = [];
+
+        foreach ($reseauxParGroupe as $groupe => $reseaux) {
+            $retenus = [];
+
+            foreach ((array) $reseaux as $reseau) {
+                $reseau = trim((string) $reseau);
+
+                if ('' !== $reseau) {
+                    $retenus[] = $reseau;
+                }
+            }
+
+            $normalises[$groupe] = $retenus;
+        }
+
+        return $normalises;
     }
 
     /**

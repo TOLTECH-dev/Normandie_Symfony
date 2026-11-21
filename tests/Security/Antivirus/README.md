@@ -23,13 +23,28 @@ décide du verdict.
 À faire une fois ClamAV installé, avant la mise en production. C'est l'essai qu'ALMOND a mené lors
 de l'audit et qu'un contre-audit refera.
 
-1. **Vérifier que l'analyse est active** sur l'environnement :
-   `SECURITY_ANTIVIRUS_ENABLED=true` et `SECURITY_ANTIVIRUS_DSN` renseigné dans `.env.recette.local`.
+0. **Avant d'activer quoi que ce soit : la supervision.** `SECURITY_ANTIVIRUS_REFUSE_WHEN_UNAVAILABLE`
+   vaut `true`, donc un arrêt de clamd qui passerait inaperçu bloquerait **tout dépôt de fichier**
+   sur la plateforme. La sonde Nagios de l'hébergeur est en place au 06/11/2026 ; s'assurer qu'elle
+   interroge le service (`PING`/`PONG`) et non la seule présence du processus, et que son alerte
+   parvienne à quelqu'un qui agit.
 
-2. **Vérifier que le service répond**, depuis le serveur applicatif :
+1. **Vérifier que l'analyse est active** sur l'environnement : `SECURITY_ANTIVIRUS_ENABLED=true` et
+   `SECURITY_ANTIVIRUS_DSN` renseigné dans **`.env.local`** — le serveur n'a pas de
+   `.env.recette.local`, la recette tournant dans l'environnement `prod`.
+
+2. **Vérifier que le service répond**, depuis le serveur applicatif. `socat` n'est pas installé :
    ```bash
-   echo -n "PING" | socat - UNIX-CONNECT:/var/run/clamav/clamd.ctl   # ou TCP:127.0.0.1:3310
+   exec 3<>/dev/tcp/127.0.0.1/3310 && printf 'PING\n' >&3 && head -c 4 <&3; exec 3>&-
    # réponse attendue : PONG
+   ```
+
+   **Contrôler au passage le `StreamMaxLength` de clamd** : `SECURITY_ANTIVIRUS_MAX_STREAM_SIZE`
+   (20 Mio) doit lui rester **strictement inférieur**, sinon clamd coupe le flux et l'analyse
+   échoue — ce qui, le refus étant bloquant, se traduit par un dépôt impossible et non par un
+   fichier accepté sans contrôle.
+   ```bash
+   grep -i StreamMaxLength /etc/clamav/clamd.conf
    ```
 
 3. **Fabriquer le fichier de test** (chaîne officielle EICAR, inoffensive) :
@@ -41,9 +56,17 @@ de l'audit et qu'un contre-audit refera.
    énergétique, ou comme RIB de partenaire.
 
    Résultat attendu : le formulaire refuse le dépôt avec le message « Ce fichier a été reconnu
-   comme dangereux par l'antivirus », aucun fichier n'est écrit dans le dossier des données, une
-   ligne « Fichier infecté refusé » apparaît dans les journaux, et les administrateurs reçoivent
-   l'alerte.
+   comme dangereux par l'antivirus : son dépôt est refusé. », aucun fichier n'est écrit dans le
+   dossier des données, et une ligne `Fichier infecté refusé` apparaît dans les journaux.
+
+   **En recette, l'alerte aux administrateurs ne part pas, et c'est voulu.**
+   `AlerteAntivirusMailer` emprunte la voie ordinaire — seul le code MFA passe par la voie `mfa` —
+   or `MAILER_DSN=null://null` y jette le courrier. C'est heureux : le mailer parcourt les comptes
+   `ROLE_SUPER_ADMIN` et `ROLE_ADMIN` de la base, qui est une copie de la production, et alerterait
+   donc de vrais administrateurs sur un faux incident. **La preuve à retenir en recette est la
+   ligne de journal, pas le courriel.** L'envoi de l'alerte ne se vérifie qu'en production, ou en
+   local où les destinataires sont forcés sur `contact@toltech.fr`
+   (`config/packages/dev/mailer.yaml`).
 
 5. **Vérifier qu'un dépôt normal fonctionne toujours** : déposer un PDF ordinaire et contrôler
    qu'il est accepté, puis consultable.

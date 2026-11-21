@@ -130,6 +130,11 @@ security:
     access_control:
         # back-office
         - { path: ^/admin/bo_login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # La déconnexion doit rester joignable pendant la saisie du code MFA : le jeton
+        # intermédiaire ne porte aucun rôle, si bien que la règle « ^/admin » ci-dessous la
+        # refusait et renvoyait sur le formulaire de code. Un utilisateur qui ne recevait pas son
+        # code restait alors enfermé sur cette page, sans moyen de revenir à la connexion.
+        - { path: ^/admin/bo_logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # Saisie du code MFA : réservée à l'utilisateur dont le mot de passe vient d'être validé.
         - { path: ^/admin/2fa, roles: IS_AUTHENTICATED_2FA_IN_PROGRESS }
         - { path: ^/admin, roles: [ ROLE_CONSEILLER, ROLE_INSTRUCTEUR, ROLE_INSTRUCTEUR_UP, ROLE_AUDITEUR, ROLE_RENOVATEUR, ROLE_EPCI, ROLE_CLIENT, ROLE_AUTOMATE, ROLE_TECHNIQUE ] }

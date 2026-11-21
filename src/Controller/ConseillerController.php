@@ -48,20 +48,14 @@ class ConseillerController extends AbstractController
         Structure_Repository $structure_Repository
     ): Response {
         /* /////////////////////////////////////////////////////////////////
-                                GET LIST BENEFICIAIRE
-        ///////////////////////////////////////////////////////////////// */
-        $andWhereByRole = '';
-        $userRole = $this->getUser()->getRoles();
-        if (User::PARAM_ROLE_CONSEILLER === $userRole[0]) {
-            $conseillerId = (int)substr($this->getUser()->getUsername(), 1);
-            $structureId = $structure_Repository->findByConseillerId($conseillerId);
-            $andWhereByRole = " AND b.structure_rattachement_id = '" . $structureId['id'] . "' ";
-        }
-
-        /* /////////////////////////////////////////////////////////////////
                                 GET COUNT BENEFICIAIRES
         ///////////////////////////////////////////////////////////////// */
-        $recordsTotal = $beneficiaireRepository->countAllForAssistanceBeneficiaire($andWhereByRole);
+        // Le périmètre passait par un fragment SQL concaténé ; il est désormais porté par les
+        // mêmes critères que le tableau, qui lient la valeur en paramètre.
+        $criteria = BeneficiaireListCriteria::pourAssistance([])
+            ->pourStructure($this->structureRattachementDuConseiller($structure_Repository));
+
+        $recordsTotal = $beneficiaireRepository->countAllForAssistanceBeneficiaire($criteria);
 
         return $this->render('BackOffice/Conseiller/list.html.twig', [
             'recordsTotal' => $recordsTotal
@@ -76,13 +70,7 @@ class ConseillerController extends AbstractController
         BeneficiaireRepository $beneficiaireRepository,
         Structure_Repository $structure_Repository
     ): JsonResponse {
-        $structureRattachement = null;
-        $userRole = $this->getUser()->getRoles();
-        if (User::PARAM_ROLE_CONSEILLER === $userRole[0]) {
-            $conseillerId = (int)substr($this->getUser()->getUsername(), 1);
-            $structureId = $structure_Repository->findByConseillerId($conseillerId);
-            $structureRattachement = isset($structureId['id']) ? (int) $structureId['id'] : null;
-        }
+        $structureRattachement = $this->structureRattachementDuConseiller($structure_Repository);
 
         /* /////////////////////////////////////////////////////////////////
                                 GET AJAX DATA
@@ -112,6 +100,28 @@ class ConseillerController extends AbstractController
         }
 
         return new JsonResponse([]);
+    }
+
+    /**
+     * Périmètre du conseiller connecté : structure à laquelle ses bénéficiaires sont rattachés.
+     *
+     * Renvoie null pour les profils qui voient tous les bénéficiaires. Pour un conseiller dont la
+     * structure est introuvable, renvoie 0 — un identifiant qui n'existe pas — de sorte que la
+     * liste reste vide : c'était le comportement de l'ancienne requête, où la comparaison se
+     * faisait alors avec une chaîne vide. Renvoyer null à sa place lui ouvrirait au contraire la
+     * totalité des bénéficiaires.
+     */
+    private function structureRattachementDuConseiller(Structure_Repository $structure_Repository): ?int
+    {
+        $userRole = $this->getUser()->getRoles();
+        if (User::PARAM_ROLE_CONSEILLER !== $userRole[0]) {
+            return null;
+        }
+
+        $conseillerId = (int) substr($this->getUser()->getUsername(), 1);
+        $structureId = $structure_Repository->findByConseillerId($conseillerId);
+
+        return isset($structureId['id']) ? (int) $structureId['id'] : 0;
     }
 
     /**

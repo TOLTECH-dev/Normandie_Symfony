@@ -27,6 +27,12 @@ yarn-error.log
 /evolutions/
 ###< docs ###
 
+###> comptes rendus de reunion ###
+# Supports de reunion (CR, enregistrements) : hors du code, et volumineux.
+# Un enregistrement commite reste dans l historique pour toujours, meme supprime ensuite.
+/resources/Reunions/
+###< comptes rendus de reunion ###
+
 /.claude/
 
 ###> outils jetables de prod (ne jamais committer) ###

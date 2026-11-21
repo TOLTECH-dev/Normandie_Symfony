@@ -24,6 +24,15 @@ class MailerService
      */
     public const TRANSPORT_MFA = 'mfa';
 
+    /**
+     * Marquage de la voie empruntée, conservé jusqu'à l'envoi.
+     *
+     * Indispensable parce que « X-Transport » ne survit pas : Transports::send() le retire du
+     * message dès qu'il a choisi le transport. Tout ce qui doit encore distinguer les voies après
+     * ce point — la redirection du courrier hors production, notamment — s'appuie sur celui-ci.
+     */
+    public const ENTETE_VOIE = 'X-Ceen-Voie';
+
     public function __construct(
         private readonly MailerInterface $mailer,
         private readonly Environment $twig,
@@ -95,6 +104,11 @@ class MailerService
             // En-tête lu par Symfony au moment de l'envoi — y compris dans le worker, lorsque le
             // message a transité par une file — pour choisir la voie.
             $email->getHeaders()->addTextHeader('X-Transport', $transport);
+
+            // Marquage durable de la voie. « X-Transport » ne peut pas servir à la relire :
+            // Transports::send() le RETIRE du message dès qu'il a choisi le transport, avant même
+            // que celui-ci ne diffuse l'évènement sur lequel travaille RedirectionCourrielListener.
+            $email->getHeaders()->addTextHeader(self::ENTETE_VOIE, $transport);
         }
 
         try {

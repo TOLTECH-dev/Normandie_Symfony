@@ -54,6 +54,48 @@ final class MailerServiceTransportTest extends TestCase
     }
 
     /**
+     * La voie est marquée DEUX fois, et ce n'est pas une redondance.
+     *
+     * « X-Transport » sert à Symfony pour choisir le transport, puis Transports::send() le RETIRE
+     * du message. Tout ce qui doit encore distinguer les voies après ce point — le détournement du
+     * courrier hors production, notamment — ne peut donc pas s'y fier et lit le marquage propre au
+     * projet, qui survit jusqu'à l'envoi.
+     */
+    public function testLaVoieEstAussiMarqueeDeFaconDurable(): void
+    {
+        $email = $this->capturerEnvoi(static function (MailerService $service): void {
+            $service->sendTemplateEmail(
+                'agent@example.com',
+                'Votre code de connexion Chèque Éco-Énergie',
+                'Email/mfa_code.html.twig',
+                ['code' => '123456'],
+                null,
+                MailerService::TRANSPORT_MFA
+            );
+        });
+
+        self::assertSame(
+            'mfa',
+            $email->getHeaders()->get(MailerService::ENTETE_VOIE)?->getBodyAsString(),
+            'Sans ce marquage, le code de connexion serait détourné en recette et personne ne pourrait se connecter.'
+        );
+    }
+
+    public function testUnCourrielOrdinaireNePorteAucunMarquageDeVoie(): void
+    {
+        $email = $this->capturerEnvoi(static function (MailerService $service): void {
+            $service->sendTemplateEmail(
+                'beneficiaire@example.com',
+                'Sujet quelconque',
+                'Email/mfa_code.html.twig',
+                ['code' => '123456']
+            );
+        });
+
+        self::assertFalse($email->getHeaders()->has(MailerService::ENTETE_VOIE));
+    }
+
+    /**
      * Le nom de la voie doit correspondre à une entrée de « framework.mailer.transports ». Si la
      * constante change sans que la configuration suive, le code de connexion part sur la voie
      * ordinaire — donc nulle part en recette.

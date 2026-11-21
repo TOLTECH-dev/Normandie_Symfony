@@ -242,6 +242,12 @@ services:
             $logoutRedirectionBo: '%logout_redirection_bo%'
             $logoutRedirectionFo: '%logout_redirection_fo%'
 
+    # Détournement du courrier des environnements qui rejouent une copie de la production.
+    # Vide en production : l'écouteur y est inerte.
+    App\Mailer\RedirectionCourrielListener:
+        arguments:
+            $destinataires: '%env(SECURITY_MAILER_REDIRECT_TO)%'
+
     App\Listener\CspNonceInjectorListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }

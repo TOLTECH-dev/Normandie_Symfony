@@ -93,14 +93,31 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function findByRole(string $role): array
     {
+        return $this->createQueryBuilderForRole($role)->getQuery()->getResult();
+    }
+
+    /**
+     * Comptes actifs portant un rôle donné.
+     *
+     * Exposé séparément pour que la requête puisse être analysée sans base de données
+     * (cf. UserRepositoryFindByRoleTest) : cette méthode est restée inutilisée depuis son
+     * écriture, et son premier appel réel — par AlerteAntivirusMailer — a révélé deux défauts
+     * qu'aucun test ne pouvait voir tant que le DQL n'était jamais interprété.
+     *
+     * Les rôles sont stockés sérialisés par PHP (colonne de type Doctrine « array »), et non en
+     * JSON : `a:1:{i:0;s:10:"ROLE_ADMIN";}`. JSON_CONTAINS ne s'y applique donc pas, et n'était de
+     * toute façon pas déclarée dans doctrine.yaml. Le nom est encadré de guillemets pour qu'un
+     * rôle n'en attrape pas un autre dont il est le préfixe (ROLE_INSTRUCTEUR /
+     * ROLE_INSTRUCTEUR_UP), comme le fait déjà ExpirePasswordsCommand::findTargetedUsers().
+     */
+    public function createQueryBuilderForRole(string $role): QueryBuilder
+    {
         return $this->createQueryBuilder('u')
-            ->andWhere('JSON_CONTAINS(u.roles, :role) = true')
-            ->andWhere('u.isActive = :isActive')
-            ->setParameter('role', sprintf('"%s"', $role))
-            ->setParameter('isActive', true)
-            ->orderBy('u.username', 'ASC')
-            ->getQuery()
-            ->getResult();
+            ->andWhere('u.roles LIKE :role')
+            ->andWhere('u.enabled = :enabled')
+            ->setParameter('role', '%"' . $role . '"%')
+            ->setParameter('enabled', true)
+            ->orderBy('u.username', 'ASC');
     }
 
     /**
