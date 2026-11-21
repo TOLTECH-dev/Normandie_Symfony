@@ -3,7 +3,11 @@
 {% block content %}
     {{ include('Main/carnet_information_logement/inc/_modal_confirm_creation.html.twig') }}
 
-    <script type="text/javascript">
+    {# Seul script inline du projet. Il porte le nonce de la requête : c'est la
+       seule façon d'être autorisé par la politique de sécurité du contenu
+       (Reco-04), et c'est ce qui a permis de supprimer la réécriture du HTML
+       par expression régulière que faisait l'ancien listener. #}
+    <script type="text/javascript" nonce="{{ csp_nonce() }}">
       document.addEventListener('DOMContentLoaded', function() {
         var modal = $('#popupCarnetInformationLogementConfirmCreation');
         var redirectOnClose = true;

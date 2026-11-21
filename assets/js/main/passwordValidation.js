@@ -18,7 +18,8 @@ $(document).ready(function() {
    * et affiche le message visuel sous le champ
    */
   function validatePassword() {
-    matchMsg.removeClass(); // reset des classes avant mise à jour
+    matchMsg.removeClass('valid invalid'); // ne retirer que nos propres classes :
+    // removeClass() sans argument emporterait aussi est-masque (Reco-04).
 
     if (confirm_password.val().length > 0) {
       if (password.val() !== confirm_password.val()) {

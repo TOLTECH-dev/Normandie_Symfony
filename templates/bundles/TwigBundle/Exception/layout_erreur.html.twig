@@ -15,7 +15,10 @@
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="{{ asset('build/images/main/favicon/favicon-32x32.png') }}" type="image/png" sizes="32x32">
     <title>{% block titre %}Erreur{% endblock %} - Chèque éco-énergie Normandie</title>
-    <style>
+    {# Bloc conserve a dessein : la page d erreur doit rester autonome, y compris
+       si la compilation des assets a echoue. Le nonce l autorise sans ouvrir
+       'unsafe-inline' a l ensemble du site (Reco-04). #}
+    <style nonce="{{ csp_nonce() }}">
         *, *::before, *::after { box-sizing: border-box; }
         body {
             margin: 0;

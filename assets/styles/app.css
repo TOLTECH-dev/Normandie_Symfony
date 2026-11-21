@@ -2,3 +2,18 @@
 @import "backOffice/core/datatable/bootstrap.css";
 @import "backOffice/core/datatable/bootstrap_datatable.css";
 @import "~jquery-ui-dist/jquery-ui.min.css";
+
+/* --------------------------------------------------------------
+   Reco-04 : classes utilitaires remplacant les attributs style=
+   embarques dans les pages. La politique de securite du contenu
+   doit pouvoir se passer de style-src 'unsafe-inline', qui
+   autorise aussi bien nos styles qu un style injecte par un tiers.
+
+   .est-masque remplace style="display:none". Les elements
+   concernes sont des porteurs de donnees (des div data-*) jamais
+   reaffiches, ou reaffiches par un style en ligne pose en
+   JavaScript, qui l emporte sur une classe.
+   -------------------------------------------------------------- */
+.est-masque { display: none; }
+
+.flotte-gauche { float: left; }

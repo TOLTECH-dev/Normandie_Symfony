@@ -368,6 +368,21 @@
         "ROLE_ADMIN",
         "ROLE_SUPER_ADMIN"
     ],
+    "csp_rapport": [
+        "ANONYME",
+        "ROLE_MEMBER",
+        "ROLE_CONSEILLER",
+        "ROLE_AUDITEUR",
+        "ROLE_RENOVATEUR",
+        "ROLE_EPCI",
+        "ROLE_TECHNIQUE",
+        "ROLE_INSTRUCTEUR",
+        "ROLE_INSTRUCTEUR_UP",
+        "ROLE_CLIENT",
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN",
+        "ROLE_AUTOMATE"
+    ],
     "dateCP_assign": [
         "ROLE_CLIENT",
         "ROLE_ADMIN",

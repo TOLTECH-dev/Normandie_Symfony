@@ -1,0 +1,78 @@
+{#
+    Alerte aux administrateurs : la politique de sécurité du contenu BLOQUE
+    réellement des ressources pour les utilisateurs (Reco-04).
+
+    N'est envoyée que pour les violations de la politique EN VIGUEUR. Celles
+    de la politique en observation sont la mesure attendue : les signaler
+    chaque matin ferait perdre de vue les vrais blocages.
+
+    Le corps ne porte que des directives, des origines et des chemins de page.
+    Les chaînes de requête ont été retirées à l'enregistrement : aucun jeton,
+    aucun identifiant ne transite ici.
+#}
+<p>Bonjour,</p>
+
+<p>
+    La politique de s&eacute;curit&eacute; du contenu du t&eacute;l&eacute;service Ch&egrave;que
+    &Eacute;co-&Eacute;nergie a <strong>refus&eacute; des ressources</strong>
+    {% if depuis %}depuis le {{ depuis|date('d/m/Y à H:i') }}{% endif %}.
+    Ces refus sont visibles par les utilisateurs&nbsp;: une feuille de style, une image ou un
+    script n'a pas &eacute;t&eacute; charg&eacute;.
+</p>
+
+<h3>Par directive</h3>
+
+<table cellpadding="4" cellspacing="0" border="1" style="border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th align="left">Directive</th>
+            <th align="right">Cas distincts</th>
+            <th align="right">Occurrences</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for ligne in synthese %}
+        <tr>
+            <td>{{ ligne.directive }}</td>
+            <td align="right">{{ ligne.cas }}</td>
+            <td align="right">{{ ligne.occurrences }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Les cas les plus fr&eacute;quents</h3>
+
+<table cellpadding="4" cellspacing="0" border="1" style="border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th align="left">Directive</th>
+            <th align="left">Ressource refus&eacute;e</th>
+            <th align="left">Page</th>
+            <th align="right">Occurrences</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for violation in violations %}
+        <tr>
+            <td>{{ violation.directive }}</td>
+            <td>{{ violation.source }}</td>
+            <td>{{ violation.page }}</td>
+            <td align="right">{{ violation.occurrences }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<p>
+    Deux causes possibles&nbsp;: une ressource l&eacute;gitime que la politique ne pr&eacute;voit
+    pas encore &mdash; il faut alors l'y ajouter &mdash; ou une ressource qui n'a rien &agrave;
+    faire l&agrave;, et la politique a fait son travail.
+</p>
+
+<p>
+    Le d&eacute;tail complet est consultable avec&nbsp;:<br>
+    <code>php bin/console normandie:csp:violations --appliquees</code>
+</p>
+
+<p>L'&eacute;quipe TOLTECH.</p>

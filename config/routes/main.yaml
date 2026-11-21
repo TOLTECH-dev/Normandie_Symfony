@@ -86,3 +86,10 @@ carnet_information_logement_confirm_creation:
     demandeId: \d+
     token: \w{128}
 
+# Reco-04 : point de collecte des violations de la politique de securite du
+# contenu. Public et non authentifie, par necessite : les navigateurs y postent
+# sans session. Protege par un limiteur de debit et un plafond de taille.
+csp_rapport:
+  path:     /csp/rapport
+  methods:  [POST]
+  defaults: { _controller: App\Controller\CspRapportController::recevoir }
