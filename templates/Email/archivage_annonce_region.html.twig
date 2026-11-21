@@ -1,0 +1,79 @@
+{#
+    Courriel de confirmation à la Région : la campagne d'archivage est lancée,
+    le préavis court, rien n'est encore produit ni supprimé.
+
+    Aucune donnée nominative : que des compteurs. C'est aussi ce qui permet
+    d'adresser ce message à plusieurs services sans précaution particulière.
+#}
+<p>Bonjour,</p>
+
+<p>
+    La campagne d'archivage <strong>{{ lot.reference }}</strong> du t&eacute;l&eacute;service
+    Ch&egrave;que &Eacute;co-&Eacute;nergie Normandie vient d'&ecirc;tre lanc&eacute;e.
+    &Agrave; ce stade, <strong>aucune donn&eacute;e n'a &eacute;t&eacute; produite ni
+    supprim&eacute;e</strong>&nbsp;: seuls les comptes concern&eacute;s ont
+    &eacute;t&eacute; identifi&eacute;s, et les professionnels pr&eacute;venus.
+</p>
+
+<h3>P&eacute;rim&egrave;tre retenu</h3>
+
+<table cellpadding="4" cellspacing="0" border="1" style="border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th align="left">D&eacute;clencheur</th>
+            <th align="right">Comptes</th>
+            <th align="right">Dossiers</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for ligne in synthese %}
+        <tr>
+            <td>{{ ligne.declencheur }}</td>
+            <td align="right">{{ ligne.comptes }}</td>
+            <td align="right">{{ ligne.dossiers }}</td>
+        </tr>
+    {% endfor %}
+        <tr>
+            <td><strong>Total</strong></td>
+            <td align="right"><strong>{{ lot.nbComptes }}</strong></td>
+            <td align="right"><strong>{{ lot.nbDossiers }}</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Pr&eacute;avis donn&eacute; aux professionnels</h3>
+
+<ul>
+    <li>
+        {{ nombre_destinataires }} professionnel{{ nombre_destinataires > 1 ? 's' : '' }}
+        pr&eacute;venu{{ nombre_destinataires > 1 ? 's' : '' }}
+        (conseillers, auditeurs et r&eacute;novateurs), invit&eacute;s &agrave; r&eacute;aliser
+        leur propre export.
+    </li>
+    <li>
+        Fin du pr&eacute;avis&nbsp;: <strong>{{ lot.dateFinPreavis|date('d/m/Y') }}</strong>.
+        Aucune archive ne sera constitu&eacute;e avant cette date.
+    </li>
+{% for motif, nombre in dossiers_sans_destinataire %}
+    <li>
+        {{ nombre }} dossier{{ nombre > 1 ? 's' : '' }} sans destinataire joignable
+        ({{ motif }}). Un professionnel dont le compte est d&eacute;sactiv&eacute; ne peut plus
+        se connecter, donc ne peut rien exporter&nbsp;: ces dossiers n'ont pas
+        &eacute;t&eacute; annonc&eacute;s.
+    </li>
+{% endfor %}
+</ul>
+
+<h3>Suite de la proc&eacute;dure</h3>
+
+<ol>
+    <li>&Agrave; l'&eacute;ch&eacute;ance du pr&eacute;avis&nbsp;: constitution des archives,
+        une par b&eacute;n&eacute;ficiaire, et d&eacute;p&ocirc;t sur le serveur.</li>
+    <li>R&eacute;cup&eacute;ration par les Archives de la R&eacute;gion, puis confirmation de
+        r&eacute;ception de leur part.</li>
+    <li><strong>Apr&egrave;s cette confirmation seulement</strong>&nbsp;: suppression des
+        pi&egrave;ces et des donn&eacute;es sur la plateforme, puis attestation de
+        destruction.</li>
+</ol>
+
+<p>L'&eacute;quipe TOLTECH.</p>

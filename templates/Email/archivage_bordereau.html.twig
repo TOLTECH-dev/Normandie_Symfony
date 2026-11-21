@@ -1,0 +1,55 @@
+{#
+    Envoi aux administrateurs du bordereau de versement d'une campagne
+    d'archivage (Reco-03).
+
+    Le corps ne porte QUE des compteurs. Le détail nominatif — noms, prénoms,
+    numéros de dossier — est dans la pièce jointe, parce que c'est la fonction
+    même du bordereau : permettre au service des Archives de retrouver le
+    dossier d'une personne nommée. Le message avertit explicitement de cette
+    nature, afin que personne ne le fasse suivre sans y penser.
+#}
+<p>Bonjour,</p>
+
+<p>
+    Les archives de la campagne <strong>{{ lot.reference }}</strong> du t&eacute;l&eacute;service
+    Ch&egrave;que &Eacute;co-&Eacute;nergie Normandie viennent d'&ecirc;tre constitu&eacute;es et
+    d&eacute;pos&eacute;es. Le bordereau de versement est joint &agrave; ce message.
+</p>
+
+<p>
+    <strong>Aucune donn&eacute;e n'a encore &eacute;t&eacute; supprim&eacute;e.</strong> La
+    destruction n'aura lieu qu'apr&egrave;s confirmation de r&eacute;ception par les Archives de la
+    R&eacute;gion.
+</p>
+
+<h3>Ce qui a &eacute;t&eacute; vers&eacute;</h3>
+
+<ul>
+    <li>{{ compteurs.comptes }} compte{{ compteurs.comptes > 1 ? 's' : '' }} b&eacute;n&eacute;ficiaire{{ compteurs.comptes > 1 ? 's' : '' }}</li>
+    <li>{{ compteurs.dossiers }} dossier{{ compteurs.dossiers > 1 ? 's' : '' }}</li>
+    <li>
+        {{ compteurs.pieces }} pi&egrave;ce{{ compteurs.pieces > 1 ? 's' : '' }}
+        {%- if compteurs.manquantes > 0 %},
+        dont {{ compteurs.manquantes }} r&eacute;f&eacute;renc&eacute;e{{ compteurs.manquantes > 1 ? 's' : '' }}
+        en base mais introuvable{{ compteurs.manquantes > 1 ? 's' : '' }} sur l'espace de stockage
+        {%- endif %}
+    </li>
+    <li>{{ (compteurs.octets / 1048576)|number_format(1, ',', ' ') }} Mio d'archives</li>
+    <li>&Eacute;ligibilit&eacute; calcul&eacute;e au {{ lot.dateReference|date('d/m/Y') }}</li>
+</ul>
+
+<h3>La pi&egrave;ce jointe</h3>
+
+<p>
+    <strong>{{ fichier }}</strong> &mdash; fichier CSV, une ligne par dossier vers&eacute;, avec le
+    compte b&eacute;n&eacute;ficiaire, son nom, son pr&eacute;nom, le num&eacute;ro de dossier et le
+    motif d'archivage.
+</p>
+
+<p>
+    <strong>Ce document est nominatif</strong>&nbsp;: il est destin&eacute; au service des Archives
+    de la R&eacute;gion et aux administrateurs du t&eacute;l&eacute;service. Merci de ne pas le
+    diffuser au-del&agrave;.
+</p>
+
+<p>L'&eacute;quipe TOLTECH.</p>

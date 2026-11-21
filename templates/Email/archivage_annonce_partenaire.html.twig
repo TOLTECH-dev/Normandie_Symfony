@@ -1,0 +1,69 @@
+{#
+    Préavis adressé à un conseiller, un auditeur ou un rénovateur : les dossiers
+    listés ci-dessous vont être archivés puis supprimés de la plateforme.
+
+    Les numéros de dossier sont volontairement PRÉSENTS, contrairement aux
+    courriels d'authentification et d'alerte (cf. templates/Email/mfa_code et
+    antivirus_alerte, et tests/Security/AuthenticationEmailsTest.php). La règle
+    « aucune donnée de compte dans un courriel » vise les courriels de sécurité,
+    qu'un tiers pourrait intercepter pour apprendre quelque chose. Ici le
+    destinataire a déjà accès à ces dossiers dans la plateforme, et sans leurs
+    numéros le préavis serait inutilisable : il ne saurait pas quoi exporter.
+
+    En revanche, aucun nom ni aucune adresse de bénéficiaire : le numéro de
+    dossier suffit à les retrouver dans le back-office.
+#}
+<p>Bonjour{% if nom %} {{ nom }}{% endif %},</p>
+
+<p>
+    Dans le cadre de la politique d'archivage du t&eacute;l&eacute;service Ch&egrave;que
+    &Eacute;co-&Eacute;nergie Normandie, les dossiers list&eacute;s ci-dessous vont &ecirc;tre
+    archiv&eacute;s, puis <strong>supprim&eacute;s de la plateforme</strong>. Leurs pi&egrave;ces
+    et leurs donn&eacute;es seront vers&eacute;es au service des Archives de la R&eacute;gion
+    Normandie, qui en assure la conservation.
+</p>
+
+<p>
+    Si vous avez besoin de conserver tout ou partie de ces &eacute;l&eacute;ments pour votre
+    propre suivi, <strong>r&eacute;alisez votre export avant le
+    {{ date_fin_preavis|date('d/m/Y') }}</strong>. Pass&eacute;e cette date, ces dossiers ne
+    seront plus consultables.
+</p>
+
+<p>
+    {{ nombre_dossiers }} dossier{{ nombre_dossiers > 1 ? 's' : '' }} vous
+    {{ nombre_dossiers > 1 ? 'concernent' : 'concerne' }} en tant que {{ profil }}&nbsp;:
+</p>
+
+<table cellpadding="4" cellspacing="0" border="1" style="border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th align="left">N&deg; de dossier</th>
+            <th align="left">Type</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for dossier in dossiers %}
+        <tr>
+            <td>{{ dossier.demande_id }}</td>
+            <td>{{ dossier.libelle }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% if tronquee %}
+    <p>
+        <em>
+            Seuls les {{ dossiers|length }} premiers dossiers sont list&eacute;s ici. La liste
+            compl&egrave;te est disponible dans la consultation des dossiers du back-office.
+        </em>
+    </p>
+{% endif %}
+
+<p>
+    Pour toute question sur cette op&eacute;ration, vous pouvez r&eacute;pondre &agrave; ce
+    message.
+</p>
+
+<p>L'&eacute;quipe Ch&egrave;que &Eacute;co-&Eacute;nergie de la R&eacute;gion Normandie.</p>

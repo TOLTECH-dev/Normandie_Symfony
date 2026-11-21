@@ -50,6 +50,8 @@ parameters:
     email_region_paiement: '%env(EMAIL_REGION_PAIEMENT)%'
     email_region_instruction: '%env(EMAIL_REGION_INSTRUCTION)%'
     email_prestataire_instruction: '%env(EMAIL_PRESTATAIRE_INSTRUCTION)%'
+    email_region_archivage: '%env(EMAIL_REGION_ARCHIVAGE)%'
+    archivage_repertoire_depot: '%env(ARCHIVAGE_REPERTOIRE_DEPOT)%'
 
     app_date_passage_montant_travaux_niveau_3_BBC: '%env(APP_DATE_PASSAGE_MONTANT_TRAVAUX_NIVEAU_3_BBC)%'
     app_date_debut_SARE: '%env(APP_DATE_DEBUT_SARE)%'
@@ -127,6 +129,8 @@ parameters:
     security_antivirus_refuse_when_unavailable: '%env(bool:SECURITY_ANTIVIRUS_REFUSE_WHEN_UNAVAILABLE)%'
     security_antivirus_alert_enabled: '%env(bool:SECURITY_ANTIVIRUS_ALERT_ENABLED)%'
     security_antivirus_alert_roles: [ ROLE_SUPER_ADMIN, ROLE_ADMIN ]
+    # Reco-03 : qui recoit le bordereau de versement et l attestation de destruction.
+    archivage_destinataires_roles: [ ROLE_SUPER_ADMIN, ROLE_ADMIN ]
     security_ip_filter_networks:
         administrateurs: '%env(csv:SECURITY_IP_FILTER_ADMINISTRATEURS)%'
         region:          '%env(csv:SECURITY_IP_FILTER_REGION)%'
@@ -390,6 +394,65 @@ services:
     App\Command\ExportDemandeCommand:
         arguments:
             $loggerExportDemande: '@monolog.logger.command_export_demande'
+
+    App\Command\ArchivageSelectionCommand:
+        arguments:
+            $loggerArchivage: '@monolog.logger.command_archivage'
+
+    App\Command\ArchivageAnnonceCommand:
+        arguments:
+            $loggerArchivage: '@monolog.logger.command_archivage'
+            $emailRegionArchivage: '%email_region_archivage%'
+
+    App\Command\ArchivageProduireCommand:
+        arguments:
+            $loggerArchivage: '@monolog.logger.command_archivage'
+            $repertoireArchivage: '%archivage_repertoire_depot%'
+
+    App\Command\ArchivageReceptionCommand:
+        arguments:
+            $loggerArchivage: '@monolog.logger.command_archivage'
+
+    App\Command\ArchivageDetruireCommand:
+        arguments:
+            $loggerArchivage: '@monolog.logger.command_archivage'
+            $repertoireArchivage: '%archivage_repertoire_depot%'
+
+    App\Archive\AttestationDestruction:
+        arguments:
+            $modele: '%kernel.project_dir%/resources/Template/attestation_destruction_modele.docx'
+
+    App\Command\ArchivageAttesterCommand:
+        arguments:
+            $loggerArchivage: '@monolog.logger.command_archivage'
+            $repertoireArchivage: '%archivage_repertoire_depot%'
+
+    App\Command\ArchivagePurgeBancaireCommand:
+        arguments:
+            $loggerArchivage: '@monolog.logger.command_archivage'
+
+    App\Repository\Archive\ArchivagePurgeBancaireRepository:
+        arguments:
+            $appRootDossierDataSymfony: '%app_root_dossier_data_symfony%'
+
+    App\Archive\DiffusionArchivage:
+        arguments:
+            $loggerArchivage: '@monolog.logger.command_archivage'
+            $rolesDestinataires: '%archivage_destinataires_roles%'
+
+    App\Command\ArchivagePurgeDepotCommand:
+        arguments:
+            $loggerArchivage: '@monolog.logger.command_archivage'
+            $repertoireArchivage: '%archivage_repertoire_depot%'
+
+    App\Command\ArchivagePiecesCommand:
+        arguments:
+            $loggerArchivage: '@monolog.logger.command_archivage'
+            $appRootDossierDataSymfony: '%app_root_dossier_data_symfony%'
+
+    App\Repository\Archive\ArchivagePiecesRepository:
+        arguments:
+            $appRootDossierDataSymfony: '%app_root_dossier_data_symfony%'
 
     App\EventListener\ExceptionListener:
 #        arguments:

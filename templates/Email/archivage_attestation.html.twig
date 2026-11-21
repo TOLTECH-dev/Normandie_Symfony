@@ -1,0 +1,52 @@
+{#
+    Envoi aux administrateurs de l'attestation de destruction (Reco-03).
+
+    Ni le corps ni la pièce jointe ne portent de donnée nominative :
+    l'attestation désigne les comptes par leur seul numéro. Le détail
+    nominatif, lui, a été transmis plus tôt dans le bordereau de versement.
+#}
+<p>Bonjour,</p>
+
+<p>
+    La destruction des donn&eacute;es de la campagne d'archivage
+    <strong>{{ lot.reference }}</strong> du t&eacute;l&eacute;service Ch&egrave;que
+    &Eacute;co-&Eacute;nergie Normandie est termin&eacute;e. L'attestation de destruction est
+    jointe &agrave; ce message.
+</p>
+
+<p>
+    Elle est &agrave; <strong>signer</strong>, puis &agrave; transmettre &agrave; la R&eacute;gion,
+    qui la remet au service Archives.
+</p>
+
+<h3>Ce qui a &eacute;t&eacute; d&eacute;truit</h3>
+
+<ul>
+    <li>{{ compteurs.comptes }} compte{{ compteurs.comptes > 1 ? 's' : '' }} b&eacute;n&eacute;ficiaire{{ compteurs.comptes > 1 ? 's' : '' }}, d&eacute;sormais anonymis&eacute;{{ compteurs.comptes > 1 ? 's' : '' }}</li>
+    <li>
+        {{ compteurs.pieces }} pi&egrave;ce{{ compteurs.pieces > 1 ? 's' : '' }}
+        {%- if compteurs.manquantes > 0 %},
+        dont {{ compteurs.manquantes }} d&eacute;j&agrave; introuvable{{ compteurs.manquantes > 1 ? 's' : '' }}
+        sur l'espace de stockage au moment de la constitution
+        {%- endif %}
+    </li>
+    <li>{{ (compteurs.octets / 1048576)|number_format(1, ',', ' ') }} Mio d'archives vers&eacute;es</li>
+    <li>R&eacute;ception confirm&eacute;e par les Archives le {{ lot.dateReceptionValidee ? lot.dateReceptionValidee|date('d/m/Y') : '—' }}</li>
+    <li>Destruction effectu&eacute;e le {{ lot.dateDestruction ? lot.dateDestruction|date('d/m/Y') : '—' }}</li>
+</ul>
+
+<h3>La pi&egrave;ce jointe</h3>
+
+<p>
+    <strong>{{ fichier }}</strong> &mdash; une ligne par compte b&eacute;n&eacute;ficiaire,
+    d&eacute;sign&eacute; par son seul num&eacute;ro, avec le motif d'archivage, la
+    volum&eacute;trie et la date de destruction.
+</p>
+
+<p>
+    Le document ne contient <strong>aucune donn&eacute;e nominative</strong>&nbsp;: ni nom, ni
+    pr&eacute;nom, ni num&eacute;ro de dossier. Le d&eacute;tail nominatif figure dans le bordereau
+    de versement, transmis lors de la constitution des archives.
+</p>
+
+<p>L'&eacute;quipe TOLTECH.</p>
