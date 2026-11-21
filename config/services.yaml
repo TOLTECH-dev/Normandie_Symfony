@@ -445,6 +445,14 @@ services:
             $loggerArchivage: '@monolog.logger.command_archivage'
             $repertoireArchivage: '%archivage_repertoire_depot%'
 
+    App\Command\PartenairePurgeBancaireCommand:
+        arguments:
+            $loggerArchivage: '@monolog.logger.command_archivage'
+
+    App\Repository\Partenaire\PurgeBancairePartenaireRepository:
+        arguments:
+            $appRootDossierDataSymfony: '%app_root_dossier_data_symfony%'
+
     App\Command\ArchivagePiecesCommand:
         arguments:
             $loggerArchivage: '@monolog.logger.command_archivage'
