@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Admin_import;
 use App\Entity\Beneficiaire;
+use App\Entity\Historique_;
 use App\Entity\User;
 use App\Form\Admin_importType;
 use App\Form\UserType;
+use App\Repository\User\EtatCompteRepository;
 use App\Repository\User\UserListCriteria;
 use App\Service\AdminService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -118,8 +120,16 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Le nombre d'actions affichées par page de l'onglet « Activité ».
+     *
+     * L'historique n'est pas un journal de quelques lignes : un seul compte en
+     * porte 57 000. Tout afficher ferait tomber la page.
+     */
+    private const ACTIONS_PAR_PAGE = 50;
+
     #[Security("is_granted('ROLE_BO_GESTION_REGION')")]
-    public function view(int $userId): Response
+    public function view(Request $request, EtatCompteRepository $etatCompteRepository, int $userId): Response
     {
         /* /////////////////////////////////////////////////////////////////
                             GET USER
@@ -127,12 +137,64 @@ class AdminController extends AbstractController
         $userRepository = $this->em->getRepository(User::class);
         $user = $userRepository->find($userId);
 
+        if (null === $user) {
+            throw $this->createNotFoundException();
+        }
+
         $beneficiaireRepository = $this->em->getRepository(Beneficiaire::class);
         $beneficiaire = $beneficiaireRepository->findOneBy(['user_id' => $userId]);
 
+        /* /////////////////////////////////////////////////////////////////
+                            ONGLET ACTIVITE (D26013)
+        ///////////////////////////////////////////////////////////////// */
+        // Réservé aux administrateurs : la chronologie retrace tout ce qu'un compte
+        // a fait. L'écran reste ouvert aux autres profils de la Région, mais sans
+        // cet onglet — et sans que l'historique soit lu pour eux.
+        $suiviAutorise = $this->isGranted('ROLE_BO_SUIVI_COMPTES');
+
+        $nombreActions = 0;
+        $nombrePages = 1;
+        $page = 1;
+        $actions = [];
+        $etats = [];
+
+        if ($suiviAutorise) {
+            // Les changements d'état du compte : quelques lignes par compte, tout
+            // tient sur un écran. Avant la mise en service de l'historique, seules
+            // la création et les désactivations datables ont été reconstituées.
+            $etats = $etatCompteRepository->lesEtatsDe($userId);
+
+            // L'historique garde le NOM de l'auteur, pas son identifiant : c'est une
+            // trace, elle doit survivre à la suppression du compte. Le rapprochement
+            // se fait donc sur le login.
+            $historiqueRepository = $this->em->getRepository(Historique_::class);
+            $nombreActions = $historiqueRepository->compterLesActionsDe($user->getUsername());
+
+            $nombrePages = max(1, (int) ceil($nombreActions / self::ACTIONS_PAR_PAGE));
+            $page = max(1, min($nombrePages, $request->query->getInt('page', 1)));
+
+            $actions = 0 === $nombreActions
+                ? []
+                : $historiqueRepository->lesActionsDe(
+                    $user->getUsername(),
+                    self::ACTIONS_PAR_PAGE,
+                    ($page - 1) * self::ACTIONS_PAR_PAGE
+                );
+        }
+
         return $this->render('BackOffice/Admin/view.html.twig', [
             'user'                         => $user,
-            'is_fiche_beneficiaire_exists' => !empty($beneficiaire)
+            'is_fiche_beneficiaire_exists' => !empty($beneficiaire),
+            'suivi_autorise'               => $suiviAutorise,
+            'etats'                        => $etats,
+            'actions'                      => $actions,
+            'nombre_actions'               => $nombreActions,
+            'page'                         => $page,
+            'nombre_pages'                 => $nombrePages,
+            'actions_par_page'             => self::ACTIONS_PAR_PAGE,
+            // L'onglet « Activité » s'ouvre de lui-même quand on navigue dans
+            // les pages : sans cela, chaque clic renverrait à l'identification.
+            'onglet_actif'                 => $suiviAutorise && $request->query->has('page') ? 'activite' : 'identification',
         ]);
     }
 

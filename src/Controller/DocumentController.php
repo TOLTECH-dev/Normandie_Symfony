@@ -210,6 +210,9 @@ class DocumentController extends AbstractController
             14 => '_ventilation_document.',
             15 => '_acte_engagement.',
             17 => '_audit_apres_travaux_document.',
+            // D26013 : mandat donné au conseiller. 16 est volontairement laissé
+            // libre, sa signification passée n'étant pas documentée.
+            18 => '_mandat.',
         ];
 
         return $mapTypeFileToSuffix[$typeFile] ?? '';

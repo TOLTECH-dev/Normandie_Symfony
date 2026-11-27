@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_core_timeline') }}
     {{ encore_entry_link_tags('backOffice_demande_list_all') }}
     {{ encore_entry_link_tags('backOffice_historique_modal_commentaire') }}
 {% endblock %}
@@ -22,6 +23,26 @@
                     <h2>Consultation des dossiers</h2>
                 </div>
             </div>
+
+            {# D26013 : chronologie générale, réservée aux administrateurs. Elle ne charge
+               rien tant que l'onglet n'est pas ouvert : la table compte 411 000 lignes.
+
+               Colonne pleine largeur : le titre au-dessus occupe huit colonnes décalées
+               de deux, et une barre d'onglets posée directement à sa suite viendrait
+               flotter dans l'espace resté libre à sa droite. #}
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            {% if is_granted('ROLE_BO_SUIVI_COMPTES') %}
+                <ul class="nav nav-tabs marginBottom10" role="tablist">
+                    <li class="active">
+                        <a href="#tab_liste_dossiers" aria-controls="liste" role="tab" data-toggle="tab">Liste des dossiers</a>
+                    </li>
+                    <li>
+                        <a href="#tab_timeline" aria-controls="timeline" role="tab" data-toggle="tab">Chronologie</a>
+                    </li>
+                </ul>
+            {% endif %}
+            <div class="{{ is_granted('ROLE_BO_SUIVI_COMPTES') ? 'tab-content' : '' }}">
+            <div role="tabpanel" class="tab-pane fade in active" id="tab_liste_dossiers">
 
             {{ form_start(form_export, {'action': '', 'attr': {'id': 'formDemandeListAll'}}) }}
             {{ form_errors(form_export) }}
@@ -112,6 +133,17 @@
             {{ form_end(form_export) }}
 
             {{ include('BackOffice/Demande/inc/modalCommentaire.html.twig') }}
+            </div>
+
+            {% if is_granted('ROLE_BO_SUIVI_COMPTES') %}
+                <div role="tabpanel" class="tab-pane fade" id="tab_timeline">
+                    {{ include('BackOffice/Historique/inc/timeline_panneau.html.twig', {
+                        'intitule': "Toutes les actions enregistrées, tous dossiers confondus, de la plus récente à la plus ancienne."
+                    }) }}
+                </div>
+            {% endif %}
+            </div>
+            </div>
 
         </div>
     {% endif %}
@@ -122,6 +154,7 @@
     {{ encore_entry_script_tags('coreList') }}
     {{ encore_entry_script_tags('backOffice_demande_listDemande_appel_datatables_ajax') }}
     {{ encore_entry_script_tags('backOffice_demande_listDemande_popover') }}
+    {{ encore_entry_script_tags('backOffice_historique_timelineGlobale_index') }}
     <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 {% endblock %}

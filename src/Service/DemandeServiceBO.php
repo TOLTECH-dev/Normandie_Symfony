@@ -163,11 +163,14 @@ class DemandeServiceBO
     ) {
         $roles = $option['roles'];
 
+        // Le nom, le prénom, le courriel et les téléphones du bénéficiaire ne figurent
+        // plus dans l'export (demande du 24/11/2026) : le fichier circule hors de la
+        // plateforme, et le numéro de dossier suffit à retrouver la personne dans
+        // l'application. Ils ont été retirés des en-têtes, des données ET de la
+        // requête (Demande_Repository::findDataExportResult).
         $fieldsHeader = [
             'numeroDossier'                     => 'Numéro dossier',
             'thematique'                        => 'Thématique',
-            'nom'                               => 'Nom',
-            'prenom'                            => 'Prénom',
             'codePostalTravaux'                 => 'Code postal travaux',
             'villeTravaux'                      => 'Ville travaux',
             'EPCI'                              => 'EPCI',
@@ -184,9 +187,6 @@ class DemandeServiceBO
             'situationFamiliale'                => 'Situation familiale',
             'nombrePersonnesFoyer'              => 'Nombre de personnes du foyer',
             'typeMenage'                        => 'Type de ménage',
-            'email'                             => 'Email',
-            'telephone1'                        => 'Téléphone1',
-            'telephone2'                        => 'Téléphone2',
             'codePostalBeneficiaire'            => 'Code postal habitat',
             'villeBeneficiaire'                 => 'Ville habitat',
             'situation'                         => 'Situation PO/PB',
@@ -268,8 +268,6 @@ class DemandeServiceBO
             $fieldsData = [
                 'numeroDossier'                     => $row['demandeId'],
                 'thematique'                        => $row['demandeType'],
-                'nom'                               => $row['beneficiaireNom'],
-                'prenom'                            => $row['beneficiairePrenom'],
                 'codePostalTravaux'                 => $row['logementCodePostal'],
                 'villeTravaux'                      => $row['logementVille'],
                 'EPCI'                              => $row['epci'],
@@ -286,9 +284,6 @@ class DemandeServiceBO
                 'situationFamiliale'                => $situation_famille,
                 'nombrePersonnesFoyer'              => $row['nb_pers_foyer'],
                 'typeMenage'                        => (!empty($row['typeMenage']) ? ANAHCritere::$TYPE_MENAGE[$row['typeMenage']] : ''),
-                'email'                             => $row['email'],
-                'telephone1'                        => $row['tel_1'],
-                'telephone2'                        => $row['tel_2'],
                 'codePostalBeneficiaire'            => $row['code_postal'],
                 'villeBeneficiaire'                 => $row['ville'],
                 'situation'                         => $situation,
@@ -1026,8 +1021,6 @@ class DemandeServiceBO
             $fieldsKey = [
                 'numeroDossier',
                 'thematique',
-                'nom',
-                'prenom',
                 'codePostalTravaux',
                 'villeTravaux',
                 'EPCI',
@@ -1043,7 +1036,6 @@ class DemandeServiceBO
                 'revenuFiscal',
                 'nombrePersonnesFoyer',
                 'typeMenage',
-                'email',
                 'situation',
                 'structure',
                 'conseiller',
@@ -1094,8 +1086,6 @@ class DemandeServiceBO
             $fieldsKey = [
                 'numeroDossier',
                 'thematique',
-                'nom',
-                'prenom',
                 'codePostalTravaux',
                 'villeTravaux',
                 'EPCI',
@@ -1103,9 +1093,6 @@ class DemandeServiceBO
                 'statut',
                 'dateCommission',
                 'typeMenage',
-                'email',
-                'telephone1',
-                'telephone2',
                 'structure',
                 'conseiller',
                 'audit',
@@ -1151,16 +1138,11 @@ class DemandeServiceBO
             $fieldsKey = [
                 'numeroDossier',
                 'thematique',
-                'nom',
-                'prenom',
                 'codePostalTravaux',
                 'villeTravaux',
                 'dateDemande',
                 'statut',
                 'dateCommission',
-                'email',
-                'telephone1',
-                'telephone2',
                 'structure',
                 'conseiller',
                 'audit',

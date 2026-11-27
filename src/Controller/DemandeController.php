@@ -639,7 +639,17 @@ class DemandeController extends AbstractController
             $beneficiaireTypeKey = explode(' | ', $beneficiaire['beneficiaireType'])[0];
         }
 
+        /* /////////////////////////////////////////////////////////////////
+                                HISTORIQUE DU DOSSIER (D26013)
+        ///////////////////////////////////////////////////////////////// */
+        // Qui a fait quoi sur ce dossier. Reserve aux administrateurs : on ne lit
+        // meme pas la table pour les autres profils.
+        $historique = $this->isGranted('ROLE_BO_SUIVI_COMPTES')
+            ? $this->em->getRepository(Historique_::class)->lesActionsDuDossier((int) $demandeId)
+            : [];
+
         return $this->render('BackOffice/Demande/view.html.twig', [
+            'historique'                            => $historique,
             'demande'                               => $demande,
             'devis'                                 => $devis,
             'informationANAH'                       => $informationANAH,
@@ -1447,22 +1457,31 @@ class DemandeController extends AbstractController
             // reparenté à init, donc il survit à la destruction de $process et s'exécute
             // jusqu'au bout. (Sous Windows, dev, nohup n'existe pas : on garde le
             // lancement natif détaché.)
-            $phpBinaryPath = (new PhpExecutableFinder())->find() ?: 'php';
+            // L'interpréteur : celui du paramètre s'il est renseigné, sinon la détection
+            // automatique. Le paramètre existe parce que PhpExecutableFinder, appelé depuis
+            // le SAPI web, rend le PHP trouvé dans le PATH et NON celui qui exécute la
+            // requête. Mesuré le 24/11/2026 sur le poste : PHP_BINARY vaut php84/php-cgi.exe,
+            // find() rend php82/php.EXE — et le verrou de composer exigeant PHP >= 8.4, la
+            // commande mourait aussitôt sur platform_check, sans rien journaliser.
+            $phpBinaryPath = $this->getParameter('app_php_binary')
+                ?: ((new PhpExecutableFinder())->find() ?: 'php');
             $projectDir = $this->getParameter('kernel.project_dir');
             $env = $this->getParameter('kernel.environment');
 
             if (DIRECTORY_SEPARATOR === '\\') {
-                // Windows (dev)
-                $process = new Process([
-                    $phpBinaryPath,
-                    'bin/console',
-                    'normandie:exportDemande',
-                    '--exportId=' . $exportId,
-                    '--env=' . $env,
-                ]);
+                // Windows (poste de développement). Process::start() ne détache pas plus
+                // ici que sous Linux : le destructeur de $process tue l'enfant dès que
+                // l'action retourne. « start /B » rend la main aussitôt et laisse le
+                // processus vivre sa vie, ce que nohup fait de l'autre côté.
+                $command = sprintf(
+                    'start /B "" %s bin\console normandie:exportDemande --exportId=%s --env=%s > NUL 2>&1',
+                    escapeshellarg($phpBinaryPath),
+                    (int) $exportId,
+                    escapeshellarg($env)
+                );
+                $process = Process::fromShellCommandline($command);
                 $process->setWorkingDirectory($projectDir);
-                $process->disableOutput();
-                $process->start();
+                $process->run();
             } else {
                 // Linux (prod) : détachement réel pour survivre au destructeur
                 $command = sprintf(

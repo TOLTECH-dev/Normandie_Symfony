@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_core_timeline') }}
     {{ encore_entry_link_tags('backOffice_admin_list') }}
 {% endblock %}
 
@@ -29,6 +30,25 @@
                 </p>
             </div>
         {% endif %}
+
+        {# D26013 : chronologie générale, réservée aux administrateurs. Elle ne charge
+           rien tant que l'onglet n'est pas ouvert : la table compte 411 000 lignes.
+
+           Colonne pleine largeur, comme les blocs qui précèdent : une barre d'onglets
+           posée hors colonne flotterait dans l'espace laissé libre à droite. #}
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        {% if is_granted('ROLE_BO_SUIVI_COMPTES') %}
+            <ul class="nav nav-tabs marginBottom10" role="tablist">
+                <li class="active">
+                    <a href="#tab_liste_utilisateurs" aria-controls="liste" role="tab" data-toggle="tab">Liste des utilisateurs</a>
+                </li>
+                <li>
+                    <a href="#tab_timeline" aria-controls="timeline" role="tab" data-toggle="tab">Chronologie</a>
+                </li>
+            </ul>
+        {% endif %}
+        <div class="{{ is_granted('ROLE_BO_SUIVI_COMPTES') ? 'tab-content' : '' }}">
+        <div role="tabpanel" class="tab-pane fade in active" id="tab_liste_utilisateurs">
 
         <table cellspacing="0" id="table_list_user" class="table table-striped table-bordered small_table">
             <thead>
@@ -83,6 +103,17 @@
             </div>
             </tbody>
         </table>
+        </div>
+
+        {% if is_granted('ROLE_BO_SUIVI_COMPTES') %}
+            <div role="tabpanel" class="tab-pane fade" id="tab_timeline">
+                {{ include('BackOffice/Historique/inc/timeline_panneau.html.twig', {
+                    'intitule': "Toutes les actions enregistrées, tous comptes confondus, de la plus récente à la plus ancienne."
+                }) }}
+            </div>
+        {% endif %}
+        </div>
+        </div>
 
     </div>
 {% endblock %}
@@ -90,6 +121,7 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('backOffice_admin_index') }}
+    {{ encore_entry_script_tags('backOffice_historique_timelineGlobale_index') }}
 {#    {{ encore_entry_script_tags('coreList') }}#}
 {#    {{ encore_entry_script_tags('backOffice_core_list_jquery_datatable') }}#}
 {#    {{ encore_entry_script_tags('backOffice_core_list_bootstrap_datatable') }}#}

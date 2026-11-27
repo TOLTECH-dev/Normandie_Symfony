@@ -20,6 +20,19 @@ class Instruction_reason
     #[ORM\Column(type: 'text', length: 255)]
     private string $slug;
 
+    /**
+     * Un motif inactif n'est plus PROPOSÉ dans les listes de choix, mais
+     * reste choisi là où il l'a déjà été.
+     *
+     * La valeur par défaut n'est pas décorative : les colonnes `*_reason`
+     * des tables d'instruction stockent ces entités SÉRIALISÉES. Les
+     * enregistrements antérieurs ne portent pas cette propriété, et c'est
+     * ce défaut qui leur est appliqué à la désérialisation — sans lui, un
+     * accès sur une propriété non initialisée lèverait une erreur.
+     */
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    private bool $actif = true;
+
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $positionLast = null;
 
@@ -59,5 +72,17 @@ class Instruction_reason
     public function getPositionLast(): ?int
     {
         return $this->positionLast;
+    }
+
+    public function estActif(): bool
+    {
+        return $this->actif;
+    }
+
+    public function setActif(bool $actif): self
+    {
+        $this->actif = $actif;
+
+        return $this;
     }
 }

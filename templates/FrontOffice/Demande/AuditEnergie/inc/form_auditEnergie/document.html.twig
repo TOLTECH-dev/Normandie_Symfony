@@ -44,6 +44,52 @@
         </div>
         {% endif %}
 
+
+        {# D26013 : mandat donné au conseiller. Obligatoire au dépôt de la
+           demande ; la règle est portée par l'entité, pour qu'elle vaille
+           quel que soit le formulaire qui la soumet. #}
+        <div class="form-group">
+            {# Le mandat n'est exigé qu'au dépôt : l'astérisque suit la même règle que la
+               contrainte portée par l'entité, et disparaît en modification. #}
+            {% set mandatObligatoire = auditE.demande_auditEnergie is null or auditE.demande_auditEnergie.id is null %}
+            {{ form_label(form.demande_auditEnergie.mandat, "Mandat donné au conseiller:", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-7 col-lg-7 control-label' ~ (mandatObligatoire ? ' required' : '')}}) }}
+
+            <div class="document-tip">
+                <a role="button"
+                   tabindex="0"
+                   data-container="body"
+                   data-toggle="popover"
+                   data-trigger="focus"
+                   data-placement="top"
+                   data-content="Document signé autorisant le conseiller à déposer et suivre la demande pour votre compte. Format PDF."
+                >
+                    <i class="glyphicon glyphicon-question-sign"></i>
+                </a>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                {{ form_widget(form.demande_auditEnergie.mandat) }}
+            </div>
+        </div>
+
+        {# Erreurs du mandat, sous le champ et alignées sur lui : la contrainte de
+           l'entité et les contrôles de fichier du navigateur, qui écrivent dans
+           custom-control_mandat. wrapper_error les met en rouge. #}
+        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xs-offset-0 col-sm-offset-0 col-md-offset-7 col-lg-offset-7 wrapper_error">
+            <ul id="custom-control_mandat" class="list_error"></ul>
+            {{ form_errors(form.demande_auditEnergie.mandat) }}
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xs-offset-0 col-sm-offset-0 col-md-offset-7 col-lg-offset-7">
+            {% if auditE and auditE.demande_auditEnergie and auditE.demande_auditEnergie.id and auditE.demande_auditEnergie.mandatAlt %}
+                <p>
+                    <a href="{{ path(path_location, {'demandeId': auditE.demande_auditEnergie.id, 'typeFile': 18, 'extension': auditE.demande_auditEnergie.mandatUrl, 'typeDemande': 0}) }}" target="_blank">
+                        Voir le document
+                    </a>
+                </p>
+            {% endif %}
+        </div>
+
         <ul id="custom-control_pieceComplement" class="list_error"></ul>
         {{ form_errors(form.demande_auditEnergie.pieceComplement) }}
         <div class="form-group">

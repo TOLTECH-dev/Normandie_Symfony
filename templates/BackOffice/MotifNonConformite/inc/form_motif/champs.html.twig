@@ -1,0 +1,62 @@
+{# D26013 : les champs d'un motif de non-conformité, partagés par la création et
+   la modification.
+
+   En modification, le champ « document » est désactivé par le FORMULAIRE lui-même
+   (option `edition` du type) : Symfony le rend inerte et ignore toute valeur
+   soumise. Rien n'est donc à faire ici — le désactiver une seconde fois dans le
+   gabarit l'exclurait de la requête.
+
+   Les libellés passés à form_label() sont écrits avec de vrais caractères
+   accentués : Symfony échappe ces chaînes, une entité HTML y apparaîtrait
+   telle quelle à l'écran. #}
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-motif">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Motif de non-conformit&eacute;</legend>
+
+        <div class="form-group">
+            {{ form_label(form_motif.document, "Document concerné", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_motif.document) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form_motif.document, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_motif.libelle, "Libellé du motif", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_motif.libelle) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_motif.libelle, {'attr': {'class': 'form-control'}}) }}
+                <p class="help-block">
+                    Texte affich&eacute; &agrave; c&ocirc;t&eacute; de la case &agrave; cocher, sur l'&eacute;cran d'instruction.
+                </p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_motif.position, "Position dans la liste", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_motif.position) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 custom-select">
+                {{ form_widget(form_motif.position, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form_motif.actif, "Motif actif", {'label_attr': {'class': 'col-xs-12 col-sm-12 col-md-4 col-lg-4 control-label'}}) }}
+            {{ form_errors(form_motif.actif) }}
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                {{ form_widget(form_motif.actif, {'attr': {'class': 'checkboxstyle'}}) }}
+                <p class="help-block">
+                    Un motif inactif n'est plus propos&eacute; sur les nouveaux dossiers, mais reste
+                    affich&eacute; et coch&eacute; sur ceux qui le portent d&eacute;j&agrave;.
+                </p>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <hr class="bloc-limit">
+</div>

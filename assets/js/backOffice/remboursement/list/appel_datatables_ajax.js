@@ -246,7 +246,12 @@ $(document).ready(function()
                         }
                         // ---------- FIN INSTRUCTION ----------
 
-                        if (['20', '22'].includes(String(row['remboursementStatutId'])) === false) {
+                        // D26013 : le dépôt reste ouvert sur un remboursement REFUSÉ, pour que
+                        // le partenaire puisse remplacer la pièce qu'on lui reproche. Le serveur
+                        // vérifie en plus que le dossier n'est ni anonymisé ni archivé
+                        // (Remboursement_Repository::findOneForDepot) ; hors reprise, la ligne
+                        // n'apparaît déjà plus dans cette liste.
+                        if ('22' !== String(row['remboursementStatutId'])) {
 
                             // ---------- DEPOT ----------
                             if (1 === arrayRole['ROLE_AUDITEUR']
@@ -287,6 +292,11 @@ $(document).ready(function()
                                 }
                             }
                             // ---------- FIN DEPOT ----------
+                        }
+
+                        // La fiche technique et les commentaires gardent leur règle : un
+                        // remboursement refusé en reste fermé tant qu'il n'a pas été repris.
+                        if (['20', '22'].includes(String(row['remboursementStatutId'])) === false) {
 
                             // ---------- FICHE TECHNIQUE ----------
                             if (1 === arrayRole['ROLE_CONSEILLER']

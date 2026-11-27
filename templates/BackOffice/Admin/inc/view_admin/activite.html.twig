@@ -1,0 +1,81 @@
+{#
+    D26013 — onglet « Activité » d'un compte : ce que l'utilisateur a fait.
+
+    Chronologie verticale, de l'action la plus récente à la plus ancienne. Chaque
+    repère porte ce que demande la Région : la date et l'heure, l'action, le
+    dossier concerné, l'état de ce dossier AU MOMENT de l'action — c'est une
+    photographie figée dans `historique_.statut_slug`, pas l'état actuel — et le
+    remboursement lorsqu'il y en a un.
+
+    L'historique est volumineux (411 000 lignes, jusqu'à 57 000 pour un seul
+    compte) : il se lit par pages de 50.
+#}
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-activite">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Activit&eacute; du compte</legend>
+
+        {% if 0 == nombre_actions %}
+            <p class="activite-vide">Ce compte n'a réalisé aucune action enregistrée.</p>
+        {% else %}
+            {% set premier = (page - 1) * actions_par_page + 1 %}
+            {% set dernier = min(page * actions_par_page, nombre_actions) %}
+
+            <p class="activite-compteur">
+                Actions <strong>{{ premier }}</strong> à <strong>{{ dernier }}</strong>
+                sur <strong>{{ nombre_actions }}</strong>, de la plus récente à la plus ancienne.
+            </p>
+
+            <ol class="activite-timeline">
+                {% for action in actions %}
+                    <li class="activite-repere">
+                        <time class="activite-date" datetime="{{ action.dateCreation|date('c') }}">
+                            {{ action.dateCreation|date('d/m/Y') }}
+                            <span class="activite-heure">{{ action.dateCreation|date('H:i:s') }}</span>
+                        </time>
+
+                        <div class="activite-contenu">
+                            <p class="activite-action">{{ action.action }}</p>
+
+                            <p class="activite-details">
+                                {% if action.demandeId %}
+                                    <a href="{{ path('demande_view', {'demandeId': action.demandeId}) }}"
+                                       class="activite-lien">Dossier n&deg;{{ action.demandeId }}</a>
+                                {% endif %}
+
+                                {% if action.remboursementId %}
+                                    <span class="activite-remboursement">Remboursement n&deg;{{ action.remboursementId }}</span>
+                                {% endif %}
+                            </p>
+
+                            {% if action.statutSlug %}
+                                <p class="activite-statut" title="État du dossier au moment de l'action">
+                                    {{ action.statutSlug }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ol>
+
+            {% if nombre_pages > 1 %}
+                <nav class="activite-pagination" aria-label="Pages de l'activité du compte">
+                    {% if page > 1 %}
+                        <a href="{{ path('admin_view', {'userId': user.id, 'page': page - 1}) }}"
+                           class="btn btn-default btn-xs">&laquo;&nbsp;Plus r&eacute;cent</a>
+                    {% else %}
+                        <span class="btn btn-default btn-xs disabled">&laquo;&nbsp;Plus r&eacute;cent</span>
+                    {% endif %}
+
+                    <span class="activite-page">Page {{ page }} sur {{ nombre_pages }}</span>
+
+                    {% if page < nombre_pages %}
+                        <a href="{{ path('admin_view', {'userId': user.id, 'page': page + 1}) }}"
+                           class="btn btn-default btn-xs">Plus ancien&nbsp;&raquo;</a>
+                    {% else %}
+                        <span class="btn btn-default btn-xs disabled">Plus ancien&nbsp;&raquo;</span>
+                    {% endif %}
+                </nav>
+            {% endif %}
+        {% endif %}
+    </fieldset>
+</div>

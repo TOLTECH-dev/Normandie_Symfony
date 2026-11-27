@@ -6,6 +6,7 @@ use App\Repository\Demande_auditEnergieRepository;
 use App\Validator\FichierSansVirus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name: "demande_audit_energie")]
@@ -38,6 +39,23 @@ class Demande_auditEnergie
     #[Assert\NotBlank()]
     #[ORM\Column(name: "signature", type: "boolean")]
     private bool $signature;
+
+    #[ORM\Column(name: "mandat_url", type: "string", length: 255, nullable: true)]
+    private ?string $mandat_url = null;
+
+    #[ORM\Column(name: "mandat_alt", type: "string", length: 255, nullable: true)]
+    private ?string $mandat_alt = null;
+
+    /**
+     * Mandat donné au conseiller (D26013).
+     *
+     * PDF uniquement, contrairement aux autres pièces qui acceptent aussi des
+     * images : un mandat est un acte signé, pas la photographie d'un
+     * justificatif.
+     */
+    #[Assert\File(maxSize: '5120k', mimeTypes: ['application/pdf'], mimeTypesMessage: 'Le mandat doit être un fichier au format PDF.')]
+    #[FichierSansVirus]
+    private ?UploadedFile $mandat = null;
 
     #[ORM\Column(name: "justificatif_propriete_url", type: "string", length: 255, nullable: true)]
     private ?string $justificatifPropriete_url = null;
@@ -647,5 +665,87 @@ class Demande_auditEnergie
     public function setTempFilename(?string $tempFilename): void
     {
         $this->tempFilename = $tempFilename;
+    }
+
+    public function setMandatUrl(?string $mandatUrl): self
+    {
+        $this->mandat_url = $mandatUrl;
+
+        return $this;
+    }
+
+    public function getMandatUrl(): ?string
+    {
+        return $this->mandat_url;
+    }
+
+    public function setMandatAlt(?string $mandatAlt): self
+    {
+        $this->mandat_alt = $mandatAlt;
+
+        return $this;
+    }
+
+    public function getMandatAlt(): ?string
+    {
+        return $this->mandat_alt;
+    }
+
+    public function getMandat(): ?UploadedFile
+    {
+        return $this->mandat;
+    }
+
+    public function setMandat(?UploadedFile $mandat): void
+    {
+        $this->mandat = $mandat;
+
+        // Un dépôt qui en remplace un autre : on garde l'extension de
+        // l'ancien fichier pour que l'écouteur sache lequel effacer.
+        if (null !== $this->mandat_url) {
+            $this->tempFilename = $this->mandat_url;
+            $this->mandat_url = null;
+            $this->mandat_alt = null;
+        }
+
+        if (null !== $mandat) {
+            $this->mandat_url = $mandat->guessExtension();
+            $this->mandat_alt = $mandat->getClientOriginalName();
+        }
+    }
+
+    public function mandat_getUploadDir(): string
+    {
+        return 'uploads/demande_auditEnergie';
+    }
+
+    public function mandat_getWebPath(): string
+    {
+        return $this->mandat_getUploadDir() . '/' . $this->getId() . '_mandat' . '.' . $this->getMandatUrl();
+    }
+
+    /**
+     * Le mandat est obligatoire pour DÉPOSER une demande (D26013).
+     *
+     * La règle ne s'applique qu'à la création. Les dossiers déposés avant la
+     * mise en service n'en portent pas : les soumettre à la même exigence
+     * rendrait toute modification impossible, alors qu'ils ont été déposés
+     * régulièrement. L'instruction administrative se prononcera sur leur cas
+     * avec la conformité « Indéterminé ».
+     */
+    #[Assert\Callback]
+    public function validerLaPresenceDuMandat(ExecutionContextInterface $contexte): void
+    {
+        if (null !== $this->getId()) {
+            return;
+        }
+
+        if (null !== $this->mandat || null !== $this->mandat_url) {
+            return;
+        }
+
+        $contexte->buildViolation('Le mandat donné au conseiller est obligatoire : déposez le document signé au format PDF.')
+            ->atPath('mandat')
+            ->addViolation();
     }
 }

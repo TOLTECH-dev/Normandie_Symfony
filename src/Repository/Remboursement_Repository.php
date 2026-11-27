@@ -11,6 +11,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use App\Entity\DateRMH;
 use App\Entity\Remboursement_;
 use App\Entity\Remboursement_statut;
+use App\Remboursement\Reinstruction;
 use App\Repository\Remboursement\RemboursementListCriteria;
 use App\Repository\Remboursement\RemboursementListSql;
 use App\Entity\Titre;
@@ -127,10 +128,23 @@ class Remboursement_Repository extends ServiceEntityRepository
         }
 
         $queryWhere .= " AND (r.statut_id IS NULL OR (r.statut_id NOT IN (" . Remboursement_statut::STATUS_22 . ") AND r.rgpd != 1))";
+
+        // Les remboursements d'audit REFUSÉS restent masqués : le refus ouvre le droit à
+        // une demande « audit Région », et les faire réapparaître brouillerait les listes.
+        //
+        // D26013 : exception pour les profils qui disposent du dépôt. Le partenaire doit
+        // retrouver le dossier pour y remplacer la pièce qu'on lui reproche ; sans cela,
+        // rouvrir le dépôt ne servirait à rien, faute de chemin pour y accéder. La reprise
+        // s'arrête au dossier anonymisé ou archivé, dont les pièces n'existent plus.
+        $refusesRepris = Reinstruction::profilPeutReprendre($roles)
+            ? " OR (r.statut_id = " . Remboursement_statut::STATUS_20 . " AND " . Reinstruction::conditionDossierVivant() . ")"
+            : "";
+
         $queryWhere .= " AND (
             r.statut_id IS NULl
             OR (r.statut_id IN (" . Remboursement_statut::STATUS_20 . ") AND (d.type NOT IN (" . Demande_::DEMANDE_AUDIT_ENERGIE_TYPE . ", " . Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE . ", " . Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE . ", " . Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE . ")))
             OR (r.statut_id NOT IN (" . Remboursement_statut::STATUS_20 . "))
+            " . $refusesRepris . "
         )";
 
         $queryJoin = "
@@ -308,10 +322,23 @@ class Remboursement_Repository extends ServiceEntityRepository
         }
 
         $queryWhere .= " AND (r.statut_id IS NULL OR (r.statut_id NOT IN (" . Remboursement_statut::STATUS_22 . ") AND r.rgpd != 1))";
+
+        // Les remboursements d'audit REFUSÉS restent masqués : le refus ouvre le droit à
+        // une demande « audit Région », et les faire réapparaître brouillerait les listes.
+        //
+        // D26013 : exception pour les profils qui disposent du dépôt. Le partenaire doit
+        // retrouver le dossier pour y remplacer la pièce qu'on lui reproche ; sans cela,
+        // rouvrir le dépôt ne servirait à rien, faute de chemin pour y accéder. La reprise
+        // s'arrête au dossier anonymisé ou archivé, dont les pièces n'existent plus.
+        $refusesRepris = Reinstruction::profilPeutReprendre($roles)
+            ? " OR (r.statut_id = " . Remboursement_statut::STATUS_20 . " AND " . Reinstruction::conditionDossierVivant() . ")"
+            : "";
+
         $queryWhere .= " AND (
             r.statut_id IS NULl
             OR (r.statut_id IN (" . Remboursement_statut::STATUS_20 . ") AND (d.type NOT IN (" . Demande_::DEMANDE_AUDIT_ENERGIE_TYPE . ", " . Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE . ", " . Demande_::DEMANDE_AUDIT_NUMERIQUE_TYPE . ", " . Demande_::DEMANDE_MISE_A_JOUR_AUDIT_ENERGIE_TYPE . ")))
             OR (r.statut_id NOT IN (" . Remboursement_statut::STATUS_20 . "))
+            " . $refusesRepris . "
         )";
 
         $queryCase = ",
@@ -1162,7 +1189,17 @@ class Remboursement_Repository extends ServiceEntityRepository
     ) {
 
         $andWhereDepotIdIs = "";
-        $andWhere = " AND (r.statut_id IS NULL OR r.statut_id NOT IN (" . Remboursement_statut::STATUS_20 . ", " . Remboursement_statut::STATUS_22 . ")) ";
+
+        // D26013 : le refus n'est plus un terminus. Le dépôt se rouvre sur un
+        // remboursement refusé tant que le dossier est vivant — ni anonymisé par la
+        // purge, ni versé à un lot d'archivage. Le 22 (payé) reste fermé : il n'y a
+        // plus rien à déposer sur un dossier soldé.
+        $andWhere = " AND (r.statut_id IS NULL OR r.statut_id <> " . Remboursement_statut::STATUS_22 . ") ";
+        $andWhere .= " AND (
+            r.statut_id IS NULL
+            OR r.statut_id <> " . Remboursement_statut::STATUS_20 . "
+            OR " . Reinstruction::conditionDossierVivant() . "
+        ) ";
 
         if (!empty($demandeId) && empty($remboursementId)) {
             // ADD DEPOT

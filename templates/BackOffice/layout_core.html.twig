@@ -197,6 +197,12 @@
                         Utilisateurs</a></li>
             {% endif %}
 
+            {# D26013 : listes des motifs de non-conformite, reservees aux administrateurs. #}
+            {% if is_granted('ROLE_BO_MOTIFS') %}
+                <li class="sidebar-item"><a href="{{ path('motif_non_conformite_list') }}" class="sidebar-anchor">Motifs de
+                        non-conformit&eacute;</a></li>
+            {% endif %}
+
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="sidebar-item"><a href="{{ path('admin_import') }}" class="sidebar-anchor">Import de donn&eacute;es</a>
                 </li>

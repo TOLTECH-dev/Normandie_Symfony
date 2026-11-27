@@ -163,6 +163,12 @@ demande_historique:
   options:
     expose: true
 
+# D26013 : chronologie generale, servie par tranches en Ajax. Montee sur la liste
+# des utilisateurs et sur celle des dossiers, reservee aux administrateurs.
+historique_timeline:
+  path:     /3E9A1C77B4D2F508A6C31E9B7F45D0A28C6517EB3D94F2A1C8B70E536D1A94F27C0B8E35A91D6472F8C3B05E19A7D46C
+  defaults: { _controller: App\Controller\HistoriqueController::timeline }
+
 demande_export:
   path:     /6D5F241CC65A855A9D05EC30CCAB02C7BC21A6566F69AF1A1837D2A5F411ECB2B93B1950F85E43025A9BA96A9508F41243FE62FF83836EBA8E56DA8121610306
   defaults: { _controller: App\Controller\DemandeController::export }
@@ -874,3 +880,35 @@ document_help_view:
   path:     /AAD7EBCB5D522AC64A9D132FF9B90AAD1BE08B19D007A7454B3D41578F2C5508EB4502DC0C155C2F8123C084E778BAFEC1544DC401009A54F755298158215274
   defaults: { _controller: App\Controller\DocumentController::viewHelp }
 
+
+###################################
+###  Motifs non-conformité (D26013)
+###################################
+# Gestion des motifs proposés à l'instructeur quand il déclare un document non
+# conforme. Réservée aux administrateurs (ROLE_BO_MOTIFS).
+#
+# Les identifiants se recoupent entre les deux familles de motifs : le motif n°3
+# existe côté instruction ET côté remboursement sans désigner la même chose. Les
+# adresses portent donc la famille, contrainte à ses deux valeurs connues.
+motif_non_conformite_list:
+  path:     /BC53EF5F35F3873ABCE7D418A2A24F4550AF9028931AC413EAB18110871B5CEFA37E7A5F384FBD84D577244F1BD8565EF04687D081A7524AC7D9947D6FD0295F
+  defaults: { _controller: App\Controller\MotifNonConformiteController::list }
+
+motif_non_conformite_add:
+  path:     /C33A0825EAD0A8683A36D5024E445321B314EC759B2F60B411C72CCAC571D8A4A2AEA2BF656E7FAA8B33C8B957FD2319B20AA256F3475771D8F12B19E299F3B5
+  defaults: { _controller: App\Controller\MotifNonConformiteController::add }
+
+motif_non_conformite_edit:
+  path:     /4D62F9A0D301C14B82A67F4A056765F7581A5A502F0B8A37{famille}5F6E01AF2F36458F217D80AEA7E3D1B2C4B1A567048145C6{motifId}885B5A03652D39F2829D0B02F1CEC47E
+  defaults: { _controller: App\Controller\MotifNonConformiteController::edit }
+  requirements:
+    famille: instruction|remboursement
+    motifId: \d+
+
+motif_non_conformite_enabled:
+  path:     /9BFB31200C15A8F1D5178C47794A6332B56DEF502F12388F{famille}3D46D3C77C70FDAB988DD14B6717CA9BC719A38573AE561D{motifId}3CB1A58B5BC3516BBE035C809005017F{flag}
+  defaults: { _controller: App\Controller\MotifNonConformiteController::enabled }
+  requirements:
+    famille: instruction|remboursement
+    motifId: \d+
+    flag: 0|1

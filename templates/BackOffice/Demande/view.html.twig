@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_core_timeline') }}
     {{ encore_entry_link_tags('backOffice_demande_view') }}
 {% endblock %}
 
@@ -474,6 +475,18 @@
                         <li><a href="#tab_remboursement" aria-controls="remboursement" role="tab" data-toggle="tab">Remboursement</a></li>
                     {% endif %}
                 {% endif %}
+
+                {# D26013 : qui a fait quoi sur ce dossier. Réservé aux administrateurs. #}
+                {% if is_granted('ROLE_BO_SUIVI_COMPTES') %}
+                    <li>
+                        <a href="#tab_historique" aria-controls="historique" role="tab" data-toggle="tab">
+                            Historique
+                            {% if historique|length > 0 %}
+                                <span class="badge">{{ historique|length }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
 
 
@@ -548,7 +561,6 @@
                             {{ include('BackOffice/Demande/Devis/inc/form_devis/revenuFiscal.html.twig') }}
                             {{ include('FrontOffice/Demande/Devis/inc/view_devis/type.html.twig') }}
                             {{ include('FrontOffice/Demande/Devis/inc/view_devis/plan.html.twig') }}
-                            {{ include('FrontOffice/Demande/Devis/inc/view_devis/acte_engagement.html.twig') }}
                             {{ include('BackOffice/Demande/Devis/inc/view_devis/instruction.html.twig') }}
                         {% else %}
                             <p class="text-center bold marginTop20">Aucun Devis r&eacute;alis&eacute;.</p>
@@ -712,6 +724,12 @@
                             {% endif %}
                         </div>
                     {% endif %}
+                {% endif %}
+
+                {% if is_granted('ROLE_BO_SUIVI_COMPTES') %}
+                    <div role="tabpanel" class="tab-pane fade" id="tab_historique">
+                        {{ include('BackOffice/Demande/inc/view_historique.html.twig') }}
+                    </div>
                 {% endif %}
             </div>
         </div>

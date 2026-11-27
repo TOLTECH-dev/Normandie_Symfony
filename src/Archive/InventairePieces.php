@@ -71,6 +71,7 @@ final class InventairePieces
         14 => '_ventilation_document.',
         15 => '_acte_engagement.',
         17 => '_audit_apres_travaux_document.',
+        18 => '_mandat.',
     ];
 
     /**
@@ -123,12 +124,14 @@ final class InventairePieces
         ['source' => 'audit_energie', 'alias' => 'dae', 'colonne' => 'piece_complement_url', 'dossier' => 0, 'type' => 1, 'libelle' => 'piece complementaire'],
         ['source' => 'audit_energie', 'alias' => 'dae', 'colonne' => 'avis_imposition_url', 'dossier' => 0, 'type' => 2, 'libelle' => 'avis d imposition'],
         ['source' => 'audit_energie', 'alias' => 'dae', 'colonne' => 'avis_imposition_conjoint_url', 'dossier' => 0, 'type' => 11, 'libelle' => 'avis d imposition du conjoint'],
+        ['source' => 'audit_energie', 'alias' => 'dae', 'colonne' => 'mandat_url', 'dossier' => 0, 'type' => 18, 'libelle' => 'mandat donne au conseiller'],
 
         // Demande de travaux
         ['source' => 'travaux', 'alias' => 'dt', 'colonne' => 'justificatif_propriete_url', 'dossier' => 1, 'type' => 0, 'libelle' => 'justificatif de propriete'],
         ['source' => 'travaux', 'alias' => 'dt', 'colonne' => 'piece_complement_url', 'dossier' => 1, 'type' => 1, 'libelle' => 'piece complementaire'],
         ['source' => 'travaux', 'alias' => 'dt', 'colonne' => 'avis_imposition_url', 'dossier' => 1, 'type' => 2, 'libelle' => 'avis d imposition'],
         ['source' => 'travaux', 'alias' => 'dt', 'colonne' => 'avis_imposition_conjoint_url', 'dossier' => 1, 'type' => 11, 'libelle' => 'avis d imposition du conjoint'],
+        ['source' => 'travaux', 'alias' => 'dt', 'colonne' => 'mandat_url', 'dossier' => 1, 'type' => 18, 'libelle' => 'mandat donne au conseiller'],
 
         // Devis de travaux
         ['source' => 'devis', 'alias' => 'dtd', 'colonne' => 'audit_url', 'dossier' => 2, 'type' => 3, 'libelle' => 'rapport d audit'],

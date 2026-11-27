@@ -1,7 +1,13 @@
 {% extends "BackOffice/layout_core.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('backOffice_core_timeline') }}
+    {{ encore_entry_link_tags('backOffice_admin_view') }}
+{% endblock %}
+
 {% block contents %}
-    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-2 col-lg-offset-3 marginBottom40 hidden" id="content-wrapper">
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-2 marginBottom40 hidden" id="content-wrapper">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div id="container-title">
                 <h2>Consulter un Utilisateur</h2>
@@ -38,8 +44,64 @@
             </div>
         </div>
 
-        {{ include('BackOffice/Admin/inc/view_admin/identification.html.twig') }}
-        {{ include('BackOffice/Admin/inc/view_admin/profil.html.twig') }}
+        {#
+            D26013 — la fiche se dédouble : l'identité du compte d'un côté, ce que
+            ce compte a fait de l'autre. L'onglet « Activité » est réservé aux
+            administrateurs (ROLE_BO_SUIVI_COMPTES) ; pour les autres profils de
+            la Région, la fiche garde exactement sa forme d'avant, sans onglets.
+
+            L'onglet s'ouvre de lui-même quand on navigue dans ses pages, sans
+            quoi chaque clic ramènerait à l'identification.
+        #}
+        {% if suivi_autorise %}
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="nav nav-tabs marginTop20" role="tablist">
+                    <li class="{{ 'identification' == onglet_actif ? 'active' : '' }}">
+                        <a href="#tab_identification" aria-controls="identification" role="tab" data-toggle="tab">
+                            Identification
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#tab_etats" aria-controls="etats" role="tab" data-toggle="tab">
+                            &Eacute;tats du compte
+                            {% if etats|length > 0 %}
+                                <span class="badge">{{ etats|length }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li class="{{ 'activite' == onglet_actif ? 'active' : '' }}">
+                        <a href="#tab_activite" aria-controls="activite" role="tab" data-toggle="tab">
+                            Activit&eacute;
+                            {% if nombre_actions > 0 %}
+                                <span class="badge">{{ nombre_actions }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel"
+                         class="tab-pane fade {{ 'identification' == onglet_actif ? 'in active' : '' }}"
+                         id="tab_identification">
+                        {{ include('BackOffice/Admin/inc/view_admin/identification.html.twig') }}
+                        {{ include('BackOffice/Admin/inc/view_admin/profil.html.twig') }}
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="tab_etats">
+                        {{ include('BackOffice/Admin/inc/view_admin/etats.html.twig') }}
+                    </div>
+
+                    <div role="tabpanel"
+                         class="tab-pane fade {{ 'activite' == onglet_actif ? 'in active' : '' }}"
+                         id="tab_activite">
+                        {{ include('BackOffice/Admin/inc/view_admin/activite.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {{ include('BackOffice/Admin/inc/view_admin/identification.html.twig') }}
+            {{ include('BackOffice/Admin/inc/view_admin/profil.html.twig') }}
+        {% endif %}
 
         {% if is_granted('ROLE_ADMIN') and not is_fiche_beneficiaire_exists %}
             {{ include('BackOffice/Admin/inc/view_admin/_modal_delete_user.html.twig') }}

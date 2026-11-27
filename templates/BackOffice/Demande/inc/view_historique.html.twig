@@ -1,0 +1,71 @@
+{#
+    D26013 — historique d'un dossier : qui a fait quoi, et quand.
+
+    Chronologie verticale, de l'action la plus récente à la plus ancienne. À la
+    différence de l'écran « Historique » accessible depuis la liste des
+    dossiers, qui est un tableau destiné à la recherche, celui-ci se lit comme
+    un récit : l'auteur et son profil au premier plan.
+
+    Le volume ne justifie pas de pagination : le dossier le plus chargé porte 87
+    lignes, la moyenne est de 17.
+
+    `statutSlug` est l'état du dossier AU MOMENT de l'action, figé dans
+    l'historique — ce n'est pas l'état actuel, affiché en tête de la fiche.
+#}
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-historique">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;Historique du dossier</legend>
+
+        {% if historique is empty %}
+            <p class="activite-vide">Aucune action enregistrée sur ce dossier.</p>
+        {% else %}
+            <p class="activite-compteur">
+                <strong>{{ historique|length }}</strong> action{{ historique|length > 1 ? 's' : '' }},
+                de la plus récente à la plus ancienne.
+            </p>
+
+            <ol class="activite-timeline">
+                {% for ligne in historique %}
+                    <li class="activite-repere">
+                        <time class="activite-date" datetime="{{ ligne.date_creation|date('c') }}">
+                            {{ ligne.date_creation|date('d/m/Y') }}
+                            <span class="activite-heure">{{ ligne.date_creation|date('H:i:s') }}</span>
+                        </time>
+
+                        <div class="activite-contenu">
+                            <p class="activite-action">{{ ligne.action }}</p>
+
+                            <p class="activite-details">
+                                <span class="activite-auteur">
+                                    {% if ligne.firstname or ligne.lastname %}
+                                        {{ ligne.lastname|upper }} {{ ligne.firstname|capitalize }}
+                                    {% else %}
+                                        {{ ligne.auteur_creation }}
+                                    {% endif %}
+                                </span>
+
+                                {% if ligne.auteur_role %}
+                                    <span class="activite-role">
+                                        &ndash; {{ ligne.auteur_role|split(' | ')|first }}
+                                    </span>
+                                {% endif %}
+
+                                {% if ligne.remboursement_id %}
+                                    <span class="activite-remboursement">
+                                        &ndash; remboursement n&deg;{{ ligne.remboursement_id }}
+                                    </span>
+                                {% endif %}
+                            </p>
+
+                            {% if ligne.statut_slug %}
+                                <p class="activite-statut" title="État du dossier au moment de l'action">
+                                    {{ ligne.statut_slug }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ol>
+        {% endif %}
+    </fieldset>
+</div>

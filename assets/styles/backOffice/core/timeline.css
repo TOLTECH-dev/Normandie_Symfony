@@ -1,0 +1,169 @@
+/* =====================================================================
+   D26013 — chronologie verticale, partagee par les ecrans qui retracent
+   une suite d evenements : l activite d un compte et l historique d un
+   dossier.
+
+   Le balisage est une liste ordonnee <ol> ; le trait vertical et les
+   pastilles sont decoratifs, obtenus par ::before. La page garde donc du
+   sens sans feuille de style et pour un lecteur d ecran.
+
+   Entree Encore : backOffice_core_timeline. A charger EN PLUS de la
+   feuille propre a l ecran.
+   ===================================================================== */
+
+.activite-compteur,
+.activite-vide {
+    margin-bottom: 18px;
+    color: #555;
+}
+
+.activite-vide {
+    font-style: italic;
+}
+
+/* --- La chronologie -------------------------------------------------- */
+
+.activite-timeline {
+    position: relative;
+    margin: 0;
+    padding: 0 0 0 150px;
+    list-style: none;
+}
+
+/* Le trait vertical, place entre la colonne des dates et les contenus. */
+.activite-timeline::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 130px;
+    width: 2px;
+    background-color: #e0e0e0;
+}
+
+.activite-repere {
+    position: relative;
+    min-height: 44px;
+    margin-bottom: 18px;
+}
+
+.activite-repere:last-child {
+    margin-bottom: 0;
+}
+
+/* La pastille, posee sur le trait. */
+.activite-repere::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: -25px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background-color: #77b636;
+    box-shadow: 0 0 0 1px #e0e0e0;
+}
+
+/* --- La date, en regard du repere ------------------------------------ */
+
+.activite-date {
+    position: absolute;
+    left: -150px;
+    width: 115px;
+    text-align: right;
+    color: #333;
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+.activite-heure {
+    display: block;
+    color: #888;
+    font-size: 12px;
+}
+
+/* --- Le contenu d un repere ------------------------------------------ */
+
+.activite-contenu {
+    padding: 8px 12px;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+    background-color: #fafafa;
+}
+
+.activite-action {
+    margin: 0;
+    color: #222;
+    font-weight: 600;
+}
+
+.activite-details {
+    margin: 4px 0 0;
+    font-size: 13px;
+}
+
+.activite-lien {
+    margin-right: 12px;
+}
+
+.activite-remboursement,
+.activite-auteur {
+    color: #555;
+}
+
+.activite-role {
+    color: #888;
+}
+
+.activite-statut {
+    margin: 4px 0 0;
+    color: #666;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* --- Pagination ------------------------------------------------------- */
+
+.activite-pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.activite-page {
+    display: inline-block;
+    min-width: 140px;
+    color: #555;
+    font-size: 13px;
+}
+
+/* --- Ecrans etroits ---------------------------------------------------
+   Sous 768 px, la colonne des dates ne tient plus a cote du trait : la
+   date repasse au-dessus du contenu et le trait se decale a gauche.     */
+
+@media (max-width: 767px) {
+    .activite-timeline {
+        padding-left: 28px;
+    }
+
+    .activite-timeline::before {
+        left: 8px;
+    }
+
+    .activite-repere::before {
+        left: -25px;
+    }
+
+    .activite-date {
+        position: static;
+        display: block;
+        width: auto;
+        margin-bottom: 4px;
+        text-align: left;
+    }
+
+    .activite-heure {
+        display: inline;
+        margin-left: 6px;
+    }
+}

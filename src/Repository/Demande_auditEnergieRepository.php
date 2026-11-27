@@ -66,6 +66,8 @@ class Demande_auditEnergieRepository extends ServiceEntityRepository
                     dae.id AS auditEId,
                     dae.justificatif_propriete_alt AS demandeJustificatifProprieteAlt,
                     dae.justificatif_propriete_url AS demandeJustificatifProprieteUrl,
+                    dae.mandat_alt AS demandeMandatAlt,
+                    dae.mandat_url AS demandeMandatUrl,
                     dae.piece_complement_alt AS demandePieceComplementAlt,
                     dae.piece_complement_url AS demandePieceComplementUrl,
                     dae.avis_imposition_alt AS demandeAvisImpositionAlt,

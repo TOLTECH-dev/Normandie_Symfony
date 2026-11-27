@@ -1,0 +1,62 @@
+/* =====================================================================
+   D26013 — fiche utilisateur : onglets, etats du compte.
+
+   La chronologie elle-meme est partagee avec l historique des dossiers :
+   elle vit dans backOffice/core/timeline.css, que le gabarit charge en
+   plus de cette feuille.
+   ===================================================================== */
+
+.tab-content {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-top: none;
+    background-color: #fff;
+}
+
+.nav-tabs .badge {
+    margin-left: 6px;
+    background-color: #77b636;
+}
+
+.nav-tabs > li:not(.active) .badge {
+    background-color: #999;
+}
+
+/* --- Historique des etats du compte ---------------------------------- */
+
+.etat-courant {
+    margin-bottom: 18px;
+    color: #555;
+}
+
+.etat-courant .label {
+    margin-left: 4px;
+    font-size: 12px;
+}
+
+/* La pastille prend la couleur de l evenement : la chronologie se lit d un
+   coup d oeil, sans avoir a dechiffrer chaque libelle. */
+.etat-desactivation::before {
+    background-color: #d9534f;
+}
+
+.etat-reactivation::before {
+    background-color: #f0ad4e;
+}
+
+.etat-suppression::before {
+    background-color: #333;
+}
+
+/* Une ligne reconstituee n a pas ete observee par l application : elle a ete
+   deduite des dates portees par le compte a la mise en service. Le dire evite
+   de lui preter une precision qu elle n a pas. */
+.etat-reconstitue {
+    margin-left: 8px;
+    padding: 1px 6px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    color: #888;
+    font-size: 11px;
+    text-transform: uppercase;
+}

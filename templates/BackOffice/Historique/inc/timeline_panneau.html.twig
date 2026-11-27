@@ -1,0 +1,34 @@
+{#
+    D26013 — panneau de la chronologie générale, monté sur la liste des
+    utilisateurs et sur celle des dossiers.
+
+    Il arrive VIDE : rien n'est lu en base tant que l'onglet n'est pas ouvert.
+    C'est la condition pour qu'un écran de liste ne paie pas le prix d'une table
+    de 411 000 lignes qu'on ne consultera peut-être pas.
+
+    Le JavaScript (backOffice/historique/timelineGlobale.js) charge la première
+    tranche à l'ouverture de l'onglet, puis les suivantes à la demande. L'adresse
+    est portée par un attribut : aucun script en ligne, la politique de sécurité
+    du contenu l'interdit.
+
+    Paramètre `intitule` : ce que la chronologie raconte sur l'écran qui
+    l'accueille. La matière est la même des deux côtés — toutes les actions
+    enregistrées —, seul le point de vue change.
+#}
+<div class="timeline-globale"
+     data-url="{{ path('historique_timeline') }}">
+
+    <p class="activite-compteur">{{ intitule }}</p>
+
+    <p class="timeline-attente">Chargement de la chronologie&hellip;</p>
+    <p class="timeline-erreur hidden">La chronologie n'a pas pu être chargée. Rechargez la page pour réessayer.</p>
+
+    <ol class="activite-timeline timeline-liste"></ol>
+
+    <p class="activite-pagination">
+        <button type="button" class="btn btn-default btn-xs timeline-plus hidden">
+            Charger 50 actions de plus
+        </button>
+        <span class="timeline-fin hidden">Fin de la chronologie.</span>
+    </p>
+</div>

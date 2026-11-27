@@ -1,0 +1,14 @@
+{# Le retour ramène sur l'onglet du document d'où l'on vient, et non sur le
+   premier de la liste. #}
+{% set parametres = (onglet_depart is defined and onglet_depart) ? {'doc': onglet_depart} : {} %}
+
+<a href="{{ path('motif_non_conformite_list', parametres) }}"
+   class="btn btn-info btn-xs button_back"
+   role="button"
+   data-toggle="tooltip"
+   data-placement="bottom"
+   data-container="body"
+   title="Retour"
+>
+    <i class="glyphicon glyphicon-backward"></i>
+</a>

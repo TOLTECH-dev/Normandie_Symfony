@@ -15,6 +15,24 @@ class Instruction_travaux
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    /**
+     * Conformité du mandat donné au conseiller (D26013). Même forme que les
+     * conformités existantes : « 0 | oui », « 1 | non », « 2 | indetermine ».
+     */
+    #[ORM\Column(name: 'mandat_conformite', type: 'string', length: 20, nullable: true)]
+    private ?string $mandatConformite = null;
+
+    /**
+     * Motifs de non-conformité retenus. Comme les autres, ce tableau contient
+     * les entités de motif sérialisées, et non leurs identifiants.
+     */
+    #[ORM\Column(name: 'mandat_reason', type: 'array', nullable: true)]
+    private ?array $mandatReason = null;
+
+    #[ORM\Column(name: 'mandat_reason_autre', type: 'text', nullable: true)]
+    #[Assert\Length(max: 245)]
+    private ?string $mandatReasonAutre = null;
+
     #[ORM\Column(name: 'JP_conformite', type: 'string', length: 20, nullable: true)]
     private ?string $JPconformite = null;
 
@@ -183,5 +201,45 @@ class Instruction_travaux
     public function getAIreasonAutre(): ?string
     {
         return $this->AIreasonAutre;
+    }
+
+    public function setMandatConformite(?string $mandatConformite): self
+    {
+        $this->mandatConformite = $mandatConformite;
+
+        return $this;
+    }
+
+    public function getMandatConformite(): ?string
+    {
+        return $this->mandatConformite;
+    }
+
+    public function setMandatReason($mandatReason): self
+    {
+        if ($mandatReason instanceof \Doctrine\Common\Collections\ArrayCollection) {
+            $mandatReason = $mandatReason->toArray();
+        }
+
+        $this->mandatReason = $mandatReason;
+
+        return $this;
+    }
+
+    public function getMandatReason(): ?array
+    {
+        return $this->mandatReason;
+    }
+
+    public function setMandatReasonAutre(?string $mandatReasonAutre): self
+    {
+        $this->mandatReasonAutre = $mandatReasonAutre;
+
+        return $this;
+    }
+
+    public function getMandatReasonAutre(): ?string
+    {
+        return $this->mandatReasonAutre;
     }
 }

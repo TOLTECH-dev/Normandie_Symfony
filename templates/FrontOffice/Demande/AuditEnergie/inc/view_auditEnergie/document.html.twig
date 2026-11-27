@@ -22,6 +22,20 @@
             </div>
         </div>
 
+        {# D26013 : mandat donné au conseiller. #}
+        <div class="row">
+            <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">Mandat donn&eacute; au conseiller :</label>
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                {% if demande and demande.demandeMandatAlt %}
+                    <a href="{{ path(path_location, {'demandeId': demande.auditEId, 'typeFile': 18, 'extension': demande.demandeMandatUrl, 'typeDemande': 0}) }}" target="_blank">
+                        Voir le document
+                    </a>
+                {% else %}
+                    Aucun document t&eacute;l&eacute;charg&eacute;
+                {% endif %}
+            </div>
+        </div>
+
         <div class="row">
             <label class="col-xs-12 col-sm-12 col-md-5 col-lg-5 control-label">{{ textePieceComplementaire }} :</label>
             <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">

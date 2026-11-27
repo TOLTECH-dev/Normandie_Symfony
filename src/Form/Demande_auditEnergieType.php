@@ -55,6 +55,11 @@ class Demande_auditEnergieType extends AbstractType
                 'required' => false,
                 'label' => 'Avis d\'imposition du demandeur',
             ])
+            ->add('mandat', FileType::class, [
+                'required' => false,
+                'label' => 'Mandat donné au conseiller',
+                'help' => 'Document signé, au format PDF. Obligatoire pour déposer la demande.',
+            ])
             ->add('avisImpositionConjoint', FileType::class, [
                 'required' => false,
                 'label' => 'Avis d\'imposition du conjoint',

@@ -1,0 +1,48 @@
+{#
+    D26013 — une tranche de la chronologie générale, servie en Ajax.
+
+    Ce partiel ne rend QUE des <li> : le navigateur les ajoute à la liste déjà
+    affichée. Il n'ouvre donc ni <ol> ni conteneur, que porte le panneau
+    (timeline_panneau.html.twig).
+#}
+{% for ligne in lignes %}
+    <li class="activite-repere">
+        <time class="activite-date" datetime="{{ ligne.date_creation|date('c') }}">
+            {{ ligne.date_creation|date('d/m/Y') }}
+            <span class="activite-heure">{{ ligne.date_creation|date('H:i:s') }}</span>
+        </time>
+
+        <div class="activite-contenu">
+            <p class="activite-action">{{ ligne.action }}</p>
+
+            <p class="activite-details">
+                <span class="activite-auteur">
+                    {% if ligne.firstname or ligne.lastname %}
+                        {{ ligne.lastname|upper }} {{ ligne.firstname|capitalize }}
+                    {% else %}
+                        {{ ligne.auteur_creation }}
+                    {% endif %}
+                </span>
+
+                {% if ligne.auteur_role %}
+                    <span class="activite-role">&ndash; {{ ligne.auteur_role|split(' | ')|first }}</span>
+                {% endif %}
+
+                {% if ligne.demande_id %}
+                    <a href="{{ path('demande_view', {'demandeId': ligne.demande_id}) }}"
+                       class="activite-lien">Dossier n&deg;{{ ligne.demande_id }}</a>
+                {% endif %}
+
+                {% if ligne.remboursement_id %}
+                    <span class="activite-remboursement">remboursement n&deg;{{ ligne.remboursement_id }}</span>
+                {% endif %}
+            </p>
+
+            {% if ligne.statut_slug %}
+                <p class="activite-statut" title="État du dossier au moment de l'action">
+                    {{ ligne.statut_slug }}
+                </p>
+            {% endif %}
+        </div>
+    </li>
+{% endfor %}

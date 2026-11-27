@@ -38,6 +38,8 @@ class Demande_travauxRepository extends ServiceEntityRepository
                     dt.audit AS demandeAudit,
                     dt.justificatif_propriete_alt AS demandeJustificatifProprieteAlt,
                     dt.justificatif_propriete_url AS demandeJustificatifProprieteUrl,
+                    dt.mandat_alt AS demandeMandatAlt,
+                    dt.mandat_url AS demandeMandatUrl,
                     dt.piece_complement_alt AS demandePieceComplementAlt,
                     dt.piece_complement_url AS demandePieceComplementUrl,
                     dt.avis_imposition_alt AS demandeAvisImpositionAlt,

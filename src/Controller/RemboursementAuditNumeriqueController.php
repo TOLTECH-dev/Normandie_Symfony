@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Beneficiaire;
 use App\Entity\Logement;
 use App\Entity\Remboursement_;
+use App\Entity\Remboursement_statut;
 use App\Entity\Titre;
 use App\Entity\Demande_;
 use App\Form\Remboursement_Type;
@@ -976,7 +977,16 @@ class RemboursementAuditNumeriqueController extends AbstractController
                 $instruction,
                 $optionAuditeur
             );
-            $remboursement->setStatutId($statut);
+            // D26013 : reprise d'un remboursement refusé. Le recalcul ordinaire
+            // renverrait un statut d'attente que rien ne distinguerait d'un dossier
+            // jamais instruit ; l'instructeur doit voir qu'il reprend un dossier déjà
+            // examiné. Le motif de refus part avec la pièce qu'il visait.
+            if (Remboursement_statut::STATUS_20 === $remboursement->getStatutId()) {
+                $remboursement->setStatutId(Remboursement_statut::STATUS_31);
+                $remboursement->setMotifRefus(null);
+            } else {
+                $remboursement->setStatutId($statut);
+            }
 
             $this->em->persist($remboursement);
 

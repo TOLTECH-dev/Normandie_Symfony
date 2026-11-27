@@ -1,0 +1,69 @@
+/* D26013 : gestion des motifs de non-conformite, un onglet par document. */
+
+.motif-explication {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Huit onglets tiennent rarement sur une ligne : on les laisse passer a la
+   ligne proprement plutot que deborder. */
+#onglets-motifs {
+    margin-bottom: 0;
+}
+
+#onglets-motifs > li > a {
+    padding: 8px 12px;
+}
+
+#onglets-motifs .badge-inactif {
+    background-color: #d9534f;
+    margin-left: 4px;
+}
+
+.tab-content {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-top: none;
+    background-color: #fff;
+}
+
+.motif-contexte {
+    margin-bottom: 15px;
+    color: #555;
+    line-height: 24px;
+}
+
+.table-motif {
+    margin-bottom: 0;
+}
+
+.table-motif .col-position {
+    width: 90px;
+}
+
+.table-motif .col-statut {
+    width: 110px;
+}
+
+.table-motif .col-action {
+    width: 90px;
+}
+
+.table-motif td:first-child {
+    text-align: center;
+}
+
+/* Une ligne inactive doit se reperer d un coup d oeil, sans avoir a lire la
+   colonne Statut. */
+.table-motif .motif-inactif td {
+    color: #999;
+}
+
+.table-motif .motif-inactif a {
+    color: #999;
+    font-style: italic;
+}
+
+.table-motif .label-info {
+    margin-left: 6px;
+}

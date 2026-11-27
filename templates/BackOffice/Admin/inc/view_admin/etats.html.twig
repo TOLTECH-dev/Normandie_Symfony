@@ -1,0 +1,56 @@
+{#
+    D26013 — historique des états d'un compte : création, désactivation,
+    réactivation, suppression, avec la date et l'heure de chacun.
+
+    L'état COURANT est rappelé en tête, et ce n'est pas un ornement : avant la
+    mise en service de cet historique, seules la création et les désactivations
+    datables ont pu être reconstituées. Une réactivation ancienne n'a laissé
+    aucune trace, et la chronologie seule pourrait laisser croire qu'un compte
+    est désactivé alors qu'il ne l'est plus.
+#}
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 bloc" id="bloc-etats">
+    <fieldset>
+        <legend class="marginTop20"><span class="legend-icon"></span>&nbsp;&Eacute;tats du compte</legend>
+
+        <p class="etat-courant">
+            État actuel&nbsp;:
+            {% if user.enabled %}
+                <span class="label label-success">Compte actif</span>
+            {% else %}
+                <span class="label label-danger">Compte d&eacute;sactiv&eacute;</span>
+            {% endif %}
+        </p>
+
+        {% if etats is empty %}
+            <p class="activite-vide">Aucun changement d'état enregistré pour ce compte.</p>
+        {% else %}
+            <ol class="activite-timeline">
+                {% for etat in etats %}
+                    <li class="activite-repere etat-{{ etat.etat }}">
+                        <time class="activite-date" datetime="{{ etat.date_evenement|date('c') }}">
+                            {{ etat.date_evenement|date('d/m/Y') }}
+                            <span class="activite-heure">{{ etat.date_evenement|date('H:i:s') }}</span>
+                        </time>
+
+                        <div class="activite-contenu">
+                            <p class="activite-action">{{ etat.libelle }}</p>
+
+                            <p class="activite-details">
+                                {% if etat.auteur %}
+                                    Par <strong>{{ etat.auteur }}</strong>
+                                {% endif %}
+
+                                {% if 'reconstitue' == etat.origine %}
+                                    <span class="etat-reconstitue"
+                                          title="Reconstitué à la mise en service, à partir des dates portées par le compte">
+                                        reconstitu&eacute;
+                                    </span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ol>
+        {% endif %}
+    </fieldset>
+</div>

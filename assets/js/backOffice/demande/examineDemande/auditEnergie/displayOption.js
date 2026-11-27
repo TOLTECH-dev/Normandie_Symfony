@@ -173,4 +173,53 @@ $(document).ready(function() {
         $('#bloc-AIcaseAutre').addClass('hidden');
         $('#whitelabel_backofficebundle_instruction__instruction_auditEnergie_AIreasonAutre').val('');
     }
+
+    ////////////////////////////////////////////////////////////////////
+    // D26013 : conformité du mandat donné au conseiller. Même mécanique
+    // que les trois conformités précédentes. « Autre » est le dernier
+    // motif de la liste MANDAT : c'est la case repérée par input:last.
+
+    var elt_mandatreason_autre = $('#whitelabel_backofficebundle_instruction__instruction_auditEnergie_mandatReason input:last');
+    var elt_mandatconformite = $('#whitelabel_backofficebundle_instruction__instruction_auditEnergie_mandatConformite');
+    var value_mandatconformite = $('#whitelabel_backofficebundle_instruction__instruction_auditEnergie_mandatConformite').val();
+
+    if (value_mandatconformite == '0 | oui' || value_mandatconformite == '2 | indetermine' || value_mandatconformite == '') {
+        hideMANDATcase();
+    } else {
+        $('#bloc-MANDATcase').removeClass('hidden');
+
+        if (elt_mandatreason_autre.prop('checked') == true) {
+            $('#bloc-MANDATcaseAutre').removeClass('hidden');
+        } else {
+            $('#bloc-MANDATcaseAutre').addClass('hidden');
+        }
+    }
+
+    elt_mandatconformite.on('change', function () {
+        if ($(this).find(':selected').val() == '0 | oui' || $(this).find(':selected').val() == '2 | indetermine' || $(this).find(':selected').val() == '') {
+            hideMANDATcase();
+        } else {
+            $('#bloc-MANDATcase').removeClass('hidden');
+        }
+    });
+
+    elt_mandatreason_autre.on('click', function () {
+        if (elt_mandatreason_autre.prop('checked') == true) {
+            $('#bloc-MANDATcaseAutre').removeClass('hidden');
+        } else {
+            $('#bloc-MANDATcaseAutre').addClass('hidden');
+            $('#whitelabel_backofficebundle_instruction__instruction_auditEnergie_mandatReasonAutre').val('');
+        }
+    });
+
+    function hideMANDATcase() {
+        $('#bloc-MANDATcase').addClass('hidden');
+        var elt_mandatreason = document.querySelectorAll('.mandatReason input');
+        $.each(elt_mandatreason, function () {
+            $(this).prop("checked", false);
+        });
+
+        $('#bloc-MANDATcaseAutre').addClass('hidden');
+        $('#whitelabel_backofficebundle_instruction__instruction_auditEnergie_mandatReasonAutre').val('');
+    }
 });

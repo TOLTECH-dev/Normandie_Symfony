@@ -58,6 +58,12 @@ parameters:
     app_date_us_passage_montant_auditEnergie: '%env(APP_DATE_US_PASSAGE_MONTANT_AUDIT_ENERGIE)%'
     app_date_passage_montant_auditRegion: '%env(APP_DATE_PASSAGE_MONTANT_AUDIT_REGION)%'
     app_date_us_nouvel_instructeur: '%env(APP_DATE_US_NOUVEL_INSTRUCTEUR)%'
+    # Interpreteur PHP des commandes lancees en arriere-plan (export des dossiers).
+    # A renseigner des que plusieurs versions de PHP cohabitent sur la machine :
+    # PhpExecutableFinder, appele depuis le SAPI web, rend celui du PATH et non
+    # celui qui execute la requete. Vide, on retombe sur la detection automatique.
+    app_php_binary: '%env(APP_PHP_BINARY)%'
+
     app_date_limite_creation_demande_member: '%env(APP_DATE_LIMITE_CREATION_DEMANDE_MEMBER)%'
     app_date_limite_creation_demande_conseiller: '%env(APP_DATE_LIMITE_CREATION_DEMANDE_CONSEILLER)%'
 

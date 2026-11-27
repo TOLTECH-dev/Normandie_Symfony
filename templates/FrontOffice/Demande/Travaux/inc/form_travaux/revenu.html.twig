@@ -43,7 +43,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xs-offset-0 col-sm-offset-0 col-md-offset-5 col-lg-offset-5">
-            {% if travaux.demande_travaux and travaux.demande_travaux.avisImpositionAlt %}
+            {% if travaux.demande_travaux and travaux.demande_travaux.id and travaux.demande_travaux.avisImpositionAlt %}
             <p>
                 <a href="{{ path(path_location, {'demandeId': travaux.demande_travaux.id, 'typeFile': 2, 'extension': travaux.demande_travaux.avisImpositionUrl, 'typeDemande': 1}) }}" target="_blank">
                     Voir le document
@@ -76,7 +76,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xs-offset-0 col-sm-offset-0 col-md-offset-5 col-lg-offset-5">
-            {% if travaux.demande_travaux and travaux.demande_travaux.avisImpositionConjointAlt %}
+            {% if travaux.demande_travaux and travaux.demande_travaux.id and travaux.demande_travaux.avisImpositionConjointAlt %}
                 <p>
                     <a href="{{ path(path_location, {'demandeId': travaux.demande_travaux.id, 'typeFile': 11, 'extension': travaux.demande_travaux.avisImpositionConjointUrl, 'typeDemande': 1}) }}" target="_blank">
                         Voir le document

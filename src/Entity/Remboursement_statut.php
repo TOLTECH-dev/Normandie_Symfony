@@ -40,6 +40,15 @@ class Remboursement_statut
     public const STATUS_29 = 29;
     public const STATUS_30 = 30;
 
+    /**
+     * Remboursement à réinstruire (D26013, point 1).
+     *
+     * Un remboursement refusé (STATUS_20) dont le partenaire a redéposé ses
+     * pièces. Il se distingue d un remboursement jamais instruit : l instruction
+     * a déjà eu lieu, et c est une reprise.
+     */
+    public const STATUS_31 = 31;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]

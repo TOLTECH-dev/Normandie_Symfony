@@ -318,13 +318,14 @@ class Demande_travaux_devisType extends AbstractType
                     'readonly' => true,
                 ]
             ])
-            ->add('acteEngagement', FileType::class, [
-                'required' => false,
-                'label' => 'Votre acte d\'engagement',
-                'attr' => [
-                    'class' => 'custom-file'
-                ]
-            ])
+            // D26013 : l acte d engagement n est plus demande ni affiche.
+            // Le champ quitte le formulaire, et pas seulement le gabarit :
+            // form_rest() rendrait sinon le champ de depot a la fin du
+            // formulaire, hors de toute section.
+            //
+            // L entite, ses accesseurs, la route de telechargement
+            // (typeFile 15) et l inventaire d archivage sont conserves :
+            // les actes deja deposes restent en place et exploitables.
             ->add('instructionDossierConforme', ChoiceType::class, [
                 'required' => true,
                 'label' => 'Dossier conforme',

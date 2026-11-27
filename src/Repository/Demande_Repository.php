@@ -1126,8 +1126,6 @@ class Demande_Repository extends ServiceEntityRepository
                         END
                         WHEN " . Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE . " THEN '" . Demande_::$demandeType[Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE] . "'
                     END AS demandeType,
-                    b.nom AS beneficiaireNom,
-                    b.prenom AS beneficiairePrenom,
                     l.ville AS logementVille,
                     l.code_postal AS logementCodePostal,
                     d.date_creation AS demandeDate,
@@ -1201,9 +1199,6 @@ class Demande_Repository extends ServiceEntityRepository
                         WHEN " . Demande_::DEMANDE_TRAVAUX_TYPE . " THEN IF(pi_dtd.raison_sociale IS NULL,'* En cours de choix',pi_dtd.raison_sociale)
                         WHEN " . Demande_::DEMANDE_AUDIT_ENERGIE_REGION_TYPE . " THEN IF(pi_dae.raison_sociale IS NULL,'* En cours de choix',pi_dae.raison_sociale)
                     END   AS professionnel,
-                    b.email AS email,
-                    b.tel_1 AS tel_1,
-                    b.tel_2 AS tel_2,
                     l.annee_construction AS annee_construction,
                     l.type_habitation AS typeHabitation,
                     l.description_projet AS description_projet,

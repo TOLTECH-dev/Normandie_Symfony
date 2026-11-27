@@ -44,7 +44,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xs-offset-0 col-sm-offset-0 col-md-offset-5 col-lg-offset-5">
-            {% if auditE.demande_auditEnergie and auditE.demande_auditEnergie.avisImpositionAlt %}
+            {% if auditE.demande_auditEnergie and auditE.demande_auditEnergie.id and auditE.demande_auditEnergie.avisImpositionAlt %}
                 <p>
                     <a href="{{ path(path_location, {'demandeId': auditE.demande_auditEnergie.id, 'typeFile': 2, 'extension': auditE.demande_auditEnergie.avisImpositionUrl, 'typeDemande': 0}) }}" target="_blank">
                         Voir le document
@@ -77,7 +77,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xs-offset-0 col-sm-offset-0 col-md-offset-5 col-lg-offset-5">
-            {% if auditE.demande_auditEnergie and auditE.demande_auditEnergie.avisImpositionConjointAlt %}
+            {% if auditE.demande_auditEnergie and auditE.demande_auditEnergie.id and auditE.demande_auditEnergie.avisImpositionConjointAlt %}
                 <p>
                     <a href="{{ path(path_location, {'demandeId': auditE.demande_auditEnergie.id, 'typeFile': 11, 'extension': auditE.demande_auditEnergie.avisImpositionConjointUrl, 'typeDemande': 0}) }}" target="_blank">
                         Voir le document

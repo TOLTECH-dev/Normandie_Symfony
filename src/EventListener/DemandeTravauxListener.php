@@ -38,6 +38,7 @@ class DemandeTravauxListener extends AbstractFileUploadListener
         $this->handleFileUpload($entity, 'getPieceComplement', 'getPieceComplementUrl', 'piece_complement', 'pieceComplement_getUploadDir');
         $this->handleFileUpload($entity, 'getAvisImpositionConjoint', 'getAvisImpositionConjointUrl', 'avis_imposition_conjoint', 'avisImpositionConjoint_getUploadDir');
         $this->handleFileUpload($entity, 'getAvisImposition', 'getAvisImpositionUrl', 'avis_imposition', 'avisImposition_getUploadDir');
+        $this->handleFileUpload($entity, 'getMandat', 'getMandatUrl', 'mandat', 'mandat_getUploadDir');
     }
 
     private function processPreRemove(Demande_travaux $entity): void
@@ -46,5 +47,6 @@ class DemandeTravauxListener extends AbstractFileUploadListener
         $this->handleFilePreRemove($entity, 'getPieceComplementUrl', 'piece_complement', 'pieceComplement_getUploadDir');
         $this->handleFilePreRemove($entity, 'getAvisImpositionConjointUrl', 'avis_imposition_conjoint', 'avisImpositionConjoint_getUploadDir');
         $this->handleFilePreRemove($entity, 'getAvisImpositionUrl', 'avis_imposition', 'avisImposition_getUploadDir');
+        $this->handleFilePreRemove($entity, 'getMandatUrl', 'mandat', 'mandat_getUploadDir');
     }
 }
