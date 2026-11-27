@@ -1,12 +1,12 @@
 /*
- * Mise en page des écrans d'authentification du back-office
- * (templates/BackOffice/Security/layout_auth.html.twig).
+ * Mise en page des écrans d'authentification (templates/BackOffice/Security/layout_auth.html.twig,
+ * étendu par Main/Security/layout_auth.html.twig pour l'espace bénéficiaire).
  *
  * Page autonome, chargée sans Bootstrap ni les feuilles du back-office : elle embarque la carte
  * de formulaire partagée et un socle minimal.
  *
- * Couleurs du dispositif : orange #e9661f (titre « Espace partenaire »), vert #77b636 (filet).
- * Le titre, en 44 px gras (32 px sur mobile), relève des « grands textes » du RGAA : le
+ * Couleurs du dispositif : orange #e9661f (nom de l'espace), vert #77b636 (filet).
+ * Le nom de l'espace, en 36 px gras (28 px sur mobile), relève des « grands textes » du RGAA : le
  * contraste de 3,3:1 de cet orange sur fond clair y est conforme (seuil 3:1).
  */
 @import '../../security/auth_form.css';
@@ -44,6 +44,7 @@ body.auth-page {
 }
 
 /* --- Panneau d'identité --- */
+/* Colonne : contenu en haut, mention « Un dispositif de la Région Normandie » toujours en bas */
 .auth-brand {
     position: relative;
     display: flex;
@@ -88,15 +89,23 @@ body.auth-page {
     z-index: 1;
 }
 
+/* Logo, puis nom du dispositif et de l'espace, sur une même ligne */
+.auth-brand-heading {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
 /* Image source de 83 px : ne pas l'agrandir au-delà pour éviter le flou */
 .auth-brand-product {
     display: block;
+    flex: none;
     width: 80px;
-    margin-bottom: 40px;
 }
 
 .auth-brand-eyebrow {
-    margin: 0 0 8px;
+    margin: 0 0 6px;
     color: #475467;
     font-size: 13px;
     font-weight: 600;
@@ -105,9 +114,9 @@ body.auth-page {
 }
 
 .auth-brand-title {
-    margin: 0 0 16px;
+    margin: 0;
     color: #e9661f;
-    font-size: 44px;
+    font-size: 36px;
     font-weight: 700;
     line-height: 1.1;
     letter-spacing: -0.01em;
@@ -118,7 +127,7 @@ body.auth-page {
     display: block;
     width: 56px;
     height: 4px;
-    margin-top: 20px;
+    margin-top: 12px;
     background: #77b636;
     border-radius: 2px;
 }
@@ -165,6 +174,96 @@ body.auth-page {
     text-align: center;
 }
 
+/* --- Encadré d'information sous la carte (création de compte de l'espace bénéficiaire) --- */
+.auth-notice {
+    width: 100%;
+    max-width: 400px;
+    margin: 16px 0 0;
+    padding: 20px 24px;
+    color: #475467;
+    font-size: 13px;
+    line-height: 1.6;
+    background: #fff;
+    border: 1px solid #eaecf0;
+    border-radius: 12px;
+}
+
+.auth-notice-title {
+    margin: 0 0 8px;
+    color: #1d2939;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.auth-notice p {
+    margin: 0 0 8px;
+}
+
+.auth-notice p:last-child {
+    margin-bottom: 0;
+}
+
+.auth-notice a {
+    color: #b84f18;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.auth-notice a:hover,
+.auth-notice a:focus {
+    color: #9a4214;
+    text-decoration: underline;
+}
+
+/* Action secondaire en contour, pour ne pas concurrencer le bouton de connexion */
+.auth-notice .auth-notice-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    margin-top: 12px;
+    color: #b84f18;
+    border: 1px solid #b84f18;
+    border-radius: 8px;
+}
+
+.auth-notice .auth-notice-action:hover,
+.auth-notice .auth-notice-action:focus {
+    color: #fff;
+    text-decoration: none;
+    background: #b84f18;
+}
+
+/*
+ * Encadré présent à deux endroits, une seule version visible : dans le panneau d'identité sur grand
+ * écran (pour ne pas allonger le panneau du formulaire), sous la carte quand les panneaux sont empilés
+ * (pour ne pas repousser le formulaire).
+ */
+.auth-notice-brand {
+    max-width: 460px;
+    margin-top: 28px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.auth-notice-brand .auth-notice-title {
+    font-size: 16px;
+}
+
+.auth-notice-panel {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .auth-notice-brand {
+        display: none;
+    }
+
+    .auth-notice-panel {
+        display: block;
+    }
+}
+
 /* --- Écrans étroits : panneaux empilés --- */
 @media (max-width: 900px) {
     .auth-layout {
@@ -179,17 +278,21 @@ body.auth-page {
         border-bottom: 1px solid #eaecf0;
     }
 
-    .auth-brand-product {
-        width: 64px;
+    .auth-brand-heading {
+        gap: 16px;
         margin-bottom: 20px;
     }
 
+    .auth-brand-product {
+        width: 64px;
+    }
+
     .auth-brand-title {
-        font-size: 32px;
+        font-size: 28px;
     }
 
     .auth-brand-title::after {
-        margin-top: 12px;
+        margin-top: 10px;
     }
 
     .auth-brand-text {

@@ -21,10 +21,7 @@ function addCssEntriesRecursively(Encore, dir, baseDir) {
 module.exports = (Encore) => {
     // Entrées statiques existantes
     Encore
-        .addStyleEntry('mainLogin', './assets/styles/main/security/login.css')
         .addStyleEntry('register', './assets/styles/main/registration/register.css')
-        .addStyleEntry('registerConfirmed', './assets/styles/main/registration/confirmed.css')
-        .addStyleEntry('registerCheckEmail', './assets/styles/main/registration/check_email.css')
         .addStyleEntry('partenaireList', './assets/styles/backOffice/partenaire/list.css')
         .addStyleEntry('ratingView', './assets/styles/backOffice/rating/view.css')
 

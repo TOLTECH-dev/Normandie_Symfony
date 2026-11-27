@@ -1,119 +1,208 @@
-.container-form {
-    padding: 5px 30px;
-    max-width: 450px;
-    width: 100% !important;
-    background-color: #F7F7F7;
-    margin: 5px auto 30px;
-    border-radius: 2px;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-    font-size: 12px;
-}
-.container-form h1 {
-    text-align: center;
-    font-size: 1.8em;
-}
-.container-form input[type=text], .container-form input[type=email], .container-form input[type=password] {
-    height: 34px;
-    font-size: 14px;
-    width: 100%;
-    margin-bottom: 10px;
-    -webkit-appearance: none;
-    background: #fff;
-    border: 1px solid #d9d9d9;
-    border-top: 1px solid #c0c0c0;
-    /* border-radius: 2px; */
-    padding: 0 8px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-}
-.container-form input[type=text]:hover, .container-form input[type=email]:hover, .container-form input[type=password]:hover {
-    border: 1px solid #b9b9b9;
-    border-top: 1px solid #a0a0a0;
-    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-}
-.container-form input[type=submit] {
-    width: 100%;
-    display: block;
-    margin-bottom: 10px;
-    position: relative;
-}
-
-
-
-#form_register #result {
-    text-align: right;
-    float: right;
-}
-#form_register .short{
-    color: #FF0000;
-}
-#form_register .weak{
-    color: #E66C2C;
-}
-#form_register .good{
-    color: #2D98F3;
-}
-#form_register .strong{
-    color: #006400;
-}
-
-
-
-
-#pswd_info {
-    /*
-    display: none;
-    position: absolute;
-    margin-top: -14px;
-    */
-    margin-bottom: 15px;
-    width: 100%;
-    padding: 15px;
-    background: #fefefe;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px #ccc;
-    border: 1px solid #ddd;
-    z-index: 9999;
-}
-#pswd_info p {
-    margin: 0 0 7px 0;
-    padding: 0;
-    font-weight: normal;
-}
 /*
-#pswd_info::before {
-    content: "\25B2";
-    position: absolute;
-    top: -13px;
-    left: 45%;
-    font-size: 14px;
-    line-height: 14px;
-    color: #ddd;
-    text-shadow: none;
-    display: block;
+ * Création de compte bénéficiaire (entrée "register",
+ * templates/Main/Security/Registration/register.html.twig).
+ *
+ * Complète la carte partagée assets/styles/security/auth_form.css :
+ * - mise en page étendue (classe auth-page-wide sur <body>) : panneau d'identité réduit, formulaire
+ *   sur deux colonnes occupant la largeur disponible, pour limiter la hauteur de la page ;
+ * - règles du mot de passe, indicateur de force et message de correspondance, identiques à ceux de la
+ *   saisie du nouveau mot de passe (assets/styles/main/resetting/reset.css). Les classes valid/invalid
+ *   et short/weak/good/strong sont posées par assets/js/main/passwordValidation.js.
+ *
+ * Couleurs d'état choisies pour un contraste d'au moins 4,5:1 sur fond clair (RGAA).
+ */
+
+/* --- Mise en page étendue --- */
+@media (min-width: 901px) {
+    .auth-page-wide .auth-brand {
+        flex-basis: 30%;
+        max-width: 460px;
+        padding: 48px 40px;
+    }
 }
-*/
-#pswd_info ul, #pswd_info li {
+
+.auth-panel .auth-card-wide {
+    max-width: 960px;
+}
+
+.auth-card-wide .auth-card-header {
+    margin-bottom: 20px;
+}
+
+/* Deux colonnes : prénom / nom, adresse e-mail / confirmation, mot de passe / confirmation */
+.auth-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+    align-items: start;
+}
+
+.auth-grid-full {
+    grid-column: 1 / -1;
+}
+
+/* Captcha et bouton sur une même ligne */
+.auth-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+.auth-form-actions .auth-captcha {
+    margin-bottom: 0;
+}
+
+.auth-card .auth-form-actions .auth-submit {
+    width: auto;
+    min-width: 240px;
+}
+
+/* --- Règles du mot de passe --- */
+.auth-password-rules {
+    margin: 0 0 20px;
+    padding: 12px 16px;
+    background: #f9fafb;
+    border: 1px solid #eaecf0;
+    border-radius: 8px;
+}
+
+.auth-card-wide .auth-password-rules {
+    margin-bottom: 16px;
+}
+
+.auth-password-rules p {
+    margin: 0 0 6px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.auth-password-rules ul {
     margin: 0;
     padding: 0;
-    list-style-type: none;
+    list-style: none;
 }
-#pswd_info ul li {
-    margin: 0px 10px;
-    padding-left: 20px;
+
+/* Formulaire étendu : règles réparties sur trois colonnes */
+.auth-card-wide .auth-password-rules ul {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 16px;
 }
-.invalid {
-    background: url('../../../images/main/icon/invalid.png') no-repeat 0 50%;
-    padding-left: 22px;
-    line-height: 24px;
-    color: #ec3f41;
+
+.auth-password-rules li {
+    position: relative;
+    padding-left: 26px;
+    font-size: 13px;
+    line-height: 26px;
 }
-.valid {
-    background: url('../../../images/main/icon/valid.png') no-repeat 0 50%;
-    padding-left: 22px;
-    line-height: 24px;
-    color: #3a7d34;
+
+.auth-password-rules li::before {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 50%;
+}
+
+/* Règle non encore remplie : neutre, pour ne pas afficher d'erreur avant la saisie */
+.auth-password-rules li.invalid {
+    color: #475467;
+}
+
+.auth-password-rules li.invalid::before {
+    content: '';
+    top: 10px;
+    left: 5px;
+    width: 6px;
+    height: 6px;
+    background: #98a2b3;
+}
+
+/* Règle remplie */
+.auth-password-rules li.valid {
+    color: #067647;
+}
+
+.auth-password-rules li.valid::before {
+    content: '\2713';
+    background: #079455;
+}
+
+/* --- Libellé et indicateur de force sur la même ligne --- */
+.auth-field-label-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.auth-password-form #result {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.auth-password-form #result.short {
+    color: #b42318;
+}
+
+.auth-password-form #result.weak {
+    color: #b54708;
+}
+
+.auth-password-form #result.good {
+    color: #175cd3;
+}
+
+.auth-password-form #result.strong {
+    color: #067647;
+}
+
+/* --- Correspondance des deux saisies --- */
+.auth-password-form #password_match_message {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.auth-password-form #password_match_message.invalid {
+    color: #b42318;
+}
+
+.auth-password-form #password_match_message.valid {
+    color: #067647;
+}
+
+/* --- Erreurs renvoyées par le serveur --- */
+.auth-field-error {
+    margin: 6px 0 0;
+    color: #b42318;
+    font-size: 12px;
+}
+
+/* --- Écrans étroits : une seule colonne --- */
+@media (max-width: 640px) {
+    .auth-grid,
+    .auth-card-wide .auth-password-rules ul {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .auth-form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .auth-card .auth-form-actions .auth-submit {
+        width: 100%;
+    }
 }

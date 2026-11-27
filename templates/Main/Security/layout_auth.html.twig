@@ -1,0 +1,23 @@
+{#
+    Gabarit des pages d'authentification de l'espace bénéficiaire (front-office) : connexion,
+    création de compte, et pages de réinitialisation du mot de passe servies sur ce domaine.
+
+    Reprend BackOffice/Security/layout_auth.html.twig (mêmes panneaux, même feuille de style) en
+    remplaçant le nom de l'espace (« Mon compte »), le texte de présentation et les favicons.
+#}
+{% extends "BackOffice/Security/layout_auth.html.twig" %}
+
+{% block space_name %}Mon compte{% endblock %}
+
+{% block brand_text %}
+    Suivez vos demandes d'aide du dispositif r&eacute;gional d'aide &agrave; la r&eacute;novation
+    &eacute;nerg&eacute;tique de votre logement.
+{% endblock %}
+
+{% block favicons %}
+    <link rel="apple-touch-icon" href="{{ asset('build/images/main/favicon/apple-touch-icon.png') }}" sizes="180x180">
+    <link rel="icon" href="{{ asset('build/images/main/favicon/favicon-32x32.png') }}" type="image/png" sizes="32x32">
+    <link rel="icon" href="{{ asset('build/images/main/favicon/favicon-16x16.png') }}" type="image/png" sizes="16x16">
+    <link rel="mask-icon" href="{{ asset('build/images/main/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="manifest" href="{{ asset('build/images/main/favicon/manifest.json') }}">
+{% endblock %}

@@ -2,15 +2,18 @@
     Gabarit des pages d'authentification : panneau d'identité (logos, nom de l'espace) et
     panneau formulaire.
 
-    Utilisé par la connexion au back-office, la saisie du code MFA et la demande de
-    réinitialisation du mot de passe (servie sur les domaines back-office et front-office).
+    Utilisé par la connexion au back-office, la saisie du code MFA et la réinitialisation du mot de
+    passe. Main/Security/layout_auth.html.twig l'étend pour l'espace bénéficiaire (connexion,
+    création de compte, réinitialisation servie sur le domaine front-office).
 
     Autonome : il n'hérite ni de BackOffice/layout_core.html.twig ni de Main/layout_core.html.twig,
     dont les headers, la largeur minimale et les feuilles Bootstrap sont inutiles avant connexion.
     Styles : assets/styles/backOffice/security/auth_layout.css (entrée backOffice_security_auth_layout).
 
     Blocs surchargeables : title, space_name (« Espace partenaire » par défaut), brand_text,
-    favicons, stylesheets, javascripts, card.
+    brand_extra (contenu ajouté sous le texte du panneau d'identité), favicons, stylesheets,
+    javascripts, body_class (classe ajoutée à <body>, ex. auth-page-wide pour un formulaire
+    étendu), card.
 #}
 <!DOCTYPE html>
 <html lang="fr">
@@ -36,21 +39,29 @@
     {% block javascripts %}
     {% endblock %}
 </head>
-<body class="auth-page">
+<body class="auth-page{% if block('body_class') is defined %} {{ block('body_class') }}{% endif %}">
 <main class="auth-layout">
     <section class="auth-brand">
         <div class="auth-brand-content">
-            <img src="{{ asset('build/images/backOffice/logo/cheque-eco-energie2.png') }}"
-                 alt="Ch&egrave;que &eacute;co-&eacute;nergie Normandie" class="auth-brand-product" width="83" height="80">
+            {# Logo et nom de l'espace sur une même ligne, pour limiter la hauteur du panneau #}
+            <div class="auth-brand-heading">
+                <img src="{{ asset('build/images/backOffice/logo/cheque-eco-energie2.png') }}"
+                     alt="Ch&egrave;que &eacute;co-&eacute;nergie Normandie" class="auth-brand-product" width="83" height="80">
 
-            <p class="auth-brand-eyebrow">Ch&egrave;que &eacute;co-&eacute;nergie Normandie</p>
-            <h1 class="auth-brand-title">{% block space_name %}Espace partenaire{% endblock %}</h1>
+                <div>
+                    <p class="auth-brand-eyebrow">Ch&egrave;que &eacute;co-&eacute;nergie Normandie</p>
+                    <h1 class="auth-brand-title">{% block space_name %}Espace partenaire{% endblock %}</h1>
+                </div>
+            </div>
+
             <p class="auth-brand-text">
                 {% block brand_text %}
                     Acc&eacute;dez aux outils de suivi et d'instruction des dossiers du dispositif r&eacute;gional
                     d'aide &agrave; la r&eacute;novation &eacute;nerg&eacute;tique des logements.
                 {% endblock %}
             </p>
+
+            {% block brand_extra %}{% endblock %}
         </div>
 
         <div class="auth-brand-footer">
